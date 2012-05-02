@@ -1,8 +1,19 @@
+<h2>Perl Maven - for people who want to get the most out of the Perl programming language</h2>
+
+<p>
+In order to register to our newsletter, please type your e-mail here:
+</p>
 <form method="POST" action="/register">
 Email: <input name="email" />
 <input type="submit" value="Register" />
 </form>
+<p>
+Registered people will get free updates of the Perl Maven Cookbook and will be notified when a
+new article is published on the Perl Maven web site.
+</p>
 
+
+<p>
 <% IF no_mail %>
 Missing e-mail.
 <% END %>
@@ -13,4 +24,4 @@ Invalid e-mail.
 This address is already registered.
 <% END %>
 
-
+</p>

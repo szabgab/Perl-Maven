@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=<% settings.charset %>" />
-<title>Perl Maven</title>
+<title>Perl Maven - for people who want to get the most out of programming in Perl</title>
 <link rel="stylesheet" href="<% request.uri_base %>/css/style.css" />
 
 <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
@@ -17,5 +17,11 @@
 <% content %>
 <div id="footer">
 </div>
+
+
+<script src="//static.getclicky.com/js" type="text/javascript"></script>
+<script type="text/javascript">try{ clicky.init(66509177); }catch(e){}</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/66509177ns.gif" /></p></noscript>
+
 </body>
 </html>
