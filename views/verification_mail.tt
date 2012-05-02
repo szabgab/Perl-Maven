@@ -1,0 +1,13 @@
+
+Hi,
+<p>
+In order to verify your e-mail address and to finish registration, please
+click on the following link:
+</p>
+<p>
+<a href="<% url %>?code=<% code %>">verify</a>.
+</p>
+<p>
+Thank you
+</p>
+

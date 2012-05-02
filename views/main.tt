@@ -1,0 +1,16 @@
+<form method="POST" action="/register">
+Email: <input name="email" />
+<input type="submit" value="Register" />
+</form>
+
+<% IF no_mail %>
+Missing e-mail.
+<% END %>
+<% IF invalid_mail %>
+Invalid e-mail.
+<% END %>
+<% IF duplicate_mail %>
+This address is already registered.
+<% END %>
+
+
