@@ -1,0 +1,4 @@
+<form method="POST" action="/register">
+Email: <input name="email" />
+<input type="submit" value="Register" />
+</form>

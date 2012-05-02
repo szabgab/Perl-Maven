@@ -1,18 +1,15 @@
  <div id="header">
     <h1>Perl Maven</h1>
-    <h2>for people who want to get the most out of the Perl</h2>
+    <h2>for people who want to get the most out of Perl</h2>
  </div>
 
 <p>
 In order to register to our newsletter, please type your e-mail here:
 </p>
-<form method="POST" action="/register">
-Email: <input name="email" />
-<input type="submit" value="Register" />
-</form>
+<% registration_form %>
 <p>
-Registered people will get free updates of the Perl Maven Cookbook and will be notified when a
-new article is published on the Perl Maven web site.
+Registered people will get free updates of the <b>Perl Maven Cookbook</b> and will
+be notified when a new article is published on the Perl Maven web site.
 </p>
 
 

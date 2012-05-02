@@ -7,7 +7,10 @@ use MIME::Lite;
 use YAML qw(DumpFile LoadFile);
 
 get '/' => sub {
-    template 'main';
+	my $tt;
+	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
+
+    template 'main', $tt;
 };
 
 post '/register' => sub {
@@ -115,6 +118,9 @@ get qr{/(.+)} => sub {
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
 	
+	my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
+	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
+	
 	return template 'page' => $tt;
 };
 
@@ -190,7 +196,12 @@ sub verify_registration {
 	
 }
 
-
+sub read_file {
+	my $file = shift;
+	open my $fh, '<', $file or return '';
+	local $/ = undef;
+	return scalar <$fh>;
+}
 
 true;
 
