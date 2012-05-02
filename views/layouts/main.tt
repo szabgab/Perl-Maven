@@ -14,7 +14,13 @@
 
 </head>
 <body>
-<% content %>
+<div id="page">
+  <div id="sidebar">
+  </div>
+  <div id="content">
+    <% content %>
+  </div>
+</div>
 <div id="footer">
 </div>
 
