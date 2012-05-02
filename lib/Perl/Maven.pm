@@ -70,6 +70,31 @@ get '/verify' => sub {
 			error => 1,
 		};
 	}
+
+	my $html = template 'post_verification_mail';
+
+	my $mail = MIME::Lite->new(
+		From    => 'Gabor Szabo <gabor@szabgab.com>',
+		To      => $email,
+		Subject => 'Thank you for registering',
+		Type    => 'multipart/mixed',
+	);
+	$mail->attach(
+		Type => 'text/html',
+		Data => $html,
+	);
+
+	use File::Basename qw(basename);
+	my $file = '/home/gabor/save/perl_maven_cookbook_v0.01.pdf';
+	$mail->attach(
+		Type => 'application/pdf',
+		Path => $file,
+		Filename => basename($file),
+		Disposition => 'attachment',
+    );
+	$mail->send;
+	
+	
 	template 'thank_you';
 };
 
