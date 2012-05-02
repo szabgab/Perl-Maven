@@ -50,7 +50,7 @@ post '/register' => sub {
 	my $mail = MIME::Lite->new(
 		From    => 'Gabor Szabo <gabor@szabgab.com>',
 		To      => $email,
-		Subject => 'Finish the Registration',
+		Subject => 'Please finish the Perl Maven registration',
 		Type    => 'multipart/mixed',
 	);
 	$mail->attach(
@@ -94,7 +94,14 @@ get '/verify' => sub {
     );
 	$mail->send;
 	
-	
+	my $selfmail = MIME::Lite->new(
+		From    => 'Perl Maven registration <gabor@perlmaven.com>',
+		To      => 'Gabor Szabo <gabor@szabgab.com>',
+		Subject => 'New Perl Maven newsletter registration',
+		Data    => "New registration from $email",
+	);
+	$selfmail->send;
+
 	template 'thank_you';
 };
 
