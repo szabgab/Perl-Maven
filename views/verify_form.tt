@@ -1,0 +1,13 @@
+<!--
+<form method="POST" action="">
+Email: <input name="email" />
+Code: <input name="code" />
+<input type="submit" value="Register" />
+</form>
+-->
+
+<% IF error %>
+Could not verify.
+<% END %>
+
+
