@@ -105,8 +105,35 @@ get '/verify' => sub {
 	template 'thank_you';
 };
 
+get qr{/(.+)} => sub {
+	my ($article) = splat;
+
+	my $path = config->{appdir} . "/../articles/$article.tt";
+	return template 'error', {'no_such_article' => 1} if not -e $path;
+
+	my $tt = read_tt($path);
+	return template 'error', {'no_such_article' => 1}
+		if not $tt->{status} or $tt->{status} ne 'show';
+	
+	return template 'page' => $tt;
+};
 
 ##############  pseudo database handling code
+
+sub read_tt {
+	my $file = shift;
+	my %data = (content => '');
+	if (open my $fh, '<', $file) {
+		while (my $line = <$fh>) {
+			if ($line =~ /^=(\w+)\s+(.*?)\s*$/) {
+				$data{$1} = $2;
+				next;
+			}
+			$data{mycontent} .= $line;
+		}
+	}
+	return \%data;
+}
 
 sub _file {
 	path config->{appdir}, 'data.yml';

@@ -1,0 +1,3 @@
+<% IF no_such_article %>
+No such article
+<% END %>
