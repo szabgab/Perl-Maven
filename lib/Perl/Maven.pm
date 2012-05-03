@@ -30,7 +30,7 @@ post '/register' => sub {
 	$email = lc $email;
 	
 	my $data = get_data();
-	if ($data->{$email}) {
+	if ($data->{$email} and $data->{$email}{verified}) {
 		return template 'main', {
 			duplicate_mail => 1,
 		};
@@ -40,8 +40,13 @@ post '/register' => sub {
 	my @chars = ('a' .. 'z', 'A' .. 'Z', 0 .. 9);
 	my $code = '';
 	$code .= $chars[ rand(scalar @chars) ] for 1..10;
-	
-	add_registration($email, $code);
+
+	# basically resend the old code
+	if ($data->{$email}) {
+		$code = $data->{$email}{code};
+	} else {
+		add_registration($email, $code);
+	}
 
 	# save  email and code (and date)
 	my $html = template 'verification_mail', {
