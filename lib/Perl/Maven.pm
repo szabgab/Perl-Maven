@@ -39,7 +39,7 @@ post '/register' => sub {
 	# generate code
 	my @chars = ('a' .. 'z', 'A' .. 'Z', 0 .. 9);
 	my $code = '';
-	$code .= $chars[ rand(scalar @chars) ] for 1..10;
+	$code .= $chars[ rand(scalar @chars) ] for 1..20;
 
 	# basically resend the old code
 	if ($data->{$email}) {
