@@ -1,9 +1,22 @@
 <h1>Your are not done yet!</h1>
 
+<p>
 In order to finish your registeration you need to do one more thing.
-
+</p>
+<p>
 To make sure there was no mistake in the e-mail address,
 we sent you an e-mail with a verification code.
 Please check your inbox now and follow the instructions there.
+</p>
+
+<h2>SPAM folder?</h2>
+<p>
+Apparently Gmail is eager to put the registration mail
+(and maybe also the mail with the cookbook) in the spam folder.
+Please check that too!
+</p>
+<p>
+Currently the messages are sent ot from 'gabor@szabgab.com'. If you can white-list that address.
+</p>
 
 
