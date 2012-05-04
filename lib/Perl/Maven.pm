@@ -28,7 +28,7 @@ post '/register' => sub {
 
 	# check for uniqueness after lc
 	$email = lc $email;
-	
+
 	my $data = get_data();
 	if ($data->{$email} and $data->{$email}{verified}) {
 		return template 'main', {
@@ -101,7 +101,7 @@ get '/verify' => sub {
 		Disposition => 'attachment',
     );
 	$mail->send;
-	
+
 	my $selfmail = MIME::Lite->new(
 		From    => 'Perl Maven registration <gabor@perlmaven.com>',
 		To      => 'Gabor Szabo <gabor@szabgab.com>',
@@ -122,10 +122,10 @@ get qr{/(.+)} => sub {
 	my $tt = read_tt($path);
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
-	
+
 	my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
 	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
-	
+
 	return template 'page' => $tt;
 };
 
@@ -160,7 +160,7 @@ sub get_data {
 }
 sub _save {
 	my ($code) = @_;
-	
+
 	use Fcntl qw(:flock);
 	my $file = _file();
 	if (open my $fh, '<', $file) {
@@ -174,7 +174,7 @@ sub _save {
 
 sub add_registration {
 	my ($email, $code) = @_;
-	
+
 	_save(sub {
 		my $data = shift;
 		if (not $data->{$email}) {
@@ -198,7 +198,7 @@ sub verify_registration {
 		}
 		return;
 	});
-	
+
 }
 
 sub read_file {
