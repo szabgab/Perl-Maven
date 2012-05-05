@@ -2,9 +2,13 @@ package Perl::Maven;
 use Dancer ':syntax';
 
 our $VERSION = '0.1';
+
+use Business::PayPal;
+use Data::Dumper qw(Dumper);
 use Email::Valid;
 use MIME::Lite;
 use YAML qw(DumpFile LoadFile);
+
 
 get '/' => sub {
 	my $tt;
@@ -113,6 +117,23 @@ get '/verify' => sub {
 	template 'thank_you';
 };
 
+get '/buy' => sub {
+	return paypal();
+};
+get '/canceled' => sub {
+	debug Dumper params();
+	return 'canceled';
+};
+get '/paid'  => sub {
+	debug Dumper params();
+	return 'paid';
+};
+get '/paypal_notify'  => sub {
+	debug Dumper params();
+	return 'paypal_notify';
+};
+
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
@@ -130,6 +151,40 @@ get qr{/(.+)} => sub {
 };
 
 ##############  pseudo database handling code
+
+sub paypal {
+
+	my $sandbox = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+#	my $paypal = Business::PayPal->new(address => $sandbox);
+	my $paypal = Business::PayPal->new();
+
+	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
+	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
+	# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
+	my $cancel_url = uri_for('/canceled');
+	my $return_url = uri_for('/paid');
+	my $notify_url = uri_for('/paypal_notify');
+	my $button = $paypal->button(
+    	business => 'gabor@szabgab.com',
+		item_name => 'Donation',
+		return        => "$return_url",
+		cancel_return => "$cancel_url",
+		amount => '0.01',
+		quantity => 1,
+		notify_url => "$notify_url",
+	);
+	my $id = $paypal->id;
+
+	my $paypal_data = session('paypal') || {};
+	$paypal_data->{$id} = { item => 'Donation' };
+	session paypal => $paypal_data;
+	#debug Dumper $button;
+
+	return $button;
+}
+
+
+
 
 sub read_tt {
 	my $file = shift;
