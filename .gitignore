@@ -2,3 +2,4 @@ sessions
 logs
 data.yml
 *.swp
+*.bak
