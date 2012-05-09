@@ -9,11 +9,15 @@ use Email::Valid;
 use MIME::Lite;
 use YAML qw(DumpFile LoadFile);
 
+hook before_template => sub {
+    my $t = shift;
+    $t->{title} ||= 'Perl Maven - for people who want to get the most out of programming in Perl';
+	return;
+};
 
 get '/' => sub {
 	my $tt;
 	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
-
     template 'main', $tt;
 };
 
@@ -146,6 +150,7 @@ get qr{/(.+)} => sub {
 
 	my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
 	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
+    $tt->{title} = $tt->{head1};
 
 	return template 'page' => $tt;
 };
