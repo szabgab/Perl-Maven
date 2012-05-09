@@ -2,5 +2,12 @@
     <h1><% head1 %></h1>
     <h2></h2>
  </div>
- 
  <% mycontent %>
+
+<% IF author %>
+Written by <% author %><br /><img src="/img/<% author %>.png"  />
+<% IF author=="szabgab" %>
+<br />Gabor Szabo
+<% END %>
+
+<% END %>

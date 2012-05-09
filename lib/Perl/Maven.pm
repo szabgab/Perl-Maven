@@ -137,6 +137,18 @@ get '/paypal_notify'  => sub {
 	return 'paypal_notify';
 };
 
+get '/img/:file' => sub {
+    my $file = param('file');
+	return if $file !~ /^[\w-]+\.(\w+)$/;
+	my $ext = $1;
+#	return config->{appdir} . "/../articles/img/$file";
+    send_file(
+	  config->{appdir} . "/../articles/img/$file",
+#	  "d:\\work\\articles\\img\\$file",
+	  content_type => $ext,
+	  system_path => 1,
+	);
+};
 
 get qr{/(.+)} => sub {
 	my ($article) = splat;
@@ -206,7 +218,7 @@ sub read_tt {
 				$data{$1} = $2;
 				next;
 			}
-			if ($line =~ m{^<code lang="(html|perl)">}) {
+			if ($line =~ m{^<code lang="([^"]+)">}) {
 				$in_code = $1;
 				$cont .= qq{<pre>\n};
 				next;
