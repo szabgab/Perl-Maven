@@ -1,5 +1,11 @@
 sessions
 logs
 data.yml
+pm.db
 *.swp
 *.bak
+MYMETA.yml
+MYMETA.json
+pm_to_blib
+blib
+Makefile
