@@ -5,7 +5,7 @@ In order to verify your e-mail address and to finish registration, please
 click on the following link:
 </p>
 <p>
-<a href="<% url %><% id %>/<% code %>">verify</a>.
+<a href="<% url %>/<% id %>/<% code %>">verify</a>.
 </p>
 <p>
 Thank you

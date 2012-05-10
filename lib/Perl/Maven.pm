@@ -7,7 +7,6 @@ our $VERSION = '0.1';
 use Business::PayPal;
 use Data::Dumper qw(Dumper);
 use Email::Valid;
-use MIME::Lite;
 use YAML qw(DumpFile LoadFile);
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
@@ -40,8 +39,9 @@ post '/register' => sub {
 	# check for uniqueness after lc
 	$email = lc $email;
 
-	my $data = $db->get_user_by_email($email);
-	if ($data and $data->{verify_time}) {
+	my $user = $db->get_user_by_email($email);
+	#debug Dumper $user;
+	if ($user and $user->{verify_time}) {
 		return template 'main', {
 			duplicate_mail => 1,
 		};
@@ -53,30 +53,27 @@ post '/register' => sub {
 	$code .= $chars[ rand(scalar @chars) ] for 1..20;
 
 	# basically resend the old code
-	if ($data) {
-		$code = $data->{verify_code};
+	my $id;
+	if ($user) {
+		$code = $user->{verify_code};
+		$id = $user->{id};
 	} else {
-		$db->add_registration($email, $code);
+		$id = $db->add_registration($email, $code);
 	}
 
 	# save  email and code (and date)
 	my $html = template 'verification_mail', {
 		url => uri_for('/verify'),
-		email => $email,
+		id => $id,
 		code => $code,
 	};
 	# send e-mail
-	my $mail = MIME::Lite->new(
+	sendmail(
 		From    => 'Gabor Szabo <gabor@szabgab.com>',
 		To      => $email,
 		Subject => 'Please finish the Perl Maven registration',
-		Type    => 'multipart/mixed',
+		html    => $html,
 	);
-	$mail->attach(
-		Type => 'text/html',
-		Data => $html,
-	);
-	$mail->send;
 	return template 'response';
 };
 
@@ -92,36 +89,21 @@ get '/verify/:id/:code' => sub {
 		};
 	}
 
-	my $html = template 'post_verification_mail';
 
-	my $mail = MIME::Lite->new(
+	sendmail(
 		From    => 'Gabor Szabo <gabor@szabgab.com>',
 		To      => $user->{email},
 		Subject => 'Thank you for registering',
-		Type    => 'multipart/mixed',
-	);
-	$mail->attach(
-		Type => 'text/html',
-		Data => $html,
+		html    => template('post_verification_mail'),
+		attachments => ['/home/gabor/save/perl_maven_cookbook_v0.01.pdf'],
 	);
 
-	use File::Basename qw(basename);
-	my $file = '/home/gabor/save/perl_maven_cookbook_v0.01.pdf';
-	$mail->attach(
-		Type => 'application/pdf',
-		Path => $file,
-		Filename => basename($file),
-		Disposition => 'attachment',
-    );
-	$mail->send;
-
-	my $selfmail = MIME::Lite->new(
-		From    => 'Perl Maven registration <gabor@perlmaven.com>',
+	sendmail(
+		From    => 'Perl Maven <gabor@perlmaven.com>',
 		To      => 'Gabor Szabo <gabor@szabgab.com>',
 		Subject => 'New Perl Maven newsletter registration',
-		Data    => "New registration from $user->{email}",
+		html    => "$user->{email} has registered",
 	);
-	$selfmail->send;
 
 	template 'thank_you';
 };
@@ -259,3 +241,39 @@ sub read_file {
 
 true;
 
+use MIME::Lite;
+use File::Basename qw(fileparse);
+
+sub sendmail {
+	my %args = @_;
+
+	my $html  = delete $args{html};
+	# TODO convert to text and add that too
+
+	my $attachments = delete $args{attachments};
+	
+	my $mail = MIME::Lite->new(
+		%args,
+		Type    => 'multipart/mixed',
+	);
+	$mail->attach(
+		Type => 'text/html',
+		Data => $html,
+	);
+	foreach my $file (@$attachments) {
+		my ($basename, $dir, $ext) = fileparse($file);
+		$mail->attach(
+			Type => "application/$ext",
+			Path => $file,
+			Filename => $basename,
+			Disposition => 'attachment',
+		);
+	}
+	if ($ENV{NOMAIL}) {
+		debug $mail->as_string;
+		return;
+	}
+
+	$mail->send;
+	return;
+}

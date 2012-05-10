@@ -1,11 +1,11 @@
 use strict;
-use warning;
+use warnings;
 
 use YAML qw(DumpFile LoadFile);
-use My::Registration::DB;
 use DBIx::RunSQL;
 
-die if not -e 'data.yml' or if -e 'pm.db';
+die 'has no data.yml' if not -e 'data.yml';
+die 'has pm.db' if -e 'pm.db';
 
 
 my $dsn = "dbi:SQLite:dbname=pm.db";
@@ -24,7 +24,7 @@ my $dbh = DBI->connect($dsn, "", "", {
 my $data = LoadFile('data.yml');
 foreach my $email (sort { $data->{$a}{register} cmp $data->{$b}{register} }  keys %$data) {
 	print "$email  $data->{$email}{register} $data->{$email}{code} $data->{$email}{verified}\n";
-    $dbh->do('INSERT INTO user (email, register_rime, verify_code, verify_time)
+    $dbh->do('INSERT INTO user (email, register_time, verify_code, verify_time)
 	    VALUES (?, ?, ?, ?)',
         undef,
 	    $email, $data->{$email}{register}, $data->{$email}{code}, $data->{$email}{verified});
