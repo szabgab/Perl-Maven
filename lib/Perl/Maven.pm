@@ -1,5 +1,6 @@
 package Perl::Maven;
 use Dancer ':syntax';
+use Perl::Maven::DB;
 
 our $VERSION = '0.1';
 
@@ -8,6 +9,8 @@ use Data::Dumper qw(Dumper);
 use Email::Valid;
 use MIME::Lite;
 use YAML qw(DumpFile LoadFile);
+
+my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 
 hook before_template => sub {
     my $t = shift;
@@ -37,8 +40,8 @@ post '/register' => sub {
 	# check for uniqueness after lc
 	$email = lc $email;
 
-	my $data = get_data();
-	if ($data->{$email} and $data->{$email}{verified}) {
+	my $data = $db->get_user_by_email($email);
+	if ($data and $data->{verify_time}) {
 		return template 'main', {
 			duplicate_mail => 1,
 		};
@@ -50,10 +53,10 @@ post '/register' => sub {
 	$code .= $chars[ rand(scalar @chars) ] for 1..20;
 
 	# basically resend the old code
-	if ($data->{$email}) {
-		$code = $data->{$email}{code};
+	if ($data) {
+		$code = $data->{verify_code};
 	} else {
-		add_registration($email, $code);
+		$db->add_registration($email, $code);
 	}
 
 	# save  email and code (and date)
@@ -77,11 +80,13 @@ post '/register' => sub {
 	return template 'response';
 };
 
-get '/verify' => sub {
-	my $email = param('email');
+get '/verify/:id/:code' => sub {
+	my $id = param('id');
 	my $code = param('code');
 
-	if (not verify_registration($email, $code)) {
+    my $user = $db->get_user_by_id($id);
+	
+	if (not $db->verify_registration($id, $code)) {
 		return template 'verify_form', {
 			error => 1,
 		};
@@ -91,7 +96,7 @@ get '/verify' => sub {
 
 	my $mail = MIME::Lite->new(
 		From    => 'Gabor Szabo <gabor@szabgab.com>',
-		To      => $email,
+		To      => $user->{email},
 		Subject => 'Thank you for registering',
 		Type    => 'multipart/mixed',
 	);
@@ -114,7 +119,7 @@ get '/verify' => sub {
 		From    => 'Perl Maven registration <gabor@perlmaven.com>',
 		To      => 'Gabor Szabo <gabor@szabgab.com>',
 		Subject => 'New Perl Maven newsletter registration',
-		Data    => "New registration from $email",
+		Data    => "New registration from $user->{email}",
 	);
 	$selfmail->send;
 
@@ -244,60 +249,6 @@ sub read_tt {
 	return \%data;
 }
 
-sub _file {
-	path config->{appdir}, 'data.yml';
-}
-
-sub get_data {
-	my $file = _file();
-	if (not -e $file) {
-		DumpFile($file, {});
-	}
-
-	LoadFile $file;
-}
-sub _save {
-	my ($code) = @_;
-
-	use Fcntl qw(:flock);
-	my $file = _file();
-	if (open my $fh, '<', $file) {
-		flock $fh, LOCK_EX;
-		my $data = LoadFile $file;
-		if ($code->($data)) {
-			DumpFile($file, $data);
-		}
-	}
-}
-
-sub add_registration {
-	my ($email, $code) = @_;
-
-	_save(sub {
-		my $data = shift;
-		if (not $data->{$email}) {
-			$data->{$email} = {code => $code, register => time};
-			return 1;
-		}
-		return;
-	});
-}
-
-sub verify_registration {
-	my ($email, $code) = @_;
-
-	_save(sub {
-		my $data = shift;
-		if ($data->{$email} and $data->{$email}{code} eq $code) {
-			if (not $data->{$email}{verified}) {
-				$data->{$email}{verified} = time;
-				return 1;
-			}
-		}
-		return;
-	});
-
-}
 
 sub read_file {
 	my $file = shift;
