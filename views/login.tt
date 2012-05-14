@@ -1,0 +1,22 @@
+
+<h2>Login</h2>
+<form method="POST" action="/login">
+<table>
+<tr><td>Email:</td><td><input name="email" /></td></tr>
+<tr><td>Password:</td><td><input type="password" name="password" /></td></tr>
+<tr><td></td><td><input type="submit" value="Login" /></td></tr>
+</table>
+</form>
+<div id="error">
+<% IF no_password %>
+Your account does not have a password yet.
+We have sent you a code that you can use to set your password.
+<% END %>
+</div>
+<hr />
+Forgot your password or don't have one yet?
+<form method="POST" action="/send-reset-pw-code">
+Email: <input name="email" />
+<input type="submit" value="Get code to reset password" />
+</form>
+

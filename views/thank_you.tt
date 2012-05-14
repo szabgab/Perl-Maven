@@ -5,6 +5,7 @@ Thank you for registering.
 
 <p>
 Soon you'll get the first edition of the Perl Maven cookbook in e-mail.
+<a href="<% filename %>"><% linkname %></a>
 </p>
 
 <p>

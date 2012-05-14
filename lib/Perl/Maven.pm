@@ -3,6 +3,8 @@ use Dancer ':syntax';
 use Perl::Maven::DB;
 
 our $VERSION = '0.1';
+my $TIMEOUT = 100;
+my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
 use Data::Dumper qw(Dumper);
@@ -14,6 +16,9 @@ my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 hook before_template => sub {
     my $t = shift;
     $t->{title} ||= 'Perl Maven - for people who want to get the most out of programming in Perl';
+	if (logged_in()) {
+		($t->{username}) = split /@/, session 'email'; 
+	}
 	return;
 };
 
@@ -21,6 +26,91 @@ get '/' => sub {
 	my $tt;
 	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
     template 'main', $tt;
+};
+
+post '/send-reset-pw-code' => sub {
+	my $email = param('email');
+	if (not $email) {
+		return template 'error', { no_email => 1 };
+	}
+	$email = lc $email;
+	my $user = $db->get_user_by_email($email);
+	if (not $user) {
+		return template 'error', {invalid_email => 1};
+	}
+	if (not $user->{verify_time}) {
+		# TODO: send e-mail with verification code
+		return template 'error', {not_verified_yet => 1};
+	}
+	
+	my $code = _generate_code();
+	$db->set_password_code($user->{email}, $code);
+
+	my $html = template 'reset_password_mail', {
+		url => uri_for('/set-password'),
+		id => $user->{id},
+		code => $code,
+	};
+
+	sendmail(
+		From    => $FROM,
+		To      => $email,
+		Subject => 'Code to reset your Perl Maven password',
+		html    => $html,
+	);
+
+
+	template 'error', {
+		reset_password_sent => 1,
+	};
+};
+
+sub pw_form {
+	my $id = param('id');
+	my $code = param('code');
+	# if there is such userid with such code and it has not expired yet
+	# then show a form
+	return template 'error', {missing_data => 1}
+		if not $id or not $code;
+	
+    my $user = $db->get_user_by_id($id);
+	return template 'error', {invalid_uid => 1}
+		if not $user;
+	return template 'error', {invalid_code => 1}
+		if not $user->{password_reset_code} or 
+		$user->{password_reset_code} ne $code
+		or not $user->{password_reset_timeout}
+		or $user->{password_reset_timeout} < time;
+
+	return;
+}
+
+get '/set-password/:id/:code' => sub {
+	my $error = pw_form();
+	return $error if $error;
+	template 'set_password';
+};
+
+post '/set-password' => sub {
+	my $error = pw_form();
+	return $error if $error;
+	
+	my $password = param('password');
+};
+
+get '/login' => sub {
+    template 'login';
+};
+
+post '/login' => sub {
+	my $email    = param('email');
+	my $password = param('password');
+	
+	my $user = $db->get_user_by_email($email);
+	if (not $user->{password}) {
+		return template 'login', { no_password => 1 };
+	}
+	return "TODO";
 };
 
 post '/register' => sub {
@@ -47,11 +137,8 @@ post '/register' => sub {
 		};
 	}
 
-	# generate code
-	my @chars = ('a' .. 'z', 'A' .. 'Z', 0 .. 9);
-	my $code = '';
-	$code .= $chars[ rand(scalar @chars) ] for 1..20;
-
+	my $code = _generate_code();
+	
 	# basically resend the old code
 	my $id;
 	if ($user) {
@@ -67,9 +154,8 @@ post '/register' => sub {
 		id => $id,
 		code => $code,
 	};
-	# send e-mail
 	sendmail(
-		From    => 'Gabor Szabo <gabor@szabgab.com>',
+		From    => $FROM,
 		To      => $email,
 		Subject => 'Please finish the Perl Maven registration',
 		html    => $html,
@@ -77,6 +163,23 @@ post '/register' => sub {
 	return template 'response';
 };
 
+get '/logout' => sub {
+	session logged_in => 0;
+	redirect '/';
+};
+
+get '/download/:dir/:file' => sub {
+	my $dir  = param('dir');
+	my $file = param('file');
+
+	return redirect '/'
+		if not logged_in();
+	return redirect '/' if $dir ne 'perl_maven_cookbok';
+	# check if the user is really subscribed to the newsletter?
+
+	send_file path config->{appdir}, '..', 'download', $dir, $file;
+};
+ 
 get '/verify/:id/:code' => sub {
 	my $id = param('id');
 	my $code = param('code');
@@ -89,13 +192,16 @@ get '/verify/:id/:code' => sub {
 		};
 	}
 
+	session email => $user->{email};
+	session logged_in => 1;
+	session last_seen => time;
 
 	sendmail(
-		From    => 'Gabor Szabo <gabor@szabgab.com>',
+		From    => $FROM,
 		To      => $user->{email},
 		Subject => 'Thank you for registering',
 		html    => template('post_verification_mail'),
-		attachments => ['/home/gabor/save/perl_maven_cookbook_v0.01.pdf'],
+#		attachments => ['/home/gabor/save/perl_maven_cookbook_v0.01.pdf'],
 	);
 
 	sendmail(
@@ -105,7 +211,18 @@ get '/verify/:id/:code' => sub {
 		html    => "$user->{email} has registered",
 	);
 
-	template 'thank_you';
+	my $dir = path config->{appdir}, '..', 'download', 'perl_maven_cookbook';
+	#debug $dir;
+	my $file;
+	if (opendir my $dh, $dir) {
+		($file) = sort grep {$_ !~ /^\./} readdir $dh;
+	} else {
+		error $!;
+	}
+	template 'thank_you', {
+		filename => "/download/perl_maven_cookbook/$file",
+		linkname => $file,
+	};
 };
 
 get '/buy' => sub {
@@ -276,4 +393,19 @@ sub sendmail {
 
 	$mail->send;
 	return;
+}
+
+sub logged_in {
+	if (session('logged_in') and session('last_seen') > time - $TIMEOUT) {
+		session last_seen => time;
+		return 1;
+	}
+	return;
+}
+
+sub _generate_code {
+	my @chars = ('a' .. 'z', 'A' .. 'Z', 0 .. 9);
+	my $code = '';
+	$code .= $chars[ rand(scalar @chars) ] for 1..20;
+	return $code;
 }
