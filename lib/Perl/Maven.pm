@@ -10,14 +10,16 @@ use Business::PayPal;
 use Data::Dumper qw(Dumper);
 use Email::Valid;
 use YAML qw(DumpFile LoadFile);
+use MIME::Lite;
+use File::Basename qw(fileparse);
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 
 hook before_template => sub {
-    my $t = shift;
-    $t->{title} ||= 'Perl Maven - for people who want to get the most out of programming in Perl';
+	my $t = shift;
+	$t->{title} ||= 'Perl Maven - for people who want to get the most out of programming in Perl';
 	if (logged_in()) {
-		($t->{username}) = split /@/, session 'email'; 
+		($t->{username}) = split /@/, session 'email';
 	}
 	return;
 };
@@ -25,7 +27,7 @@ hook before_template => sub {
 get '/' => sub {
 	my $tt;
 	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
-    template 'main', $tt;
+	template 'main', $tt;
 };
 
 post '/send-reset-pw-code' => sub {
@@ -42,7 +44,7 @@ post '/send-reset-pw-code' => sub {
 		# TODO: send e-mail with verification code
 		return template 'error', {not_verified_yet => 1};
 	}
-	
+
 	my $code = _generate_code();
 	$db->set_password_code($user->{email}, $code);
 
@@ -65,26 +67,6 @@ post '/send-reset-pw-code' => sub {
 	};
 };
 
-sub pw_form {
-	my $id = param('id');
-	my $code = param('code');
-	# if there is such userid with such code and it has not expired yet
-	# then show a form
-	return template 'error', {missing_data => 1}
-		if not $id or not $code;
-	
-    my $user = $db->get_user_by_id($id);
-	return template 'error', {invalid_uid => 1}
-		if not $user;
-	return template 'error', {invalid_code => 1}
-		if not $user->{password_reset_code} or 
-		$user->{password_reset_code} ne $code
-		or not $user->{password_reset_timeout}
-		or $user->{password_reset_timeout} < time;
-
-	return;
-}
-
 get '/set-password/:id/:code' => sub {
 	my $error = pw_form();
 	return $error if $error;
@@ -94,18 +76,18 @@ get '/set-password/:id/:code' => sub {
 post '/set-password' => sub {
 	my $error = pw_form();
 	return $error if $error;
-	
+
 	my $password = param('password');
 };
 
 get '/login' => sub {
-    template 'login';
+	template 'login';
 };
 
 post '/login' => sub {
 	my $email    = param('email');
 	my $password = param('password');
-	
+
 	my $user = $db->get_user_by_email($email);
 	if (not $user->{password}) {
 		return template 'login', { no_password => 1 };
@@ -138,7 +120,7 @@ post '/register' => sub {
 	}
 
 	my $code = _generate_code();
-	
+
 	# basically resend the old code
 	my $id;
 	if ($user) {
@@ -179,13 +161,13 @@ get '/download/:dir/:file' => sub {
 
 	send_file path config->{appdir}, '..', 'download', $dir, $file;
 };
- 
+
 get '/verify/:id/:code' => sub {
 	my $id = param('id');
 	my $code = param('code');
 
-    my $user = $db->get_user_by_id($id);
-	
+	my $user = $db->get_user_by_id($id);
+
 	if (not $db->verify_registration($id, $code)) {
 		return template 'verify_form', {
 			error => 1,
@@ -242,15 +224,15 @@ get '/paypal_notify'  => sub {
 };
 
 get '/img/:file' => sub {
-    my $file = param('file');
+	my $file = param('file');
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
 #	return config->{appdir} . "/../articles/img/$file";
-    send_file(
-	  config->{appdir} . "/../articles/img/$file",
-#	  "d:\\work\\articles\\img\\$file",
-	  content_type => $ext,
-	  system_path => 1,
+	send_file(
+		config->{appdir} . "/../articles/img/$file",
+#		"d:\\work\\articles\\img\\$file",
+		content_type => $ext,
+		system_path => 1,
 	);
 };
 
@@ -266,12 +248,32 @@ get qr{/(.+)} => sub {
 
 	my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
 	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
-    $tt->{title} = $tt->{head1};
+	$tt->{title} = $tt->{head1};
 
 	return template 'page' => $tt;
 };
 
-##############  pseudo database handling code
+##########################################################################################
+
+sub pw_form {
+	my $id = param('id');
+	my $code = param('code');
+	# if there is such userid with such code and it has not expired yet
+	# then show a form
+	return template 'error', {missing_data => 1}
+		if not $id or not $code;
+
+	my $user = $db->get_user_by_id($id);
+	return template 'error', {invalid_uid => 1}
+		if not $user;
+	return template 'error', {invalid_code => 1}
+		if not $user->{password_reset_code} or
+		$user->{password_reset_code} ne $code
+		or not $user->{password_reset_timeout}
+		or $user->{password_reset_timeout} < time;
+
+	return;
+}
 
 sub paypal {
 
@@ -286,7 +288,7 @@ sub paypal {
 	my $return_url = uri_for('/paid');
 	my $notify_url = uri_for('/paypal_notify');
 	my $button = $paypal->button(
-    	business => 'gabor@szabgab.com',
+		business => 'gabor@szabgab.com',
 		item_name => 'Donation',
 		return        => "$return_url",
 		cancel_return => "$cancel_url",
@@ -356,10 +358,7 @@ sub read_file {
 	return scalar <$fh>;
 }
 
-true;
 
-use MIME::Lite;
-use File::Basename qw(fileparse);
 
 sub sendmail {
 	my %args = @_;
@@ -368,7 +367,7 @@ sub sendmail {
 	# TODO convert to text and add that too
 
 	my $attachments = delete $args{attachments};
-	
+
 	my $mail = MIME::Lite->new(
 		%args,
 		Type    => 'multipart/mixed',
@@ -409,3 +408,6 @@ sub _generate_code {
 	$code .= $chars[ rand(scalar @chars) ] for 1..20;
 	return $code;
 }
+
+true;
+
