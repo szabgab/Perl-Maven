@@ -1,6 +1,6 @@
 sessions
 logs
-data.yml
+^data.yml
 pm.db
 *.swp
 *.bak

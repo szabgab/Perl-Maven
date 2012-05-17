@@ -13,6 +13,11 @@ use YAML qw(DumpFile LoadFile);
 use MIME::Lite;
 use File::Basename qw(fileparse);
 
+if (not config->{appdir}) {
+	require Cwd;
+	set appdir => Cwd::cwd;
+}
+
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 
 hook before_template => sub {
