@@ -1,7 +1,7 @@
 sessions
 logs
 ^data.yml
-pm.db
+pm.db*
 *.swp
 *.bak
 MYMETA.yml
