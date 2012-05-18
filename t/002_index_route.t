@@ -1,4 +1,4 @@
-use Test::More tests => 2;
+use Test::More tests => 4;
 use strict;
 use warnings;
 
@@ -25,6 +25,17 @@ END {
 use Perl::Maven;
 use Dancer::Test;
 
+{
+	my $dr = dancer_response('GET' => '/');
+	is $dr->{status}, 200, 'status /';
+	like $dr->{content}, qr{Perl Maven}, 'content of /';
+}
 
-route_exists [GET => '/'], 'a route handler is defined for /';
-response_status_is ['GET' => '/'], 200, 'response status is 200 for /';
+{
+	my $dr = dancer_response('GET' => '/login');
+	is $dr->{status}, 200, 'status /';
+	like $dr->{content}, qr{Perl Maven}, 'content of /';
+}
+
+
+
