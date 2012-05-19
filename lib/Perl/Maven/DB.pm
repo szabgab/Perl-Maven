@@ -21,7 +21,7 @@ sub new {
   $instance = bless {
     dbh => $dbh,
   }, $class;
-  
+
   return $instance;
 }
 
