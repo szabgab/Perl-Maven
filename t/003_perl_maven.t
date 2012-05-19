@@ -19,11 +19,9 @@ my $URL = "$url/";
 
 #diag($url);
 #sleep 30;
-plan( tests => 6 );
+plan( tests => 17 );
 
 my $w = Test::WWW::Mechanize->new;
-$w->get_ok($URL);
-$w->content_like(qr/Perl Maven/);
 
 {
 	$w->get_ok("$url/login");
@@ -36,15 +34,63 @@ $w->content_like(qr/Perl Maven/);
 	}, 'ask to reset password');
 
 	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
+	unlink $ENV{PERL_MAVEN_MAIL};
 	#diag $mail;
 	my $mail_regex = qr{<a href="(http://localhost:$ENV{PERL_MAVEN_PORT}/set-password/1/(\w+))">set new password</a>};
-	like($mail, $mail_regex, 'mail');
 	my ($set_url) = $mail =~ $mail_regex;
+	ok($set_url, 'mail with set url address');
 	diag($set_url);
 }
 
+diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
+# TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
+# TODO do this both on the main page and on the /perl-maven-cookbook page
+{
+	$w->get_ok($URL);
+	$w->content_like(qr/Perl Maven/);
+	$w->submit_form_ok( {
+		form_name => 'registration_form',
+		fields => {
+			email => 'gabor@szabgab.com',
+		},
+	}, 'register form');
+	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
+	unlink $ENV{PERL_MAVEN_MAIL};
+	#diag($mail);
+	my $mail_regex = qr{<a href="(http://localhost:$ENV{PERL_MAVEN_PORT}/verify/2/\w+)">verify</a>};
+	my ($set_url) = $mail =~ $mail_regex;
+	ok($set_url, 'mail with set url address');
+	diag($set_url);
 
-# subscribe to free Perl Maven newsletter, let them download the cookbook
+	$w->get_ok("http://localhost:$ENV{PERL_MAVEN_PORT}/verify/20/1234567");
+	$w->content_like(qr{User not found}, 'no such user');
+	#diag($w->content);
+
+	$w->get_ok($set_url);
+	$w->content_like(qr{<a href="/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf">perl_maven_cookbook_v0.01.pdf</a>}, 'download link');
+
+	# check e-mails
+	my $mail2 = read_file($ENV{PERL_MAVEN_MAIL});
+	unlink $ENV{PERL_MAVEN_MAIL};
+	#diag($mail2);
+
+	like($mail2, qr{Thank you for registering}, 'thank you mail');
+	like($mail2, qr{<gabor\@szabgab.com> has registered}, 'self reporting');
+
+	# hit it again
+	$w->get_ok($set_url);
+	ok( !-e $ENV{PERL_MAVEN_MAIL}. 'no mails were sent' );
+
+	$w->follow_link_ok({
+		text => 'perl_maven_cookbook_v0.01.pdf',
+	}, 'download_pdf');
+
+	#open my $out, '>', 'a.pdf' or die;
+	#print $out $w->content;
+	#diag($w->content);
+}
+
+
 # login
 # reset password (send code, allow typing in a password 6+ characters)
 # After reseting the password and after verifying the e-mail address the user should be already logged in

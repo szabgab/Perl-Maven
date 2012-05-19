@@ -23,12 +23,13 @@
 </div>
 <div id="footer">
 
+<!--
   <% IF username %>
   Hi <% username %>
   <% ELSE %>
   <a href="/login">login</a>
   <% END %>
-
+-->
 </div>
 
 <!-- Google Adwords -->

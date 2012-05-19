@@ -164,7 +164,7 @@ get '/download/:dir/:file' => sub {
 	return redirect '/' if $dir ne 'perl_maven_cookbok';
 	# check if the user is really subscribed to the newsletter?
 
-	send_file path config->{appdir}, '..', 'download', $dir, $file;
+	send_file path config->{appdir}, '..', 'articles', 'download', $dir, $file;
 };
 
 get '/verify/:id/:code' => sub {
@@ -172,6 +172,10 @@ get '/verify/:id/:code' => sub {
 	my $code = param('code');
 
 	my $user = $db->get_user_by_id($id);
+
+	if (not $user) {
+		return template 'error', { invalid_uid => 1 };
+	}
 
 	if (not $db->verify_registration($id, $code)) {
 		return template 'verify_form', {
@@ -195,16 +199,16 @@ get '/verify/:id/:code' => sub {
 		From    => 'Perl Maven <gabor@perlmaven.com>',
 		To      => 'Gabor Szabo <gabor@szabgab.com>',
 		Subject => 'New Perl Maven newsletter registration',
-		html    => "$user->{email} has registered",
+		html    => "<$user->{email}> has registered",
 	);
 
-	my $dir = path config->{appdir}, '..', 'download', 'perl_maven_cookbook';
+	my $dir = path config->{appdir}, '..', 'articles', 'download', 'perl_maven_cookbook';
 	#debug $dir;
 	my $file;
 	if (opendir my $dh, $dir) {
 		($file) = sort grep {$_ !~ /^\./} readdir $dh;
 	} else {
-		error $!;
+		error "$dir : $!";
 	}
 	template 'thank_you', {
 		filename => "/download/perl_maven_cookbook/$file",
@@ -391,7 +395,7 @@ sub sendmail {
 		);
 	}
 	if ($ENV{PERL_MAVEN_MAIL}) {
-		if (open my $out, '>', $ENV{PERL_MAVEN_MAIL}) {
+		if (open my $out, '>>', $ENV{PERL_MAVEN_MAIL}) {
 			print $out $mail->as_string;
 		} else {
 			error "Could not open $ENV{PERL_MAVEN_MAIL} $!";
@@ -404,7 +408,7 @@ sub sendmail {
 }
 
 sub logged_in {
-	if (session('logged_in') and session('last_seen') > time - $TIMEOUT) {
+	if (session('logged_in') and session('email') and session('last_seen') > time - $TIMEOUT) {
 		session last_seen => time;
 		return 1;
 	}
