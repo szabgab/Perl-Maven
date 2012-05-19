@@ -19,7 +19,7 @@ my $URL = "$url/";
 
 #diag($url);
 #sleep 30;
-plan( tests => 17 );
+plan( tests => 19 );
 
 my $w = Test::WWW::Mechanize->new;
 
@@ -64,6 +64,9 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 
 	$w->get_ok("http://localhost:$ENV{PERL_MAVEN_PORT}/verify/20/1234567");
 	$w->content_like(qr{User not found}, 'no such user');
+
+	$w->get_ok("http://localhost:$ENV{PERL_MAVEN_PORT}/verify/2/1234567");
+	$w->content_like(qr{Invalid or missing code}, 'incorrect code');
 	#diag($w->content);
 
 	$w->get_ok($set_url);

@@ -177,6 +177,10 @@ get '/verify/:id/:code' => sub {
 		return template 'error', { invalid_uid => 1 };
 	}
 
+	if (not $user->{verify_code} or not $code or $user->{verify_code} ne $code) {
+		return template 'error', { invalid_code => 1 };
+	}
+
 	if (not $db->verify_registration($id, $code)) {
 		return template 'verify_form', {
 			error => 1,
