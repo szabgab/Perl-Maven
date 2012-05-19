@@ -390,8 +390,12 @@ sub sendmail {
 			Disposition => 'attachment',
 		);
 	}
-	if ($ENV{NOMAIL}) {
-		debug $mail->as_string;
+	if ($ENV{PERL_MAVEN_MAIL}) {
+		if (open my $out, '>', $ENV{PERL_MAVEN_MAIL}) {
+			print $out $mail->as_string;
+		} else {
+			error "Could not open $ENV{PERL_MAVEN_MAIL} $!";
+		}
 		return;
 	}
 

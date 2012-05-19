@@ -4,7 +4,7 @@ use warnings;
 
 use base 'Exporter';
 
-our @EXPORT = qw(start stop);
+our @EXPORT_OK = qw(start stop read_file);
 
 use Cwd qw(cwd);
 use File::Basename qw(basename);
@@ -74,6 +74,15 @@ END {
 	if ($backup) {
 		move $backup, 'pm.db';
 	}
+}
+
+sub read_file {
+    my $file = shift;
+    open my $fh, '<', $file or die "Could not open '$file' $!";
+    local $/ = undef;
+    my $cont = <$fh>;
+    close $fh;
+    return $cont;
 }
 
 
