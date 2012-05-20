@@ -20,7 +20,7 @@ my $URL = "$url/";
 
 #diag($url);
 #sleep 30;
-plan( tests => 34 );
+plan( tests => 37 );
 
 my $w = Test::WWW::Mechanize->new;
 
@@ -51,6 +51,11 @@ my $w = Test::WWW::Mechanize->new;
 	#diag($w->content);
 	$w->get_ok("$url/logged-in");
 	is($w->content, 1);
+
+	# logout
+	$w->get_ok("$url/logout");
+	$w->get_ok("$url/logged-in");
+	is($w->content, 0);
 }
 
 diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
