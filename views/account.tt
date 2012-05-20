@@ -1,0 +1,15 @@
+
+<p>
+The latest edition of the Perl Maven cookbook:
+<a href="<% filename %>"><% linkname %></a>
+</p>
+<p>
+You are currently subscribed to the Perl Maven newsletter that entitles
+you to download the latest edition of the Perl Maven Cookbook.
+<a href="/unsubscribe">unsubscribe</a>
+</p>
+
+<p>
+<a href="/logout">logout</a>
+</p>
+

@@ -20,7 +20,7 @@ my $URL = "$url/";
 
 #diag($url);
 #sleep 30;
-plan( tests => 20 );
+plan( tests => 34 );
 
 my $w = Test::WWW::Mechanize->new;
 
@@ -41,6 +41,16 @@ my $w = Test::WWW::Mechanize->new;
 	my ($set_url) = $mail =~ $mail_regex;
 	ok($set_url, 'mail with set url address');
 	diag($set_url);
+	$w->get_ok($set_url);
+	$w->submit_form_ok({
+		form_name => 'set_password',
+		fields => {
+			password => '123456',
+		},
+	});
+	#diag($w->content);
+	$w->get_ok("$url/logged-in");
+	is($w->content, 1);
 }
 
 diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
@@ -74,6 +84,8 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	my $cookbook_text = basename $cookbook_url;
 	$w->get_ok($set_url);
 	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
+	$w->get_ok("$url/logged-in");
+	is($w->content, 1);
 
 	# check e-mails
 	my $mail2 = read_file($ENV{PERL_MAVEN_MAIL});
@@ -97,14 +109,25 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	#open my $t, '>', 'a.pdf' or die;
 	#print $out $w->content;
 	#diag($w->content);
+
+	$w->get_ok('/account');
+	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
+	$w->content_like(qr{<a href="/logout">logout</a>}, 'logout link');
+	$w->get_ok('/logout');
+	$w->get_ok('/account');
+	$w->content_unlike(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
+	$w->get_ok("$url/logged-in");
+	is($w->content, 0);
 }
 
-# e-mails should have another layout that does not include the login information and no javascript
+# after verifying the e-mail allow the user to set his her password
+# after logging in
+#   Allow user to mark "unregistered" from the Perl Maven newsletter (but keep e-mail, passsword)
+#   If registered to the mailing list, let the person download the latest edition of the cookbook
 
 # login
 # reset password (send code, allow typing in a password 6+ characters)
 # After reseting the password and after verifying the e-mail address the user should be already logged in
-# Allow user to mark "unregistered" from the Perl Maven newsletter (but keep e-mail, passsword)
 #
 # Allow admin to send e-mail to all the subscribers
 #

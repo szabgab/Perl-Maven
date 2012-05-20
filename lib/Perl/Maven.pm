@@ -77,7 +77,10 @@ post '/send-reset-pw-code' => sub {
 get '/set-password/:id/:code' => sub {
 	my $error = pw_form();
 	return $error if $error;
-	template 'set_password';
+	template 'set_password', {
+		id   => param('id'),
+		code => param('code'),
+	};
 };
 
 post '/set-password' => sub {
@@ -85,6 +88,16 @@ post '/set-password' => sub {
 	return $error if $error;
 
 	my $password = param('password');
+	my $id = param('id');
+	my $user = $db->get_user_by_id($id);
+
+	session email => $user->{email};
+	session logged_in => 1;
+	session last_seen => time;
+
+	$db->set_password($id, $password);
+
+	template 'error', { password_set => 1 };
 };
 
 get '/login' => sub {
@@ -100,6 +113,10 @@ post '/login' => sub {
 		return template 'login', { no_password => 1 };
 	}
 	return "TODO";
+};
+
+get '/logged-in' => sub {
+	return logged_in() ? 1 : 0;
 };
 
 post '/register' => sub {
@@ -159,13 +176,21 @@ get '/logout' => sub {
 	redirect '/';
 };
 
+get '/account' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $cookbook = get_download_file('perl_maven_cookbook');
+
+	template 'account', {
+		filename => "/download/perl_maven_cookbook/$cookbook",
+		linkname => $cookbook,
+	};
+};
+
 get '/download/:dir/:file' => sub {
 	my $dir  = param('dir');
 	my $file = param('file');
 
-debug(logged_in());
-debug($dir);
-debug(session());
 	# TODO better error reporting or handling when not logged in
 	return redirect '/'
 		if not logged_in();
@@ -214,17 +239,11 @@ get '/verify/:id/:code' => sub {
 		html    => "$user->{email} has registered",
 	);
 
-	my $dir = path config->{appdir}, '..', 'articles', 'download', 'perl_maven_cookbook';
-	#debug $dir;
-	my $file;
-	if (opendir my $dh, $dir) {
-		($file) = sort grep {$_ !~ /^\./} readdir $dh;
-	} else {
-		error "$dir : $!";
-	}
+	my $cookbook = get_download_file('perl_maven_cookbook');
+
 	template 'thank_you', {
-		filename => "/download/perl_maven_cookbook/$file",
-		linkname => $file,
+		filename => "/download/perl_maven_cookbook/$cookbook",
+		linkname => $cookbook,
 	};
 };
 
@@ -433,6 +452,21 @@ sub _generate_code {
 	$code .= $chars[ rand(scalar @chars) ] for 1..20;
 	return $code;
 }
+
+sub get_download_file {
+	my ($subdir) = @_;
+
+	my $dir = path config->{appdir}, '..', 'articles', 'download', $subdir;
+	#debug $dir;
+	my $file;
+	if (opendir my $dh, $dir) {
+		($file) = sort grep {$_ !~ /^\./} readdir $dh;
+	} else {
+		error "$dir : $!";
+	}
+	return $file;
+}
+
 
 true;
 
