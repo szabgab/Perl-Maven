@@ -57,6 +57,8 @@ post '/send-reset-pw-code' => sub {
 		url => uri_for('/set-password'),
 		id => $user->{id},
 		code => $code,
+	}, {
+		layout => 'email',
 	};
 
 	sendmail(
@@ -140,6 +142,8 @@ post '/register' => sub {
 		url => uri_for('/verify'),
 		id => $id,
 		code => $code,
+	}, {
+		layout => 'email',
 	};
 	sendmail(
 		From    => $FROM,
@@ -199,7 +203,7 @@ get '/verify/:id/:code' => sub {
 		From    => $FROM,
 		To      => $user->{email},
 		Subject => 'Thank you for registering',
-		html    => template('post_verification_mail'),
+		html    => template('post_verification_mail', {}, { layout => 'email', }),
 #		attachments => ['/home/gabor/save/perl_maven_cookbook_v0.01.pdf'],
 	);
 

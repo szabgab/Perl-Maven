@@ -99,6 +99,7 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	#diag($w->content);
 }
 
+# e-mails should have another layout that does not include the login information and no javascript
 
 # login
 # reset password (send code, allow typing in a password 6+ characters)
