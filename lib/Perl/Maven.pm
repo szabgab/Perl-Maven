@@ -3,7 +3,7 @@ use Dancer ':syntax';
 use Perl::Maven::DB;
 
 our $VERSION = '0.1';
-my $TIMEOUT = 100;
+my $TIMEOUT = 1000;
 my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
@@ -159,12 +159,16 @@ get '/download/:dir/:file' => sub {
 	my $dir  = param('dir');
 	my $file = param('file');
 
+debug(logged_in());
+debug($dir);
+debug(session());
+	# TODO better error reporting or handling when not logged in
 	return redirect '/'
 		if not logged_in();
-	return redirect '/' if $dir ne 'perl_maven_cookbok';
+	return redirect '/' if $dir ne 'perl_maven_cookbook';
 	# check if the user is really subscribed to the newsletter?
 
-	send_file path config->{appdir}, '..', 'articles', 'download', $dir, $file;
+	send_file(path(config->{appdir}, '..', 'articles', 'download', $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -203,7 +207,7 @@ get '/verify/:id/:code' => sub {
 		From    => 'Perl Maven <gabor@perlmaven.com>',
 		To      => 'Gabor Szabo <gabor@szabgab.com>',
 		Subject => 'New Perl Maven newsletter registration',
-		html    => "<$user->{email}> has registered",
+		html    => "$user->{email} has registered",
 	);
 
 	my $dir = path config->{appdir}, '..', 'articles', 'download', 'perl_maven_cookbook';
