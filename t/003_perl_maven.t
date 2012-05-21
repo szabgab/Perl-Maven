@@ -20,7 +20,10 @@ my $URL = "$url/";
 
 #diag($url);
 #sleep 30;
-plan( tests => 37 );
+plan( tests => 42 );
+
+my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
+my $cookbook_text = basename $cookbook_url;
 
 my $w = Test::WWW::Mechanize->new;
 
@@ -47,7 +50,7 @@ my $w = Test::WWW::Mechanize->new;
 		fields => {
 			password => '123456',
 		},
-	});
+	}, 'set password');
 	#diag($w->content);
 	$w->get_ok("$url/logged-in");
 	is($w->content, 1);
@@ -56,6 +59,20 @@ my $w = Test::WWW::Mechanize->new;
 	$w->get_ok("$url/logout");
 	$w->get_ok("$url/logged-in");
 	is($w->content, 0);
+
+	# login now that we have a password
+	$w->get_ok("$url/login");
+	$w->submit_form_ok({
+		form_name => 'login',
+		fields => {
+			email => 'szabgab@gmail.com',
+			password => '123456',
+		}, 
+	}, 'login');
+	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
+		
+	$w->get_ok("$url/logged-in");
+	is($w->content, 1);
 }
 
 diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
@@ -85,8 +102,6 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	$w->content_like(qr{Invalid or missing code}, 'incorrect code');
 	#diag($w->content);
 
-	my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
-	my $cookbook_text = basename $cookbook_url;
 	$w->get_ok($set_url);
 	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
 	$w->get_ok("$url/logged-in");
