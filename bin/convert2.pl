@@ -24,7 +24,7 @@ my $dbh = DBI->connect($dsn, "", "", {
 $dbh->do('INSERT INTO product (dir, name) VALUES (?, ?)',
 	undef, 'perl_maven_cookbook', 'Perl Maven Cookbook');
 
-my $users = $dbh->selectall_arrayref('SELECT id FROM user WHERE id < 5');
+my $users = $dbh->selectall_arrayref('SELECT id FROM user');
 #die Dumper $users;
 
 foreach my $ar (@$users) {
