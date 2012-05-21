@@ -8,18 +8,3 @@ CREATE TABLE user (
   verify_code     VARCHAR(20),
   verify_time     VARCHAR(11)
 );
-
-CREATE TABLE product (
-  id              INTEGER PRIMARY KEY,
-  dir             VARCHAR(255) UNIQUE NOT NULL,
-  name            VARCHAR(255) UNIQUE NOT NULL
-);
-
-CREATE TABLE subscriptions (
-  uid    INTEGER NOT NULL,
-  pid    INTEGER NOT NULL,
-  FOREIGN KEY (uid) REFERENCES user(id),
-  FOREIGN KEY (pid) REFERENCES product(id),
-  CONSTRAINT uid_pid UNIQUE (uid, pid)
-);
-
