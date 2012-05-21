@@ -8,6 +8,7 @@ my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
 use Data::Dumper qw(Dumper);
+use Digest::SHA;
 use Email::Valid;
 use YAML qw(DumpFile LoadFile);
 use MIME::Lite;
@@ -91,11 +92,15 @@ post '/set-password' => sub {
 	my $id = param('id');
 	my $user = $db->get_user_by_id($id);
 
+	return template 'error', {
+		bad_password => 1,
+	} if not $password or length($password) < 6;
+
 	session email => $user->{email};
 	session logged_in => 1;
 	session last_seen => time;
 
-	$db->set_password($id, $password);
+	$db->set_password($id, Digest::SHA::sha1_base64($password));
 
 	template 'error', { password_set => 1 };
 };
@@ -108,11 +113,23 @@ post '/login' => sub {
 	my $email    = param('email');
 	my $password = param('password');
 
+	return template 'error', {
+		missing_data => 1,
+	} if not $password or not $email;
+
 	my $user = $db->get_user_by_email($email);
 	if (not $user->{password}) {
 		return template 'login', { no_password => 1 };
 	}
-	return "TODO";
+
+	return template 'error', { invalid_pw => 1 } 
+		if $user->{password} ne Digest::SHA::sha1_base64($password);
+
+	session email => $user->{email};
+	session logged_in => 1;
+	session last_seen => time;
+
+	redirect '/account';
 };
 
 get '/logged-in' => sub {

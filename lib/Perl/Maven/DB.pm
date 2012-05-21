@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use DBI;
-use Digest::SHA;
 
 my $instance;
 
@@ -72,8 +71,6 @@ sub set_password_code {
 
 sub set_password {
 	my ($self, $id, $password) = @_;
-
-	$password  = Digest::SHA::sha1_base64($password);
 
 	$self->{dbh}->do('UPDATE user
 		SET password=?, password_reset_code="" WHERE id=?',

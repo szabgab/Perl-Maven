@@ -35,3 +35,13 @@ Invalid or missing code
 <% IF reset_password_sent %>
 E-mail sent with code to reset password.
 <% END %>
+
+<% IF bad_password %>
+No or bad password was given.
+<% END %>
+
+<% IF invalid_pw %>
+Invalid password
+<% END %>
+
+

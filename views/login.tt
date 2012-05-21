@@ -1,6 +1,6 @@
 
 <h2>Login</h2>
-<form method="POST" action="/login">
+<form method="POST" action="/login" name="login">
 <table>
 <tr><td>Email:</td><td><input name="email" /></td></tr>
 <tr><td>Password:</td><td><input type="password" name="password" /></td></tr>
