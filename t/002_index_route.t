@@ -12,6 +12,7 @@ BEGIN {
 		move 'pm.db', $backup;
 	}
 	system "$^X bin/convert.pl" and die;
+	system "$^X bin/convert2.pl" and die;
 }
 
 END {
