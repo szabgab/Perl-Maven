@@ -140,6 +140,10 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	is($w->content, 0);
 }
 
+
+# when a user sets his password consider that user to have been verified (after all he got the code)
+# even he did not click on the verify link.
+
 # after verifying the e-mail allow the user to set his her password
 # after logging in
 #   Allow user to mark "unregistered" from the Perl Maven newsletter (but keep e-mail, passsword)
