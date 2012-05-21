@@ -117,8 +117,8 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 
 	# hit it again
 	$w->get_ok($set_url);
-	ok( !-e $ENV{PERL_MAVEN_MAIL}. 'no mails were sent' );
 	#diag($w->content);
+	ok( !-e $ENV{PERL_MAVEN_MAIL}, 'no mails were sent' );
 
 	$w->follow_link_ok({
 		text => $cookbook_text,

@@ -21,7 +21,7 @@ my $dbh = DBI->connect($dsn, "", "", {
 	AutoCommit => 1,
 });
 
-$dbh->do('INSERT INTO product (dir, name) VALUES (?, ?)',
+$dbh->do('INSERT INTO product (code, name) VALUES (?, ?)',
 	undef, 'perl_maven_cookbook', 'Perl Maven Cookbook');
 
 my $users = $dbh->selectall_arrayref('SELECT id FROM user');

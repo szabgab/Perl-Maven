@@ -77,6 +77,30 @@ sub set_password {
 		undef, $password, $id);
 }
 
+sub is_subscribed {
+	my ($self, $email, $code) = @_;
 
+	my ($subscribed) = $self->{dbh}->selectrow_array(q{
+SELECT COUNT(*)
+  FROM subscription, product, user
+  WHERE user.id=subscription.uid
+    AND user.email=?
+    AND product.code=?
+    AND product.id=subscription.pid
+}, undef, $email, $code);
+
+	return $subscribed;
+}
+
+sub subscribe_to {
+	my ($self, $email, $code) = @_;
+
+	my ($pid) = $self->{dbh}->selectrow_array(q{SELECT product.id FROM product WHERE code=?}, undef, $code);
+	my ($uid) = $self->{dbh}->selectrow_array(q{SELECT user.id FROM user WHERE email=?}, undef, $email);
+	return if not $uid or not $pid;
+
+	$self->{dbh}->do('INSERT INTO subscription (uid, pid) VALUES (?, ?)',
+		undef, $uid, $pid);
+}
 
 1;

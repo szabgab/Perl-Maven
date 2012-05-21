@@ -212,7 +212,9 @@ get '/download/:dir/:file' => sub {
 	return redirect '/'
 		if not logged_in();
 	return redirect '/' if $dir ne 'perl_maven_cookbook';
+
 	# check if the user is really subscribed to the newsletter?
+	return redirect '/' if not $db->is_subscribed(session('email'), 'perl_maven_cookbook');
 
 	send_file(path(config->{appdir}, '..', 'articles', 'download', $dir, $file), system_path => 1);
 };
@@ -231,11 +233,22 @@ get '/verify/:id/:code' => sub {
 		return template 'error', { invalid_code => 1 };
 	}
 
+	if ($user->{verify_time}) {
+		my $cookbook = get_download_file('perl_maven_cookbook');
+
+		return template 'thank_you', {
+			filename => "/download/perl_maven_cookbook/$cookbook",
+			linkname => $cookbook,
+		};
+	}
+
 	if (not $db->verify_registration($id, $code)) {
 		return template 'verify_form', {
 			error => 1,
 		};
 	}
+
+	$db->subscribe_to($user->{email}, 'perl_maven_cookbook');
 
 	session email => $user->{email};
 	session logged_in => 1;

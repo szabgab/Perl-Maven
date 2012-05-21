@@ -1,6 +1,6 @@
 CREATE TABLE product (
   id              INTEGER PRIMARY KEY,
-  dir             VARCHAR(255) UNIQUE NOT NULL,
+  code            VARCHAR(255) UNIQUE NOT NULL,
   name            VARCHAR(255) UNIQUE NOT NULL
 );
 
