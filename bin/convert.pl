@@ -3,6 +3,7 @@ use warnings;
 
 use YAML qw(DumpFile LoadFile);
 use DBIx::RunSQL;
+use DBI;
 
 die 'has no t/data.yml' if not -e 't/data.yml';
 die 'has pm.db' if -e 'pm.db';
