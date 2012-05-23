@@ -12,4 +12,3 @@ CREATE TABLE subscription (
   CONSTRAINT uid_pid UNIQUE (uid, pid)
 );
 
-
