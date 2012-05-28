@@ -103,4 +103,15 @@ sub subscribe_to {
 		undef, $uid, $pid);
 }
 
+sub unsubscribe_from {
+	my ($self, $email, $code) = @_;
+
+	my ($pid) = $self->{dbh}->selectrow_array(q{SELECT product.id FROM product WHERE code=?}, undef, $code);
+	my ($uid) = $self->{dbh}->selectrow_array(q{SELECT user.id FROM user WHERE email=?}, undef, $email);
+	return if not $uid or not $pid;
+
+	$self->{dbh}->do('DELETE FROM subscription WHERE uid=? AND pid=?',
+		undef, $uid, $pid);
+}
+
 1;

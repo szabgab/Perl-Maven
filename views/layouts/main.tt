@@ -24,7 +24,7 @@
 <div id="footer">
 
   <% IF username %>
-  Hi <% username %>
+  Hi <a href="/account"><% username %></a>
   <% ELSE %>
   <a href="/login">login</a>
   <% END %>

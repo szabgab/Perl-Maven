@@ -132,6 +132,24 @@ post '/login' => sub {
 	redirect '/account';
 };
 
+get '/unsubscribe' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $email = session('email');
+	
+	$db->unsubscribe_from($email, 'perl_maven_cookbook');
+	template 'error', { unsubscribed => 1 }
+};
+
+get '/subscribe' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $email = session('email');
+	$db->subscribe_to($email, 'perl_maven_cookbook');
+	template 'error', { subscribed => 1 }
+};
+
+
 get '/logged-in' => sub {
 	return logged_in() ? 1 : 0;
 };
@@ -197,10 +215,12 @@ get '/account' => sub {
 	return redirect '/login' if not logged_in();
 
 	my $cookbook = get_download_file('perl_maven_cookbook');
+	my $email = session('email');
 
 	template 'account', {
 		filename => "/download/perl_maven_cookbook/$cookbook",
 		linkname => $cookbook,
+		subscribed => $db->is_subscribed($email, 'perl_maven_cookbook'),
 	};
 };
 
