@@ -23,6 +23,7 @@ my $emails = $dbh->selectall_arrayref(q{
    SELECT email
    FROM user, subscription, product
    WHERE user.id=subscription.uid
+     AND user.verify_time is not null
      AND product.id=subscription.pid
      AND product.code=?
 }, undef, 'perl_maven_cookbook');
