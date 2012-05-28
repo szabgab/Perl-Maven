@@ -3,11 +3,30 @@ use strict;
 use warnings;
 use v5.12;
 
+use Data::Dumper qw(Dumper);
 use Getopt::Long qw(GetOptions);
 use MIME::Lite;
 use Cwd qw(abs_path cwd);
 use File::Slurp    qw(read_file);
 use WWW::Mechanize;
+use DBI;
+
+my $dsn = "dbi:SQLite:dbname=pm.db";
+
+my $dbh = DBI->connect($dsn, "", "", {
+	RaiseError => 1,
+	PrintError => 0,
+	AutoCommit => 1,
+});
+
+my $emails = $dbh->selectall_arrayref(q{
+   SELECT email
+   FROM user, subscription, product
+   WHERE user.id=subscription.uid
+     AND product.id=subscription.pid
+     AND product.code=?
+}, undef, 'perl_maven_cookbook');
+#die Dumper $emails;
 
 my %opt;
 GetOptions(\%opt,
@@ -28,10 +47,10 @@ $content{html} = $w->content;
 $content{text} = html2text($w->content);
 
 
-if ($opt{to} eq 'aa') {
-	my @emails = ('szabgab@gmail.com', 'gabor@perl.org.il');
-	foreach my $email (@emails) {
-		sendmail($email);
+if ($opt{to} eq 'all') {
+	#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
+	foreach my $email (@$emails) {
+		sendmail($email->[0]);
 	}
 } else {
 	sendmail($opt{to});
@@ -39,7 +58,7 @@ if ($opt{to} eq 'aa') {
 
 sub sendmail {
 	my $to = shift;
-	
+
 	my $msg = MIME::Lite->new(
 		From     => $from,
 		To       => $to,
