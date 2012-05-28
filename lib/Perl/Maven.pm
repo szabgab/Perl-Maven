@@ -326,6 +326,22 @@ get '/img/:file' => sub {
 	);
 };
 
+get '/mail/:article' => sub {
+
+	my $article = param('article');
+
+	my $path = config->{appdir} . "/../articles/mail/$article.tt";
+	return 'NO path' if not -e $path;
+
+	my $tt = read_tt($path);
+	return template 'error', {'no_such_article' => 1}
+		if not $tt->{status} or $tt->{status} ne 'show';
+
+	$tt->{title} = $tt->{head1};
+
+	return template 'page', $tt, {	layout => 'email' };
+};
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
@@ -340,7 +356,7 @@ get qr{/(.+)} => sub {
 	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
 	$tt->{title} = $tt->{head1};
 
-	return template 'page' => $tt;
+	return template 'page', $tt;
 };
 
 ##########################################################################################
