@@ -9,6 +9,9 @@
   </p>
   <hr>
 <% END %>
+
+<% INCLUDE layouts/incl/newsletter.tt %>
+
 </div>
 
 

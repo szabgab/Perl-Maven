@@ -14,6 +14,8 @@ use YAML qw(DumpFile LoadFile);
 use MIME::Lite;
 use File::Basename qw(fileparse);
 
+use Perl::Maven::Page;
+
 if (not config->{appdir}) {
 	require Cwd;
 	set appdir => Cwd::cwd;
@@ -417,43 +419,8 @@ sub paypal {
 
 sub read_tt {
 	my $file = shift;
-	my %data = (content => '', abstract => '');
-	my $cont = '';
-	my $in_code;
-	if (open my $fh, '<', $file) {
-		while (my $line = <$fh>) {
-			if ($line =~ /^=abstract start/ .. $line =~ /^=abstract end/) {
-				next if $line =~ /^=abstract/;
-				$data{abstract} .= $line;
-			}
-			if ($line =~ /^=(\w+)\s+(.*?)\s*$/) {
-				$data{$1} = $2;
-				next;
-			}
-			if ($line =~ m{^<code lang="([^"]+)">}) {
-				$in_code = $1;
-				$cont .= qq{<pre>\n};
-				next;
-			}
-			if ($line =~ m{^</code>}) {
-				$in_code = undef;
-				$cont .= qq{</pre>\n};
-				next;
-			}
-			if ($in_code) {
-				$line =~ s{<}{&lt;}g;
-				$cont .= $line;
-				next;
-			}
 
-			if ($line =~ /^\s*$/) {
-				$cont .= "<p>\n";
-			}
-			$cont .= $line;
-		}
-	}
-	$data{mycontent} = $cont;
-	return \%data;
+	return Perl::Maven::Page->new(file => $file)->read;
 }
 
 

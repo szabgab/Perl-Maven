@@ -1,3 +1,11 @@
 
-Newsletter?
+In order to register to our newsletter, please type your e-mail here:
+
+<form method="POST" action="/register" name="registration_form">
+Email: <input name="email" />
+<input type="submit" value="Register" />
+</form>
+
+Registered people will get free updates of the <a href="/perl-maven-cookbook">Perl Maven Cookbook</a> and will be notified
+when a new article is published on the Perl Maven web site.
 
