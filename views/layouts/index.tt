@@ -1,0 +1,15 @@
+<% INCLUDE layouts/incl/header.tt %>
+
+<div class="container">
+<% FOR p IN pages %>
+  <p>
+  <% p.abstract %>
+  <br>
+  <a href="<% p.url %>"><% p.title %></a>
+  </p>
+  <hr>
+<% END %>
+</div>
+
+
+<% INCLUDE layouts/incl/footer.tt %>

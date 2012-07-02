@@ -33,7 +33,7 @@ hook before_template => sub {
 get '/' => sub {
 	my $tt;
 	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
-	template 'main', $tt;
+	template 'main', $tt, { layout => 'index' };
 };
 
 post '/send-reset-pw-code' => sub {
@@ -122,7 +122,7 @@ post '/login' => sub {
 		return template 'login', { no_password => 1 };
 	}
 
-	return template 'error', { invalid_pw => 1 } 
+	return template 'error', { invalid_pw => 1 }
 		if $user->{password} ne Digest::SHA::sha1_base64($password);
 
 	session email => $user->{email};
@@ -136,7 +136,7 @@ get '/unsubscribe' => sub {
 	return redirect '/login' if not logged_in();
 
 	my $email = session('email');
-	
+
 	$db->unsubscribe_from($email, 'perl_maven_cookbook');
 	template 'error', { unsubscribed => 1 }
 };
@@ -356,7 +356,7 @@ get qr{/(.+)} => sub {
 	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
 	$tt->{title} = $tt->{head1};
 
-	return template 'page', $tt;
+	return template 'page', $tt, { layout => 'page' };
 };
 
 ##########################################################################################

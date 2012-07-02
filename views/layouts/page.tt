@@ -1,0 +1,18 @@
+<% INCLUDE layouts/incl/header.tt %>
+
+<div class="container">
+<% content %>
+
+<% INCLUDE "layouts/incl/newsletter.tt" %>
+</div>
+
+
+<% IF timestamp %>
+<hr>
+<p>
+Published on <% timestamp %>
+</p>
+<% END %>
+
+
+<% INCLUDE layouts/incl/footer.tt %>
