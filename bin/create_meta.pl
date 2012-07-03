@@ -37,19 +37,28 @@ my $count_index = 0;
 my $count_rss   = 0;
 my $MAX_INDEX   = 3;
 my $MAX_RSS     = 10;
-my (@index, @rss);
+my (@index, @rss, @archive);
 foreach my $p (@pages) {
+	my $filename = substr(basename($p->{file}),  0, -3);
 	#say "$p->{timestamp} $p->{file}";
+	if ($p->{archive}) {
+		push @archive, {
+			title => $p->{title},
+			timestamp => $p->{timestamp},
+			filename  => $filename,
+		}
+	}
 	if ($p->{index} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
 		push @index, {
-				title => $p->{title},
-				timestamp => $p->{timestamp},
-				abstract  => $p->{abstract},
-				filename  => substr(basename($p->{file}),  0, -3),
-			};
+			title => $p->{title},
+			timestamp => $p->{timestamp},
+			abstract  => $p->{abstract},
+			filename  => $filename,
+		};
 	}
 }
-save ('index', \@index);
+save ('index',   \@index);
+save ('archive', \@archive);
 
 
 sub save {
@@ -60,6 +69,5 @@ sub save {
 	return;
 }
 
-# create a file for tha archive list (date, title, filename)  (all the file that are 'show' and 'archive')
 # create a file for the rss feed ( dare, title, abstract, filename )  (the K most recent pages that are 'show', 'rss', and have 'abstract' )
 

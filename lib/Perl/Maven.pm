@@ -43,6 +43,16 @@ get '/' => sub {
 	template 'main', $tt, { layout => 'index' };
 };
 
+get '/archive' => sub {
+	my $tt;
+	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', 'archive.json')) {
+		local $/ = undef;
+		my $json = <$fh>;
+		$tt->{pages} = from_json $json;
+	}
+	template 'archive', $tt, { layout => 'system' };
+};
+
 post '/send-reset-pw-code' => sub {
 	my $email = param('email');
 	if (not $email) {
