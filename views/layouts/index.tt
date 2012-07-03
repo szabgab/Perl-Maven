@@ -1,6 +1,7 @@
 <% INCLUDE layouts/incl/header.tt %>
 
 <div class="container">
+<% content %>
 <% FOR p IN pages %>
   <h2><% p.title %></h2>
   <p>
@@ -12,6 +13,18 @@
 <% END %>
 
 <% INCLUDE layouts/incl/newsletter.tt %>
+
+<div id="error">
+<% IF no_mail %>
+Missing e-mail.
+<% END %>
+<% IF invalid_mail %>
+Invalid e-mail.
+<% END %>
+<% IF duplicate_mail %>
+This address is already registered.
+<% END %>
+</div>
 
 </div>
 

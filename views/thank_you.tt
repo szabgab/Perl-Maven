@@ -4,7 +4,7 @@ Thank you for registering.
 </p>
 
 <p>
-You can now download the first edition of the Perl Maven cookbook:
+You can now download the first edition of the Perl 5 Maven cookbook:
 <a href="<% filename %>"><% linkname %></a>
 </p>
 

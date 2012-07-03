@@ -49,6 +49,12 @@ body {
 <!--
               <li><a href="/contact">Contact</a></li>
 -->
+<% IF username %>
+   <li><a href="/account">hi <% username %></a></li>
+<% ELSE %>
+   <li><a href="/login">Login</a></li>
+<% END %>
+
             </ul>
           </div><!--/.nav-collapse -->
         </div>

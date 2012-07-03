@@ -25,7 +25,7 @@ my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 
 hook before_template => sub {
 	my $t = shift;
-	$t->{title} ||= 'Perl Maven - for people who want to get the most out of programming in Perl';
+	$t->{title} ||= 'Perl 5 Maven - for people who want to get the most out of programming in Perl';
 	if (logged_in()) {
 		($t->{username}) = split /@/, session 'email';
 	}
@@ -34,7 +34,7 @@ hook before_template => sub {
 
 get '/' => sub {
 	my $tt;
-	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
+	#$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
 	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', 'index.json')) {
 		local $/ = undef;
 		my $json = <$fh>;
@@ -72,7 +72,7 @@ post '/send-reset-pw-code' => sub {
 	sendmail(
 		From    => $FROM,
 		To      => $email,
-		Subject => 'Code to reset your Perl Maven password',
+		Subject => 'Code to reset your Perl 5 Maven password',
 		html    => $html,
 	);
 
@@ -164,12 +164,12 @@ get '/logged-in' => sub {
 post '/register' => sub {
 	my $email = param('email');
 	if (not $email) {
-		return template 'main', {
+		return template 'registration_form', {
 			no_mail => 1,
 		};
 	}
 	if (not Email::Valid->address($email)) {
-		return template 'main', {
+		return template 'registration_form', {
 			invalid_mail => 1,
 		};
 	}
@@ -180,7 +180,7 @@ post '/register' => sub {
 	my $user = $db->get_user_by_email($email);
 	#debug Dumper $user;
 	if ($user and $user->{verify_time}) {
-		return template 'main', {
+		return template 'registration_form', {
 			duplicate_mail => 1,
 		};
 	}
@@ -207,7 +207,7 @@ post '/register' => sub {
 	sendmail(
 		From    => $FROM,
 		To      => $email,
-		Subject => 'Please finish the Perl Maven registration',
+		Subject => 'Please finish the Perl 5 Maven registration',
 		html    => $html,
 	);
 	return template 'response';
@@ -285,14 +285,16 @@ get '/verify/:id/:code' => sub {
 		From    => $FROM,
 		To      => $user->{email},
 		Subject => 'Thank you for registering',
-		html    => template('post_verification_mail', {}, { layout => 'email', }),
+		html    => template('post_verification_mail', {
+			url => uri_for('/account'),
+		}, { layout => 'email', }),
 #		attachments => ['/home/gabor/save/perl_maven_cookbook_v0.01.pdf'],
 	);
 
 	sendmail(
-		From    => 'Perl Maven <gabor@perlmaven.com>',
+		From    => 'Perl 5 Maven <gabor@perl5maven.com>',
 		To      => 'Gabor Szabo <gabor@szabgab.com>',
-		Subject => 'New Perl Maven newsletter registration',
+		Subject => 'New Perl 5 Maven newsletter registration',
 		html    => "$user->{email} has registered",
 	);
 
@@ -359,8 +361,8 @@ get qr{/(.+)} => sub {
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
 
-	my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
-	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
+	#my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
+	#$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
 	#$tt->{title} = $tt->{head1};
 
 	return template 'page', $tt, { layout => 'page' };

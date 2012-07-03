@@ -6,6 +6,6 @@ Email: <input name="email" />
 <input type="submit" value="Register" />
 </form>
 
-Registered people will get free updates of the <a href="/perl-maven-cookbook">Perl Maven Cookbook</a> and will be notified
-when a new article is published on the Perl Maven web site.
+Registered people will get free updates of the <a href="/perl-maven-cookbook">Perl 5 Maven Cookbook</a> and will be notified
+when a new article is published on the Perl 5 Maven web site.
 
