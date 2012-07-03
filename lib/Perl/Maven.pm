@@ -33,24 +33,23 @@ hook before_template => sub {
 };
 
 get '/' => sub {
-	my $tt;
-	#$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
-	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', 'index.json')) {
-		local $/ = undef;
-		my $json = <$fh>;
-		$tt->{pages} = from_json $json;
-	}
-	template 'main', $tt, { layout => 'index' };
+	_display('index', 'main', 'index');
+};
+get '/archive' => sub {
+	_display('archive', 'archive', 'system');
 };
 
-get '/archive' => sub {
+
+sub _display {
+	my ($file, $template, $layout) = @_;
+
 	my $tt;
-	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', 'archive.json')) {
+	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$tt->{pages} = from_json $json;
 	}
-	template 'archive', $tt, { layout => 'system' };
+	template $template, $tt, { layout => $layout };
 };
 
 post '/send-reset-pw-code' => sub {
