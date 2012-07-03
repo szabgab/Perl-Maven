@@ -1,8 +1,4 @@
- <div id="header">
-    <h1><% head1 %></h1>
-    <h2></h2>
- </div>
- <% mycontent %>
+<% mycontent %>
 
 <% IF author %>
 Written by <% author %><br /><img src="/img/<% author %>.png"  />

@@ -51,6 +51,7 @@ $content{text} = html2text($w->content);
 if ($opt{to} eq 'all') {
 	#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
 	foreach my $email (@$emails) {
+		#say $email->[0];
 		sendmail($email->[0]);
 	}
 } else {
@@ -86,13 +87,13 @@ sub sendmail {
 		$msg->attach($att);
 	}
 	$msg->send;
-	
+
 	return;
 }
 
 sub html2text {
 	my $html = shift;
-	
+
 	$html =~ s{</?p>}{\n}gi;
 	$html =~ s{<a href="([^"]+)">([^<]+)</a>}{$2 [ $1 ]}gi;
 
