@@ -344,7 +344,7 @@ get '/mail/:article' => sub {
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
 
-	$tt->{title} = $tt->{head1};
+	#$tt->{title} = $tt->{head1};
 
 	return template 'page', $tt, {	layout => 'email' };
 };
@@ -361,7 +361,7 @@ get qr{/(.+)} => sub {
 
 	my $registration_form = read_file(config->{appdir} . "/views/registration_form.tt");
 	$tt->{mycontent} =~ s/<%\s+registration_form\s+%>/$registration_form/g;
-	$tt->{title} = $tt->{head1};
+	#$tt->{title} = $tt->{head1};
 
 	return template 'page', $tt, { layout => 'page' };
 };
