@@ -45,7 +45,7 @@ foreach my $p (@pages) {
 				title => $p->{title},
 				timestamp => $p->{timestamp},
 				abstract  => $p->{abstract},
-				filename  => basename($p->{file}),
+				filename  => substr(basename($p->{file}),  0, -3),
 			};
 	}
 }

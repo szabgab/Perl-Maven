@@ -6,7 +6,7 @@
   <p>
   <% p.abstract %>
   <br>
-  <a href="<% p.url %>"><% p.title %></a>
+  <a href="/<% p.filename %>"><% p.title %></a>
   </p>
   <hr>
 <% END %>
