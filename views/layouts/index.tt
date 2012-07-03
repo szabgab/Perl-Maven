@@ -2,6 +2,7 @@
 
 <div class="container">
 <% FOR p IN pages %>
+  <h2><% p.title %></h2>
   <p>
   <% p.abstract %>
   <br>

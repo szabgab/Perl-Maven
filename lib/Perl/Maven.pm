@@ -10,7 +10,7 @@ use Business::PayPal;
 use Data::Dumper qw(Dumper);
 use Digest::SHA;
 use Email::Valid;
-use YAML qw(DumpFile LoadFile);
+#use YAML qw(DumpFile LoadFile);
 use MIME::Lite;
 use File::Basename qw(fileparse);
 
@@ -35,6 +35,11 @@ hook before_template => sub {
 get '/' => sub {
 	my $tt;
 	$tt->{registration_form} = read_file(config->{appdir} . "/views/registration_form.tt");
+	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', 'index.json')) {
+		local $/ = undef;
+		my $json = <$fh>;
+		$tt->{pages} = from_json $json;
+	}
 	template 'main', $tt, { layout => 'index' };
 };
 
