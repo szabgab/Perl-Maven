@@ -34,10 +34,10 @@ foreach my $file (glob "$dir/*.tt") {
 @pages = sort { $b->{timestamp} cmp $a->{timestamp} } grep { $_->{status} eq 'show' } @pages;
 
 my $count_index = 0;
-my $count_rss   = 0;
+my $count_feed  = 0;
 my $MAX_INDEX   = 3;
-my $MAX_RSS     = 10;
-my (@index, @rss, @archive);
+my $MAX_FEED    = 10;
+my (@index, @feed, @archive);
 foreach my $p (@pages) {
 	my $filename = substr(basename($p->{file}),  0, -3);
 	#say "$p->{timestamp} $p->{file}";
@@ -56,10 +56,20 @@ foreach my $p (@pages) {
 			filename  => $filename,
 		};
 	}
+	if ($p->{feed} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
+		push @feed, {
+			title => $p->{title},
+			timestamp => $p->{timestamp},
+			abstract  => $p->{abstract},
+			filename  => $filename,
+		};
+	}
+
 }
 save ('index',   \@index);
 save ('archive', \@archive);
-
+save ('feed',    \@feed);
+exit;
 
 sub save {
 	my ($file, $data) = @_;
@@ -69,5 +79,4 @@ sub save {
 	return;
 }
 
-# create a file for the rss feed ( dare, title, abstract, filename )  (the K most recent pages that are 'show', 'rss', and have 'abstract' )
 

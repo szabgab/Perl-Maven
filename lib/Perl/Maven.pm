@@ -14,6 +14,9 @@ use Email::Valid;
 use MIME::Lite;
 use File::Basename qw(fileparse);
 
+use XML::Atom::Feed;
+use XML::Atom::Entry;
+
 use Perl::Maven::Page;
 
 if (not config->{appdir}) {
@@ -38,7 +41,29 @@ get '/' => sub {
 get '/archive' => sub {
 	_display('archive', 'archive', 'system');
 };
+get '/atom' => sub {
+	my $pages;
+	my $file = 'feed';
+	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', "$file.json")) {
+		local $/ = undef;
+		my $json = <$fh>;
+		$pages = from_json $json;
+	}
 
+	my $feed = XML::Atom::Feed->new;
+	$feed->title('Perl 5 Maven');
+	#$feed->id('tag:example.com,2006:feed-id');
+	foreach my $p (@$pages) {
+		my $entry = XML::Atom::Entry->new;
+		$entry->title($p->{title});
+		#$entry->id('tag:example.com,2006:entry-id');
+		$entry->content($p->{abstract});
+		$feed->add_entry($entry);
+	}
+
+	content_type 'application/atom+xml';
+	$feed->as_xml;
+};
 
 sub _display {
 	my ($file, $template, $layout) = @_;
