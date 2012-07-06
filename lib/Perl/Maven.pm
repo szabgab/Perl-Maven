@@ -3,7 +3,7 @@ use Dancer ':syntax';
 use Perl::Maven::DB;
 
 our $VERSION = '0.1';
-my $TIMEOUT = 1000;
+my $TIMEOUT = 60*60*24*10;
 my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
