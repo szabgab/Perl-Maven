@@ -38,25 +38,25 @@ body {
           <div class="nav-collapse">
             <ul class="nav">
 <!--
-              <li class="active"><a href="/">Home</a></li>
--->
-              <li><a href="/about">About</a></li>
-              <li><a href="/archive">Archive</a></li>
-<!--
               <li><a href="/projects">Projects</a></li>
               <li><a href="/authors">Authors</a></li>
 -->
               <li><a href="/perl-maven-cookbook">Newsletter and Cookbook</a></li>
+              <% IF username %>
+                 <li><a href="/account">hi <% username %></a></li>
+              <% ELSE %>
+                 <li><a href="/login">Login</a></li>
+              <% END %>
+
+            </ul>
+            <ul class="nav pull-right">
+              <li><a href="/archive">Archive</a></li>
+              <li><a href="/about">About</a></li>
 <!--
               <li><a href="/contact">Contact</a></li>
 -->
-<% IF username %>
-   <li><a href="/account">hi <% username %></a></li>
-<% ELSE %>
-   <li><a href="/login">Login</a></li>
-<% END %>
-
             </ul>
+
           </div><!--/.nav-collapse -->
         </div>
       </div>
