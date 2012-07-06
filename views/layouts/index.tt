@@ -1,6 +1,5 @@
 <% INCLUDE layouts/incl/header.tt %>
 
-<div class="container">
 <% content %>
 <% FOR p IN pages %>
   <h2><% p.title %></h2>
@@ -9,7 +8,6 @@
   <br>
   <a href="/<% p.filename %>"><% p.title %></a>
   </p>
-  <hr>
 <% END %>
 
 <% INCLUDE layouts/incl/newsletter.tt %>
@@ -26,7 +24,6 @@ This address is already registered.
 <% END %>
 </div>
 
-</div>
 
 
 <% INCLUDE layouts/incl/footer.tt %>

@@ -1,8 +1,5 @@
 <% INCLUDE layouts/incl/header.tt %>
 
-<div class="container">
 <% content %>
-</div>
-
 
 <% INCLUDE layouts/incl/footer.tt %>

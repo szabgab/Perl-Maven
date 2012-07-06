@@ -1,11 +1,9 @@
 <% INCLUDE layouts/incl/header.tt %>
 
-<div class="container">
 <h1><% title %></h1>
 <% content %>
 
 <% INCLUDE "layouts/incl/newsletter.tt" %>
-</div>
 
 
 <% IF timestamp %>
