@@ -37,10 +37,7 @@ body {
           <a class="brand" href="/">Perl 5 Maven</a>
           <div class="nav-collapse">
             <ul class="nav">
-<!--
-              <li><a href="/projects">Projects</a></li>
-              <li><a href="/authors">Authors</a></li>
--->
+              <li><a href="/perl-tutorial">Tutorial</a></li>
               <li><a href="/perl-maven-cookbook">Newsletter and Cookbook</a></li>
               <% IF username %>
                  <li><a href="/account">hi <% username %></a></li>

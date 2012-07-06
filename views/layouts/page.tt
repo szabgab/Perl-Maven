@@ -3,10 +3,9 @@
 <h1><% title %></h1>
 <% content %>
 
+<% UNLESS clean %>
 <% INCLUDE "layouts/incl/newsletter.tt" %>
 
-
-<% IF timestamp %>
 <hr>
 <p>
 Published on <% timestamp %>
