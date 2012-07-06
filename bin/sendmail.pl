@@ -50,9 +50,14 @@ $content{text} = html2text($w->content);
 
 if ($opt{to} eq 'all') {
 	#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
+	my $total = scalar @$emails;
+	print "Sending to $total number of addresses\n";
+	my $count = 0;
 	foreach my $email (@$emails) {
-		#say $email->[0];
+		$count++;
+		say "$count out of $total  to $email->[0]";
 		sendmail($email->[0]);
+		sleep 1;
 	}
 } else {
 	sendmail($opt{to});
