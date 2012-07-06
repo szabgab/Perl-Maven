@@ -1,3 +1,17 @@
+    </div>
+
+    <div class="span3">
+       <% UNLESS standalone %>
+       <h3>Do you want to improve your Perl?</h3>
+       Register to the FREE newsletter now, get updates and a copy
+       of the Perl Maven Cookbook.
+      <form method="POST" action="/register" name="registration_form">
+         Email: <input name="email" />
+        <input type="submit" value="Register" />
+      </form>
+      <% END %>
+    </div>
+  </div>
 </div>
 
 <script src="/bootstrap/js/jquery.js"></script>
