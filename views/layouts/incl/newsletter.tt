@@ -1,4 +1,8 @@
 
+<hr />
+
+<h3>Do you want to improve your Perl?</h3>
+
 In order to register to our newsletter, please type your e-mail here:
 
 <form method="POST" action="/register" name="registration_form">
@@ -6,6 +10,6 @@ Email: <input name="email" />
 <input type="submit" value="Register" />
 </form>
 
-Registered people will get free updates of the <a href="/perl-maven-cookbook">Perl 5 Maven Cookbook</a> and will be notified
-when a new article is published on the Perl 5 Maven web site.
+Registered people will be notified when a new article is published on the Perl 5 Maven web site,
+and will also get free updates of the <a href="/perl-maven-cookbook">Perl 5 Maven Cookbook</a>.
 

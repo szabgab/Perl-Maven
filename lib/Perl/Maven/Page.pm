@@ -12,6 +12,8 @@ sub read {
 	my $in_code;
 	if (open my $fh, '<', $self->file) {
 		while (my $line = <$fh>) {
+			$line =~ s{<hl>}{<b>}g;
+			$line =~ s{</hl>}{</b>}g;
 			if ($line =~ /^=abstract start/ .. $line =~ /^=abstract end/) {
 				next if $line =~ /^=abstract/;
 				$data{abstract} .= $line;
@@ -43,6 +45,9 @@ sub read {
 		}
 	}
 	$data{mycontent} = $cont;
+	if (length $data{abstract} > 600) {
+		die sprintf("Abstract of %s is too long. It has %s character", $self->file, length $data{abstract});
+	}
 
 	return \%data;
 }
