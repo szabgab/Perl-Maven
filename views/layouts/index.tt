@@ -12,18 +12,4 @@
 
 <% INCLUDE layouts/incl/newsletter.tt %>
 
-<div id="error">
-<% IF no_mail %>
-Missing e-mail.
-<% END %>
-<% IF invalid_mail %>
-Invalid e-mail.
-<% END %>
-<% IF duplicate_mail %>
-This address is already registered.
-<% END %>
-</div>
-
-
-
 <% INCLUDE layouts/incl/footer.tt %>
