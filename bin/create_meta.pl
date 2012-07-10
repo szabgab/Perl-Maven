@@ -42,9 +42,11 @@ foreach my $p (@pages) {
 	my $filename = substr(basename($p->{file}),  0, -3);
 	#say "$p->{timestamp} $p->{file}";
 	if ($p->{archive}) {
+		my ($date) = split /T/, $p->{timestamp};
 		push @archive, {
 			title => $p->{title},
 			timestamp => $p->{timestamp},
+			date      => $date,
 			filename  => $filename,
 		}
 	}

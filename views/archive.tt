@@ -4,7 +4,7 @@ but the Perl 5 related articles will be moved here.
 </p>
 <ul>
 <% FOR p IN pages %>
- <li><a href="/<% p.filename %>"><% p.title %></a> <% p.timestamp %></li>
+ <li><a href="/<% p.filename %>"><% p.title %></a> <% p.date %></li>
 <% END %>
 </ul>
 

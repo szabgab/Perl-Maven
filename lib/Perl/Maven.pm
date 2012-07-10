@@ -404,6 +404,7 @@ get qr{/(.+)} => sub {
 	my $tt = read_tt($path);
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
+	($tt->{date}) = split /T/, $tt->{timestamp};
 
 	my $nick = $tt->{author};
 	if ($nick and $authors{$nick}) {

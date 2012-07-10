@@ -8,7 +8,7 @@
 
 <hr>
 <p>
-Published on <% timestamp %>
+Published on <% date %>
 </p>
 <% END %>
 
