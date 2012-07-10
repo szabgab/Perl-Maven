@@ -1,4 +1,4 @@
-<% IF comments %>
+<% IF comments_disabled_for_now %>
 <h2>Comments</h2>
 
 In the comments, please wrap your code snippets within &lt;pre&gt; &lt;/pre&gt; tags and use spaces for indentation.
