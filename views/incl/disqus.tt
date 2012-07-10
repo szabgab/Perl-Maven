@@ -1,4 +1,4 @@
-<% IF comments_disabled_for_now %>
+<% IF comments %>
 
 <h2>Comments</h2>
 
