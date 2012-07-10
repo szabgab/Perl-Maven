@@ -12,5 +12,6 @@ Published on <% date %>
 </p>
 <% END %>
 
+<% INCLUDE incl/disqus.tt %>
 
 <% INCLUDE layouts/incl/footer.tt %>
