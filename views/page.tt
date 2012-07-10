@@ -1,9 +1,5 @@
 <% mycontent %>
 
 <% IF author %>
-Written by <% author %><br /><img src="/img/<% author %>.png"  />
-<% IF author=="szabgab" %>
-<br />Gabor Szabo
-<% END %>
-
+Written by <% author_name %><br /><img src="/img/<% author_img %>"  />
 <% END %>

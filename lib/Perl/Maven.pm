@@ -25,6 +25,7 @@ if (not config->{appdir}) {
 }
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
+my %authors;
 
 hook before_template => sub {
 	my $t = shift;
@@ -395,12 +396,22 @@ get '/mail/:article' => sub {
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
+	read_authors();
+
 	my $path = config->{appdir} . "/../articles/$article.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
+
+	my $nick = $tt->{author};
+	if ($nick and $authors{$nick}) {
+		$tt->{author_name} = $authors{$nick}{author_name};
+		$tt->{author_img} = $authors{$nick}{author_img};
+	} else {
+		delete $tt->{author};
+	}
 
 	return template 'page', $tt, { layout => 'page' };
 };
@@ -542,6 +553,21 @@ sub get_download_file {
 		error "$dir : $!";
 	}
 	return $file;
+}
+
+sub read_authors {
+	return if %authors;
+
+	open my $fh, '<', config->{appdir} . "/authors.txt" or return;
+	while (my $line = <$fh>) {
+		chomp $line;
+		my ($nick, $name, $img) = split /;/, $line;
+		$authors{$nick} = {
+			author_name => $name,
+			author_img  => $img,
+		};
+	}
+	return;
 }
 
 
