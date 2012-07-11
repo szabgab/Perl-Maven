@@ -61,9 +61,8 @@ get '/atom' => sub {
 	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
 	$xml .= qq{<link href="$url/atom" rel="self" />\n};
 	$xml .= qq{<title>Perl 5 Maven</title>\n};
-	$xml .= qq{<link>$url/</link>\n};
 	$xml .= qq{<id>$url/</id>\n};
-	$xml .= qq{<updated>{$ts}Z</updated>\n};
+	$xml .= qq{<updated>${ts}Z</updated>\n};
 	foreach my $p (@$pages) {
 		$xml .= qq{<entry>\n};
 		$xml .= qq{  <title>$p->{title}</title>\n};
