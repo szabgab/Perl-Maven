@@ -64,6 +64,7 @@ foreach my $p (@pages) {
 			timestamp => $p->{timestamp},
 			abstract  => $p->{abstract},
 			filename  => $filename,
+			author    => $p->{author},
 		};
 	}
 

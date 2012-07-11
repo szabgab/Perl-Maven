@@ -8,14 +8,12 @@ my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
 use Data::Dumper qw(Dumper);
+use DateTime;
 use Digest::SHA;
 use Email::Valid;
 #use YAML qw(DumpFile LoadFile);
 use MIME::Lite;
 use File::Basename qw(fileparse);
-
-use XML::Atom::Feed;
-use XML::Atom::Entry;
 
 use Perl::Maven::Page;
 
@@ -26,6 +24,10 @@ if (not config->{appdir}) {
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
+
+hook before => sub {
+	read_authors();
+};
 
 hook before_template => sub {
 	my $t = shift;
@@ -51,20 +53,38 @@ get '/atom' => sub {
 		$pages = from_json $json;
 	}
 
-	my $feed = XML::Atom::Feed->new;
-	$feed->title('Perl 5 Maven');
-	#$feed->id('tag:example.com,2006:feed-id');
+	my $ts = DateTime->now;
+
+	my $url = 'http://perl5maven.com';
+	my $xml = '';
+	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
+	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
+	$xml .= qq{<link href="$url/atom" rel="self" />\n};
+	$xml .= qq{<title>Perl 5 Maven</title>\n};
+	$xml .= qq{<link>$url/</link>\n};
+	$xml .= qq{<id>$url/</id>\n};
+	$xml .= qq{<updated>{$ts}Z</updated>\n};
 	foreach my $p (@$pages) {
-		my $entry = XML::Atom::Entry->new;
-		$entry->title($p->{title});
-		$entry->issued($p->{timestamp});
-		#$entry->id('tag:example.com,2006:entry-id');
-		$entry->content($p->{abstract});
-		$feed->add_entry($entry);
+		$xml .= qq{<entry>\n};
+		$xml .= qq{  <title>$p->{title}</title>\n};
+		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
+		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
+		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}.html" />};
+		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}.html";
+		$xml .= qq{  <id>$id</id>\n};
+		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
+		if ($p->{author}) {
+			$xml .= qq{    <author>\n};
+			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
+			#$xml .= qq{      <email></email>\n};
+			$xml .= qq{    </author>\n};
+		}
+		$xml .= qq{</entry>\n};
 	}
+	$xml .= qq{</feed>\n};
 
 	content_type 'application/atom+xml';
-	$feed->as_xml;
+	return $xml;
 };
 
 sub _display {
@@ -397,7 +417,6 @@ get '/mail/:article' => sub {
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
-	read_authors();
 
 	my $path = config->{appdir} . "/../articles/$article.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
