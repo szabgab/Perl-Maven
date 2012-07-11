@@ -1,6 +1,6 @@
 <% mycontent %>
 
 <% IF author %>
-Written by <% author_name %><br /><img src="/img/<% author_img %>"  />
+Written by <a href="<% google_plus_profile %>?rel=author"><% author_name %></a><br /><img src="/img/<% author_img %>"  />
 <% END %>
 

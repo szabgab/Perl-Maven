@@ -429,6 +429,7 @@ get qr{/(.+)} => sub {
 	if ($nick and $authors{$nick}) {
 		$tt->{author_name} = $authors{$nick}{author_name};
 		$tt->{author_img} = $authors{$nick}{author_img};
+		$tt->{google_plus_profile} = $authors{$nick}{google_plus_profile};
 	} else {
 		delete $tt->{author};
 	}
@@ -581,10 +582,11 @@ sub read_authors {
 	open my $fh, '<', config->{appdir} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
-		my ($nick, $name, $img) = split /;/, $line;
+		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
 		$authors{$nick} = {
 			author_name => $name,
 			author_img  => $img,
+			google_plus_profile => $google_plus_profile,
 		};
 	}
 	return;
