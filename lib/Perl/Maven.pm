@@ -57,6 +57,7 @@ get '/atom' => sub {
 	foreach my $p (@$pages) {
 		my $entry = XML::Atom::Entry->new;
 		$entry->title($p->{title});
+		$entry->issued($p->{timestamp});
 		#$entry->id('tag:example.com,2006:entry-id');
 		$entry->content($p->{abstract});
 		$feed->add_entry($entry);
