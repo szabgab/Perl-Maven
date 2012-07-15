@@ -392,13 +392,21 @@ get '/logout' => sub {
 get '/account' => sub {
 	return redirect '/login' if not logged_in();
 
-	# list all the purchased products !
-	my $cookbook = get_download_file('perl_maven_cookbook');
 	my $email = session('email');
+	my @subscriptions = $db->get_subscriptions($email);
+	my @products;
+	foreach my $code (@subscriptions) {
+		my $file = get_download_file($code);
+		debug "$code -  $file";
+		push @products, {
+			name     => $products{$code}{name},
+			filename => "/download/$code/$file",
+			linkname => $file,
+		};
+	}
 
 	template 'account', {
-		filename => "/download/perl_maven_cookbook/$cookbook",
-		linkname => $cookbook,
+		subscriptions => \@products,
 		subscribed => $db->is_subscribed($email, 'perl_maven_cookbook'),
 	};
 };
@@ -410,10 +418,10 @@ get '/download/:dir/:file' => sub {
 	# TODO better error reporting or handling when not logged in
 	return redirect '/'
 		if not logged_in();
-	return redirect '/' if $dir ne 'perl_maven_cookbook';
+	return redirect '/' if not $products{$dir}; # no such product
 
 	# check if the user is really subscribed to the newsletter?
-	return redirect '/' if not $db->is_subscribed(session('email'), 'perl_maven_cookbook');
+	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
 	send_file(path(config->{appdir}, '..', 'articles', 'download', $dir, $file), system_path => 1);
 };

@@ -77,6 +77,26 @@ sub set_password {
 		undef, $password, $id);
 }
 
+
+sub get_subscriptions {
+	my ($self, $email) = @_;
+
+	my $sth = $self->{dbh}->prepare(q{
+SELECT product.code
+  FROM product, user, subscription
+  WHERE user.id=subscription.uid
+    AND user.email=?
+    AND product.id=subscription.pid
+});
+	$sth->execute($email);
+	my @products;
+	while (my ($p) = $sth->fetchrow_array) {
+		push @products, $p;
+	}
+
+	return @products;
+}
+
 sub is_subscribed {
 	my ($self, $email, $code) = @_;
 

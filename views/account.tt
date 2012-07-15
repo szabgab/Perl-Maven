@@ -1,16 +1,16 @@
 
-<% IF subscribed %>
-<p>
-The latest edition of the Perl 5 Maven cookbook:
-<a href="<% filename %>"><% linkname %></a>
-</p>
+<ul>
+<% FOR s IN subscriptions %>
+<li><% s.name %> <a href="<% s.filename %>"><% s.linkname %></a></li>
+<% END %>
+</ul>
 
+<% IF subscribed %>
 <p>
 You are currently subscribed to the Perl 5 Maven newsletter that entitles
 you to download the latest edition of the Perl 5 Maven Cookbook.
 <a href="/unsubscribe">unsubscribe</a>
 </p>
-
 <% ELSE %>
 <p>
 <a href="/subscribe">subscribe to the free Perl 5 Maven newsletter</a>
