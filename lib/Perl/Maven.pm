@@ -14,8 +14,19 @@ use Email::Valid;
 #use YAML qw(DumpFile LoadFile);
 use MIME::Lite;
 use File::Basename qw(fileparse);
+use POSIX ();
 
 use Perl::Maven::Page;
+my %products = (
+	'perl_maven_cookbook' => {
+		name  => 'Perl Maven Cookbook',
+		price => 0,
+	},
+	'beginner_perl_maven_ebook' => {
+		name  => 'Beginner Perl Maven E-book',
+		price => 0.01,
+	},
+);
 
 if (not config->{appdir}) {
 	require Cwd;
@@ -371,25 +382,21 @@ get '/verify/:id/:code' => sub {
 };
 
 get '/buy' => sub {
+	if (not logged_in()) {
+		return template 'error', {please_log_in => 1};
+		# TODO redirect back the user once logged in!!!
+	}
 	my $what = param('product');
 	if (not $what) {
-		return template 'error', {'no_product_specified' => 1}
+		return template 'error', {'no_product_specified' => 1};
 	}
-	my %products = (
-		'perl_maven_cookbook' => {
-			name  => 'Perl Maven Cookbook',
-			price => 0,
-		},
-		'beginner_perl_maven_ebook' => {
-			name  => 'Beginner Perl Maven E-book',
-			price => 0.01,
-		},
-	);
 	if (not $products{$what}) {
 		return template 'error', {'invalid_product_specified' => 1};
 	}
-	my $out = paypal_buy($products{$what}{name}, 1, $products{$what}{price});
-	return $out;
+	return template 'buy', {
+		%{ $products{$what} },
+		button => paypal_buy($what, 1),
+	};
 };
 get '/canceled' => sub {
 	debug 'get canceled ' . Dumper params();
@@ -405,13 +412,48 @@ post '/paypal'  => sub {
 	my $id = param('custom');
 	my $paypal = Business::PayPal->new(id => $id);
 	my ($txnstatus, $reason) = $paypal->ipnvalidate(\%query);
+	if (not $txnstatus) {
+		log_paypal('IPN-no', \%query);
+		return 'ipn-transaction-failed';
+	}
+
+	my $paypal_data = from_yaml $db->get_transaction($id);
+	if (not $paypal_data->{$id}) {
+		log_paypal('IPN-unrecognized-id', \%query);
+		return 'ipn-transaction-invalid';
+	}
+	my $payment_status = $query{payment_status} || '';
+	if ($payment_status eq 'Completed') {
+		my $email = $paypal_data->{email};
+		$db->subscribe_to($email, $paypal_data->{$id}{what});
+		log_paypal('IPN-ok', \%query);
+		return 'ipn-ok';
+	}
+
+	log_paypal('IPN-failed', \%query);
+	return 'ipn-failed';
+};
+
+	# Start by requireing the user to be loged in first
+
+	# Plan:
+	# If user logged in, add purchase information to his account
+
+	# If user is not logged in
+	#  If the e-mail supplied by Paypal is in our database already
+	#     assume they are the same user and add the purchase to that account
+	#     and even log the user in (how?)
+	# If the e-mail exists but not yet verified in the system ????
+
+	# If this is a new e-mail, save the data as a new user and
+	# at the end of the transaction ask the user if he already
+	# has an account or if a new one should be created?
+	# If he wants to use the existing account, ask for credentials,
+	# after successful login merge the two accounts
 
 	# last_name
 	# first_name
 	# payer_email
-
-	return 'paypal';
-};
 
 get '/img/:file' => sub {
 	my $file = param('file');
@@ -487,7 +529,10 @@ sub pw_form {
 }
 
 sub paypal_buy {
-	my ($item, $quantity, $usd) = @_;
+	my ($what, $quantity) = @_;
+
+	my $item = $products{$what}{name};
+	my $usd  = $products{$what}{price};
 
 	my $sandbox = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 	my $paypal = Business::PayPal->new(address => $sandbox);
@@ -512,10 +557,30 @@ sub paypal_buy {
 	debug $button;
 
 	my $paypal_data = session('paypal') || {};
-	$paypal_data->{$id} = { item => $item, quantity => $quantity, usd => $usd };
+
+	my %data = (what => $what, quantity => $quantity, usd => $usd );
+	$paypal_data->{$id} = \%data; 
 	session paypal => $paypal_data;
+	$db->save_transaction($id, to_yaml $paypal_data->{$id});
+
+	my $email = logged_in() ? session('email') : '';
+	log_paypal('buy_button', {id => $id, email => $email, %data});
 
 	return $button;
+}
+
+sub log_paypal {
+	my ($action, $data) = @_;
+
+	my $ts = time;
+	my $logfile = config->{appdir} . '/logs/paypal_' . POSIX::strftime("%Y%m%d", gmtime($ts));
+	#debug $logfile;
+	if (open my $out, '>>', $logfile) {
+		print $out POSIX::strftime("%Y-%m-%d", gmtime($ts)), " - $action\n";
+		print $out Dumper $data;
+		close $out;
+	}
+	return;
 }
 
 

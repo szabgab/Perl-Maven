@@ -114,4 +114,16 @@ sub unsubscribe_from {
 		undef, $uid, $pid);
 }
 
+sub save_transaction {
+	my ($self, $id, $data) = @_;
+	$self->{dbh}->do(q{INSERT INTO transactions (id, ts, sys, data) VALUES(?, ?, ?, ?)},
+		{}, $id, time, 'paypal', $data);
+	return;
+}
+sub get_transaction {
+	my ($self, $id) = @_;
+	my ($data) = $self->{dbh}->selectrowarray(q{SELECT data FROM transactions WHERE id=?},undef, $id);
+	return $data;
+}
+
 1;

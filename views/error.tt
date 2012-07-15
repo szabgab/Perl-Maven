@@ -64,5 +64,7 @@ No product was specified.
 Invalid product was specified.
 <% END %>
 
-
-
+<% IF please_log_in %>
+Before making a purchase, please <a href="/register">create an account</a> and  <a href="/login">login</a>,
+so we can associate your purchase with your account.
+<% END %>
