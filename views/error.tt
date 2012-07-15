@@ -55,3 +55,14 @@ Unsubscribed from the Perl 5 Maven newsletter.
 <% IF subscribed %>
 Subscribed to the Perl 5 Maven newsletter. Please visit your <a href="/account">account</a> to get a free copy of the Perl 5 Maven Cookbook.
 <% END %>
+
+<% IF no_product_specified %>
+No product was specified.
+<% END %>
+
+<% IF invalid_product_specified %>
+Invalid product was specified.
+<% END %>
+
+
+

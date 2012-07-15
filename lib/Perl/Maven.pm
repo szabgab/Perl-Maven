@@ -371,19 +371,46 @@ get '/verify/:id/:code' => sub {
 };
 
 get '/buy' => sub {
-	return paypal();
+	my $what = param('product');
+	if (not $what) {
+		return template 'error', {'no_product_specified' => 1}
+	}
+	my %products = (
+		'perl_maven_cookbook' => {
+			name  => 'Perl Maven Cookbook',
+			price => 0,
+		},
+		'beginner_perl_maven_ebook' => {
+			name  => 'Beginner Perl Maven E-book',
+			price => 0.01,
+		},
+	);
+	if (not $products{$what}) {
+		return template 'error', {'invalid_product_specified' => 1};
+	}
+	my $out = paypal_buy($products{$what}{name}, 1, $products{$what}{price});
+	return $out;
 };
 get '/canceled' => sub {
-	debug Dumper params();
+	debug 'get canceled ' . Dumper params();
 	return 'canceled';
 };
 get '/paid'  => sub {
-	debug Dumper params();
+	debug 'paid ' . Dumper params();
 	return 'paid';
 };
-get '/paypal_notify'  => sub {
-	debug Dumper params();
-	return 'paypal_notify';
+post '/paypal'  => sub {
+	my %query = params();
+	debug 'paypal ' . Dumper \%query;
+	my $id = param('custom');
+	my $paypal = Business::PayPal->new(id => $id);
+	my ($txnstatus, $reason) = $paypal->ipnvalidate(\%query);
+
+	# last_name
+	# first_name
+	# payer_email
+
+	return 'paypal';
 };
 
 get '/img/:file' => sub {
@@ -459,38 +486,37 @@ sub pw_form {
 	return;
 }
 
-sub paypal {
+sub paypal_buy {
+	my ($item, $quantity, $usd) = @_;
 
 	my $sandbox = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-#	my $paypal = Business::PayPal->new(address => $sandbox);
-	my $paypal = Business::PayPal->new();
+	my $paypal = Business::PayPal->new(address => $sandbox);
+#	my $paypal = Business::PayPal->new();
 
 	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
 	# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
 	my $cancel_url = uri_for('/canceled');
 	my $return_url = uri_for('/paid');
-	my $notify_url = uri_for('/paypal_notify');
+	my $notify_url = uri_for('/paypal');
 	my $button = $paypal->button(
-		business => 'gabor@szabgab.com',
-		item_name => 'Donation',
-		return        => "$return_url",
-		cancel_return => "$cancel_url",
-		amount => '0.01',
-		quantity => 1,
-		notify_url => "$notify_url",
+		business       => 'gabor@szabgab.com',
+		item_name      => $item,
+		amount         => $usd,
+		quantity       => $quantity,
+		return         => "$return_url",
+		cancel_return  => "$cancel_url",
+		notify_url     => "$notify_url",
 	);
 	my $id = $paypal->id;
+	debug $button;
 
 	my $paypal_data = session('paypal') || {};
-	$paypal_data->{$id} = { item => 'Donation' };
+	$paypal_data->{$id} = { item => $item, quantity => $quantity, usd => $usd };
 	session paypal => $paypal_data;
-	#debug Dumper $button;
 
 	return $button;
 }
-
-
 
 
 sub read_tt {
