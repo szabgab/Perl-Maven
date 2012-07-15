@@ -68,3 +68,8 @@ Invalid product was specified.
 Before making a purchase, please <a href="/register">create an account</a> and  <a href="/login">login</a>,
 so we can associate your purchase with your account.
 <% END %>
+
+<% IF canceled %>
+We are sorry that you canceled your purchase.
+<% END %>
+

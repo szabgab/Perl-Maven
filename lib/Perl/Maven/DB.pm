@@ -122,7 +122,7 @@ sub save_transaction {
 }
 sub get_transaction {
 	my ($self, $id) = @_;
-	my ($data) = $self->{dbh}->selectrowarray(q{SELECT data FROM transactions WHERE id=?},undef, $id);
+	my ($data) = $self->{dbh}->selectrow_array(q{SELECT data FROM transactions WHERE id=?},undef, $id);
 	return $data;
 }
 

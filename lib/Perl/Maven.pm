@@ -17,6 +17,102 @@ use File::Basename qw(fileparse);
 use POSIX ();
 
 use Perl::Maven::Page;
+
+my $sandbox = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+my $real_Cert = <<"CERT";
+-----BEGIN CERTIFICATE-----
+MIIGSzCCBTOgAwIBAgIQLjOHT2/i1B7T//819qTJGDANBgkqhkiG9w0BAQUFADCB
+ujELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDlZlcmlTaWduLCBJbmMuMR8wHQYDVQQL
+ExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMTswOQYDVQQLEzJUZXJtcyBvZiB1c2Ug
+YXQgaHR0cHM6Ly93d3cudmVyaXNpZ24uY29tL3JwYSAoYykwNjE0MDIGA1UEAxMr
+VmVyaVNpZ24gQ2xhc3MgMyBFeHRlbmRlZCBWYWxpZGF0aW9uIFNTTCBDQTAeFw0x
+MTAzMjMwMDAwMDBaFw0xMzA0MDEyMzU5NTlaMIIBDzETMBEGCysGAQQBgjc8AgED
+EwJVUzEZMBcGCysGAQQBgjc8AgECEwhEZWxhd2FyZTEdMBsGA1UEDxMUUHJpdmF0
+ZSBPcmdhbml6YXRpb24xEDAOBgNVBAUTBzMwMTQyNjcxCzAJBgNVBAYTAlVTMRMw
+EQYDVQQRFAo5NTEzMS0yMDIxMRMwEQYDVQQIEwpDYWxpZm9ybmlhMREwDwYDVQQH
+FAhTYW4gSm9zZTEWMBQGA1UECRQNMjIxMSBOIDFzdCBTdDEVMBMGA1UEChQMUGF5
+UGFsLCBJbmMuMRowGAYDVQQLFBFQYXlQYWwgUHJvZHVjdGlvbjEXMBUGA1UEAxQO
+d3d3LnBheXBhbC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCd
+szetUP2zRUbaN1vHuX9WV2mMq0IIVQ5NX2kpFCwBYc4vwW/CHiMr+dgs8lDduCfH
+5uxhyRxKtJa6GElIIiP8qFB5HFWf1uUgoDPC1he4HaxUkowCnVEqjEowOy9R9Cr4
+yyrmqmMEDccVsx4d3dOY2JF1FrLDHT7qH/GCBnyYw+nZJ88ci6HqnVJiNM+NX/D/
+d7Y3r3V1bp7y1DaJwK/z/uMwNCC+lcM59w+nwAvLutgCW6WitFHMB+HpSsOSJlIZ
+ydpj0Ox+javRR1FIdhRUFMK4wwcbD8PvULi1gM+sYsJIzP0mHDlhWRIDImG1zmy2
+x7ZLp0HA5WayjI5aSn9fAgMBAAGjggHzMIIB7zAJBgNVHRMEAjAAMB0GA1UdDgQW
+BBQxqt0MVbSO4lWE5aB52xc8nEq5RTALBgNVHQ8EBAMCBaAwQgYDVR0fBDswOTA3
+oDWgM4YxaHR0cDovL0VWU2VjdXJlLWNybC52ZXJpc2lnbi5jb20vRVZTZWN1cmUy
+MDA2LmNybDBEBgNVHSAEPTA7MDkGC2CGSAGG+EUBBxcGMCowKAYIKwYBBQUHAgEW
+HGh0dHBzOi8vd3d3LnZlcmlzaWduLmNvbS9ycGEwHQYDVR0lBBYwFAYIKwYBBQUH
+AwEGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFPyKULqeuSVae1WFT5UAY4/pWGtDMHwG
+CCsGAQUFBwEBBHAwbjAtBggrBgEFBQcwAYYhaHR0cDovL0VWU2VjdXJlLW9jc3Au
+dmVyaXNpZ24uY29tMD0GCCsGAQUFBzAChjFodHRwOi8vRVZTZWN1cmUtYWlhLnZl
+cmlzaWduLmNvbS9FVlNlY3VyZTIwMDYuY2VyMG4GCCsGAQUFBwEMBGIwYKFeoFww
+WjBYMFYWCWltYWdlL2dpZjAhMB8wBwYFKw4DAhoEFEtruSiWBgy70FI4mymsSweL
+IQUYMCYWJGh0dHA6Ly9sb2dvLnZlcmlzaWduLmNvbS92c2xvZ28xLmdpZjANBgkq
+hkiG9w0BAQUFAAOCAQEAisdjAvky8ehg4A0J3ED6+yR0BU77cqtrLUKqzaLcLL/B
+wuj8gErM8LLaWMGM/FJcoNEUgSkMI3/Qr1YXtXFvdqo3urqMhi/SsuUJU85Gnoxr
+Vr0rWoBqOOnmcsVEgtYeusK0sQbxq5JlE1eq9xqYZrKuOuA/8JS1V7Ss1iFrtA5i
+pwotaEK3k5NEJOQh9/Zm+fy1vZfUyyX+iVSlmyFHC4bzu2DlzZln3UzjBJeXoEfe
+YjQyLpdUhUhuPslV1qs+Bmi6O+e6htDHvD05wUaRzk6vsPcEQ3EqsPbdpLgejb5p
+9YDR12XLZeQjO1uiunCsJkDIf9/5Mqpu57pw8v1QNA==
+-----END CERTIFICATE-----
+CERT
+my $real_Certcontent = <<CERTCONTENT;
+Subject Name: /1.3.6.1.4.1.311.60.2.1.3=US/1.3.6.1.4.1.311.60.2.1.2=Delaware/businessCategory=Private Organization/serialNumber=3014267/C=US/postalCode=95131-2021/ST=California/L=San Jose/street=2211 N 1st St/O=PayPal, Inc./OU=PayPal Production/CN=www.paypal.com
+Issuer  Name: /C=US/O=VeriSign, Inc./OU=VeriSign Trust Network/OU=Terms of use at https://www.verisign.com/rpa (c)06/CN=VeriSign Class 3 Extended Validation SSL CA
+CERTCONTENT
+
+
+my $Cert = <<CERT;
+-----BEGIN CERTIFICATE-----
+MIIGUzCCBTugAwIBAgIQQcO4g86BppQ1JLIKmUw/VDANBgkqhkiG9w0BAQUFADCB
+ujELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDlZlcmlTaWduLCBJbmMuMR8wHQYDVQQL
+ExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMTswOQYDVQQLEzJUZXJtcyBvZiB1c2Ug
+YXQgaHR0cHM6Ly93d3cudmVyaXNpZ24uY29tL3JwYSAoYykwNjE0MDIGA1UEAxMr
+VmVyaVNpZ24gQ2xhc3MgMyBFeHRlbmRlZCBWYWxpZGF0aW9uIFNTTCBDQTAeFw0x
+MTA5MDEwMDAwMDBaFw0xMzA5MzAyMzU5NTlaMIIBFzETMBEGCysGAQQBgjc8AgED
+EwJVUzEZMBcGCysGAQQBgjc8AgECEwhEZWxhd2FyZTEdMBsGA1UEDxMUUHJpdmF0
+ZSBPcmdhbml6YXRpb24xEDAOBgNVBAUTBzMwMTQyNjcxCzAJBgNVBAYTAlVTMRMw
+EQYDVQQRFAo5NTEzMS0yMDIxMRMwEQYDVQQIEwpDYWxpZm9ybmlhMREwDwYDVQQH
+FAhTYW4gSm9zZTEWMBQGA1UECRQNMjIxMSBOIDFzdCBTdDEVMBMGA1UEChQMUGF5
+UGFsLCBJbmMuMRowGAYDVQQLFBFQYXlQYWwgUHJvZHVjdGlvbjEfMB0GA1UEAxQW
+d3d3LnNhbmRib3gucGF5cGFsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAOgLoTxH7wR+fQFXznItNcPuPDKQhdUIWLRvG2uMDQDeolaPF4L5Dvn5
+yazgycHMjYBxinH02Sc7k69OqFDCiOiLpIpRLsVCqTZUixIHmsZP6gPMYsYm6a+C
+cvpOnqYQ02XE+CIWjN92cK5BKBebtPc9us0MtcPAnuU8Pyp4l7OdLNukjDgXuxZ3
+rbnKKb7Z/3kkmzQTeshNWbDLYcgUR2OiibD/lsQpcoYtlPcsXcA+R+HAaYIY3JXc
+U2q7RwxCK19kSRcuxKdNNV+/RjBL3Ttbf0LLMiqjWgKpAWpRUjfu08tl7vxR6SCl
+aRzoJwnQDwosBtT8I8OiZ8sldmc4btkCAwEAAaOCAfMwggHvMAkGA1UdEwQCMAAw
+HQYDVR0OBBYEFE/LQp+SfkYxbltojftEGXrE7GTQMAsGA1UdDwQEAwIFoDBCBgNV
+HR8EOzA5MDegNaAzhjFodHRwOi8vRVZTZWN1cmUtY3JsLnZlcmlzaWduLmNvbS9F
+VlNlY3VyZTIwMDYuY3JsMEQGA1UdIAQ9MDswOQYLYIZIAYb4RQEHFwYwKjAoBggr
+BgEFBQcCARYcaHR0cHM6Ly93d3cudmVyaXNpZ24uY29tL3JwYTAdBgNVHSUEFjAU
+BggrBgEFBQcDAQYIKwYBBQUHAwIwHwYDVR0jBBgwFoAU/IpQup65JVp7VYVPlQBj
+j+lYa0MwfAYIKwYBBQUHAQEEcDBuMC0GCCsGAQUFBzABhiFodHRwOi8vRVZTZWN1
+cmUtb2NzcC52ZXJpc2lnbi5jb20wPQYIKwYBBQUHMAKGMWh0dHA6Ly9FVlNlY3Vy
+ZS1haWEudmVyaXNpZ24uY29tL0VWU2VjdXJlMjAwNi5jZXIwbgYIKwYBBQUHAQwE
+YjBgoV6gXDBaMFgwVhYJaW1hZ2UvZ2lmMCEwHzAHBgUrDgMCGgQUS2u5KJYGDLvQ
+UjibKaxLB4shBRgwJhYkaHR0cDovL2xvZ28udmVyaXNpZ24uY29tL3ZzbG9nbzEu
+Z2lmMA0GCSqGSIb3DQEBBQUAA4IBAQAoyJqVjD1/73TyA0GU8Q2hTuTWrUxCE/Cv
+D7b3zgR3GXjri0V+V0/+DoczFjn/SKxi6gDWvhH7uylPMiTMPcLDlp8ulgQycxeF
+YxgxgcNn37ztw4f2XV/U9N5MRJrrtj5Sr4kAzEk6jPORgh1XfklgPgb1k/mJWWZw
+l1AksZwbxMp/adNq1+gyfG65cIgVMiLXYYMr+UJXwey+/e6GVcOhLdEiKmxT6u3M
+lsQPBEHGmGM3WDRpCqb7lBPMXP9GkNBfF36IVOu7jzgP69prSKjICk2fPC1+ktAF
+KUmGOOMrAuewXyJ8wRuRjbtPikYdApAnHjd7quQWApwUJyOCKr99
+-----END CERTIFICATE-----
+CERT
+
+my $Certcontent = <<CERTCONTENT;
+Subject Name: /1.3.6.1.4.1.311.60.2.1.3=US/1.3.6.1.4.1.311.60.2.1.2=Delaware/businessCategory=Private Organization/serialNumber=3014267/C=US/postalCode=95131-2021/ST=California/L=San Jose/street=2211 N 1st St/O=PayPal, Inc./OU=PayPal Production/CN=www.sandbox.paypal.com
+Issuer  Name: /C=US/O=VeriSign, Inc./OU=VeriSign Trust Network/OU=Terms of use at https://www.verisign.com/rpa (c)06/CN=VeriSign Class 3 Extended Validation SSL CA
+CERTCONTENT
+
+chomp $Cert;
+chomp $Certcontent;
+
+$Business::PayPal::Cert = $Cert;
+$Business::PayPal::Certcontent = $Certcontent;
+
 my %products = (
 	'perl_maven_cookbook' => {
 		name  => 'Perl Maven Cookbook',
@@ -296,6 +392,7 @@ get '/logout' => sub {
 get '/account' => sub {
 	return redirect '/login' if not logged_in();
 
+	# list all the purchased products !
 	my $cookbook = get_download_file('perl_maven_cookbook');
 	my $email = session('email');
 
@@ -400,32 +497,35 @@ get '/buy' => sub {
 };
 get '/canceled' => sub {
 	debug 'get canceled ' . Dumper params();
+	return template 'error', { canceled => 1};
 	return 'canceled';
 };
 get '/paid'  => sub {
 	debug 'paid ' . Dumper params();
-	return 'paid';
+	return template 'thank_you_buy';
 };
-post '/paypal'  => sub {
+any '/paypal'  => sub {
 	my %query = params();
 	debug 'paypal ' . Dumper \%query;
 	my $id = param('custom');
-	my $paypal = Business::PayPal->new(id => $id);
+	#my $paypal = Business::PayPal->new(id => $id);
+	my $paypal = Business::PayPal->new(address => $sandbox, id => $id);
 	my ($txnstatus, $reason) = $paypal->ipnvalidate(\%query);
 	if (not $txnstatus) {
-		log_paypal('IPN-no', \%query);
+		log_paypal("IPN-no $reason", \%query);
 		return 'ipn-transaction-failed';
 	}
 
 	my $paypal_data = from_yaml $db->get_transaction($id);
-	if (not $paypal_data->{$id}) {
+	if (not $paypal_data) {
 		log_paypal('IPN-unrecognized-id', \%query);
 		return 'ipn-transaction-invalid';
 	}
 	my $payment_status = $query{payment_status} || '';
-	if ($payment_status eq 'Completed') {
+	if ($payment_status eq 'Completed' or $payment_status eq 'Pending') {
 		my $email = $paypal_data->{email};
-		$db->subscribe_to($email, $paypal_data->{$id}{what});
+		debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
+		$db->subscribe_to($email, $paypal_data->{what});
 		log_paypal('IPN-ok', \%query);
 		return 'ipn-ok';
 	}
@@ -534,7 +634,6 @@ sub paypal_buy {
 	my $item = $products{$what}{name};
 	my $usd  = $products{$what}{price};
 
-	my $sandbox = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 	my $paypal = Business::PayPal->new(address => $sandbox);
 #	my $paypal = Business::PayPal->new();
 
@@ -558,13 +657,13 @@ sub paypal_buy {
 
 	my $paypal_data = session('paypal') || {};
 
-	my %data = (what => $what, quantity => $quantity, usd => $usd );
+	my $email = logged_in() ? session('email') : '';
+	my %data = (what => $what, quantity => $quantity, usd => $usd, email => $email );
 	$paypal_data->{$id} = \%data; 
 	session paypal => $paypal_data;
-	$db->save_transaction($id, to_yaml $paypal_data->{$id});
+	$db->save_transaction($id, to_yaml \%data);
 
-	my $email = logged_in() ? session('email') : '';
-	log_paypal('buy_button', {id => $id, email => $email, %data});
+	log_paypal('buy_button', {id => $id, %data});
 
 	return $button;
 }
