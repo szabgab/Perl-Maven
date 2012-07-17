@@ -18,7 +18,7 @@ use POSIX ();
 
 use Perl::Maven::Page;
 
-my $sandbox = 1;
+my $sandbox = 0;
 
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 my $real_Cert = <<"CERT";
@@ -116,7 +116,7 @@ my %products = (
 	},
 	'beginner_perl_maven_ebook' => {
 		name  => 'Beginner Perl Maven E-book',
-		price => 0.01,
+		price => 8.00,
 	},
 );
 
@@ -789,14 +789,16 @@ sub paypal {
 	my @params = @_;
 
 	if ($sandbox) {
-		chomp $Cert;
-		chomp $Certcontent;
-
 		$Business::PayPal::Cert = $Cert;
 		$Business::PayPal::Certcontent = $Certcontent;
 
 		push @params, address => $sandbox_url;
+	} else {
+		$Business::PayPal::Cert = $real_Cert;
+		$Business::PayPal::Certcontent = $real_Certcontent;
 	}
+	chomp $Business::PayPal::Cert;
+	chomp $Business::PayPal::Certcontent;
 	Business::PayPal->new(@params);
 }
 
