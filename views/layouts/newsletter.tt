@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=<% settings.charset %>" />
+<title><% title %></title>
+</head>
+<body>
+<div id="page">
+  <div id="sidebar">
+  </div>
+  <div id="content" style="width: 700px">
+    <% content %>
+  </div>
+</div>
+<div id="footer" style="font-size: 12px">
+<hr>
+You are receiving this message beacuse you subscribed to the <a href="http://perl5maven.com/">Perl 5 Maven newsletter</a>. 
+<br>
+If you don't want to receive these messages any more, you can subscribe on the web site.
+<br>
+In case of any bugs, please, just reply to this e-mail and let me know.
+</div>
+</body>
+</html>

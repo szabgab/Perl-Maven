@@ -576,7 +576,7 @@ get '/mail/:article' => sub {
 	return template 'error', {'no_such_article' => 1}
 		if not $tt->{status} or $tt->{status} ne 'show';
 
-	return template 'mail', $tt, {	layout => 'email' };
+	return template 'mail', $tt, {	layout => 'newsletter' };
 };
 
 get qr{/(.+)} => sub {
