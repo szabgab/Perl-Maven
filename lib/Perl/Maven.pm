@@ -121,7 +121,7 @@ my %authors;
 hook before => sub {
 	read_authors();
 	my $p = $db->get_products;
-	debug Dumper $p;
+	#debug Dumper $p;
 	%products = %$p;
 };
 
@@ -386,7 +386,7 @@ get '/account' => sub {
 	my @owned_products;
 	foreach my $code (@subscriptions) {
 		my $file = get_download_file($code);
-		debug "$code -  $file";
+		#debug "$code -  $file";
 		push @owned_products, {
 			name     => $products{$code}{name},
 			filename => "/download/$code/$file",
@@ -493,17 +493,17 @@ get '/buy' => sub {
 	};
 };
 get '/canceled' => sub {
-	debug 'get canceled ' . Dumper params();
+	#debug 'get canceled ' . Dumper params();
 	return template 'error', { canceled => 1};
 	return 'canceled';
 };
 get '/paid'  => sub {
-	debug 'paid ' . Dumper params();
+	#debug 'paid ' . Dumper params();
 	return template 'thank_you_buy';
 };
 any '/paypal'  => sub {
 	my %query = params();
-	debug 'paypal ' . Dumper \%query;
+	#debug 'paypal ' . Dumper \%query;
 	my $id = param('custom');
 	my $paypal = paypal( id => $id );
 
@@ -521,7 +521,7 @@ any '/paypal'  => sub {
 	my $payment_status = $query{payment_status} || '';
 	if ($payment_status eq 'Completed' or $payment_status eq 'Pending') {
 		my $email = $paypal_data->{email};
-		debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
+		#debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
 		$db->subscribe_to($email, $paypal_data->{what});
 		log_paypal('IPN-ok', \%query);
 		return 'ipn-ok';
@@ -649,13 +649,13 @@ sub paypal_buy {
 		notify_url     => "$notify_url",
 	);
 	my $id = $paypal->id;
-	debug $button;
+	#debug $button;
 
 	my $paypal_data = session('paypal') || {};
 
 	my $email = logged_in() ? session('email') : '';
 	my %data = (what => $what, quantity => $quantity, usd => $usd, email => $email );
-	$paypal_data->{$id} = \%data; 
+	$paypal_data->{$id} = \%data;
 	session paypal => $paypal_data;
 	$db->save_transaction($id, to_yaml \%data);
 
