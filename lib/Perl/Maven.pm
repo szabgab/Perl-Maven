@@ -497,7 +497,7 @@ get '/canceled' => sub {
 	return template 'error', { canceled => 1};
 	return 'canceled';
 };
-get '/paid'  => sub {
+any '/paid'  => sub {
 	#debug 'paid ' . Dumper params();
 	return template 'thank_you_buy';
 };
