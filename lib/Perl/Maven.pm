@@ -18,7 +18,9 @@ use POSIX ();
 
 use Perl::Maven::Page;
 
-my $sandbox = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+my $sandbox = 1;
+
+my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 my $real_Cert = <<"CERT";
 -----BEGIN CERTIFICATE-----
 MIIGSzCCBTOgAwIBAgIQLjOHT2/i1B7T//819qTJGDANBgkqhkiG9w0BAQUFADCB
@@ -106,12 +108,6 @@ my $Certcontent = <<CERTCONTENT;
 Subject Name: /1.3.6.1.4.1.311.60.2.1.3=US/1.3.6.1.4.1.311.60.2.1.2=Delaware/businessCategory=Private Organization/serialNumber=3014267/C=US/postalCode=95131-2021/ST=California/L=San Jose/street=2211 N 1st St/O=PayPal, Inc./OU=PayPal Production/CN=www.sandbox.paypal.com
 Issuer  Name: /C=US/O=VeriSign, Inc./OU=VeriSign Trust Network/OU=Terms of use at https://www.verisign.com/rpa (c)06/CN=VeriSign Class 3 Extended Validation SSL CA
 CERTCONTENT
-
-chomp $Cert;
-chomp $Certcontent;
-
-$Business::PayPal::Cert = $Cert;
-$Business::PayPal::Certcontent = $Certcontent;
 
 my %products = (
 	'perl_maven_cookbook' => {
@@ -516,8 +512,8 @@ any '/paypal'  => sub {
 	my %query = params();
 	debug 'paypal ' . Dumper \%query;
 	my $id = param('custom');
-	#my $paypal = Business::PayPal->new(id => $id);
-	my $paypal = Business::PayPal->new(address => $sandbox, id => $id);
+	my $paypal = paypal( id => $id );
+
 	my ($txnstatus, $reason) = $paypal->ipnvalidate(\%query);
 	if (not $txnstatus) {
 		log_paypal("IPN-no $reason", \%query);
@@ -642,8 +638,7 @@ sub paypal_buy {
 	my $item = $products{$what}{name};
 	my $usd  = $products{$what}{price};
 
-	my $paypal = Business::PayPal->new(address => $sandbox);
-#	my $paypal = Business::PayPal->new();
+	my $paypal = paypal();
 
 	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
@@ -790,6 +785,20 @@ sub read_authors {
 	return;
 }
 
+sub paypal {
+	my @params = @_;
+
+	if ($sandbox) {
+		chomp $Cert;
+		chomp $Certcontent;
+
+		$Business::PayPal::Cert = $Cert;
+		$Business::PayPal::Certcontent = $Certcontent;
+
+		push @params, address => $sandbox_url;
+	}
+	Business::PayPal->new(@params);
+}
 
 true;
 
