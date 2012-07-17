@@ -109,17 +109,7 @@ Subject Name: /1.3.6.1.4.1.311.60.2.1.3=US/1.3.6.1.4.1.311.60.2.1.2=Delaware/bus
 Issuer  Name: /C=US/O=VeriSign, Inc./OU=VeriSign Trust Network/OU=Terms of use at https://www.verisign.com/rpa (c)06/CN=VeriSign Class 3 Extended Validation SSL CA
 CERTCONTENT
 
-my %products = (
-	'perl_maven_cookbook' => {
-		name  => 'Perl Maven Cookbook',
-		price => 0,
-	},
-	'beginner_perl_maven_ebook' => {
-		name  => 'Beginner Perl Maven E-book',
-		price => 8.00,
-	},
-);
-
+my %products;
 if (not config->{appdir}) {
 	require Cwd;
 	set appdir => Cwd::cwd;
@@ -130,6 +120,9 @@ my %authors;
 
 hook before => sub {
 	read_authors();
+	my $p = $db->get_products;
+	debug Dumper $p;
+	%products = %$p;
 };
 
 hook before_template => sub {
@@ -390,11 +383,11 @@ get '/account' => sub {
 
 	my $email = session('email');
 	my @subscriptions = $db->get_subscriptions($email);
-	my @products;
+	my @owned_products;
 	foreach my $code (@subscriptions) {
 		my $file = get_download_file($code);
 		debug "$code -  $file";
-		push @products, {
+		push @owned_products, {
 			name     => $products{$code}{name},
 			filename => "/download/$code/$file",
 			linkname => $file,
@@ -402,7 +395,7 @@ get '/account' => sub {
 	}
 
 	template 'account', {
-		subscriptions => \@products,
+		subscriptions => \@owned_products,
 		subscribed => $db->is_subscribed($email, 'perl_maven_cookbook'),
 	};
 };

@@ -146,4 +146,10 @@ sub get_transaction {
 	return $data;
 }
 
+sub get_products {
+	my ($self) = @_;
+	return $self->{dbh}->selectall_hashref(q{SELECT id, code, name, price FROM product}, 'code');
+}
+
+
 1;
