@@ -22,7 +22,7 @@ sub read {
 				$data{$1} = $2;
 				next;
 			}
-			if ($line =~ m{^<code lang="([^"]+)">}) {
+			if ($line =~ m{^<code(?: lang="([^"]+)")?>}) {
 				$in_code = $1;
 				$cont .= qq{<pre>\n};
 				next;
