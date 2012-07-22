@@ -1,0 +1,16 @@
+<% IF comments %>
+
+<script>reddit_url='<% permalink %>'</script>
+<script>reddit_title='<% title %>'</script>
+<script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
+
+<a href="http://twitter.com/share" class="twitter-share-button"
+data-text="<% title %>" data-url="<% permalink %>" data-count="vertical" data-via="perlmaven">Tweet</a>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js">
+</script>
+
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<g:plusone size="tall" href="<% permalink %>"></g:plusone>
+
+<% END %>
+
