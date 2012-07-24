@@ -67,11 +67,12 @@ sub sendmail {
 	my $to = shift;
 
 	my $msg = MIME::Lite->new(
-		From     => $from,
-		To       => $to,
-		Type     => 'multipart/alternative',
-		Subject  => $subject,
+		'From'     => $from,
+		'To'       => $to,
+		'Type'     => 'multipart/alternative',
+		'Subject'  => $subject,
 		);
+	$msg->attr('List-Id'  => 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'),
 
 	my %type = (
 		text => 'text/plain',
