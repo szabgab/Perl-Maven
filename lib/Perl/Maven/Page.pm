@@ -17,6 +17,9 @@ sub read {
 			if ($line =~ /^=abstract start/ .. $line =~ /^=abstract end/) {
 				next if $line =~ /^=abstract/;
 				$data{abstract} .= $line;
+				if ($line =~ /^\s*$/) {
+					$data{abstract} .= "<p>\n";
+				}
 			}
 			if ($line =~ /^=(\w+)\s+(.*?)\s*$/) {
 				$data{$1} = $2;
@@ -45,7 +48,7 @@ sub read {
 		}
 	}
 	$data{mycontent} = $cont;
-	if (length $data{abstract} > 600) {
+	if (length $data{abstract} > 700) {
 		die sprintf("Abstract of %s is too long. It has %s character", $self->file, length $data{abstract});
 	}
 
