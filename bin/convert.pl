@@ -13,7 +13,7 @@ my $dsn = "dbi:SQLite:dbname=pm.db";
 DBIx::RunSQL->create(
 	verbose => 0,
 	dsn     => $dsn,
-	sql     => 'sql/schema.sql',
+	sql     => 'sql/schema1.sql',
 );
 
 my $dbh = DBI->connect($dsn, "", "", {

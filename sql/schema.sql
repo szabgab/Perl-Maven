@@ -8,3 +8,29 @@ CREATE TABLE user (
   verify_code     VARCHAR(20),
   verify_time     VARCHAR(11)
 );
+
+CREATE TABLE product (
+  id              INTEGER PRIMARY KEY,
+  code            VARCHAR(255) UNIQUE NOT NULL,
+  name            VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE subscription (
+  uid    INTEGER NOT NULL,
+  pid    INTEGER NOT NULL,
+  FOREIGN KEY (uid) REFERENCES user(id),
+  FOREIGN KEY (pid) REFERENCES product(id),
+  CONSTRAINT uid_pid UNIQUE (uid, pid)
+);
+
+CREATE TABLE transactions (
+  id     VARCHAR(100) UNIQUE NOT NULL,
+  sys    VARCHAR(10),
+  ts     VARCHAR(10) NOT NULL,
+  data   BLOB 
+);
+ALTER TABLE product ADD COLUMN price NUMERIC;
+UPDATE product SET price = 0 WHERE id = 1;
+INSERT INTO product (id, code, name, price) VALUES (2, 'beginner_perl_maven_ebook', 'Beginner Perl 5 Maven e-book', 0.01); 
+
+
