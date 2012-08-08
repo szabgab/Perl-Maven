@@ -36,12 +36,12 @@ GetOptions(\%opt,
 ) or die;
 die "Usage: $0 --to mail\@address.com --url http://url\n" if not $opt{to} or not $opt{url};
 
-my $from = 'Gabor Szabo <gabor@szabgab.com>';
+my $from = 'Gabor Szabo <gabor@perl5maven.com>';
 
 my $w = WWW::Mechanize->new;
 #say $opt{url};
 $w->get($opt{url});
-my $subject = $w->title;
+my $subject = '[Perl Maven] ' . $w->title;
 
 my %content;
 $content{html} = $w->content;
