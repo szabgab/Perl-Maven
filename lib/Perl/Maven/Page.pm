@@ -27,7 +27,7 @@ sub read {
 			}
 			if ($line =~ m{^<code(?: lang="([^"]+)")?>}) {
 				$in_code = $1;
-				$cont .= qq{<pre>\n};
+				$cont .= qq{<pre class="prettyprint linenums languague-perl">\n};
 				next;
 			}
 			if ($line =~ m{^</code>}) {

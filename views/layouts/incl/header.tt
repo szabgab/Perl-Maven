@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/css/style.css" rel="stylesheet">
 <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+<link href="/google-code-prettify/prettify.css" rel="stylesheet">
+<script src="/google-code-prettify/prettify.js"></script>
+
+
+
 <style>
 body {
   padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -29,7 +36,7 @@ pre {
 <meta name="author" content="<% author %>">
 
 </head>
-<body>
+<body onload="prettyPrint()" >
 <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
