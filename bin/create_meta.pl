@@ -20,7 +20,7 @@ foreach my $file (glob "$dir/*.tt") {
 		die "No $field in $file" if not $data->{$field};
 	}
 	die "Invalid status $data->{status} in $file"
-		if $data->{status} !~ /^(show|hide|draft)/;
+		if $data->{status} !~ /^(show|hide|draft|ready)/;
 
 	push @pages, {
 			file  => $file,
