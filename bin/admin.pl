@@ -3,6 +3,9 @@ use strict;
 use warnings;
 use v5.12;
 
+# TODO --address filter    list subscribers filtered by their e-mail
+# TODO --addsub  product  --email  email@address     add the specific product to the specific user
+
 use Data::Dumper qw(Dumper);
 use DBI;
 use Getopt::Long qw(GetOptions);
@@ -33,9 +36,15 @@ if ($opt{products}) {
 	}, 'id');
 	#print Dumper $products;
 	my $subs = $dbh->selectall_hashref(q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid');
+	my $format = "%-35s %5s\n";
 	foreach my $pid (sort keys %$products) {
-		printf "%-35s %5s\n", $products->{$pid}{code}, $subs->{$pid}{cnt};
+		printf $format, $products->{$pid}{code}, $subs->{$pid}{cnt};
 	}
+	my $all_subs = $dbh->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
+	my $distinct_subs = $dbh->selectrow_array(q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
+	say '-' x 45;
+	printf $format, "Total 'purchases':", $all_subs;
+	printf $format, "Distinct # of clients:", $distinct_subs;
 } else {
 	usage();
 }
