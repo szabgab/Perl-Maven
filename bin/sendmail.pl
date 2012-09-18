@@ -22,46 +22,57 @@ my $dbh = DBI->connect($dsn, "", "", {
 my %opt;
 GetOptions(\%opt,
 	'to=s',
-	'url=s'
+	'url=s',
+	'send',
 ) or usage();
 usage() if not $opt{to} or not $opt{url};
 
 my $from = 'Gabor Szabo <gabor@perl5maven.com>';
+my ($subject, %content) = build_content();
+send_messages();
+exit;
+################################################################################
 
-my $w = WWW::Mechanize->new;
-#say $opt{url};
-$w->get($opt{url});
-my $subject = '[Perl Maven] ' . $w->title;
+sub build_content {
+	my $w = WWW::Mechanize->new;
+	$w->get($opt{url});
+	my $subject = '[Perl Maven] ' . $w->title;
 
-my %content;
-$content{html} = $w->content;
-$content{text} = html2text($w->content);
+	my %content;
+	$content{html} = $w->content;
+	$content{text} = html2text($w->content);
 
+	return $subject, %content;
+}
 
-if ($opt{to} =~ /\@/) {
-	sendmail($opt{to});
-} else {
-	my $emails = $dbh->selectall_arrayref(q{
-	   SELECT email
-	   FROM user, subscription, product
-	   WHERE user.id=subscription.uid
-	     AND user.verify_time is not null
-	     AND product.id=subscription.pid
-	     AND product.code=?
-	}, undef, $opt{to});
-#'perl_maven_cookbook'
-#die Dumper $emails;
+sub send_messages {
+	if ($opt{to} =~ /\@/) {
+		sendmail($opt{to});
+	} else {
+		my $emails = $dbh->selectall_arrayref(q{
+		   SELECT email
+		   FROM user, subscription, product
+		   WHERE user.id=subscription.uid
+		     AND user.verify_time is not null
+		     AND product.id=subscription.pid
+		     AND product.code=?
+		}, undef, $opt{to});
+	#'perl_maven_cookbook'
+	#die Dumper $emails;
 
-	#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
-	my $total = scalar @$emails;
-	print "Sending to $total number of addresses\n";
-	my $count = 0;
-	foreach my $email (@$emails) {
-		$count++;
-		say "$count out of $total  to $email->[0]";
-		sendmail($email->[0]);
-		sleep 1;
+		#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
+		my $total = scalar @$emails;
+		print "Sending to $total number of addresses\n";
+		return if not $opt{send};
+		my $count = 0;
+		foreach my $email (@$emails) {
+			$count++;
+			say "$count out of $total  to $email->[0]";
+			sendmail($email->[0]);
+			sleep 1;
+		}
 	}
+	return;
 }
 
 sub sendmail {
@@ -112,6 +123,8 @@ sub html2text {
 sub usage {
 	print <<"END_USAGE";
 Usage: $0 --url http://url
+    --send if I really want to send the messages
+
     --to mail\@address.com
 #    --to all                      (all the subscribers) currently not supported
 
