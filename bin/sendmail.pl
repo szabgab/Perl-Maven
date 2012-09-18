@@ -19,22 +19,12 @@ my $dbh = DBI->connect($dsn, "", "", {
 	AutoCommit => 1,
 });
 
-my $emails = $dbh->selectall_arrayref(q{
-   SELECT email
-   FROM user, subscription, product
-   WHERE user.id=subscription.uid
-     AND user.verify_time is not null
-     AND product.id=subscription.pid
-     AND product.code=?
-}, undef, 'perl_maven_cookbook');
-#die Dumper $emails;
-
 my %opt;
 GetOptions(\%opt,
 	'to=s',
 	'url=s'
-) or die;
-die "Usage: $0 --to mail\@address.com --url http://url\n" if not $opt{to} or not $opt{url};
+) or usage();
+usage() if not $opt{to} or not $opt{url};
 
 my $from = 'Gabor Szabo <gabor@perl5maven.com>';
 
@@ -48,7 +38,20 @@ $content{html} = $w->content;
 $content{text} = html2text($w->content);
 
 
-if ($opt{to} eq 'all') {
+if ($opt{to} =~ /\@/) {
+	sendmail($opt{to});
+} else {
+	my $emails = $dbh->selectall_arrayref(q{
+	   SELECT email
+	   FROM user, subscription, product
+	   WHERE user.id=subscription.uid
+	     AND user.verify_time is not null
+	     AND product.id=subscription.pid
+	     AND product.code=?
+	}, undef, $opt{to});
+#'perl_maven_cookbook'
+#die Dumper $emails;
+
 	#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
 	my $total = scalar @$emails;
 	print "Sending to $total number of addresses\n";
@@ -59,8 +62,6 @@ if ($opt{to} eq 'all') {
 		sendmail($email->[0]);
 		sleep 1;
 	}
-} else {
-	sendmail($opt{to});
 }
 
 sub sendmail {
@@ -106,4 +107,22 @@ sub html2text {
 	$html =~ s{<[^>]+>}{}g;
 
 	return $html;
+}
+
+sub usage {
+	print <<"END_USAGE";
+Usage: $0 --url http://url
+    --to mail\@address.com
+#    --to all                      (all the subscribers) currently not supported
+
+END_USAGE
+
+	my $products = $dbh->selectall_arrayref(q{
+	   SELECT code, name
+	   FROM product
+	});
+	foreach my $p (@$products) {
+		say "    --to $p->[0]";
+	}
+	exit;
 }
