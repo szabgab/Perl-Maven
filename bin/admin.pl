@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use v5.12;
 
-# TODO --addsub  product  --email  email@address     add the specific product to the specific user
 
 use Data::Dumper qw(Dumper);
 use DBI;
@@ -21,6 +20,9 @@ GetOptions(\%opt,
 	'products',
 	'stats',
 	'address=s',
+
+	'addsub=s',
+	'email=s',
 ) or usage();
 
 if ($opt{products}) {
@@ -46,24 +48,50 @@ if ($opt{products}) {
 	printf $format, "Total 'purchases':", $all_subs;
 	printf $format, "Distinct # of clients:", $distinct_subs;
 } elsif ($opt{address}) {
-	my $people = $dbh->selectall_arrayref(q{
-	   SELECT id, email, verify_time
-	   FROM user WHERE email LIKE ?
-	}, undef, '%' . $opt{address} . '%');
-	foreach my $p (@$people) {
-		$p->[2] //= '-';
-		printf "%4s %30s  %s\n", @$p;
-	}
+	show_people($opt{address});
+
+} elsif ($opt{addsub} and $opt{email}) {
+	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, $opt{addsub});
+	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
+	print "PID: $pid  UID: $uid\n";
+	$dbh->do(q{INSERT INTO subscription (uid, pid) VALUES (?, ?)}, undef, $uid, $pid);
+	show_people($opt{email});
 } else {
 	usage();
 }
+exit;
+#######################################################################################################
+
+sub show_people {
+	my ($email) = @_;
+
+	my $people = $dbh->selectall_arrayref(q{
+	   SELECT id, email, verify_time
+	   FROM user WHERE email LIKE ?
+	}, undef, '%' . $email . '%');
+	foreach my $p (@$people) {
+		$p->[2] //= '-';
+		my $subs = $dbh->selectall_arrayref(q{SELECT product.code
+			FROM product, subscription
+			WHERE product.id=subscription.pid
+			AND subscription.uid=?}, undef, $p->[0]);
+		printf "%4s %30s  %s\n", @$p;
+		foreach my $s (@$subs) {
+			printf "     %s\n", @$s;
+		}
+	}
+	return;
+}
+
 
 sub usage {
 	print <<"END_USAGE";
 Usage: $0
-    --products
-    --stats
-    --address   FILTER_FOR_EMAIL
+    --products                                   list of products
+    --stats                                      subscription statistics
+    --address   FILTER_FOR_EMAIL                 list users
+
+    --addsub  product  --email  email\@address   add the specific product to the specific user
 END_USAGE
 	exit;
 }
