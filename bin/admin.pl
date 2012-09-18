@@ -4,6 +4,7 @@ use warnings;
 use v5.12;
 
 
+
 use Data::Dumper qw(Dumper);
 use DBI;
 use Getopt::Long qw(GetOptions);
@@ -20,6 +21,7 @@ GetOptions(\%opt,
 	'products',
 	'stats',
 	'address=s',
+	'list=s',
 
 	'addsub=s',
 	'email=s',
@@ -63,6 +65,18 @@ if ($opt{products}) {
 	print "PID: $pid  UID: $uid\n";
 	$dbh->do(q{DELETE FROM subscription WHERE uid=? AND pid=?}, undef, $uid, $pid);
 	show_people($opt{email});
+} elsif ($opt{list}) {
+	my $emails = $dbh->selectall_arrayref(q{
+	   SELECT email
+	   FROM user, subscription, product
+	   WHERE user.id=subscription.uid
+	     AND user.verify_time is not null
+	     AND product.id=subscription.pid
+	     AND product.code=?
+	}, undef, $opt{list});
+	foreach my $e (sort {$a->[0] cmp $b->[0]} @$emails) {
+		say "$e->[0]";
+	}
 } else {
 	usage();
 }
@@ -98,8 +112,9 @@ Usage: $0
     --stats                                      subscription statistics
     --address   FILTER_FOR_EMAIL                 list users
 
-    --addsub  product  --email  email\@address   add the specific product to the specific user
+    --list PRODUCT                               list all the users who subscribe to this project
 
+    --addsub  product  --email  email\@address   add the specific product to the specific user
     --unsub  --email  email\@address   remove the perl_maven_cookbook from the specific user
 END_USAGE
 	exit;
