@@ -17,6 +17,7 @@ my $dbh = DBI->connect($dsn, "", "", {
 my %opt;
 GetOptions(\%opt,
 	'products',
+	'stats',
 ) or usage();
 
 if ($opt{products}) {
@@ -25,16 +26,25 @@ if ($opt{products}) {
 	   FROM product
 	});
 	print Dumper $products;
-	exit;
+} elsif ($opt{stats}) {
+	my $products = $dbh->selectall_hashref(q{
+	   SELECT *
+	   FROM product
+	}, 'id');
+	#print Dumper $products;
+	my $subs = $dbh->selectall_hashref(q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid');
+	foreach my $pid (sort keys %$products) {
+		printf "%-35s %5s\n", $products->{$pid}{code}, $subs->{$pid}{cnt};
+	}
+} else {
+	usage();
 }
-
-usage();
-
 
 sub usage {
 	print <<"END_USAGE";
 Usage: $0
     --products
+    --stats
 END_USAGE
 	exit;
 }
