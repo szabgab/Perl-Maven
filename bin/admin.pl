@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use v5.12;
 
-# TODO --address filter    list subscribers filtered by their e-mail
 # TODO --addsub  product  --email  email@address     add the specific product to the specific user
 
 use Data::Dumper qw(Dumper);
@@ -21,6 +20,7 @@ my %opt;
 GetOptions(\%opt,
 	'products',
 	'stats',
+	'address=s',
 ) or usage();
 
 if ($opt{products}) {
@@ -45,6 +45,15 @@ if ($opt{products}) {
 	say '-' x 45;
 	printf $format, "Total 'purchases':", $all_subs;
 	printf $format, "Distinct # of clients:", $distinct_subs;
+} elsif ($opt{address}) {
+	my $people = $dbh->selectall_arrayref(q{
+	   SELECT id, email, verify_time
+	   FROM user WHERE email LIKE ?
+	}, undef, '%' . $opt{address} . '%');
+	foreach my $p (@$people) {
+		$p->[2] //= '-';
+		printf "%4s %30s  %s\n", @$p;
+	}
 } else {
 	usage();
 }
@@ -54,6 +63,7 @@ sub usage {
 Usage: $0
     --products
     --stats
+    --address   FILTER_FOR_EMAIL
 END_USAGE
 	exit;
 }
