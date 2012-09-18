@@ -23,6 +23,8 @@ GetOptions(\%opt,
 
 	'addsub=s',
 	'email=s',
+
+	'unsub',
 ) or usage();
 
 if ($opt{products}) {
@@ -49,12 +51,17 @@ if ($opt{products}) {
 	printf $format, "Distinct # of clients:", $distinct_subs;
 } elsif ($opt{address}) {
 	show_people($opt{address});
-
 } elsif ($opt{addsub} and $opt{email}) {
 	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, $opt{addsub});
 	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
 	print "PID: $pid  UID: $uid\n";
 	$dbh->do(q{INSERT INTO subscription (uid, pid) VALUES (?, ?)}, undef, $uid, $pid);
+	show_people($opt{email});
+} elsif ($opt{unsub} and $opt{email}) {
+	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, 'perl_maven_cookbook');
+	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
+	print "PID: $pid  UID: $uid\n";
+	$dbh->do(q{DELETE FROM subscription WHERE uid=? AND pid=?}, undef, $uid, $pid);
 	show_people($opt{email});
 } else {
 	usage();
@@ -92,6 +99,8 @@ Usage: $0
     --address   FILTER_FOR_EMAIL                 list users
 
     --addsub  product  --email  email\@address   add the specific product to the specific user
+
+    --unsub  --email  email\@address   remove the perl_maven_cookbook from the specific user
 END_USAGE
 	exit;
 }
