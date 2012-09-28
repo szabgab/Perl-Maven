@@ -104,7 +104,7 @@ sub sendmail {
 
 		$msg->attach($att);
 	}
-	$msg->send;
+	$msg->send(smtp => 'localhost');
 
 	return;
 }
