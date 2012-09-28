@@ -55,7 +55,7 @@ get '/archive' => sub {
 get '/atom' => sub {
 	my $pages;
 	my $file = 'feed';
-	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', "$file.json")) {
+	if (open my $fh, '<', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$pages = from_json $json;
@@ -98,7 +98,7 @@ sub _display {
 	my ($file, $template, $layout) = @_;
 
 	my $tt;
-	if (open my $fh, '<', path(config->{appdir}, '..', 'articles', 'meta', "$file.json")) {
+	if (open my $fh, '<', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$tt->{pages} = from_json $json;
@@ -324,7 +324,7 @@ get '/download/:dir/:file' => sub {
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
-	send_file(path(config->{appdir}, '..', 'articles', 'download', $dir, $file), system_path => 1);
+	send_file(path(config->{articles}, 'download', $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -468,9 +468,9 @@ get '/img/:file' => sub {
 	my $file = param('file');
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
-#	return config->{appdir} . "/../articles/img/$file";
+#	return config->{articles} . "img/$file";
 	send_file(
-		config->{appdir} . "/../articles/img/$file",
+		config->{articles} . "/img/$file",
 #		"d:\\work\\articles\\img\\$file",
 		content_type => $ext,
 		system_path => 1,
@@ -481,7 +481,7 @@ get '/mail/:article' => sub {
 
 	my $article = param('article');
 
-	my $path = config->{appdir} . "/../articles/mail/$article.tt";
+	my $path = config->{articles} . "/mail/$article.tt";
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
@@ -495,7 +495,7 @@ get qr{/(.+)} => sub {
 	my ($article) = splat;
 
 
-	my $path = config->{appdir} . "/../articles/$article.tt";
+	my $path = config->{articles} . "/$article.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
@@ -663,7 +663,7 @@ sub _generate_code {
 sub get_download_file {
 	my ($subdir) = @_;
 
-	my $dir = path config->{appdir}, '..', 'articles', 'download', $subdir;
+	my $dir = path config->{articles}, 'download', $subdir;
 	#debug $dir;
 	my $file;
 	if (opendir my $dh, $dir) {

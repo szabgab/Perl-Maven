@@ -10,6 +10,8 @@ use Data::Dumper qw(Dumper);
 
 my $run = start();
 
+my $articles = '../articles';
+
 eval "use Test::More";
 eval "use Test::Deep";
 require Test::WWW::Mechanize;
@@ -130,7 +132,7 @@ diag('subscribe to free Perl 5 Maven newsletter, let them download the cookbook'
 		text => $cookbook_text,
 	}, 'download_pdf');
 
-	my $src_pdf = read_file("../articles$cookbook_url");
+	my $src_pdf = read_file("$articles/$cookbook_url");
 	#diag(length $src_pdf);
 	#diag(length $w->content);
 	SKIP: {
