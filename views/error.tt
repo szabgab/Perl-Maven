@@ -30,6 +30,10 @@ User not found
 Invalid or missing code
 <% END %>
 
+<% IF old_password_code %>
+The code you you've received to set your password has timed out. Please ask for a new code.
+<% END %>
+
 </div>
 
 <% IF reset_password_sent %>
