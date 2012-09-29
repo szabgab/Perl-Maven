@@ -20,6 +20,7 @@ charset: "UTF-8"
 
 # template: "simple"
 
+articles: '/home/gabor/work/articles'
 template: "template_toolkit"
 engines:
   template_toolkit:
