@@ -12,8 +12,10 @@ sub read {
 	my $in_code;
 	if (open my $fh, '<', $self->file) {
 		while (my $line = <$fh>) {
-			$line =~ s{<hl>}{<span class="label">}g;
-			$line =~ s{</hl>}{</span>}g;
+			#$line =~ s{<hl>}{<span class="">}g;
+			#$line =~ s{</hl>}{</span>}g;
+			$line =~ s{<hl>}{<b>}g;
+			$line =~ s{</hl>}{</b>}g;
 			if ($line =~ /^=abstract start/ .. $line =~ /^=abstract end/) {
 				next if $line =~ /^=abstract/;
 				$data{abstract} .= $line;
