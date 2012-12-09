@@ -56,6 +56,8 @@ if ($opt{products}) {
 } elsif ($opt{addsub} and $opt{email}) {
 	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, $opt{addsub});
 	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
+    usage("Could not find product '$opt{addsub}'") if not $pid;
+    usage("Could not find user '$opt{email}'") if not $uid;
 	print "PID: $pid  UID: $uid\n";
 	$dbh->do(q{INSERT INTO subscription (uid, pid) VALUES (?, ?)}, undef, $uid, $pid);
 	show_people($opt{email});
@@ -106,6 +108,12 @@ sub show_people {
 
 
 sub usage {
+    my ($msg) = @_;
+
+    if ($msg) {
+        print "*** $msg\n\n";
+    }
+
 	print <<"END_USAGE";
 Usage: $0
     --products                                   list of products

@@ -1,4 +1,4 @@
-use Test::More tests => 7;
+use Test::More tests => 14;
 use strict;
 use warnings;
 
@@ -56,6 +56,31 @@ my $admin = "$^X -Ilib bin/admin.pl";
     };
     like $stdout, qr{Distinct # of clients};
     is $stderr, '', 'stderr is empty';
+}
+
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --list perl_maven_cookbook";
+    };
+    is $stdout, '';
+    is $stderr, '', 'stderr is empty';
+}
+
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --list other_product";
+    };
+    is $stdout, '';
+    is $stderr, '', 'stderr is empty';
+}
+
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --addsub perl_maven_cookbook --email a\@b.com";
+    };
+    like $stdout, qr{Could not find user 'a\@b.com'};
+    is $stderr, '', 'stderr is empty';
+    unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
 }
 
 
