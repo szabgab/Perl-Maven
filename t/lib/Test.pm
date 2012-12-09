@@ -15,6 +15,15 @@ use File::Copy qw(copy move);
 my $backup;
 my $process;
 
+sub setup {
+	my $t = time;
+	if (-e 'pm.db') {
+		$backup = "pm.db.$t";
+		move 'pm.db', $backup;
+	}
+	system "$^X bin/setup.pl" and die;
+}
+
 sub start {
     my $dir = tempdir( CLEANUP => 1 );
 
@@ -25,13 +34,7 @@ sub start {
     $ENV{PERL_MAVEN_PORT} = 20_000+$cnt;
     $ENV{PERL_MAVEN_MAIL} = File::Spec->catfile( $dir, 'mail.txt' );
 
-	my $t = time;
-	if (-e 'pm.db') {
-		$backup = "pm.db.$t";
-		move 'pm.db', $backup;
-	}
-	system "$^X bin/setup.pl" and die;
-
+    setup();
 
 	my $root = cwd();
     if ( $^O =~ /win32/i ) {
@@ -75,6 +78,7 @@ END {
 		move $backup, 'pm.db';
 	}
 }
+
 
 sub read_file {
     my $file = shift;

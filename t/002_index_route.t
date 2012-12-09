@@ -4,20 +4,9 @@ use warnings;
 
 use File::Copy qw(move);
 use Cwd qw(cwd);
-my $backup;
+use t::lib::Test;
 BEGIN {
-	my $t = time;
-	if (-e 'pm.db') {
-		$backup = "pm.db.$t";
-		move 'pm.db', $backup;
-	}
-	system "$^X bin/setup.pl" and die;
-}
-
-END {
-	if ($backup) {
-		move $backup, 'pm.db';
-	}
+    t::lib::Test::setup();
 }
 
 
