@@ -1,4 +1,4 @@
-use Test::More tests => 4;
+use Test::More tests => 7;
 use strict;
 use warnings;
 
@@ -41,7 +41,23 @@ my $admin = "$^X -Ilib bin/admin.pl";
          ], '--products';
     is $stderr, '', 'stderr is empty';
 }
+
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --address \@";
+    };
     #diag $stdout;
+    is $stderr, '', 'stderr is empty';
+}
+
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --stats";
+    };
+    like $stdout, qr{Distinct # of clients};
+    is $stderr, '', 'stderr is empty';
+}
+
 
 sub re_dump {
     my ($str) = @_;

@@ -44,7 +44,7 @@ if ($opt{products}) {
 	my $subs = $dbh->selectall_hashref(q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid');
 	my $format = "%-35s %5s\n";
 	foreach my $pid (sort keys %$products) {
-		printf $format, $products->{$pid}{code}, $subs->{$pid}{cnt};
+		printf $format, $products->{$pid}{code}, ($subs->{$pid}{cnt} || 0);
 	}
 	my $all_subs = $dbh->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
 	my $distinct_subs = $dbh->selectrow_array(q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
