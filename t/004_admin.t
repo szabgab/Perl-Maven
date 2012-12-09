@@ -1,4 +1,4 @@
-use Test::More tests => 14;
+use Test::More tests => 17;
 use strict;
 use warnings;
 
@@ -79,6 +79,15 @@ my $admin = "$^X -Ilib bin/admin.pl";
         system "$admin --addsub perl_maven_cookbook --email a\@b.com";
     };
     like $stdout, qr{Could not find user 'a\@b.com'};
+    is $stderr, '', 'stderr is empty';
+    unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
+}
+
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --addsub other_thing --email a\@b.com";
+    };
+    like $stdout, qr{Could not find product 'other_thing'};
     is $stderr, '', 'stderr is empty';
     unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
 }
