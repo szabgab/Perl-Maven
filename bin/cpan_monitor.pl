@@ -57,7 +57,10 @@ sub send_messages {
           );
           $msg->send;
         }
+        delete $data->{subscribers}{$uid}{msg};
     }
+
+    return;
 }
 
 sub collect_changes {
@@ -85,7 +88,7 @@ sub generate_messages {
         my $msg = '';
         foreach my $name ( sort keys %{$data->{subscribers}{$uid}{modules} }) {
             if ($data->{modules}{$name}{change}) {
-                $msg .= $data->{modules}{$name}{change};
+                $msg .= delete $data->{modules}{$name}{change};
             }
         }
         $data->{subscribers}{$uid}{msg} = $msg;
