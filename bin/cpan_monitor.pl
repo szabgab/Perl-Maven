@@ -15,27 +15,46 @@ use Cwd qw(abs_path);
 use File::Basename qw(dirname);
 use File::Slurp qw(read_file write_file);
 use MIME::Lite;
+use Getopt::Long qw(GetOptions);
+
+my %opt;
+GetOptions(\%opt, 'help', 'email', 'verbose') or usage();
+usage() if $opt{help};
+
+sub usage { die "Usage: --help --email --verbose\n" };
+
+my $mcpan = MetaCPAN::API->new;
 
 my $file = dirname(dirname abs_path $0) . "/cpan.json";
 my $data = {};
 if (-e $file) {
     $data = from_json scalar read_file $file;
 }
-
-my $mcpan = MetaCPAN::API->new;
-
 update_subscriptions();
 collect_changes();
+update_changes();
 generate_messages();
 send_messages();
+clear_changes();
 write_file $file, to_json($data, { utf8 => 1, pretty => 1 });
 
+exit;
+##################################################################
+
+sub _log {
+    my $msg = shift;
+    return if not $opt{verbose};
+    print "$msg\n";
+    return;
+}
+
 sub update_subscriptions {
+    _log("Update subscriptions");
     foreach my $uid (sort keys %{ $data->{subscribers} }) {
-#        say "Subscriber $uid";
+        _log("Subscriber $uid");
         my $msg = '';
         foreach my $name ( sort keys %{$data->{subscribers}{$uid}{modules} }) {
-#            print "$name\n";
+            _log("   Start monitoring module $name");
             $data->{modules}{$name} ||= {};
         }
     }
@@ -47,7 +66,7 @@ sub update_subscriptions {
 
 sub collect_changes {
     foreach my $name (sort keys %{ $data->{modules} }) {
-#        say "Module $name";
+        _log("Module $name");
         my $module   = $mcpan->module( $name );
         my $change = '';
         if (not defined $data->{modules}{$name}{version}) {
@@ -57,10 +76,10 @@ sub collect_changes {
         }
         if ($change) {
             my $dist = $mcpan->release( distribution => $module->{distribution} );
-            #say "$module->{distribution}  ";
+            _log("$module->{distribution}  ");
             foreach my $dep (@{ $dist->{dependency} }) {
                 next if $dep->{module} eq 'perl';
-                #say "   $dep->{module}  $dep->{version}"
+                _log("   $dep->{module}  $dep->{version}");
                 if (not exists $data->{modules}{$name}{dependencies}{$dep->{module}}) {
                     $change .= "Dependency added $dep->{module} $dep->{version}\n";
                 } elsif ( $data->{modules}{$name}{dependencies}{$dep->{module}} ne $dep->{version}) {
@@ -77,9 +96,41 @@ sub collect_changes {
     }
 }
 
+{
+    my %deps;
+
+# go over all the modules
+#   go over all the dependencies in a recursive way
+#     if any of the dependencies has changed, add this information to the "deps_changed" field
+    sub update_changes {
+        foreach my $name (sort keys %{ $data->{modules} }) {
+            %deps = ();
+            $deps{$name} = undef;
+            _deps($name);
+            
+            my $changes = '';
+            foreach my $d (keys %deps) {
+                next if not defined $deps{$d};
+                $changes .= "Dep: $d\n   $deps{$d}";
+            }
+            $data->{modules}{$name}{deps_changed} = $changes;
+        }
+        return;
+    }
+
+    sub _deps {
+        my ($name) = @_;
+        foreach my $d (sort keys %{ $data->{modules}{$name}{dependencies} || {} }) {
+            next if exists $deps{ $d };
+            $deps{ $d } = $data->{modules}{$name}{changes};
+            _deps($d);
+        }
+    }
+}
+
 sub generate_messages {
     foreach my $uid (sort keys %{ $data->{subscribers} }) {
-#        say "Subscriber $uid";
+        _log("Subscriber $uid");
         my $msg = '';
         foreach my $name ( sort keys %{$data->{subscribers}{$uid}{modules} }) {
             if ($data->{modules}{$name}{change}) {
@@ -104,12 +155,22 @@ sub send_messages {
           if (@ARGV and $ARGV[0] eq 'send') {
             $msg->send;
           } else {
+            print "The message\n";
+            print "--------------------\n";
             print $data->{subscribers}{$uid}{msg};
+            print "---------------------\n";
           }
         }
         delete $data->{subscribers}{$uid}{msg};
     }
 
     return;
+}
+
+sub clear_changes {
+    foreach my $name (sort keys %{ $data->{modules} }) {
+        $data->{modules}{$name}{change}       = '';
+        $data->{modules}{$name}{deps_changed} = '';
+    }
 }
 
