@@ -14,6 +14,7 @@ use JSON qw(from_json to_json);
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
 use File::Slurp qw(read_file write_file);
+use MIME::Lite;
 
 my $file = dirname(dirname abs_path $0) . "/cpan.json";
 my $data = {};
@@ -24,17 +25,17 @@ if (-e $file) {
 my $mcpan = MetaCPAN::API->new;
 
 update_subscriptions();
-#collect_changes();
-#generate_messages();
-#send_messages();
+collect_changes();
+generate_messages();
+send_messages();
 write_file $file, to_json($data, { utf8 => 1, pretty => 1 });
 
 sub update_subscriptions {
     foreach my $uid (sort keys %{ $data->{subscribers} }) {
-        say "Subscriber $uid";
+#        say "Subscriber $uid";
         my $msg = '';
         foreach my $name ( sort keys %{$data->{subscribers}{$uid}{modules} }) {
-            print "$name\n";
+#            print "$name\n";
             $data->{modules}{$name} ||= {};
         }
     }
@@ -45,12 +46,23 @@ sub update_subscriptions {
 
 
 sub send_messages {
-   ...
+    foreach my $uid (sort keys %{ $data->{subscribers} }) {
+#        say "Subscriber $uid";
+        if ($data->{subscribers}{$uid}{msg}) {
+          my $msg = MIME::Lite->new(
+            From    => 'szabgab@gmail.com',
+            To      => $data->{subscribers}{$uid}{email},
+            Subject => 'Perl Maven CPAN update',
+            Data    => $data->{subscribers}{$uid}{msg},
+          );
+          $msg->send;
+        }
+    }
 }
 
 sub collect_changes {
     foreach my $name (sort keys %{ $data->{modules} }) {
-        say "Module $name";
+#        say "Module $name";
         my $module   = $mcpan->module( $name );
         if (not defined $data->{modules}{$name}{version}) {
             $data->{modules}{$name}{change} = "Module $name N/A => $module->{version}\n";
@@ -69,13 +81,15 @@ sub collect_changes {
 
 sub generate_messages {
     foreach my $uid (sort keys %{ $data->{subscribers} }) {
-        say "Subscriber $uid";
+#        say "Subscriber $uid";
         my $msg = '';
         foreach my $name ( sort keys %{$data->{subscribers}{$uid}{modules} }) {
             if ($data->{modules}{$name}{change}) {
                 $msg .= $data->{modules}{$name}{change};
             }
-       }
+        }
+        $data->{subscribers}{$uid}{msg} = $msg;
     }
+    return;
 }
 
