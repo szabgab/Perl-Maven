@@ -45,28 +45,6 @@ sub update_subscriptions {
 }
 
 
-sub send_messages {
-    foreach my $uid (sort keys %{ $data->{subscribers} }) {
-#        say "Subscriber $uid";
-        if ($data->{subscribers}{$uid}{msg}) {
-          my $msg = MIME::Lite->new(
-            From    => 'Perl Maven <gabor@perl5maven.com>',
-            To      => $data->{subscribers}{$uid}{email},
-            Subject => 'Perl Maven CPAN update',
-            Data    => $data->{subscribers}{$uid}{msg},
-          );
-          if (@ARGV and $ARGV[0] eq 'send') {
-            $msg->send;
-          } else {
-            print $data->{subscribers}{$uid}{msg};
-          }
-        }
-        delete $data->{subscribers}{$uid}{msg};
-    }
-
-    return;
-}
-
 sub collect_changes {
     foreach my $name (sort keys %{ $data->{modules} }) {
 #        say "Module $name";
@@ -110,6 +88,28 @@ sub generate_messages {
         }
         $data->{subscribers}{$uid}{msg} = $msg;
     }
+    return;
+}
+
+sub send_messages {
+    foreach my $uid (sort keys %{ $data->{subscribers} }) {
+#        say "Subscriber $uid";
+        if ($data->{subscribers}{$uid}{msg}) {
+          my $msg = MIME::Lite->new(
+            From    => 'Perl Maven <gabor@perl5maven.com>',
+            To      => $data->{subscribers}{$uid}{email},
+            Subject => 'Perl Maven CPAN update',
+            Data    => $data->{subscribers}{$uid}{msg},
+          );
+          if (@ARGV and $ARGV[0] eq 'send') {
+            $msg->send;
+          } else {
+            print $data->{subscribers}{$uid}{msg};
+          }
+        }
+        delete $data->{subscribers}{$uid}{msg};
+    }
+
     return;
 }
 
