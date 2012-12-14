@@ -81,12 +81,15 @@ sub collect_changes {
             my $dist = $mcpan->release( distribution => $module->{distribution} );
             #say "$module->{distribution}  ";
             foreach my $dep (@{ $dist->{dependency} }) {
+                next if $dep->{module} eq 'perl';
                 #say "   $dep->{module}  $dep->{version}"
                 if (not exists $data->{modules}{$name}{dependencies}{$dep->{module}}) {
                     $change .= "Dependency added $dep->{module} $dep->{version}\n";
                 } elsif ( $data->{modules}{$name}{dependencies}{$dep->{module}} ne $dep->{version}) {
                     $change .= "Dependency changed $dep->{module} $data->{modules}{$name}{dependencies}{$dep->{module}} => $dep->{version}\n";
                 }
+                
+                $data->{modules}{ $dep->{module} } ||= {}; # add it to the list of modules being monitored
                 $data->{modules}{$name}{dependencies}{$dep->{module}} = $dep->{version};
             }
         }
