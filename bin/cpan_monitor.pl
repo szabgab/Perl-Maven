@@ -55,7 +55,11 @@ sub send_messages {
             Subject => 'Perl Maven CPAN update',
             Data    => $data->{subscribers}{$uid}{msg},
           );
-          $msg->send;
+          if (@ARGV and $ARGV[0] eq 'send') {
+            $msg->send;
+          } else {
+            print $data->{subscribers}{$uid}{msg};
+          }
         }
         delete $data->{subscribers}{$uid}{msg};
     }
@@ -67,18 +71,28 @@ sub collect_changes {
     foreach my $name (sort keys %{ $data->{modules} }) {
 #        say "Module $name";
         my $module   = $mcpan->module( $name );
+        my $change = '';
         if (not defined $data->{modules}{$name}{version}) {
-            $data->{modules}{$name}{change} = "Module $name N/A => $module->{version}\n";
+            $change = "Module $name N/A => $module->{version}\n";
         } elsif ($data->{modules}{$name}{version} ne $module->{version}) {
-            $data->{modules}{$name}{change} = "Module $name $data->{modules}{$name}{version} => $module->{version}\n";
+            $change = "Module $name $data->{modules}{$name}{version} => $module->{version}\n";
         }
+        if ($change) {
+            my $dist = $mcpan->release( distribution => $module->{distribution} );
+            #say "$module->{distribution}  ";
+            foreach my $dep (@{ $dist->{dependency} }) {
+                #say "   $dep->{module}  $dep->{version}"
+                if (not exists $data->{modules}{$name}{dependencies}{$dep->{module}}) {
+                    $change .= "Dependency added $dep->{module} $dep->{version}\n";
+                } elsif ( $data->{modules}{$name}{dependencies}{$dep->{module}} ne $dep->{version}) {
+                    $change .= "Dependency changed $dep->{module} $data->{modules}{$name}{dependencies}{$dep->{module}} => $dep->{version}\n";
+                }
+                $data->{modules}{$name}{dependencies}{$dep->{module}} = $dep->{version};
+            }
+        }
+
+        $data->{modules}{$name}{change} = $change;
         $data->{modules}{$name}{version} = $module->{version};
-        #my $dist     = $mcpan->release( distribution => $module->{distribution} );
-        #say "$module->{distribution}  ";
-        #foreach my $dependency (@{ $dist->{dependency} }) {
-        #   say "   $dependency->{module}  $dependency->{version}"
-        #}
-        #print Dumper $dist;
     }
 }
 
