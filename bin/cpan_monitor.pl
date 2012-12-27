@@ -18,28 +18,65 @@ use MIME::Lite;
 use Getopt::Long qw(GetOptions);
 
 my %opt;
-GetOptions(\%opt, 'help', 'email', 'verbose') or usage();
+usage() if not @ARGV;
+GetOptions(\%opt, 'help', 'run', 'email', 'verbose', 'setup') or usage();
 usage() if $opt{help};
 
-sub usage { die "Usage: --help --email --verbose\n" };
+sub usage {
+    my ($msg) = @_;
 
-my $mcpan = MetaCPAN::API->new;
+    if ($msg) {
+        print "**** $msg\n\n";
+    }
+
+    print <<"USAGE";
+Usage:
+    --help
+
+    --run
+    --email
+    --verbose
+
+    --setup
+#    --addsubscriber --name NAME  --email email
+USAGE
+
+    exit;
+};
 
 my $file = dirname(dirname abs_path $0) . "/cpan.json";
+
 my $data = {};
-if (-e $file) {
-    $data = from_json scalar read_file $file;
+if ($opt{setup}) {
+    die "Cannot run --setup. Database already exists\n" if -e $file;
+    save_file();
+    exit;
 }
+
+usage("Need to call --setup") if not -e $file;
+
+
+exit if not $opt{run};
+
+$data = from_json scalar read_file $file;
+
+
+my $mcpan = MetaCPAN::API->new;
 update_subscriptions();
 collect_changes();
 update_changes();
 generate_messages();
 send_messages();
 clear_changes();
-write_file $file, to_json($data, { utf8 => 1, pretty => 1 });
+save_file();
+
 
 exit;
 ##################################################################
+
+sub save_file {
+    write_file $file, to_json($data, { utf8 => 1, pretty => 1 });
+}
 
 sub _log {
     my $msg = shift;
