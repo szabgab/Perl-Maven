@@ -10,6 +10,12 @@ sub read {
 	my %data = (content => '', abstract => '');
 	my $cont = '';
 	my $in_code;
+
+    # headers need to be in this order.
+    # The onese with a ? mark at the end are optional
+    # Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
+    #    require it but also have a mark if we want to show it or not?)
+    # the standalaone and the clean might need a clean-up as I think it is not the negation of the others.
     my @header = qw(title timestamp description? indexes? tags? status standalone? clean? author index archive feed comments social);
 
 
