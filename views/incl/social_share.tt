@@ -1,4 +1,4 @@
-<% IF comments %>
+<% IF social %>
 
 <script>reddit_url='<% permalink %>'</script>
 <script>reddit_title='<% title %>'</script>
