@@ -76,7 +76,7 @@ get '/atom' => sub {
 		$xml .= qq{  <title>$p->{title}</title>\n};
 		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
 		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
-		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}" />};
+		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
 		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
 		$xml .= qq{  <id>$id</id>\n};
 		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
