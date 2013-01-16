@@ -20,7 +20,7 @@ my %opt;
 GetOptions(\%opt,
 	'products',
 	'stats',
-	'address=s',
+	'show',
 	'list=s',
 
 	'addsub=s',
@@ -51,8 +51,8 @@ if ($opt{products}) {
 	say '-' x 45;
 	printf $format, "Total 'purchases':", $all_subs;
 	printf $format, "Distinct # of clients:", $distinct_subs;
-} elsif ($opt{address}) {
-	show_people($opt{address});
+} elsif ($opt{show} and $opt{email}) {
+	show_people($opt{email});
 } elsif ($opt{addsub} and $opt{email}) {
 	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, $opt{addsub});
 	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
@@ -118,7 +118,7 @@ sub usage {
 Usage: $0
     --products                                   list of products
     --stats                                      subscription statistics
-    --address   FILTER_FOR_EMAIL                 list users
+    --show   --email FILTER_FOR_EMAIL            list users
 
     --list PRODUCT                               list all the users who subscribe to this project
 
