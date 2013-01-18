@@ -21,7 +21,7 @@ sub read {
 
     my $file = $self->file;
 
-	if (open my $fh, '<', $file) {
+	if (open my $fh, '<encoding(UTF-8)', $file) {
         for (my $i = 0; $i <= $#header; $i++) {
             my $field = $header[$i];
 

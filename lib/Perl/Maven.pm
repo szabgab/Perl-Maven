@@ -55,7 +55,7 @@ get '/archive' => sub {
 get '/atom' => sub {
 	my $pages;
 	my $file = 'feed';
-	if (open my $fh, '<', path(config->{articles}, 'meta', "$file.json")) {
+	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$pages = from_json $json;
@@ -98,7 +98,7 @@ sub _display {
 	my ($file, $template, $layout) = @_;
 
 	my $tt;
-	if (open my $fh, '<', path(config->{articles}, 'meta', "$file.json")) {
+	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$tt->{pages} = from_json $json;
@@ -601,7 +601,7 @@ sub read_tt {
 
 sub read_file {
 	my $file = shift;
-	open my $fh, '<', $file or return '';
+	open my $fh, '<encoding(UTF-8)', $file or return '';
 	local $/ = undef;
 	return scalar <$fh>;
 }
@@ -678,7 +678,7 @@ sub get_download_file {
 sub read_authors {
 	return if %authors;
 
-	open my $fh, '<', config->{appdir} . "/authors.txt" or return;
+	open my $fh, '<encoding(UTF-8)', config->{appdir} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
