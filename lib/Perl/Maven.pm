@@ -18,6 +18,7 @@ use POSIX ();
 
 use Perl::Maven::Page;
 
+
 my $sandbox = 0;
 
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
@@ -26,6 +27,13 @@ if (not config->{appdir}) {
 	require Cwd;
 	set appdir => Cwd::cwd;
 }
+
+# configure relative pathes
+my $engines = config->{engines};
+$engines->{template_toolkit}{INCLUDE_PATH} = config->{appdir}. '/views';
+set engines => $engines;
+set articles => config->{appdir} . '/../articles';
+
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
