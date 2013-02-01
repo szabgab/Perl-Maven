@@ -41,25 +41,25 @@ $('#typeahead').typeahead( { 'source' : <% keywords %>  })
 var data = <% keyword_mapper %>;
 $("#typeahead").keyup(function (e) {
     if (e.keyCode == 13) {
-        console.log('----------');
+        //console.log('----------');
         var keyword = $("#typeahead").val(); 
-        console.log( keyword );
-//        console.log( data[ keyword ] );
         var count = 0;
+
+        var single;
+        var html = '<ul>';
         for (var prop in data[ keyword ] ) {
             count++;
-            //console.log( prop );
-            //console.log( '       ' + data[ $("#typeahead").val() ][prop] );
+            single = '/' + prop;
+            html += '<li><a href="/' + prop + '">';
+            html += data[keyword][prop] + '</a></li>';
         }
-        console.log(count);
+        html += '</ul>';
+        //console.log(count);
         if (count == 1) {
-           console.log('in 1');
-           for (var prop in data[ keyword ] ) {
-              window.location = '/' + prop;
-              break;
-           }
+           window.location = single;
         } else {
-           alert('more than one hit');
+           $('.modal-body').html(html);
+           $('#myModal').modal('show')
         }
     }
 });

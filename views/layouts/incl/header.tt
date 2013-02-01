@@ -75,6 +75,21 @@ pre {
 <div class="container-fluid">
 <div class="row-fluid">
   <div class="span1">
+
+<!-- Modal start -->
+<!-- used for the result set when there are more than one results -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  </div>
+  <div class="modal-body">
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
+<!-- Modal end -->
+
   </div>
   <div class="span8">
 
