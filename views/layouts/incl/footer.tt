@@ -2,7 +2,13 @@
 
     <div class="span3">
       <div style="position:fixed">
-         <% UNLESS standalone %>
+        <input type="text" data-provide="typeahead" data-items="4" data-source='["Perl","Python","PHP","Ruby","Java","Jaja"]'>
+        
+        <div class="ui-widget">
+          <label for="tags">Tags: </label>
+          <input id="tags" />
+        </div>
+        <% UNLESS standalone %>
            <h3>Do you want to improve your Perl?</h3>
            Register to the FREE newsletter now, get updates and a copy
            of the Perl Maven Cookbook.
@@ -36,6 +42,29 @@
 <script src="/bootstrap/js/bootstrap-carousel.js"></script>
 <script src="/bootstrap/js/bootstrap-typeahead.js"></script>
 
+<!-- start autocomplete search box -->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+<script>
+ $(function() {
+   var availableTags = [
+     "ActionScript",
+     "AppleScript",
+     "Asp",
+     "BASIC",
+     "C"
+   ];
+   $( "#tags" ).autocomplete({
+     source: availableTags
+   });
+});   
+</script>
+<!-- end of autocomplete search box -->
+
+<script>
+$('.typeahead').typeahead(source)
+</script>
 
 <!-- Google Adwords -->
 <script type="text/javascript">
