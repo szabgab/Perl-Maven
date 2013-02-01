@@ -51,6 +51,19 @@ hook before_template => sub {
 	if (logged_in()) {
 		($t->{username}) = split /@/, session 'email';
 	}
+
+    my $keywords = '[]';
+    my $keyword_mapper = '{}';
+    if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "keywords.json")) {
+		local $/ = undef;
+		my $json = <$fh>;
+        $keyword_mapper = $json;
+		my $data = from_json $json;
+        $keywords = to_json [sort keys %$data]
+    }
+    $t->{keywords} = $keywords;
+    $t->{keyword_mapper} = $keyword_mapper;
+
 	return;
 };
 
@@ -105,21 +118,12 @@ get '/atom' => sub {
 sub _display {
 	my ($file, $template, $layout) = @_;
 
-    my $keywords = '[]';
-    if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "keywords.json")) {
-		local $/ = undef;
-		my $json = <$fh>;
-		my $data = from_json $json;
-        $keywords = to_json [sort keys %$data]
-    }
-   
 	my $tt;
 	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$tt->{pages} = from_json $json;
 	}
-    $tt->{keywords} = $keywords;
 	template $template, $tt, { layout => $layout };
 };
 
