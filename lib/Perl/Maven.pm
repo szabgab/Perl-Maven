@@ -105,12 +105,21 @@ get '/atom' => sub {
 sub _display {
 	my ($file, $template, $layout) = @_;
 
+    my $keywords = '[]';
+    if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "keywords.json")) {
+		local $/ = undef;
+		my $json = <$fh>;
+		my $data = from_json $json;
+        $keywords = to_json [sort keys %$data]
+    }
+   
 	my $tt;
 	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		$tt->{pages} = from_json $json;
 	}
+    $tt->{keywords} = $keywords;
 	template $template, $tt, { layout => $layout };
 };
 

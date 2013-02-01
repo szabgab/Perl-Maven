@@ -1,13 +1,7 @@
     </div>
 
     <div class="span3">
-      <div style="position:fixed">
-        <input type="text" data-provide="typeahead" data-items="4" data-source='["Perl","Python","PHP","Ruby","Java","Jaja"]'>
-        
-        <div class="ui-widget">
-          <label for="tags">Tags: </label>
-          <input id="tags" />
-        </div>
+      <div style="position:fixed">        
         <% UNLESS standalone %>
            <h3>Do you want to improve your Perl?</h3>
            Register to the FREE newsletter now, get updates and a copy
@@ -42,28 +36,13 @@
 <script src="/bootstrap/js/bootstrap-carousel.js"></script>
 <script src="/bootstrap/js/bootstrap-typeahead.js"></script>
 
-<!-- start autocomplete search box -->
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 <script>
- $(function() {
-   var availableTags = [
-     "ActionScript",
-     "AppleScript",
-     "Asp",
-     "BASIC",
-     "C"
-   ];
-   $( "#tags" ).autocomplete({
-     source: availableTags
-   });
-});   
-</script>
-<!-- end of autocomplete search box -->
-
-<script>
-$('.typeahead').typeahead(source)
+$('#typeahead').typeahead( { 'source' : <% keywords %>  })
+$("#typeahead").keyup(function (e) {
+    if (e.keyCode == 13) {
+        alert( $("#typeahead").val() );
+    }
+});
 </script>
 
 <!-- Google Adwords -->
@@ -84,7 +63,6 @@ $('.typeahead').typeahead(source)
 <script src="//static.getclicky.com/js" type="text/javascript"></script>
 <script type="text/javascript">try{ clicky.init(66509177); }catch(e){}</script>
 <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/66509177ns.gif" /></p></noscript>
-
 
 </body>
 </html>
