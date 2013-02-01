@@ -4,7 +4,8 @@ use warnings;
 use v5.10;
 
 #use Cwd qw(abs_path);
-use File::Basename qw(basename);
+use File::Basename qw(basename dirname);
+use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use JSON qw(to_json);
 
@@ -12,7 +13,9 @@ use lib 'lib';
 use Perl::Maven::Page;
 
 my @pages;
-my $dir = '/home/gabor/work/articles'; #dirname dirname dirname abs_path $0;
+#my $dir = '/home/gabor/work/articles';
+my $dir = dirname(dirname dirname abs_path $0) . '/articles';
+
 foreach my $file (glob "$dir/*.tt") {
 	#say "Reading $file";
 	my $data = Perl::Maven::Page->new(file => $file)->read;
@@ -32,6 +35,12 @@ foreach my $file (glob "$dir/*.tt") {
 #die  Dumper [ keys %{$pages[0]} ];
 
 @pages = sort { $b->{timestamp} cmp $a->{timestamp} } grep { $_->{status} eq 'show' } @pages;
+my %keywords; # =indexes and =tags are united here
+
+# TODO:
+# I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
+# might want to search for. Or the other way around.
+
 
 my $count_index = 0;
 my $count_feed  = 0;
@@ -40,6 +49,17 @@ my $MAX_FEED    = 10;
 my (@index, @feed, @archive);
 foreach my $p (@pages) {
 	my $filename = substr(basename($p->{file}),  0, -3);
+    
+    foreach my $f (qw(indexes tags)) {
+        next if not $p->{$f};
+        my @words = split /,\s*/, $p->{$f};
+        foreach my $w (@words) {
+            #$keywords{$w} ||= {};
+            warn "Duplicate '$w' in '$filename'\n" if $keywords{$w}{$filename};
+            $keywords{$w}{$filename} = $p->{title}
+        }
+    }
+    
 	#say "$p->{timestamp} $p->{file}";
 	if ($p->{archive}) {
 		my ($date) = split /T/, $p->{timestamp};
@@ -72,11 +92,13 @@ foreach my $p (@pages) {
 save ('index',   \@index);
 save ('archive', \@archive);
 save ('feed',    \@feed);
+save ('keywords', \%keywords);
 exit;
 
 sub save {
 	my ($file, $data) = @_;
-	open my $fh, '>', "$dir/meta/$file.json" or die;
+    my $path = "$dir/meta/$file.json";
+	open my $fh, '>', $path or die "Could not open '$path'\n";
 	print $fh to_json $data, { utf8 => 1, pretty => 1 };
 	close $fh;
 	return;
