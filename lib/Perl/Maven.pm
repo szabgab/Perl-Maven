@@ -689,7 +689,7 @@ sub get_download_file {
 	#debug $dir;
 	my $file;
 	if (opendir my $dh, $dir) {
-		($file) = sort grep {$_ !~ /^\./} readdir $dh;
+		($file) = reverse sort grep {$_ !~ /^\./} readdir $dh;
 	} else {
 		error "$dir : $!";
 	}
