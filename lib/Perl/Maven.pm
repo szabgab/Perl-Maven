@@ -223,6 +223,10 @@ post '/login' => sub {
 	redirect '/account';
 };
 
+get '/linode' => sub {
+	redirect 'http://www.linode.com/?r=cccf1376edd5c6f0b8eccb97e0741a1f24584e43';
+};
+
 get '/unsubscribe' => sub {
 	return redirect '/login' if not logged_in();
 
