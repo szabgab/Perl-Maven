@@ -10,15 +10,14 @@
              Email: <input name="email" />
             <input type="submit" value="Register" />
            </form>
-         <% END %>
+        <% END %>
         <% INCLUDE incl/social_share.tt %>
 
-        <div style="text-align:center">
-	Recommended web hosting company:<br>
-        <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a>
-        </div>
-
          <% UNLESS standalone %>
+           <div style="text-align:center">
+	        Recommended web hosting company:<br>
+            <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a>
+           </div>
 <!--
          Looking for a job using Perl?
 -->
