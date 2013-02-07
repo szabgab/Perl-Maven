@@ -1,7 +1,7 @@
     </div>
 
     <div class="span3">
-      <div style="position:fixed">        
+      <div style="position:fixed">
         <% UNLESS standalone %>
            <h3>Do you want to improve your Perl?</h3>
            Register to the FREE newsletter now, get updates and a copy
@@ -19,8 +19,17 @@
             <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a>
            </div>
 
-           <div>
-             <a href="https://home.eease.adp.com/recruit/?id=794281">MediaMath is hiring Perl Developers:  Are you tired of Perl "scripting"?</a>
+           <div style="
+                margin: 20px;
+                background-color: #EEEEEE;
+                padding: 10px;
+                -moz-border-radius: 15px;
+                -webkit-border-radius: 15px;
+                border-radius: 15px;
+             " >
+             <p>
+             <a href="https://home.eease.adp.com/recruit/?id=794281">MediaMath is hiring Perl Developers:<br>Are you tired of Perl "scripting"?</a>
+             </p>
              Come join an innovative talented engineering department where you can do
              some serious Perl programming in a great development environment with
              clean codebase that is not slapped together.  If interested in learning
