@@ -14,19 +14,12 @@
         <% INCLUDE incl/social_share.tt %>
 
          <% UNLESS standalone %>
-           <div style="text-align:center">
-	        Recommended web hosting company:<br>
-            <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a>
+           <div class="sponsor">
+	        <a href="/linode">Linode</a> is our recommended web hosting company.  
+	        <!-- Recommended web hosting company:  <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a> -->
            </div>
 
-           <div style="
-                margin: 20px;
-                background-color: #EEEEEE;
-                padding: 10px;
-                -moz-border-radius: 15px;
-                -webkit-border-radius: 15px;
-                border-radius: 15px;
-             " >
+           <div class="sponsor">
              <p>
              <a href="https://home.eease.adp.com/recruit/?id=794281">MediaMath is hiring Perl Developers:<br>Are you tired of Perl "scripting"?</a>
              </p>
