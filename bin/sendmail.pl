@@ -36,6 +36,7 @@ exit;
 sub build_content {
 	my $w = WWW::Mechanize->new;
 	$w->get($opt{url});
+	die 'missing title' if not $w->title;
 	my $subject = '[Perl Maven] ' . $w->title;
 
 	my %content;
