@@ -1,7 +1,25 @@
 .sponsor {
   /* text-align:center */
   margin: 20px;
+  background-color: #DDDDDD;
+  padding: 10px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
+
+.abstract {
+  margin: 20px;
   background-color: #EEEEEE;
+  padding: 10px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
+
+#main-content {
+  margin: 20px;
+  background-color: #AAEEEE;
   padding: 10px;
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
