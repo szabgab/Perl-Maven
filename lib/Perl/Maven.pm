@@ -32,8 +32,7 @@ if (not config->{appdir}) {
 my $engines = config->{engines};
 $engines->{template_toolkit}{INCLUDE_PATH} = config->{appdir}. '/views';
 set engines => $engines;
-set articles => config->{appdir} . '/../articles';
-
+set articles => dirname(config->{appdir}) . '/articles';
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
