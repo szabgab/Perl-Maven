@@ -44,7 +44,7 @@ my $admin = "$^X -Ilib bin/admin.pl";
 
 {
     my ($stdout, $stderr, @result) = capture {
-        system "$admin --address \@";
+        system "$admin --email \@";
     };
     #diag $stdout;
     is $stderr, '', 'stderr is empty';
