@@ -19,13 +19,23 @@
 
 #main-content {
   margin: 20px;
-  background-color: #AAEEEE;
+  background-color: #DDEEFF;
   padding: 10px;
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
   border-radius: 15px;
 }
- 
+
 #error {
    color: #F00;
+}
+
+#newsletter-right-form {
+  margin: 20px;
+  background-color: #DDEEFF;
+  padding: 10px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+
 }
