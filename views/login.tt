@@ -21,6 +21,11 @@ Email: <input name="email" />
 <input type="submit" value="Get code to reset password" />
 </form>
 
+<h2>Unsubscribe?</h2>
+<p>
+If you are here to unsubscribe from the newsletter, please log-in first. In your account you'll find the on/off button.
+</p>
+
 <h2>No account yet?</h2>
 <form method="POST" action="/register" name="registration_form">
 Email: <input name="email" />
