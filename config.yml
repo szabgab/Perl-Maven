@@ -20,11 +20,11 @@ charset: "UTF-8"
 
 # template: "simple"
 
-articles: '/home/gabor/work/articles'
+#articles: '/home/gabor/work/articles'
 template: "template_toolkit"
 engines:
   template_toolkit:
-    INCLUDE_PATH: '/home/gabor/work/Perl-Maven/views'
+#    INCLUDE_PATH: '/home/gabor/work/Perl-Maven/views'
     encoding:  'utf8'
 #     start_tag: '[%'
 #     end_tag:   '%]'

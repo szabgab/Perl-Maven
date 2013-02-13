@@ -7,6 +7,7 @@ my $TIMEOUT = 60*60*24*365;
 my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
+use Cwd qw(cwd abs_path);
 use Data::Dumper qw(Dumper);
 use DateTime;
 use Digest::SHA;
@@ -23,16 +24,18 @@ my $sandbox = 0;
 
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 my %products;
-if (not config->{appdir}) {
-	require Cwd;
-	set appdir => Cwd::cwd;
-}
+# do we still need this? For testing?
+#if (not config->{appdir}) {
+#	set appdir => Cwd::cwd;
+#}
 
-# configure relative pathes
+## configure relative pathes
+my $appdir = abs_path config->{appdir};
 my $engines = config->{engines};
-$engines->{template_toolkit}{INCLUDE_PATH} = config->{appdir}. '/views';
+$engines->{template_toolkit}{INCLUDE_PATH} = "$appdir/views";
 set engines => $engines;
-set articles => dirname(config->{appdir}) . '/articles';
+set articles => dirname($appdir) . '/articles';
+#warn config->{articles};
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
