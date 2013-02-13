@@ -1,7 +1,7 @@
     </div>
 
     <div class="span3">
-      <div style="position:fixed">
+      <div id="right-side">
         <% UNLESS standalone %>
           <div id="newsletter-right-form">
              <h3>Do you want to improve your Perl?</h3>

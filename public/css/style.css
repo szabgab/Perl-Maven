@@ -1,3 +1,26 @@
+#main-content {
+  margin: 20px;
+  background-color: #DDEEFF;
+  padding: 10px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
+
+#error {
+   color: #F00;
+}
+
+/*
+on mobile phones the fixed position right side was displayed on top of the text while it should have disappeard)
+So for now we enable the fixed position only above 800px
+*/
+@media (min-width: 800px) {
+  #right-side {
+    position:fixed;
+  }
+}
+
 .sponsor {
   /* text-align:center */
   margin: 20px;
@@ -15,19 +38,6 @@
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
   border-radius: 15px;
-}
-
-#main-content {
-  margin: 20px;
-  background-color: #DDEEFF;
-  padding: 10px;
-  -moz-border-radius: 15px;
-  -webkit-border-radius: 15px;
-  border-radius: 15px;
-}
-
-#error {
-   color: #F00;
 }
 
 #newsletter-right-form {
