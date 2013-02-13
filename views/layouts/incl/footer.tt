@@ -2,7 +2,7 @@
 
     <div class="span3">
       <div id="right-side">
-        <% UNLESS standalone %>
+        <% IF showright %>
           <div id="newsletter-right-form">
              <h3>Do you want to improve your Perl?</h3>
              Register to the FREE newsletter now, get updates and a copy
@@ -12,10 +12,8 @@
               <input type="submit" value="Register" />
              </form>
           </div>
-        <% END %>
         <% INCLUDE incl/social_share.tt %>
 
-         <% UNLESS standalone %>
 <!--
            <div class="sponsor">
 	        <a href="/linode">Linode</a> is our recommended web hosting company.

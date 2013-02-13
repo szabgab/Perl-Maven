@@ -3,13 +3,15 @@
 <h1><% title %></h1>
 <% content %>
 
-<% UNLESS clean %>
-<% INCLUDE "layouts/incl/newsletter.tt" %>
+<% IF newsletter %>
+  <% INCLUDE "layouts/incl/newsletter.tt" %>
+<% END %>
 
-<hr>
-<p>
-Published on <% date %>
-</p>
+<% IF published %>
+  <hr>
+  <p>
+  Published on <% date %>
+  </p>
 <% END %>
 
 <% INCLUDE incl/disqus.tt %>

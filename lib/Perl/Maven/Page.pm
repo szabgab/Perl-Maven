@@ -7,7 +7,7 @@ has file => (is => 'ro', isa => 'Str', required => 1);
 sub read {
 	my ($self) = @_;
 
-	my %data = (content => '', abstract => '');
+	my %data = (content => '', abstract => '', showright => 1, newsletter => 1, published => 1);
 	my $cont = '';
 	my $in_code;
 
@@ -15,8 +15,7 @@ sub read {
     # The onese with a ? mark at the end are optional
     # Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
     #    require it but also have a mark if we want to show it or not?)
-    # the standalaone and the clean might need a clean-up as I think it is not the negation of the others.
-    my @header = qw(title timestamp description? indexes? tags? status standalone? clean? author index archive feed comments social);
+    my @header = qw(title timestamp description? indexes? tags? status showright? newsletter? published? author index archive feed comments social);
 
 
     my $file = $self->file;
@@ -31,7 +30,7 @@ sub read {
                 die "Header ended and '$field' was not supplied for file $file\n";
             }
 
-            if (my ($f, $v) = $line =~ /^=(\w+)\s+(.*?)\s*$/) {
+            if (my ($f, $v) = $line =~ /^=([\w-]+)\s+(.*?)\s*$/) {
 				$data{$f} = $v;
                 while ($f ne $field and "$f?" ne $field) {
                     if (substr($field, -1) eq '?') {

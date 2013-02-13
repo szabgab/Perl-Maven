@@ -126,6 +126,8 @@ sub _display {
 		my $json = <$fh>;
 		$tt->{pages} = from_json $json;
 	}
+    $tt->{$_} = 1 for qw(showright newsletter);
+
 	template $template, $tt, { layout => $layout };
 };
 
@@ -253,7 +255,7 @@ get '/logged-in' => sub {
 
 get '/register' => sub {
 		return template 'registration_form', {
-			standalone => 1,
+			showright => 0,
 		};
 };
 
@@ -262,13 +264,13 @@ post '/register' => sub {
 	if (not $email) {
 		return template 'registration_form', {
 			no_mail => 1,
-			standalone => 1,
+			showright => 0,
 		};
 	}
 	if (not Email::Valid->address($email)) {
 		return template 'registration_form', {
 			invalid_mail => 1,
-			standalone => 1,
+			showright => 0,
 		};
 	}
 
@@ -280,7 +282,7 @@ post '/register' => sub {
 	if ($user and $user->{verify_time}) {
 		return template 'registration_form', {
 			duplicate_mail => 1,
-			standalone => 1,
+			showright => 0,
 		};
 	}
 
