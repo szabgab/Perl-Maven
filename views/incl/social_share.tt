@@ -1,5 +1,6 @@
 <% IF social %>
 
+<div id="social-share">
 <script>reddit_url='<% permalink %>'</script>
 <script>reddit_title='<% title %>'</script>
 <script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
@@ -11,6 +12,7 @@ data-text="<% title %>" data-url="<% permalink %>" data-count="vertical" data-vi
 
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 <g:plusone size="tall" href="<% permalink %>"></g:plusone>
+</div>
 
 <% END %>
 

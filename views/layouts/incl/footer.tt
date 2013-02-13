@@ -16,10 +16,16 @@
         <% INCLUDE incl/social_share.tt %>
 
          <% UNLESS standalone %>
+<!--
            <div class="sponsor">
-	        <a href="/linode">Linode</a> is our recommended web hosting company.  
-	        <!-- Recommended web hosting company:  <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a> -->
+	        <a href="/linode">Linode</a> is our recommended web hosting company.
            </div>
+-->
+<!--
+           <div class="sponsor">
+	       Recommended web hosting company:  <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a>
+           </div>
+-->
 
            <div class="sponsor">
              <p>
@@ -32,8 +38,6 @@
              mspinowitz@mediamath.com or 646-532-5914
            </div>
 
-<!--
--->
          <% END %>
       </div>
     </div>
