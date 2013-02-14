@@ -541,6 +541,14 @@ get qr{/(.+)} => sub {
 		delete $tt->{author};
 	}
 
+    my $books = delete $tt->{books};
+    if ($books) {
+        $books =~ s/^\s+|\s+$//g;
+        foreach my $name (split /\s+/, $books) {
+            $tt->{$name} = 1;
+        }
+    }
+
 	return template 'page', $tt, { layout => 'page' };
 };
 

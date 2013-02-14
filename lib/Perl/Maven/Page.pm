@@ -15,7 +15,8 @@ sub read {
     # The onese with a ? mark at the end are optional
     # Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
     #    require it but also have a mark if we want to show it or not?)
-    my @header = qw(title timestamp description? indexes? tags? status showright? newsletter? published? author index archive feed comments social);
+    my @header = qw(title timestamp description? indexes? tags? status books? showright? newsletter? published? author index
+        archive feed comments social);
 
 
     my $file = $self->file;

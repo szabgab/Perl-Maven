@@ -90,6 +90,12 @@ pre {
 </div>
 <!-- Modal end -->
 
+    <% IF beginner_book %>
+      <div id="bookimg">
+      <a href="/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x213.png" alt="Beginner Perl Maven" /></a>
+      </div>
+    <% END %>
+
   </div>
   <div class="span8">
 
