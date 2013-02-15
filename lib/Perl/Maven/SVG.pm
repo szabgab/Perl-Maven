@@ -4,24 +4,29 @@ use warnings;
 
 use SVG;
 
+use Data::Dumper qw(Dumper);
+
 sub circle {
+    my ($data) = @_;
+    #die Dumper $data;
+
     my $svg = SVG->new(
-        width  => 200,
-        height => 200,
+        width  => $data->{width},
+        height => $data->{height},
     );
 
     my $grp = $svg->group(
         id => 'group_y',
         style => {
-            stroke => 'red',
-            fill   => 'grey',
+            stroke => $data->{stroke},
+            fill   => $data->{fill},
         },
     );
 
     $grp->circle(
-        cx => 100,
-        cy => 100,
-        r  => 50,
+        cx => $data->{cx},
+        cy => $data->{cy},
+        r  => $data->{r},
         id => 'circle01',
     );
     return $svg->xmlify;

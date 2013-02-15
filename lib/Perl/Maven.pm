@@ -507,9 +507,12 @@ get '/mail/:article' => sub {
 };
 
 get '/svg.xml' => sub {
+	my %query = params();
     require Perl::Maven::SVG;
     #mime->add_type(
-    return Perl::Maven::SVG::circle();
+    my $xml = Perl::Maven::SVG::circle(\%query);
+    #die $xml;
+    return $xml;
 };
 
 get qr{/(.+)} => sub {
