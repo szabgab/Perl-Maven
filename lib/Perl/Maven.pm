@@ -117,20 +117,6 @@ get '/atom' => sub {
 	return $xml;
 };
 
-sub _display {
-	my ($file, $template, $layout) = @_;
-
-	my $tt;
-	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
-		local $/ = undef;
-		my $json = <$fh>;
-		$tt->{pages} = from_json $json;
-	}
-    $tt->{$_} = 1 for qw(showright newsletter);
-
-	template $template, $tt, { layout => $layout };
-};
-
 post '/send-reset-pw-code' => sub {
 	my $email = param('email');
 	if (not $email) {
@@ -553,6 +539,20 @@ get qr{/(.+)} => sub {
 };
 
 ##########################################################################################
+
+sub _display {
+	my ($file, $template, $layout) = @_;
+
+	my $tt;
+	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
+		local $/ = undef;
+		my $json = <$fh>;
+		$tt->{pages} = from_json $json;
+	}
+    $tt->{$_} = 1 for qw(showright newsletter);
+
+	template $template, $tt, { layout => $layout };
+};
 
 sub pw_form {
 	my $id = param('id');
