@@ -506,6 +506,12 @@ get '/mail/:article' => sub {
 	return template 'mail', $tt, {	layout => 'newsletter' };
 };
 
+get '/svg.xml' => sub {
+    require Perl::Maven::SVG;
+    #mime->add_type(
+    return Perl::Maven::SVG::circle();
+};
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
