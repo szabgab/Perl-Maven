@@ -509,9 +509,7 @@ get '/mail/:article' => sub {
 get '/svg.xml' => sub {
 	my %query = params();
     require Perl::Maven::SVG;
-    #mime->add_type(
     my $xml = Perl::Maven::SVG::circle(\%query);
-    #die $xml;
     return $xml;
 };
 
