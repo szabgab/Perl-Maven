@@ -14,13 +14,16 @@
 /*
 on mobile phones the fixed position right side was displayed on top of the text while it should have disappeard)
 So for now we enable the fixed position only above 800px
+
+On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for now.
 */
+/*
 @media (min-width: 800px) {
   #right-side {
     position:fixed;
   }
 }
-
+*/
 .sponsor {
   /* text-align:center */
   margin: 20px;
