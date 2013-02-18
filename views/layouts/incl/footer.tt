@@ -40,7 +40,7 @@
            <a href="http://www.booking.com/jobs.en-gb.html?sid=d0e9c689cd0e0805f626ee9229be7b51;dcid=1;st=details;job_id=10771">Now hiring 25 Perl Developers at Booking.com in Amsterdam (relocation + visa included)</a>
            </p>
             Do you want to solve real problems of scale involving thousands of servers with
-            various subsystems all deployed multiple times a day? And do you want to work 
+            various subsystems all deployed multiple times a day? And do you want to work
             on the largest Perl codebases in the world? Join
             Booking.com in Amsterdam. Do awesome things.
            </div>
@@ -64,13 +64,15 @@
 <script src="/bootstrap/js/bootstrap-carousel.js"></script>
 <script src="/bootstrap/js/bootstrap-typeahead.js"></script>
 
+<script src="/javascripts/svg.js"></script>
+
 <script>
 $('#typeahead').typeahead( { 'source' : <% keywords %>  })
 var data = <% keyword_mapper %>;
 $("#typeahead").keyup(function (e) {
     if (e.keyCode == 13) {
         //console.log('----------');
-        var keyword = $("#typeahead").val(); 
+        var keyword = $("#typeahead").val();
         var count = 0;
 
         var single;
