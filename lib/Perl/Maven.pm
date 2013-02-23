@@ -76,13 +76,8 @@ get '/archive' => sub {
 	_display('archive', 'archive', 'system');
 };
 get '/atom' => sub {
-	my $pages;
 	my $file = 'feed';
-	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
-		local $/ = undef;
-		my $json = <$fh>;
-		$pages = from_json $json;
-	}
+	my $pages = read_meta($file);
 
 	my $ts = DateTime->now;
 
@@ -550,12 +545,8 @@ get qr{/(.+)} => sub {
 sub _display {
 	my ($file, $template, $layout) = @_;
 
-	my $tt;
-	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
-		local $/ = undef;
-		my $json = <$fh>;
-		$tt->{pages} = from_json $json;
-	}
+	my $tt->{pages} = read_meta($file);
+
     $tt->{$_} = 1 for qw(showright newsletter);
 
 	template $template, $tt, { layout => $layout };
@@ -742,6 +733,16 @@ sub paypal {
 		push @params, address => $sandbox_url;
 	}
 	Business::PayPal->new(@params);
+}
+
+sub read_meta {
+    my ($file) = @_;
+	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
+		local $/ = undef;
+		my $json = <$fh>;
+		return from_json $json;
+	}
+    return [];
 }
 
 true;
