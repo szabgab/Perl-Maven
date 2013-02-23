@@ -1,7 +1,7 @@
 <% INCLUDE layouts/incl/header.tt %>
 
 <h3>Welcome to the Perl Maven</h3>
-<div id="main-content">
+<div class="main-content">
 The Perl Maven web site was created to help people solve problems using the Perl programming language.
 <p>
 On one hand there are plenty of people who "inherit" large pieces of Perl code and they need to maintain it.
