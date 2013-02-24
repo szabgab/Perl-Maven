@@ -20,6 +20,11 @@ charset: "UTF-8"
 
 # template: "simple"
 
+mymaven:
+  rss:
+    title: 'Perl 5 Maven'
+    url: 'http://perl5maven.com'
+
 articles: '/home/gabor/work/articles'
 template: "template_toolkit"
 engines:

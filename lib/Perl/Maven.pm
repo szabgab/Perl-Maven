@@ -49,7 +49,7 @@ hook before => sub {
 
 hook before_template => sub {
 	my $t = shift;
-	$t->{title} ||= 'Perl 5 Maven - for people who want to get the most out of programming in Perl';
+	$t->{title} ||= '';
 	if (logged_in()) {
 		($t->{username}) = split /@/, session 'email';
 	}
@@ -70,14 +70,18 @@ get '/archive' => sub {
 get '/atom' => sub {
 	my $pages = read_meta('feed');
 
+	my $cfg = config->{mymaven};
+
 	my $ts = DateTime->now;
 
-	my $url = 'http://perl5maven.com';
+	my $url = $cfg->{rss}{url};
+	my $title = $cfg->{rss}{title};
+
 	my $xml = '';
 	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
 	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
 	$xml .= qq{<link href="$url/atom" rel="self" />\n};
-	$xml .= qq{<title>Perl 5 Maven</title>\n};
+	$xml .= qq{<title>$title</title>\n};
 	$xml .= qq{<id>$url/</id>\n};
 	$xml .= qq{<updated>${ts}Z</updated>\n};
 	foreach my $p (@$pages) {
