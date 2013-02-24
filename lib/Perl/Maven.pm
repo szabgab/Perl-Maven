@@ -4,7 +4,6 @@ use Perl::Maven::DB;
 
 our $VERSION = '0.1';
 my $TIMEOUT = 60*60*24*365;
-my $FROM = 'Gabor Szabo <gabor@szabgab.com>';
 
 use Business::PayPal;
 use Cwd qw(cwd abs_path);
@@ -133,10 +132,11 @@ post '/send-reset-pw-code' => sub {
 		layout => 'email',
 	};
 
+	my $cfg = config->{mymaven};
 	sendmail(
-		From    => $FROM,
+		From    => $cfg->{from},
 		To      => $email,
-		Subject => 'Code to reset your Perl 5 Maven password',
+		Subject => "Code to reset your $cfg->{title} password",
 		html    => $html,
 	);
 
@@ -281,13 +281,16 @@ post '/register' => sub {
 	}, {
 		layout => 'email',
 	};
+	my $cfg = config->{mymaven};
 	sendmail(
-		From    => $FROM,
+		From    => $cfg->{from},
 		To      => $email,
-		Subject => 'Please finish the Perl 5 Maven registration',
+		Subject => "Please finish the $cfg->{title} registration",
 		html    => $html,
 	);
-	return template 'response';
+	my $html_from = $cfg->{from};
+	$html_from =~ s/</&lt;/g;
+	return template 'response', { from => $html_from };
 };
 
 get '/logout' => sub {
@@ -367,8 +370,9 @@ get '/verify/:id/:code' => sub {
 	session logged_in => 1;
 	session last_seen => time;
 
+	my $cfg = config->{mymaven};
 	sendmail(
-		From    => $FROM,
+		From    => $cfg->{from},
 		To      => $user->{email},
 		Subject => 'Thank you for registering',
 		html    => template('post_verification_mail', {
@@ -378,9 +382,9 @@ get '/verify/:id/:code' => sub {
 	);
 
 	sendmail(
-		From    => 'Perl 5 Maven <gabor@perl5maven.com>',
-		To      => 'Gabor Szabo <gabor@szabgab.com>',
-		Subject => 'New Perl 5 Maven newsletter registration',
+		From    => $cfg->{from},
+		To      => $cfg->{admin}{email},
+		Subject => "New $cfg->{title} newsletter registration",
 		html    => "$user->{email} has registered",
 	);
 
@@ -574,6 +578,8 @@ sub paypal_buy {
 
 	my $paypal = paypal();
 
+	my $cfg = config->{mymaven};
+
 	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
 	# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
@@ -581,7 +587,7 @@ sub paypal_buy {
 	my $return_url = uri_for('/paid');
 	my $notify_url = uri_for('/paypal');
 	my $button = $paypal->button(
-		business       => 'gabor@szabgab.com',
+		business       => $cfg->{paypal}{email},
 		item_name      => $item,
 		amount         => $usd,
 		quantity       => $quantity,

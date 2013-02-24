@@ -21,9 +21,17 @@ charset: "UTF-8"
 # template: "simple"
 
 mymaven:
+  title: 'Perl 5 Maven'
+  from: 'Perl 5 Maven <gabor@perl5maven.com>'
+  listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
+  prefix: '[Perl Maven]'
   rss:
     title: 'Perl 5 Maven'
     url: 'http://perl5maven.com'
+  admin:
+    email: 'Gabor Szabo <gabor@szabgab.com>'
+  paypal:
+    email: 'gabor@szabgab.com'
 
 articles: '/home/gabor/work/articles'
 template: "template_toolkit"

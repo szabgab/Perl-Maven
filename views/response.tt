@@ -16,7 +16,9 @@ Apparently Gmail is eager to put the registration mail
 Please check that too!
 </p>
 <p>
-Currently the messages are sent from 'gabor@szabgab.com'. If you can white-list that address.
+The messages are sent from <b><% from %></b>.
+Please add that address to your address-book, or add it to the white-list of your e-mail client.
+That will improve the chances that the messages will arrive to your inbox.
 </p>
 
 

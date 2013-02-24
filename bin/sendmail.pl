@@ -10,6 +10,7 @@ use Cwd qw(abs_path cwd);
 use File::Slurp    qw(read_file);
 use WWW::Mechanize;
 use DBI;
+use YAML qw();
 
 my $dsn = "dbi:SQLite:dbname=pm.db";
 
@@ -19,6 +20,9 @@ my $dbh = DBI->connect($dsn, "", "", {
 	AutoCommit => 1,
 });
 
+my $config = YAML::LoadFile('config.yml');
+my $from = $config->{mymaven}{from};
+
 my %opt;
 GetOptions(\%opt,
 	'to=s',
@@ -27,7 +31,6 @@ GetOptions(\%opt,
 ) or usage();
 usage() if not $opt{to} or not $opt{url};
 
-my $from = 'Gabor Szabo <gabor@perl5maven.com>';
 my ($subject, %content) = build_content();
 send_messages();
 exit;
@@ -37,7 +40,7 @@ sub build_content {
 	my $w = WWW::Mechanize->new;
 	$w->get($opt{url});
 	die 'missing title' if not $w->title;
-	my $subject = '[Perl Maven] ' . $w->title;
+	my $subject = $config->{mymaven}{prefix} . ' ' . $w->title;
 
 	my %content;
 	$content{html} = $w->content;
@@ -61,7 +64,6 @@ sub send_messages {
 	#'perl_maven_cookbook'
 	#die Dumper $emails;
 
-		#my $emails = ['szabgab@gmail.com', 'gabor@perl.org.il'];
 		my $total = scalar @$emails;
 		print "Sending to $total number of addresses\n";
 		return if not $opt{send};
@@ -85,7 +87,7 @@ sub sendmail {
 		'Type'     => 'multipart/alternative',
 		'Subject'  => $subject,
 		);
-	$msg->attr('List-Id'  => 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'),
+	$msg->attr('List-Id'  => $config->{mymaven}{listid}),
 
 	my %type = (
 		text => 'text/plain',
