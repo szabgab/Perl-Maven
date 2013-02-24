@@ -68,8 +68,7 @@ get '/archive' => sub {
 	_display('archive', 'archive', 'system');
 };
 get '/atom' => sub {
-	my $file = 'feed';
-	my $pages = read_meta($file);
+	my $pages = read_meta('feed');
 
 	my $ts = DateTime->now;
 
