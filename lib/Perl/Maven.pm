@@ -54,17 +54,9 @@ hook before_template => sub {
 		($t->{username}) = split /@/, session 'email';
 	}
 
-    my $keywords = '[]';
-    my $keyword_mapper = '{}';
-    if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "keywords.json")) {
-		local $/ = undef;
-		my $json = <$fh>;
-        $keyword_mapper = $json;
-		my $data = from_json $json;
-        $keywords = to_json [sort keys %$data]
-    }
-    $t->{keywords} = $keywords;
-    $t->{keyword_mapper} = $keyword_mapper;
+    my $data = read_meta('keywords');
+    $t->{keywords} = to_json([sort keys %$data]) || '[]';
+    $t->{keyword_mapper} = to_json($data) || '{}';
 
 	return;
 };
