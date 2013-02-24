@@ -65,7 +65,7 @@ get '/' => sub {
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => read_meta('index') });
 };
 get '/archive' => sub {
-	_display('archive', 'archive', 'system');
+	_show({ article => 'archive', template => 'archive', layout => 'system' }, { pages => read_meta('archive') });
 };
 get '/atom' => sub {
 	my $pages = read_meta('feed');
@@ -505,6 +505,8 @@ get qr{/(.+)} => sub {
 	return _show({ article => $article, template => 'page', layout => 'page' });
 };
 
+##########################################################################################
+
 sub _show {
 	my ($params, $data) = @_;
 	$data ||= {};
@@ -537,18 +539,6 @@ sub _show {
 	$tt->{$_} = $data->{$_} for keys %$data;
 
 	return template $params->{template}, $tt, { layout => $params->{layout} };
-};
-
-##########################################################################################
-
-sub _display {
-	my ($file, $template, $layout) = @_;
-
-	my $tt->{pages} = read_meta($file);
-
-	$tt->{$_} = 1 for qw(showright newsletter);
-
-	template $template, $tt, { layout => $layout };
 };
 
 sub pw_form {
