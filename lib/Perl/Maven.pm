@@ -62,7 +62,7 @@ hook before_template => sub {
 };
 
 get '/' => sub {
-	_display('index', 'main', 'index');
+	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => read_meta('index') });
 };
 get '/archive' => sub {
 	_display('archive', 'archive', 'system');
@@ -502,8 +502,14 @@ get '/svg.xml' => sub {
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
+	return _show({ article => $article, template => 'page', layout => 'page' });
+};
 
-	my $path = config->{articles} . "/$article.tt";
+sub _show {
+	my ($params, $data) = @_;
+	$data ||= {};
+
+	my $path = config->{articles} . "/$params->{article}.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
@@ -528,7 +534,9 @@ get qr{/(.+)} => sub {
 		}
 	}
 
-	return template 'page', $tt, { layout => 'page' };
+	$tt->{$_} = $data->{$_} for keys %$data;
+
+	return template $params->{template}, $tt, { layout => $params->{layout} };
 };
 
 ##########################################################################################

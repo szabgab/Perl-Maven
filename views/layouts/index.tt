@@ -1,27 +1,7 @@
 <% INCLUDE layouts/incl/header.tt %>
 
-<h3>Welcome to the Perl Maven</h3>
-<div class="main-content">
-The Perl Maven web site was created to help people solve problems using the Perl programming language.
-<p>
-On one hand there are plenty of people who "inherit" large pieces of Perl code and they need to maintain it.
-Often without adequate training.
-<p>
-On the other hand there are people use Perl as "another tool in their toolbox". Some of these people need to
-parse log files and create reports.
-Some work in the field of Software Configuration Management and need to write triggers or build scripts.
-Others work as System Administrators and need to do all kinds of things.
-<p>
-On yet another hand, there are many people who would like to create new things with Perl. Either within a company or on their own.
-Quite often they would like to build web applications.
-<p>
-If any of this sounds familiar to you then you are in the right place.
-<p>
-To get started you could read the <a href="/perl-tutorial">Perl tutorial</a> and sign up to the <a href="/perl-maven-newsletter">newsletter</a>.
-</div>
-
 <% content %>
-<h3>Recent articles</h3>
+<h2>Recent articles</h2>
 <% FOR p IN pages %>
   <div class="abstract">
   <h2><a href="/<% p.filename %>"><% p.title %></a></h2>
