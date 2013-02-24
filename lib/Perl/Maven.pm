@@ -54,9 +54,9 @@ hook before_template => sub {
 		($t->{username}) = split /@/, session 'email';
 	}
 
-    my $data = read_meta('keywords');
-    $t->{keywords} = to_json([sort keys %$data]) || '[]';
-    $t->{keyword_mapper} = to_json($data) || '{}';
+	my $data = read_meta('keywords');
+	$t->{keywords} = to_json([sort keys %$data]) || '[]';
+	$t->{keyword_mapper} = to_json($data) || '{}';
 
 	return;
 };
@@ -494,9 +494,9 @@ get '/mail/:article' => sub {
 
 get '/svg.xml' => sub {
 	my %query = params();
-    require Perl::Maven::SVG;
-    my $xml = Perl::Maven::SVG::circle(\%query);
-    return $xml;
+	require Perl::Maven::SVG;
+	my $xml = Perl::Maven::SVG::circle(\%query);
+	return $xml;
 };
 
 get qr{/(.+)} => sub {
@@ -520,13 +520,13 @@ get qr{/(.+)} => sub {
 		delete $tt->{author};
 	}
 
-    my $books = delete $tt->{books};
-    if ($books) {
-        $books =~ s/^\s+|\s+$//g;
-        foreach my $name (split /\s+/, $books) {
-            $tt->{$name} = 1;
-        }
-    }
+	my $books = delete $tt->{books};
+	if ($books) {
+		$books =~ s/^\s+|\s+$//g;
+		foreach my $name (split /\s+/, $books) {
+			$tt->{$name} = 1;
+		}
+	}
 
 	return template 'page', $tt, { layout => 'page' };
 };
@@ -538,7 +538,7 @@ sub _display {
 
 	my $tt->{pages} = read_meta($file);
 
-    $tt->{$_} = 1 for qw(showright newsletter);
+	$tt->{$_} = 1 for qw(showright newsletter);
 
 	template $template, $tt, { layout => $layout };
 };
@@ -727,14 +727,16 @@ sub paypal {
 }
 
 sub read_meta {
-    my ($file) = @_;
+	my ($file) = @_;
 	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json;
 	}
-    return [];
+	return [];
 }
 
 true;
+
+# vim:noexpandtab
 

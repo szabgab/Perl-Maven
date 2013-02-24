@@ -11,47 +11,48 @@ sub read {
 	my $cont = '';
 	my $in_code;
 
-    # headers need to be in this order.
-    # The onese with a ? mark at the end are optional
-    # Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
-    #    require it but also have a mark if we want to show it or not?)
-    my @header = qw(title timestamp description? indexes? tags? status books? showright? newsletter? published? author index
-        archive feed comments social);
+	# headers need to be in this order.
+	# The onese with a ? mark at the end are optional
+	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
+	#    require it but also have a mark if we want to show it or not?)
+	my @header = qw(title timestamp description? indexes? tags? status books? showright? newsletter? published? author index
+		archive feed comments social);
 
 
-    my $file = $self->file;
+	my $file = $self->file;
 
 	if (open my $fh, '<encoding(UTF-8)', $file) {
-        for (my $i = 0; $i <= $#header; $i++) {
-            my $field = $header[$i];
+		for (my $i = 0; $i <= $#header; $i++) {
+			my $field = $header[$i];
 
-            my $line = <$fh>;
-            chomp $line;
-            if ($line =~ /^\s*$/) {
-                die "Header ended and '$field' was not supplied for file $file\n";
-            }
+			my $line = <$fh>;
+			chomp $line;
+			if ($line =~ /^\s*$/) {
+				die "Header ended and '$field' was not supplied for file $file\n";
+			}
 
-            if (my ($f, $v) = $line =~ /^=([\w-]+)\s+(.*?)\s*$/) {
+			if (my ($f, $v) = $line =~ /^=([\w-]+)\s+(.*?)\s*$/) {
 				$data{$f} = $v;
-                while ($f ne $field and "$f?" ne $field) {
-                    if (substr($field, -1) eq '?') {
-                        $i++;
-                        if ($i > $#header) {
-                            die "We ran out of fields while processing line '$line' in file $file\n";
-                        }
-                        $field = $header[$i];
-                        next;
-                    }
-                    die "Invalid entry in header expected '$field', received '$f' in line '$line' file $file\n";
-                }
+				while ($f ne $field and "$f?" ne $field) {
+					if (substr($field, -1) eq '?') {
+						$i++;
+						if ($i > $#header) {
+							die "We ran out of fields while processing line '$line' in file $file\n";
+						}
+						$field = $header[$i];
+						next;
+					}
+					die "Invalid entry in header expected '$field', received '$f' in line '$line' file $file\n";
+				}
 			} else {
-                die "Invalid entry in header for '$field' in line '$line' file $file\n";
-            }
-        }
-        my $line = <$fh>;
-        if ($line =~ /\S/) {
-            die "Header not ended even after we ran out of required fields. line '$line' file $file\n";
-        }
+				die "Invalid entry in header for '$field' in line '$line' file $file\n";
+			}
+		}
+
+		my $line = <$fh>;
+		if ($line =~ /\S/) {
+			die "Header not ended even after we ran out of required fields. line '$line' file $file\n";
+		}
 
 		while (my $line = <$fh>) {
 			#$line =~ s{<hl>}{<span class="">}g;
@@ -96,4 +97,6 @@ sub read {
 }
 
 1;
+
+# vim:noexpandtab
 
