@@ -12,29 +12,11 @@ use JSON qw(to_json);
 use lib 'lib';
 use Perl::Maven::Page;
 
-my @pages;
 #my $dir = '/home/gabor/work/articles';
 my $dir = dirname(dirname dirname abs_path $0) . '/articles';
+my @pages = get_pages();
 
-foreach my $file (glob "$dir/*.tt") {
-	#say "Reading $file";
-	my $data = Perl::Maven::Page->new(file => $file)->read;
-	foreach my $field (qw(timestamp title status)) {
-		die "No $field in $file" if not $data->{$field};
-	}
-	die "Invalid status $data->{status} in $file"
-		if $data->{status} !~ /^(show|hide|draft|ready)/;
 
-	push @pages, {
-			file  => $file,
-			%$data,
-	};
-}
-
-#die Dumper $pages[0];
-#die  Dumper [ keys %{$pages[0]} ];
-
-@pages = sort { $b->{timestamp} cmp $a->{timestamp} } grep { $_->{status} eq 'show' } @pages;
 my %keywords; # =indexes and =tags are united here
 
 # TODO:
@@ -104,4 +86,27 @@ sub save {
 	return;
 }
 
+sub get_pages {
+	foreach my $file (glob "$dir/*.tt") {
+		#say "Reading $file";
+		my $data = Perl::Maven::Page->new(file => $file)->read;
+		foreach my $field (qw(timestamp title status)) {
+			die "No $field in $file" if not $data->{$field};
+		}
+		die "Invalid status $data->{status} in $file"
+			if $data->{status} !~ /^(show|hide|draft|ready)/;
+
+		push @pages, {
+				file  => $file,
+				%$data,
+		};
+	}
+
+	#die Dumper $pages[0];
+	#die  Dumper [ keys %{$pages[0]} ];
+
+	@pages = sort { $b->{timestamp} cmp $a->{timestamp} } grep { $_->{status} eq 'show' } @pages;
+}
+
+# vim:noexpandtab
 
