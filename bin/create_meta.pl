@@ -17,65 +17,71 @@ my $dir = dirname(dirname dirname abs_path $0) . '/articles';
 my @pages = get_pages();
 
 
-my %keywords; # =indexes and =tags are united here
 
 # TODO:
 # I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
 # might want to search for. Or the other way around.
 
-
-my $count_index = 0;
-my $count_feed  = 0;
-my $MAX_INDEX   = 3;
-my $MAX_FEED    = 10;
 my (@index, @feed, @archive);
-foreach my $p (@pages) {
-	my $filename = substr(basename($p->{file}),  0, -3);
-
-	foreach my $f (qw(indexes tags)) {
-		next if not $p->{$f};
-		my @words = split /,\s*/, $p->{$f};
-		foreach my $w (@words) {
-			#$keywords{$w} ||= {};
-			warn "Duplicate '$w' in '$filename'\n" if $keywords{$w}{$filename};
-			$keywords{$w}{$filename} = $p->{title}
-		}
-	}
-
-	#say "$p->{timestamp} $p->{file}";
-	if ($p->{archive}) {
-		my ($date) = split /T/, $p->{timestamp};
-		push @archive, {
-			title => $p->{title},
-			timestamp => $p->{timestamp},
-			date      => $date,
-			filename  => $filename,
-		}
-	}
-	if ($p->{index} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
-		push @index, {
-			title => $p->{title},
-			timestamp => $p->{timestamp},
-			abstract  => $p->{abstract},
-			filename  => $filename,
-		};
-	}
-	if ($p->{feed} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
-		push @feed, {
-			title => $p->{title},
-			timestamp => $p->{timestamp},
-			abstract  => $p->{abstract},
-			filename  => $filename,
-			author    => $p->{author},
-		};
-	}
-
-}
+my ($keywords) = process_files();
 save ('index',   \@index);
 save ('archive', \@archive);
 save ('feed',    \@feed);
-save ('keywords', \%keywords);
+save ('keywords', $keywords);
 exit;
+###############################################################################
+
+sub process_files {
+	my $count_index = 0;
+	my $count_feed  = 0;
+	my $MAX_INDEX   = 3;
+	my $MAX_FEED    = 10;
+	my %keywords; # =indexes and =tags are united here
+	foreach my $p (@pages) {
+		my $filename = substr(basename($p->{file}),  0, -3);
+
+		foreach my $f (qw(indexes tags)) {
+			next if not $p->{$f};
+			my @words = split /,\s*/, $p->{$f};
+			foreach my $w (@words) {
+				#$keywords{$w} ||= {};
+				warn "Duplicate '$w' in '$filename'\n" if $keywords{$w}{$filename};
+				$keywords{$w}{$filename} = $p->{title}
+			}
+		}
+
+		#say "$p->{timestamp} $p->{file}";
+		if ($p->{archive}) {
+			my ($date) = split /T/, $p->{timestamp};
+			push @archive, {
+				title => $p->{title},
+				timestamp => $p->{timestamp},
+				date      => $date,
+				filename  => $filename,
+			}
+		}
+		if ($p->{index} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
+			push @index, {
+				title => $p->{title},
+				timestamp => $p->{timestamp},
+				abstract  => $p->{abstract},
+				filename  => $filename,
+			};
+		}
+		if ($p->{feed} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
+			push @feed, {
+				title => $p->{title},
+				timestamp => $p->{timestamp},
+				abstract  => $p->{abstract},
+				filename  => $filename,
+				author    => $p->{author},
+			};
+		}
+
+	}
+
+	return \%keywords;
+}
 
 sub save {
 	my ($file, $data) = @_;
