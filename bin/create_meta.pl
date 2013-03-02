@@ -120,10 +120,16 @@ sub get_pages {
 
 	#die Dumper $pages[0];
 	#die  Dumper [ keys %{$pages[0]} ];
+	my @selected;
+	foreach my $p (@pages) {
+		if ($p->{status} eq 'show') {
+			push @selected, $p;
+		} else {
+			warn "No show $p->{file}";
+		}
+	}
 
-	@pages = sort { $b->{timestamp} cmp $a->{timestamp} } grep { $_->{status} eq 'show' } @pages;
-
-	return \@pages;
+	return [ sort { $b->{timestamp} cmp $a->{timestamp} } @selected ];
 }
 
 # vim:noexpandtab
