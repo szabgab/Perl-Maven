@@ -12,6 +12,10 @@ use JSON qw(to_json);
 use lib 'lib';
 use Perl::Maven::Page;
 
+# Run with any value on the command line to get debugging info
+my ($verbose) = @ARGV;
+
+
 #my $dir = '/home/gabor/work/articles';
 my $dir = dirname(dirname dirname abs_path $0) . '/articles';
 my $pages = get_pages();
@@ -41,6 +45,9 @@ sub process_files {
 
 	foreach my $p (@$pages) {
 		my $filename = substr(basename($p->{file}),  0, -3);
+		if ($verbose) {
+			say "Processing $filename";
+		}
 
 		foreach my $f (qw(indexes tags)) {
 			next if not $p->{$f};
