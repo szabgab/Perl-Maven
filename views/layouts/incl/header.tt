@@ -92,7 +92,7 @@ pre {
 
     <% IF beginner_book %>
       <div id="bookimg">
-      <a href="/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x213.png" alt="Beginner Perl Maven" /></a>
+      <a href="/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
       </div>
     <% END %>
 
