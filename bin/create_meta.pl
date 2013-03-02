@@ -14,30 +14,32 @@ use Perl::Maven::Page;
 
 #my $dir = '/home/gabor/work/articles';
 my $dir = dirname(dirname dirname abs_path $0) . '/articles';
-my @pages = get_pages();
+my $pages = get_pages();
 
-
-
-# TODO:
-# I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
-# might want to search for. Or the other way around.
-
-my (@index, @feed, @archive);
-my ($keywords) = process_files();
-save ('index',   \@index);
-save ('archive', \@archive);
-save ('feed',    \@feed);
+my ($keywords, $index, $archive, $feed) = process_files($pages);
+save ('index',   $index);
+save ('archive', $archive);
+save ('feed',    $feed);
 save ('keywords', $keywords);
 exit;
 ###############################################################################
 
 sub process_files {
+	my ($pages) = @_;
+
 	my $count_index = 0;
 	my $count_feed  = 0;
 	my $MAX_INDEX   = 3;
 	my $MAX_FEED    = 10;
+
+	# TODO:
+	# I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
+	# might want to search for. Or the other way around.
+
 	my %keywords; # =indexes and =tags are united here
-	foreach my $p (@pages) {
+	my (@index, @feed, @archive);
+
+	foreach my $p (@$pages) {
 		my $filename = substr(basename($p->{file}),  0, -3);
 
 		foreach my $f (qw(indexes tags)) {
@@ -80,7 +82,7 @@ sub process_files {
 
 	}
 
-	return \%keywords;
+	return (\%keywords, \@index, \@archive, \@feed);
 }
 
 sub save {
@@ -93,6 +95,7 @@ sub save {
 }
 
 sub get_pages {
+	my @pages;
 	foreach my $file (glob "$dir/*.tt") {
 		#say "Reading $file";
 		my $data = Perl::Maven::Page->new(file => $file)->read;
@@ -112,6 +115,8 @@ sub get_pages {
 	#die  Dumper [ keys %{$pages[0]} ];
 
 	@pages = sort { $b->{timestamp} cmp $a->{timestamp} } grep { $_->{status} eq 'show' } @pages;
+
+	return \@pages;
 }
 
 # vim:noexpandtab
