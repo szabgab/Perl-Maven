@@ -31,17 +31,17 @@ my $MAX_FEED    = 10;
 my (@index, @feed, @archive);
 foreach my $p (@pages) {
 	my $filename = substr(basename($p->{file}),  0, -3);
-    
-    foreach my $f (qw(indexes tags)) {
-        next if not $p->{$f};
-        my @words = split /,\s*/, $p->{$f};
-        foreach my $w (@words) {
-            #$keywords{$w} ||= {};
-            warn "Duplicate '$w' in '$filename'\n" if $keywords{$w}{$filename};
-            $keywords{$w}{$filename} = $p->{title}
-        }
-    }
-    
+
+	foreach my $f (qw(indexes tags)) {
+		next if not $p->{$f};
+		my @words = split /,\s*/, $p->{$f};
+		foreach my $w (@words) {
+			#$keywords{$w} ||= {};
+			warn "Duplicate '$w' in '$filename'\n" if $keywords{$w}{$filename};
+			$keywords{$w}{$filename} = $p->{title}
+		}
+	}
+
 	#say "$p->{timestamp} $p->{file}";
 	if ($p->{archive}) {
 		my ($date) = split /T/, $p->{timestamp};
@@ -79,7 +79,7 @@ exit;
 
 sub save {
 	my ($file, $data) = @_;
-    my $path = "$dir/meta/$file.json";
+	my $path = "$dir/meta/$file.json";
 	open my $fh, '>', $path or die "Could not open '$path'\n";
 	print $fh to_json $data, { utf8 => 1, pretty => 1 };
 	close $fh;
