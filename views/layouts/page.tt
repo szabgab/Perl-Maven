@@ -13,7 +13,7 @@
   <div id="indexes">
     <ul>
       <% FOR k IN indexes %>
-         <li><button class="btn btn-mini btn-primary" type="button"><% k %></button></li>
+         <li><button class="btn btn-mini btn-primary kw-button" type="button" value="<% k %>"><% k %></button></li>
       <% END %>
     </ul>
   </div>

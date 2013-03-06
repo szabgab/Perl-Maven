@@ -91,6 +91,11 @@ function mysearch(keyword) {
     }
 }
 
+$(".kw-button").click(function (e) {
+    //alert('click' + e.target.value);
+    mysearch(e.target.value);
+});
+
 $("#typeahead").keyup(function (e) {
     if (e.keyCode == 13) {
         //console.log('----------');
