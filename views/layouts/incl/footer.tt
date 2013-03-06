@@ -70,7 +70,7 @@
 $('#typeahead').typeahead( { 'source' : <% keywords %>  });
 var data = <% keyword_mapper %>;
 
-function mysearch(keyword) {
+function mysearch(keyword, auto) {
     var count = 0;
 
     var single;
@@ -83,7 +83,7 @@ function mysearch(keyword) {
     }
     html += '</ul>';
     //console.log(count);
-    if (count == 1) {
+    if (count == 1 && auto) {
        window.location = single;
     } else {
        $('.modal-body').html(html);
@@ -92,8 +92,7 @@ function mysearch(keyword) {
 }
 
 $(".kw-button").click(function (e) {
-    //alert('click' + e.target.value);
-    mysearch(e.target.value);
+    mysearch(e.target.value, false);
 });
 
 $("#typeahead").keyup(function (e) {
@@ -101,7 +100,7 @@ $("#typeahead").keyup(function (e) {
         //console.log('----------');
         var keyword = $("#typeahead").val();
 
-        mysearch(keyword);
+        mysearch(keyword, true);
     }
 });
 </script>
