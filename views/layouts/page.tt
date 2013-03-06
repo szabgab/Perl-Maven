@@ -1,6 +1,24 @@
 <% INCLUDE layouts/incl/header.tt %>
 
 <h1><% title %></h1>
+
+<style>
+#indexes li {
+    list-style: none;
+    display: inline;
+}
+</style>
+
+<% IF indexes %>
+  <div id="indexes">
+    <ul>
+      <% FOR k IN indexes %>
+         <li><button class="btn btn-mini btn-primary" type="button"><% k %></button></li>
+      <% END %>
+    </ul>
+  </div>
+<% END %>
+
 <% content %>
 
 <% IF newsletter %>

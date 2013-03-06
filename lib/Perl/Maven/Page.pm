@@ -32,7 +32,16 @@ sub read {
 			}
 
 			if (my ($f, $v) = $line =~ /^=([\w-]+)\s+(.*?)\s*$/) {
-				$data{$f} = $v;
+
+				# TODO make it configurable, which fields to split?
+				if ($f eq 'indexes') {
+					if ($v !~ /^\s*0\s*$/) {   # TODO eliminate the need for this distinction of the character 0
+						$data{$f} = [ map {s/^\s+|\s+$//g; $_} split /,/, $v ];
+					}
+				} else {
+					$data{$f} = $v;
+				}
+
 				while ($f ne $field and "$f?" ne $field) {
 					if (substr($field, -1) eq '?') {
 						$i++;
