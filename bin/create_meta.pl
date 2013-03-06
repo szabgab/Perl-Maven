@@ -51,7 +51,7 @@ sub process_files {
 
 		foreach my $f (qw(indexes tags)) {
 			next if not $p->{$f};
-			my @words = split /,\s*/, $p->{$f};
+			my @words = @{ $p->{$f} };
 			foreach my $w (@words) {
 				#$keywords{$w} ||= {};
 				warn "Duplicate '$w' in '$filename'\n" if $keywords{$w}{$filename};

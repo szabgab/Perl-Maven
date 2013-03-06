@@ -34,10 +34,8 @@ sub read {
 			if (my ($f, $v) = $line =~ /^=([\w-]+)\s+(.*?)\s*$/) {
 
 				# TODO make it configurable, which fields to split?
-				if ($f eq 'indexes') {
-					if ($v !~ /^\s*0\s*$/) {   # TODO eliminate the need for this distinction of the character 0
-						$data{$f} = [ map {s/^\s+|\s+$//g; $_} split /,/, $v ];
-					}
+				if ($f eq 'indexes' or $f eq 'tags') {
+					$data{$f} = [ map {s/^\s+|\s+$//g; $_} split /,/, $v ];
 				} else {
 					$data{$f} = $v;
 				}
