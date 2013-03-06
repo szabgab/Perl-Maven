@@ -59,7 +59,8 @@ pre {
 
             </ul>
             <ul class="nav pull-right">
-              <li>Type keyword: <input id="typeahead" type="text" data-provide="typeahead" data-items="4" style="margin-top:6px; height:27px"></li>
+              <li><a href="/keywords">Type keyword:</a></li>
+              <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" style="margin-top:6px; height:27px"></li>
               <li><a href="/archive">Archive</a></li>
               <li><a href="/about">About</a></li>
               <li><a href="/atom" rel="alternate" type="application/atom+xml"><img

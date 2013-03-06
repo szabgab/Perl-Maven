@@ -63,6 +63,12 @@ hook before_template => sub {
 get '/' => sub {
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => read_meta('index') });
 };
+
+get '/keywords' => sub {
+	my $kw = read_meta('keywords');
+	_show({ article => 'keywords', template => 'page', layout => 'keywords' }, { kw  => $kw });
+};
+
 get '/archive' => sub {
 	_show({ article => 'archive', template => 'archive', layout => 'system' }, { pages => read_meta('archive') });
 };

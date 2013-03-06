@@ -1,0 +1,29 @@
+<% INCLUDE layouts/incl/header.tt %>
+
+<% content %>
+
+<style>
+#keyword-list li {
+   margin-bottom: 10px;
+}
+#keyword-list li li {
+   margin-bottom: 1px;
+}
+</style>
+
+<div id="keyword-list">
+<ul>
+<% FOR k IN kw.keys.sort %>
+  <li><% k %>
+    <ul>
+      <% FOR page IN kw.$k.keys %>
+         <li><a href="/<% page %>"><% kw.$k.$page %></a></li>
+      <% END %>
+    </ul>
+  </li>
+<% END %>
+</ul>
+</div>
+
+<% INCLUDE layouts/incl/footer.tt %>
+
