@@ -7,6 +7,9 @@
     list-style: none;
     display: inline;
 }
+#indexes ul li button {
+    margin-bottom: 2px;
+}
 </style>
 
 <% IF indexes %>
