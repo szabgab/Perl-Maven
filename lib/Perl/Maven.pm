@@ -55,9 +55,16 @@ hook before_template => sub {
 
 	my $data = read_meta('keywords');
 	$t->{keywords} = to_json([sort keys %$data]) || '[]';
-	$t->{keyword_mapper} = to_json($data) || '{}';
+	#$t->{keyword_mapper} = to_json($data) || '{}';
 
 	return;
+};
+
+get '/search' => sub {
+	my ($keyword) = param('keyword');
+	return to_json({}) if not defined $keyword;
+	my $data = read_meta('keywords');
+	return to_json($data->{$keyword} || {});
 };
 
 get '/' => sub {
