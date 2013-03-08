@@ -69,7 +69,7 @@ sub perlfunc {
                     $item = $1;
                     $item =~ s{/}{}g;   # items such as m/// and tr///
                     $item =~ s{-}{}g;   # -X
-                    $item =~ s{_}{}g;   # items like __FILE__
+                    #$item =~ s{_}{}g;   # items like __FILE__
                     $item_had_content = 0;
                 }
                 next;
@@ -110,9 +110,8 @@ sub perlfunc {
         die "Pod errors in $key\n$pod{$key}\n-----\n$tt" if $tt =~ /POD_ERRORS/;
 
         open my $out, '>', $file or die "Could not open '$file' $!";
-        #print $out $pod{$key};
-        #print $out $p->{_tt_};
         print $out tt_header($key, $key);
+        print $out "The content of this page was taken from the standard Perl documentation\n\n";
         print $out $tt;
         close $out;
         #last if ++$xx::xx > 1; # for debugging
