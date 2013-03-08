@@ -67,8 +67,8 @@ sub perlfunc {
                 #say $line;
                 if ((not $item) or ($item and $item_had_content)) {
                     $item = $1;
-                    $item =~ s{/}{}g;   # items such as m/// and tr///
-                    $item =~ s{-}{}g;   # -X
+                    #$item =~ s{/}{}g;   # items such as m/// and tr///
+                    #$item =~ s{-}{}g;   # -X
                     #$item =~ s{_}{}g;   # items like __FILE__
                     $item_had_content = 0;
                 }
@@ -94,11 +94,18 @@ sub perlfunc {
     }
 
     # special case as this is the back from the =over we skipped before all the keywords
-    $pod{y} =~ s/=back//;
+    # will need to be enabled when we add back handling y///
+    #$pod{y} =~ s/=back//;
+
     # some error checkig:
     die if $in_head;
 
     foreach my $key (keys %pod) {
+        # for now let's limit the entries excluding m/// tr/// -X __WARN__
+        # TODO: decide how to display them and reduce this limitation
+        next if $key =~ /[^a-z]/;
+
+
         my $file = "$outdir/$key.tt";
         my $p = Podder->new;
         #print $pod{$key};
@@ -108,6 +115,13 @@ sub perlfunc {
         $p->html_header_after_title('');
         $p->html_footer( '' );
         #$p->top_anchor( '' );
+        $p->{Tagmap}{'C'}  = '<hl>';
+        $p->{Tagmap}{'/C'} = '</hl>';
+        $p->{Tagmap}{'Verbatim'}  = qq{\n<code lang="perl">\n};
+        $p->{Tagmap}{'/Verbatim'} = qq{\n</code>\n};
+        $p->{Tagmap}{'VerbatimFormatted'} = qq{\n<code lang="perl">\n};
+        $p->{Tagmap}{'/VerbatimFormatted'} = qq{\n</code>\n};
+
         $p->output_string(\$tt);
         $p->parse_string_document( $pod{$key} );
 
@@ -116,11 +130,12 @@ sub perlfunc {
         open my $out, '>', $file or die "Could not open '$file' $!";
         print $out tt_header($key, $key);
 
+        print $out $tt;
+
         print $out qq{<div style="font-size: 10px">};
         print $out qq{(The content of this page was taken from the standard Perl documentation.)};
         print $out qq{</div>\n\n};
 
-        print $out $tt;
         close $out;
         #last if ++$xx::xx > 1; # for debugging
     }
