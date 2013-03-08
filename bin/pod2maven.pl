@@ -104,6 +104,9 @@ sub perlfunc {
         #print $pod{$key};
 
         my $tt;
+        $p->html_header_before_title('');
+        $p->html_header_after_title('');
+        $p->html_footer( '' );
         $p->output_string(\$tt);
         $p->parse_string_document( $pod{$key} );
 
@@ -111,7 +114,11 @@ sub perlfunc {
 
         open my $out, '>', $file or die "Could not open '$file' $!";
         print $out tt_header($key, $key);
-        print $out "The content of this page was taken from the standard Perl documentation\n\n";
+
+        print $out qq{<div style="font-size: 10px">};
+        print $out qq{(The content of this page was taken from the standard Perl documentation.)};
+        print $out qq{</div>\n\n};
+
         print $out $tt;
         close $out;
         #last if ++$xx::xx > 1; # for debugging
