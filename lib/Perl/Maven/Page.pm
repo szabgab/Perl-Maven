@@ -74,8 +74,13 @@ sub read {
 				}
 			}
 			if ($line =~ m{^<code(?: lang="([^"]+)")?>}) {
-				$in_code = $1;
-				$cont .= qq{<pre class="prettyprint linenums languague-perl">\n};
+				my $language = $1 || '';
+				$in_code = 1;
+				if ($language eq 'perl') {
+					$cont .= qq{<pre class="prettyprint linenums languague-perl">\n};
+				} else {
+					$cont .= qq{<pre class="prettyprint">\n};
+				}
 				next;
 			}
 			if ($line =~ m{^</code>}) {
