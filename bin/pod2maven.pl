@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use 5.010;
 
+use Data::Dumper qw(Dumper);
+
 # pod2maven should generate the .tt files for the perl keywords and modules.
 # It uses the PODs supplied with perl, PODs in Perl core and CPAN modules and some in-house text/html
 # to preceed each entry and to link to the respective Perl 5 Maven articles.
@@ -18,28 +20,32 @@ exit;
 
 sub main {
     #'/home/gabor/tmp/perl-5.16.2/pod/perlvar.pod'
-
     # first thing to "manually" cut up the PODs to chunks I'd like to display
     # This probably needs special code for each pod file in the core perl documentation
     # then we'll be able to generate stand alone template files from each one
-    my $perlfunc = '/home/gabor/tmp/perl-5.16.2/pod/perlfunc.pod';
+    perlfunc('/home/gabor/tmp/perl-5.16.2/pod', '/home/gabor/work/articles/perldoc');
+}
+
+
+sub perlfunc {
+    my ($src, $outdir) = @_;
+
+    my $perlfunc =  "$src/perlfunc.pod";
     open my $fh, '<', $perlfunc or die;
 
-#=item -X FILEHANDLE
-#=item abs VALUE
-#=item accept NEWSOCKET,GENERICSOCKET
-
+    my %keywords;
     my %pod;
     my $in_head = 1;
     my $item;
     my $item_had_content = 0;
     my $internal = 0;
+    my $head = '';
     while (my $line = <$fh>) {
         if ($in_head) {
             if ($line =~ /^=head2 Alphabetical Listing of Perl Functions/) {
                 $in_head = 0;
             }
-            $pod{head} .= $line;
+            $head .= $line;
             next;
         }
 
@@ -48,7 +54,6 @@ sub main {
             next;
         }
 
-        #if ($line =~ /^=over/ or $line =~ /^=for/) {
         if ($line =~ /^=over/) {
             $internal++;
         }
@@ -59,6 +64,7 @@ sub main {
 
         if (not $internal) {
             if ($line =~ /^=item\s+(\S+)/) {
+                #say $line;
                 if ((not $item) or ($item and $item_had_content)) {
                     $item = $1;
                     $item =~ s{/}{}g;   # items such as m/// and tr///
@@ -66,8 +72,14 @@ sub main {
                     $item =~ s{_}{}g;   # items like __FILE__
                     $item_had_content = 0;
                 }
+                next;
             }
             if ($item) {
+                if ($line =~ /^X</) {
+                    #say $line;
+                    next;
+                }
+
                 if ($line !~ /^=/ and $line !~ /^X</ and $line =~ /\S/) {
                     $item_had_content = 1;
                 }
@@ -81,27 +93,57 @@ sub main {
         }
     }
 
+    # special case as this is the back from the =over we skipped before all the keywords
+    $pod{y} =~ s/=back//;
     # some error checkig:
     die if $in_head;
 
-    my $path = 'tmp';
     foreach my $key (keys %pod) {
-        my $file = "$path/$key.tt";
+        my $file = "$outdir/$key.tt";
+        my $p = Podder->new;
+        #print $pod{$key};
+
+        my $tt;
+        $p->output_string(\$tt);
+        $p->parse_string_document( $pod{$key} );
+
+        die "Pod errors in $key\n$pod{$key}\n-----\n$tt" if $tt =~ /POD_ERRORS/;
+
         open my $out, '>', $file or die "Could not open '$file' $!";
-        print $out $pod{$key};
+        #print $out $pod{$key};
+        #print $out $p->{_tt_};
+        print $out tt_header($key, $key);
+        print $out $tt;
         close $out;
-        #say $key;
+        #last if ++$xx::xx > 1; # for debugging
     }
-    #print $pod{head};
 
 
-    #my $perlfunc = find_in_inc('perlfunc.pod');
-    #my $p = Podder->new;
     #my $out;
-    #$p->output_string(\$out);
     #$p->parse_file($perlfunc);
     #$p->parse_from_file($perlfunc, 'out.txt');
 }
+
+sub tt_header {
+    my ($title, $keywords) = @_;
+    use DateTime;
+    my $time = DateTime->from_epoch( epoch => time );
+
+return <<"END_HEADER";
+=title Perldoc: $title
+=timestamp $time
+=indexes $keywords
+=status show
+=author 0
+=index 0
+=archive 0
+=feed 0
+=comments 1
+=social 1
+
+END_HEADER
+}
+
 
 
 sub find_in_inc {
@@ -127,26 +169,29 @@ use warnings;
 use 5.010;
 
 use Data::Dumper qw(Dumper);
+use base 'Pod::Simple::HTML';
 
-sub _handle_element_start {
-  my($parser, $element_name, $attr_hash_r) = @_;
-}
-
-sub _handle_element_end {
-  my($parser, $element_name, $attr_hash_r) = @_;
-  # NOTE: $attr_hash_r is only present when $element_name is "over" or "begin"
-  # The remaining code excerpts will mostly ignore this $attr_hash_r, as it is
-  # mostly useless. It is documented where "over-*" and "begin" events are
-  # documented.
-}
-
-sub _handle_text {
-  my($parser, $text) = @_;
-}
+#sub _handle_element_start {
+#    my($parser, $element_name, $attr_hash_r) = @_;
+#    say "Start $element_name " . Dumper $attr_hash_r;
+#    #$parser->{_tt_} .= "$element_name\n";
+#    #return $element_name;
+#}
+#
+#sub _handle_element_end {
+#    my($parser, $element_name, $attr_hash_r) = @_;
+#    # NOTE: $attr_hash_r is only present when $element_name is "over" or "begin"
+#    # The remaining code excerpts will mostly ignore this $attr_hash_r, as it is
+#    # mostly useless. It is documented where "over-*" and "begin" events are
+#    # documented.
+#}
+#
+#sub _handle_text {
+#    my($parser, $text) = @_;
+#}
 
 =pod
 
-use base 'Pod::Simple';
 sub _handle_element_start {
     my ($parser, $element_name, $attr_hash_r) = @_;
     if ($element_name =~ /item/) {
@@ -168,7 +213,6 @@ sub _handle_text {
 }
 =cut
 
-use base 'Pod::Simple';
 #my $start;
 #sub command {
 #    my ($parser, $command, $paragraph, $line_num) = @_;
