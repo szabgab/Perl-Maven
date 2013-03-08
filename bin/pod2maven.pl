@@ -107,6 +107,7 @@ sub perlfunc {
         $p->html_header_before_title('');
         $p->html_header_after_title('');
         $p->html_footer( '' );
+        #$p->top_anchor( '' );
         $p->output_string(\$tt);
         $p->parse_string_document( $pod{$key} );
 
@@ -233,5 +234,6 @@ sub _handle_text {
 #        #exit;
 #    }
 #}
+sub _add_top_anchor {}
 
 
