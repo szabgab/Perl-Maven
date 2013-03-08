@@ -44,7 +44,7 @@ sub process_files {
 	my (@index, @feed, @archive);
 
 	foreach my $p (@$pages) {
-		my $filename = substr(basename($p->{file}),  0, -3);
+		my $filename = substr($p->{url_path},  0, -3);
 		if ($verbose) {
 			say "Processing $filename";
 		}
@@ -103,19 +103,22 @@ sub save {
 
 sub get_pages {
 	my @pages;
-	foreach my $file (glob "$dir/*.tt") {
-		#say "Reading $file";
-		my $data = Perl::Maven::Page->new(file => $file)->read;
-		foreach my $field (qw(timestamp title status)) {
-			die "No $field in $file" if not $data->{$field};
-		}
-		die "Invalid status $data->{status} in $file"
-			if $data->{status} !~ /^(show|hide|draft|ready)/;
+	foreach my $path ('', 'perldoc') {
+		foreach my $file (glob "$dir/$path/*.tt") {
+			#say "Reading $file";
+			my $data = Perl::Maven::Page->new(file => $file)->read;
+			foreach my $field (qw(timestamp title status)) {
+				die "No $field in $file" if not $data->{$field};
+			}
+			die "Invalid status $data->{status} in $file"
+				if $data->{status} !~ /^(show|hide|draft|ready)/;
 
-		push @pages, {
-				file  => $file,
-				%$data,
-		};
+			push @pages, {
+					file  => $file,
+					url_path => ($path ? "$path/" : '') . basename($file),
+					%$data,
+			};
+		}
 	}
 
 	#die Dumper $pages[0];
