@@ -124,11 +124,6 @@ sub perlfunc {
         close $out;
         #last if ++$xx::xx > 1; # for debugging
     }
-
-
-    #my $out;
-    #$p->parse_file($perlfunc);
-    #$p->parse_from_file($perlfunc, 'out.txt');
 }
 
 sub tt_header {
@@ -177,63 +172,6 @@ use 5.010;
 
 use Data::Dumper qw(Dumper);
 use base 'Pod::Simple::HTML';
-
-#sub _handle_element_start {
-#    my($parser, $element_name, $attr_hash_r) = @_;
-#    say "Start $element_name " . Dumper $attr_hash_r;
-#    #$parser->{_tt_} .= "$element_name\n";
-#    #return $element_name;
-#}
-#
-#sub _handle_element_end {
-#    my($parser, $element_name, $attr_hash_r) = @_;
-#    # NOTE: $attr_hash_r is only present when $element_name is "over" or "begin"
-#    # The remaining code excerpts will mostly ignore this $attr_hash_r, as it is
-#    # mostly useless. It is documented where "over-*" and "begin" events are
-#    # documented.
-#}
-#
-#sub _handle_text {
-#    my($parser, $text) = @_;
-#}
-
-=pod
-
-sub _handle_element_start {
-    my ($parser, $element_name, $attr_hash_r) = @_;
-    if ($element_name =~ /item/) {
-        #say $element_name;
-        print Dumper $attr_hash_r;
-    }
-}
-
-sub _handle_element_end {
-    my ($parser, $element_name, $attr_hash_r) = @_;
-       # NOTE: $attr_hash_r is only present when $element_name is "over" or "begin"
-       # The remaining code excerpts will mostly ignore this $attr_hash_r, as it is
-       # mostly useless. It is documented where "over-*" and "begin" events are
-       # documented.
-}
-
-sub _handle_text {
-    my($parser, $text) = @_;
-}
-=cut
-
-#my $start;
-#sub command {
-#    my ($parser, $command, $paragraph, $line_num) = @_;
-#    #say $command;
-#    if ($command eq 'head2' and $paragraph =~ /Alphabetical Listing of Perl Functions/) {
-#      $start = 1;
-#    }
-#    if ($start and $command eq 'item') {
-#        if ($paragraph =~ /\s/) {
-#            return;
-#        }
-#        #exit;
-#    }
-#}
 sub _add_top_anchor {}
 
 
