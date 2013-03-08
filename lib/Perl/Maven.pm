@@ -74,6 +74,25 @@ get '/keywords' => sub {
 get '/archive' => sub {
 	_show({ article => 'archive', template => 'archive', layout => 'system' }, { pages => read_meta('archive') });
 };
+
+get '/sitemap.xml' => sub {
+	my $pages = read_meta('sitemap');
+
+	my $cfg = config->{mymaven};
+	my $url = $cfg->{rss}{url};
+	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
+	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
+	foreach my $p (@$pages) {
+		$xml .= qq{  <url>\n};
+      	$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
+      	$xml .= qq{    <lastmod>$p->{timestamp}</lastmod>\n};
+      	#$xml .= qq{    <changefreq>monthly</changefreq>\n};
+      	#$xml .= qq{    <priority>0.8</priority>\n};
+   		$xml .= qq{  </url>\n};
+	}
+	$xml .= qq{</urlset>\n};
+	return $xml;
+};
 get '/atom' => sub {
 	my $pages = read_meta('feed');
 

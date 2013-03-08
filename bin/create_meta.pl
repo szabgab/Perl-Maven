@@ -20,11 +20,12 @@ my ($verbose) = @ARGV;
 my $dir = dirname(dirname dirname abs_path $0) . '/articles';
 my $pages = get_pages();
 
-my ($keywords, $index, $archive, $feed) = process_files($pages);
+my ($keywords, $index, $archive, $feed, $sitemap) = process_files($pages);
 save ('index',   $index);
 save ('archive', $archive);
 save ('feed',    $feed);
 save ('keywords', $keywords);
+save ('sitemap', $sitemap);
 exit;
 ###############################################################################
 
@@ -41,7 +42,7 @@ sub process_files {
 	# might want to search for. Or the other way around.
 
 	my %keywords; # =indexes and =tags are united here
-	my (@index, @feed, @archive);
+	my (@index, @feed, @archive, @sitemap);
 
 	foreach my $p (@$pages) {
 		my $filename = substr($p->{url_path},  0, -3);
@@ -87,9 +88,14 @@ sub process_files {
 			};
 		}
 
+		push @sitemap, {
+			title => $p->{title},
+			filename => ($filename eq 'index' ? '' : $filename),
+			timestamp => $p->{timestamp},
+		};
 	}
 
-	return (\%keywords, \@index, \@archive, \@feed);
+	return (\%keywords, \@index, \@archive, \@feed, \@sitemap);
 }
 
 sub save {
