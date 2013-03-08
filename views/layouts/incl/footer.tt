@@ -67,7 +67,7 @@
 <script src="/javascripts/svg.js"></script>
 
 <script>
-$('#typeahead').typeahead( { 'source' : <% keywords %>  });
+$('#typeahead').typeahead( { 'source' : <% keywords %>, items : 15  });
 var data = <% keyword_mapper %>;
 
 function mysearch(keyword, auto) {
