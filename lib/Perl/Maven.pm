@@ -33,8 +33,6 @@ my $appdir = abs_path config->{appdir};
 my $engines = config->{engines};
 $engines->{template_toolkit}{INCLUDE_PATH} = "$appdir/views";
 set engines => $engines;
-set articles => dirname($appdir) . '/articles';
-#warn config->{articles};
 
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
