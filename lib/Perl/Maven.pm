@@ -582,6 +582,11 @@ sub _show {
 	} else {
 		delete $tt->{author};
 	}
+	my $translator = $tt->{translator};
+	if ($translator and $authors{$translator}) {
+		$tt->{translator_name} = $authors{$translator}{author_name};
+		$tt->{translator_img} = $authors{$translator}{author_img};
+	}
 
 	my $books = delete $tt->{books};
 	if ($books) {

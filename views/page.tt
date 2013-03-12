@@ -36,12 +36,14 @@
 
 <% IF lang_br %>
    <div id="creators">
-     <div id="translator">
-      <img src="/img/leprevost.jpg" />
-      <div class="author_text">
-        Traduzido por<br><a href="http://www.leprevost.com.br/">Felipe da Veiga Leprevost</a>
-      </div>
-     </div>
+      <% IF translator %>
+         <div id="translator">
+          <img src="/img/<% translator_img %>" />
+          <div class="author_text">
+            Traduzido por<br><a href="http://www.leprevost.com.br/"><% translator_name %></a>
+          </div>
+         </div>
+      <% END %>
       <% IF author %>
         <div id="author">
          <img src="/img/<% author_img %>"  />
