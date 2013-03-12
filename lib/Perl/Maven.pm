@@ -61,8 +61,8 @@ hook before_template => sub {
 get '/search' => sub {
 	my ($keyword) = param('keyword');
 	return to_json({}) if not defined $keyword;
-	my $data = read_meta('keywords');
-	return to_json($data->{$keyword} || {});
+	my $data = read_meta('keywords') || {};
+	return to_json($data->{$keyword});
 };
 
 get '/' => sub {
@@ -70,18 +70,18 @@ get '/' => sub {
 };
 
 get '/keywords' => sub {
-	my $kw = read_meta('keywords');
+	my $kw = read_meta('keywords') || {};
 	delete $kw->{keys}; # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
 	#die Dumper $kw->{__WARN__};
 	_show({ article => 'keywords', template => 'page', layout => 'keywords' }, { kw  => $kw });
 };
 
 get '/archive' => sub {
-	_show({ article => 'archive', template => 'archive', layout => 'system' }, { pages => read_meta('archive') });
+	_show({ article => 'archive', template => 'archive', layout => 'system' }, { pages => (read_meta('archive') || []) });
 };
 
 get '/sitemap.xml' => sub {
-	my $pages = read_meta('sitemap');
+	my $pages = read_meta('sitemap') || [];
 
 	my $cfg = config->{mymaven};
 	my $url = $cfg->{rss}{url};
@@ -99,7 +99,7 @@ get '/sitemap.xml' => sub {
 	return $xml;
 };
 get '/atom' => sub {
-	my $pages = read_meta('feed');
+	my $pages = read_meta('feed') || [];
 
 	my $cfg = config->{mymaven};
 
