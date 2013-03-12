@@ -21,7 +21,7 @@ my ($verbose) = @ARGV;
 
 my $config = LoadFile('config.yml');
 
-my $dir = $config->{articles};
+my $dir = $config->{mymaven}{articles};
 
 my $pages = get_pages();
 

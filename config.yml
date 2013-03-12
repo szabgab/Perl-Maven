@@ -32,8 +32,8 @@ mymaven:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:
     email: 'gabor@szabgab.com'
+  articles: '/home/gabor/work/articles'
 
-articles: '/home/gabor/work/articles'
 template: "template_toolkit"
 engines:
   template_toolkit:

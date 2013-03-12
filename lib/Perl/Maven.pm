@@ -364,7 +364,7 @@ get '/download/:dir/:file' => sub {
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
-	send_file(path(config->{articles}, 'download', $dir, $file), system_path => 1);
+	send_file(path(config->{mymaven}{articles}, 'download', $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -509,9 +509,9 @@ get '/img/:file' => sub {
 	my $file = param('file');
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
-#	return config->{articles} . "img/$file";
+#	return config->{mymaven}{articles} . "img/$file";
 	send_file(
-		config->{articles} . "/img/$file",
+		config->{mymaven}{articles} . "/img/$file",
 #		"d:\\work\\articles\\img\\$file",
 		content_type => $ext,
 		system_path => 1,
@@ -522,7 +522,7 @@ get '/mail/:article' => sub {
 
 	my $article = param('article');
 
-	my $path = config->{articles} . "/mail/$article.tt";
+	my $path = config->{mymaven}{articles} . "/mail/$article.tt";
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
@@ -551,7 +551,7 @@ sub _show {
 	my ($params, $data) = @_;
 	$data ||= {};
 
-	my $path = config->{articles} . "/$params->{article}.tt";
+	my $path = config->{mymaven}{articles} . "/$params->{article}.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
@@ -730,7 +730,7 @@ sub _generate_code {
 sub get_download_file {
 	my ($subdir) = @_;
 
-	my $dir = path config->{articles}, 'download', $subdir;
+	my $dir = path config->{mymaven}{articles}, 'download', $subdir;
 	#debug $dir;
 	my $file;
 	if (opendir my $dh, $dir) {
@@ -768,7 +768,7 @@ sub paypal {
 
 sub read_meta {
 	my ($file) = @_;
-	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
+	if (open my $fh, '<encoding(UTF-8)', path(config->{mymaven}{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};
