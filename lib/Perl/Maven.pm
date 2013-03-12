@@ -18,8 +18,22 @@ use POSIX ();
 
 use Perl::Maven::Page;
 
-sub mymaven { config->{mymaven} }
+sub mymaven {
+	my $host = request->host;
+	$host =~ s/:.*//; # remove port
 
+	if (! config->{mymaven}{$host}) {
+		return config->{mymaven}{default};
+	}
+
+	use Storable qw(dclone);
+	my $mymaven = dclone config->{mymaven}{default};
+	my $host = config->{mymaven}{$host};
+	foreach my $key (keys %$host) {
+		$mymaven->{$key} = $host->{$key};
+	}
+	return $mymaven;
+}
 
 my $sandbox = 0;
 

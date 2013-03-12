@@ -23,7 +23,7 @@ my $dbh = DBI->connect($dsn, "", "", {
 });
 
 my $config = YAML::LoadFile('config.yml');
-my mymaven = $config->{mymaven};
+my mymaven = $config->{mymaven}{default};
 my $from = $mymaven->{from};
 
 my %opt;
