@@ -22,6 +22,7 @@ charset: "UTF-8"
 
 mymaven:
   default:
+    lang: 'en'
     title: 'Perl 5 Maven'
     from: 'Perl 5 Maven <gabor@perl5maven.com>'
     listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
@@ -35,8 +36,10 @@ mymaven:
       email: 'gabor@szabgab.com'
     articles: '/home/gabor/work/articles'
   br.perl5maven.local:
+    lang: 'br'
     articles: '/home/gabor/work/br.perl5maven.com'
   br.perl5maven.com:
+    lang: 'br'
     articles: '/home/gabor/work/br.perl5maven.com'
 
 

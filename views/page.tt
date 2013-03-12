@@ -1,6 +1,55 @@
 <% mycontent %>
 
-<% IF author %>
-Written by <a href="<% google_plus_profile %>?rel=author"><% author_name %></a><br /><img src="/img/<% author_img %>"  />
+
+<style>
+#creators {
+/*  background-color: #DDDDDD; */
+  margin-top: 20px;
+  width: 500px;
+  height: 200px;
+}
+#creators img {
+}
+
+#translator {
+}
+#author {
+   position: relative;
+   float: right;
+   top: -155px;
+}
+.author_text {
+}
+
+</style>
+
+<% IF lang_en %>
+   <div id="creators">
+     <% IF author %>
+      <img src="/img/<% author_img %>"  />
+         <div class="author_text">
+              Written by<br><a href="<% google_plus_profile %>?rel=author"><% author_name %></a>
+          </div>
+     <% END %>
+   </div>
+<% END %>
+
+<% IF lang_br %>
+   <div id="creators">
+     <div id="translator">
+      <img src="/img/leprevost.jpg" />
+      <div class="author_text">
+        Traduzido por<br><a href="http://www.leprevost.com.br/">Felipe da Veiga Leprevost</a>
+      </div>
+     </div>
+      <% IF author %>
+        <div id="author">
+         <img src="/img/<% author_img %>"  />
+         <div class="author_text">
+          Escrito por<br><a href="<% google_plus_profile %>?rel=author"><% author_name %></a>
+         </div>
+        </div>
+     <% END %>
+   </div>
 <% END %>
 

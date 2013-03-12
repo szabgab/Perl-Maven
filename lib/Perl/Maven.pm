@@ -66,7 +66,8 @@ hook before_template => sub {
 	if (logged_in()) {
 		($t->{username}) = split /@/, session 'email';
 	}
-
+	my $language = mymaven->{lang};
+	$t->{"lang_$language"} = 1;
 	my $data = read_meta('keywords') || {};
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
