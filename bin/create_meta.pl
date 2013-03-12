@@ -8,16 +8,21 @@ use File::Basename qw(basename dirname);
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use JSON qw(to_json);
+use YAML qw(LoadFile);
 
 use lib 'lib';
 use Perl::Maven::Page;
 
+binmode(STDOUT, ":utf8");
+binmode(STDERR, ":utf8");
+
 # Run with any value on the command line to get debugging info
 my ($verbose) = @ARGV;
 
+my $config = LoadFile('config.yml');
 
-#my $dir = '/home/gabor/work/articles';
-my $dir = dirname(dirname dirname abs_path $0) . '/articles';
+my $dir = $config->{articles};
+
 my $pages = get_pages();
 
 my ($keywords, $index, $archive, $feed, $sitemap) = process_files($pages);
