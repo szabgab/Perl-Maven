@@ -51,8 +51,8 @@ hook before_template => sub {
 		($t->{username}) = split /@/, session 'email';
 	}
 
-	my $data = read_meta('keywords');
-	$t->{keywords} = to_json([sort keys %$data]) || '[]';
+	my $data = read_meta('keywords') || {};
+	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
 	return;
@@ -66,7 +66,7 @@ get '/search' => sub {
 };
 
 get '/' => sub {
-	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => read_meta('index') });
+	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => (read_meta('index') || []) });
 };
 
 get '/keywords' => sub {
@@ -773,7 +773,7 @@ sub read_meta {
 		my $json = <$fh>;
 		return from_json $json;
 	}
-	return [];
+	return;
 }
 
 true;
