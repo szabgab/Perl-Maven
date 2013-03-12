@@ -1,6 +1,8 @@
 package Perl::Maven::Page;
 use Moose;
 
+use 5.014;
+
 
 has file => (is => 'ro', isa => 'Str', required => 1);
 
@@ -31,7 +33,7 @@ sub read {
 				die "Header ended and '$field' was not supplied for file $file\n";
 			}
 
-			if (my ($f, $v) = $line =~ /^=([\w-]+)\s+(.*?)\s*$/) {
+			if (my ($f, $v) = $line =~ /=([\w-]+)\s+(.*?)\s*$/) {
 
 				# TODO make it configurable, which fields to split?
 				if ($f eq 'indexes' or $f eq 'tags') {
