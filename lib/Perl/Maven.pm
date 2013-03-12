@@ -18,6 +18,8 @@ use POSIX ();
 
 use Perl::Maven::Page;
 
+sub mymaven { config->{mymaven} }
+
 
 my $sandbox = 0;
 
@@ -83,8 +85,7 @@ get '/archive' => sub {
 get '/sitemap.xml' => sub {
 	my $pages = read_meta('sitemap') || [];
 
-	my $cfg = config->{mymaven};
-	my $url = $cfg->{rss}{url};
+	my $url = mymaven->{rss}{url};
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
 	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
@@ -101,12 +102,12 @@ get '/sitemap.xml' => sub {
 get '/atom' => sub {
 	my $pages = read_meta('feed') || [];
 
-	my $cfg = config->{mymaven};
+	my $mymaven = mymaven;
 
 	my $ts = DateTime->now;
 
-	my $url = $cfg->{rss}{url};
-	my $title = $cfg->{rss}{title};
+	my $url = $mymaven->{rss}{url};
+	my $title = $mymaven->{rss}{title};
 
 	my $xml = '';
 	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
@@ -164,11 +165,11 @@ post '/send-reset-pw-code' => sub {
 		layout => 'email',
 	};
 
-	my $cfg = config->{mymaven};
+	my $mymaven = mymaven;
 	sendmail(
-		From    => $cfg->{from},
+		From    => $mymaven->{from},
 		To      => $email,
-		Subject => "Code to reset your $cfg->{title} password",
+		Subject => "Code to reset your $mymaven->{title} password",
 		html    => $html,
 	);
 
@@ -313,14 +314,14 @@ post '/register' => sub {
 	}, {
 		layout => 'email',
 	};
-	my $cfg = config->{mymaven};
+	my $mymaven = mymaven;
 	sendmail(
-		From    => $cfg->{from},
+		From    => $mymaven->{from},
 		To      => $email,
-		Subject => "Please finish the $cfg->{title} registration",
+		Subject => "Please finish the $mymaven->{title} registration",
 		html    => $html,
 	);
-	my $html_from = $cfg->{from};
+	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
 	return template 'response', { from => $html_from };
 };
@@ -364,7 +365,7 @@ get '/download/:dir/:file' => sub {
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
-	send_file(path(config->{mymaven}{articles}, 'download', $dir, $file), system_path => 1);
+	send_file(path(mymaven->{articles}, 'download', $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -402,9 +403,9 @@ get '/verify/:id/:code' => sub {
 	session logged_in => 1;
 	session last_seen => time;
 
-	my $cfg = config->{mymaven};
+	my $mymaven = mymaven;
 	sendmail(
-		From    => $cfg->{from},
+		From    => $mymaven->{from},
 		To      => $user->{email},
 		Subject => 'Thank you for registering',
 		html    => template('post_verification_mail', {
@@ -414,9 +415,9 @@ get '/verify/:id/:code' => sub {
 	);
 
 	sendmail(
-		From    => $cfg->{from},
-		To      => $cfg->{admin}{email},
-		Subject => "New $cfg->{title} newsletter registration",
+		From    => $mymaven->{from},
+		To      => $mymaven->{admin}{email},
+		Subject => "New $mymaven->{title} newsletter registration",
 		html    => "$user->{email} has registered",
 	);
 
@@ -509,9 +510,8 @@ get '/img/:file' => sub {
 	my $file = param('file');
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
-#	return config->{mymaven}{articles} . "img/$file";
 	send_file(
-		config->{mymaven}{articles} . "/img/$file",
+		mymaven->{articles} . "/img/$file",
 #		"d:\\work\\articles\\img\\$file",
 		content_type => $ext,
 		system_path => 1,
@@ -522,7 +522,7 @@ get '/mail/:article' => sub {
 
 	my $article = param('article');
 
-	my $path = config->{mymaven}{articles} . "/mail/$article.tt";
+	my $path = mymaven->{articles} . "/mail/$article.tt";
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
@@ -551,7 +551,7 @@ sub _show {
 	my ($params, $data) = @_;
 	$data ||= {};
 
-	my $path = config->{mymaven}{articles} . "/$params->{article}.tt";
+	my $path = mymaven->{articles} . "/$params->{article}.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
@@ -610,8 +610,6 @@ sub paypal_buy {
 
 	my $paypal = paypal();
 
-	my $cfg = config->{mymaven};
-
 	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
 	# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
@@ -619,7 +617,7 @@ sub paypal_buy {
 	my $return_url = uri_for('/paid');
 	my $notify_url = uri_for('/paypal');
 	my $button = $paypal->button(
-		business       => $cfg->{paypal}{email},
+		business       => mymaven->{paypal}{email},
 		item_name      => $item,
 		amount         => $usd,
 		quantity       => $quantity,
@@ -730,7 +728,7 @@ sub _generate_code {
 sub get_download_file {
 	my ($subdir) = @_;
 
-	my $dir = path config->{mymaven}{articles}, 'download', $subdir;
+	my $dir = path mymaven->{articles}, 'download', $subdir;
 	#debug $dir;
 	my $file;
 	if (opendir my $dh, $dir) {
@@ -768,7 +766,7 @@ sub paypal {
 
 sub read_meta {
 	my ($file) = @_;
-	if (open my $fh, '<encoding(UTF-8)', path(config->{mymaven}{articles}, 'meta', "$file.json")) {
+	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};

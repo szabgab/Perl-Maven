@@ -12,6 +12,8 @@ use WWW::Mechanize;
 use DBI;
 use YAML qw();
 
+
+
 my $dsn = "dbi:SQLite:dbname=pm.db";
 
 my $dbh = DBI->connect($dsn, "", "", {
@@ -21,7 +23,8 @@ my $dbh = DBI->connect($dsn, "", "", {
 });
 
 my $config = YAML::LoadFile('config.yml');
-my $from = $config->{mymaven}{from};
+my mymaven = $config->{mymaven};
+my $from = $mymaven->{from};
 
 my %opt;
 GetOptions(\%opt,
@@ -40,7 +43,7 @@ sub build_content {
 	my $w = WWW::Mechanize->new;
 	$w->get($opt{url});
 	die 'missing title' if not $w->title;
-	my $subject = $config->{mymaven}{prefix} . ' ' . $w->title;
+	my $subject = $mymaven->{prefix} . ' ' . $w->title;
 
 	my %content;
 	$content{html} = $w->content;
@@ -87,7 +90,7 @@ sub sendmail {
 		'Type'     => 'multipart/alternative',
 		'Subject'  => $subject,
 		);
-	$msg->attr('List-Id'  => $config->{mymaven}{listid}),
+	$msg->attr('List-Id'  => $mymaven->{listid}),
 
 	my %type = (
 		text => 'text/plain',
