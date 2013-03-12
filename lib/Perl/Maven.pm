@@ -578,7 +578,7 @@ sub _show {
 	if ($nick and $authors{$nick}) {
 		$tt->{author_name} = $authors{$nick}{author_name};
 		$tt->{author_img} = $authors{$nick}{author_img};
-		$tt->{google_plus_profile} = $authors{$nick}{google_plus_profile};
+		$tt->{author_google_plus_profile} = $authors{$nick}{author_google_plus_profile};
 	} else {
 		delete $tt->{author};
 	}
@@ -769,7 +769,7 @@ sub read_authors {
 		$authors{$nick} = {
 			author_name => $name,
 			author_img  => $img,
-			google_plus_profile => $google_plus_profile,
+			author_google_plus_profile => $google_plus_profile,
 		};
 	}
 	return;

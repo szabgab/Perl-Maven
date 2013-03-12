@@ -28,7 +28,7 @@
      <% IF author %>
       <img src="/img/<% author_img %>"  />
          <div class="author_text">
-              Written by<br><a href="<% google_plus_profile %>?rel=author"><% author_name %></a>
+              Written by<br><a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
           </div>
      <% END %>
    </div>
@@ -48,7 +48,7 @@
         <div id="author">
          <img src="/img/<% author_img %>"  />
          <div class="author_text">
-          Escrito por<br><a href="<% google_plus_profile %>?rel=author"><% author_name %></a>
+          Escrito por<br><a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
          </div>
         </div>
      <% END %>
