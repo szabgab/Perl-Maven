@@ -105,8 +105,9 @@ sub process_files {
 
 sub save {
 	my ($file, $data) = @_;
+	die "'$dir/meta' does not exist" if not -d "$dir/meta";
 	my $path = "$dir/meta/$file.json";
-	open my $fh, '>', $path or die "Could not open '$path'\n";
+	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
 	print $fh to_json $data, { utf8 => 1, pretty => 1 };
 	close $fh;
 	return;

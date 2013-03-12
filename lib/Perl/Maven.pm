@@ -771,7 +771,7 @@ sub read_meta {
 	if (open my $fh, '<encoding(UTF-8)', path(config->{articles}, 'meta', "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
-		return from_json $json;
+		return from_json $json, {utf8 => 1};
 	}
 	return;
 }
