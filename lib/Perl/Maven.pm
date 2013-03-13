@@ -353,13 +353,15 @@ get '/account' => sub {
 	my @subscriptions = $db->get_subscriptions($email);
 	my @owned_products;
 	foreach my $code (@subscriptions) {
-		my $file = get_download_file($code);
-		#debug "$code -  $file";
-		push @owned_products, {
-			name     => $products{$code}{name},
-			filename => "/download/$code/$file",
-			linkname => $file,
-		};
+		my @files = get_download_files($code);
+		foreach my $f (@files) {
+			#debug "$code -  $f->{file}";
+			push @owned_products, {
+				name     => "$products{$code}{name} $f->{title}",
+				filename => "/download/$code/$f->{file}",
+				linkname => $f->{file},
+			};
+		}
 	}
 
 	template 'account', {
@@ -398,11 +400,11 @@ get '/verify/:id/:code' => sub {
 	}
 
 	if ($user->{verify_time}) {
-		my $cookbook = get_download_file('perl_maven_cookbook');
+		my ($cookbook) = get_download_files('perl_maven_cookbook');
 
 		return template 'thank_you', {
-			filename => "/download/perl_maven_cookbook/$cookbook",
-			linkname => $cookbook,
+			filename => "/download/perl_maven_cookbook/$cookbook->{file}",
+			linkname => $cookbook->{file},
 		};
 	}
 
@@ -436,11 +438,11 @@ get '/verify/:id/:code' => sub {
 		html    => "$user->{email} has registered",
 	);
 
-	my $cookbook = get_download_file('perl_maven_cookbook');
+	my ($cookbook) = get_download_files('perl_maven_cookbook');
 
 	template 'thank_you', {
-		filename => "/download/perl_maven_cookbook/$cookbook",
-		linkname => $cookbook,
+		filename => "/download/perl_maven_cookbook/$cookbook->{file}",
+		linkname => $cookbook->{file},
 	};
 };
 
@@ -745,18 +747,25 @@ sub _generate_code {
 	return $code;
 }
 
-sub get_download_file {
+sub get_download_files {
 	my ($subdir) = @_;
 
-	my $dir = path mymaven->{download}, $subdir;
-	#debug $dir;
-	my $file;
-	if (opendir my $dh, $dir) {
-		($file) = reverse sort grep {$_ !~ /^\./} readdir $dh;
+	my $manifest = path mymaven->{download}, $subdir, 'manifest.csv';
+	#debug $manifest;
+	my @files;
+	if (open my $fh, $manifest) {
+		while (my $line = <$fh>) {
+			chomp $line;
+			my ($file, $title) = split /;/, $line;
+			push @files, {
+				file => $file,
+				title => $title,
+			}
+		}
 	} else {
-		error "$dir : $!";
+		error "Could not open $manifest : $!";
 	}
-	return $file;
+	return @files;
 }
 
 sub read_authors {
