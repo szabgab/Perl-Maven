@@ -380,7 +380,7 @@ get '/download/:dir/:file' => sub {
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
-	send_file(path(mymaven->{articles}, 'download', $dir, $file), system_path => 1);
+	send_file(path(mymaven->{download}, $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -748,7 +748,7 @@ sub _generate_code {
 sub get_download_file {
 	my ($subdir) = @_;
 
-	my $dir = path mymaven->{articles}, 'download', $subdir;
+	my $dir = path mymaven->{download}, $subdir;
 	#debug $dir;
 	my $file;
 	if (opendir my $dh, $dir) {

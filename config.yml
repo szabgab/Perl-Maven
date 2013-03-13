@@ -35,6 +35,7 @@ mymaven:
     paypal:
       email: 'gabor@szabgab.com'
     articles: '/home/gabor/work/articles'
+    download: '/home/gabor/work/articles/download'
   br.perl5maven.local:
     lang: 'br'
     articles: '/home/gabor/work/br.perl5maven.com'
