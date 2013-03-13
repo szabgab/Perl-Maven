@@ -19,9 +19,10 @@ binmode(STDERR, ":utf8");
 # Run with any value on the command line to get debugging info
 my ($verbose) = @ARGV;
 
-my $config = LoadFile('config.yml');
+#my $config = LoadFile('config.yml');
 
-my $dir = $config->{mymaven}{articles};
+my $dir = shift or die "Usage $0 path/to/articles\n";
+#$config->{mymaven}{articles};
 
 my $pages = get_pages();
 
