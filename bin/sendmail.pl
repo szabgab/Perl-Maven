@@ -23,12 +23,12 @@ my $dbh = DBI->connect($dsn, "", "", {
 });
 
 my $config = YAML::LoadFile('config.yml');
-my mymaven = $config->{mymaven}{default};
+my $mymaven = $config->{mymaven}{default};
 my $from = $mymaven->{from};
 
 my %opt;
 GetOptions(\%opt,
-	'to=s',
+	'to=s@',
 	'url=s',
 	'send',
 ) or usage();
@@ -53,31 +53,43 @@ sub build_content {
 }
 
 sub send_messages {
-	if ($opt{to} =~ /\@/) {
-		sendmail($opt{to});
-	} else {
-		my $emails = $dbh->selectall_arrayref(q{
-		   SELECT email
-		   FROM user, subscription, product
-		   WHERE user.id=subscription.uid
-		     AND user.verify_time is not null
-		     AND product.id=subscription.pid
-		     AND product.code=?
-		}, undef, $opt{to});
+    my %sent;
+    my $count = 0;
+    my $planned = 0;
+    foreach my $to (@{$opt{to}}) {
+	    if ($to =~ /\@/) {
+            $planned++;
+            next if $sent{$to};
+		    sendmail($to);
+            $count++;
+            $sent{$to} = 1;
+	    } else {
+		    my $emails = $dbh->selectall_arrayref(q{
+		        SELECT email
+		        FROM user, subscription, product
+		        WHERE user.id=subscription.uid
+		          AND user.verify_time is not null
+		          AND product.id=subscription.pid
+		          AND product.code=?
+		    }, undef, $to);
 	#'perl_maven_cookbook'
 	#die Dumper $emails;
-
-		my $total = scalar @$emails;
-		print "Sending to $total number of addresses\n";
-		return if not $opt{send};
-		my $count = 0;
-		foreach my $email (@$emails) {
-			$count++;
-			say "$count out of $total  to $email->[0]";
-			sendmail($email->[0]);
-			sleep 1;
+		    my $total = scalar @$emails;
+		    print "Sending to $total number of addresses\n";
+		    next if not $opt{send};
+		    foreach my $email (@$emails) {
+                $planned++;
+                my $address = $email->[0];
+                next if $sent{$address};
+			    $count++;
+                $sent{$address} = 1;
+			    say "$count out of $total to $address";
+			    sendmail($address);
+			    sleep 1;
+            }
 		}
 	}
+    say "Total sent $count. Planned: $planned";
 	return;
 }
 
