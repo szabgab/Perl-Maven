@@ -20,10 +20,14 @@ use Perl::Maven::Page;
 
 sub mymaven {
 	my $host = request->host;
+
+	die 'localhost is not supported' if $host =~ /localhost/; # avoid stupid mistakes
+
 	$host =~ s/:.*//; # remove port
 
 	if (! config->{mymaven}{$host}) {
-		return config->{mymaven}{default};
+		die "No such host '$host'"; # Avoid more stupid mistakes
+		#return config->{mymaven}{default};
 	}
 
 	use Storable qw(dclone);
@@ -795,7 +799,7 @@ sub paypal {
 
 sub read_meta {
 	my ($file) = @_;
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{articles}, 'meta', "$file.json")) {
+	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta}, "$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};

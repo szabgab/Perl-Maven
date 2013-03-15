@@ -34,14 +34,21 @@ mymaven:
       email: 'Gabor Szabo <gabor@szabgab.com>'
     paypal:
       email: 'gabor@szabgab.com'
-    articles: '/home/gabor/work/articles'
     download: '/home/gabor/work/articles/download'
+  perl5maven.local:
+    articles: '/home/gabor/work/articles'
+    meta: '/home/gabor/work/articles/perl5maven.com/meta'
+  perl5maven.com:
+    articles: '/home/gabor/work/articles'
+    meta: '/home/gabor/work/articles/perl5maven.com/meta'
   br.perl5maven.local:
     lang: 'br'
     articles: '/home/gabor/work/br.perl5maven.com'
+    meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
   br.perl5maven.com:
     lang: 'br'
     articles: '/home/gabor/work/br.perl5maven.com'
+    meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
 
 
 template: "template_toolkit"
