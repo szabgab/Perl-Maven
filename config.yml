@@ -36,10 +36,12 @@ mymaven:
       email: 'gabor@szabgab.com'
     download: '/home/gabor/work/articles/download'
   perl5maven.local:
-    articles: '/home/gabor/work/articles'
+    articles: '/home/gabor/work/perl5maven.com'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
+    mail: '/home/gabor/work/articles/mail'
+    perldoc: '/home/gabor/work/articles/perldoc'
   perl5maven.com:
-    articles: '/home/gabor/work/articles'
+    articles: '/home/gabor/work/perl5maven.com'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
   br.perl5maven.local:
     lang: 'br'

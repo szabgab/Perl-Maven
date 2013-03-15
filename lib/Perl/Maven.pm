@@ -543,7 +543,7 @@ get '/mail/:article' => sub {
 
 	my $article = param('article');
 
-	my $path = mymaven->{articles} . "/mail/$article.tt";
+	my $path = mymaven->{mail} . "/$article.tt";
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
@@ -560,6 +560,13 @@ get '/svg.xml' => sub {
 	return $xml;
 };
 
+get qr{/perldoc/(.+)} => sub {
+	my ($article) = splat;
+
+	return _show({ path => mymaven->{perldoc}, article => $article, template => 'page', layout => 'page' });
+};
+
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
@@ -572,7 +579,7 @@ sub _show {
 	my ($params, $data) = @_;
 	$data ||= {};
 
-	my $path = mymaven->{articles} . "/$params->{article}.tt";
+	my $path = (delete $params->{path} || mymaven->{articles} ) . "/$params->{article}.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);

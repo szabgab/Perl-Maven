@@ -27,8 +27,22 @@ my $dest   = $config->{mymaven}{$site}{meta};
 usage('Missing source') if not $source;
 usage('Missing meta') if not $dest;
 
+my @sources = (
+		{
+			path => $source,
+			uri  => '',
+		},
+);
+if ($config->{mymaven}{$site}{perldoc}) {
+	push @sources,
+		{
+			path => $config->{mymaven}{$site}{perldoc},
+			uri  => 'perldoc/',
+		};
+}
 
-my $pages = get_pages();
+my $pages = get_pages(@sources);
+
 
 my ($keywords, $index, $archive, $feed, $sitemap) = process_files($pages);
 save ('index',   $index);
@@ -119,9 +133,12 @@ sub save {
 }
 
 sub get_pages {
+	my @sources = @_;
+
 	my @pages;
-	foreach my $path ('', 'perldoc') {
-		foreach my $file (glob "$source/$path/*.tt") {
+	foreach my $s (@sources) {
+		say $s->{path};
+		foreach my $file (glob "$s->{path}/*.tt") {
 			#say "Reading $file";
 			my $data = Perl::Maven::Page->new(file => $file)->read;
 			foreach my $field (qw(timestamp title status)) {
@@ -132,7 +149,7 @@ sub get_pages {
 
 			push @pages, {
 					file  => $file,
-					url_path => ($path ? "$path/" : '') . basename($file),
+					url_path => $s->{uri} . basename($file),
 					%$data,
 			};
 		}
