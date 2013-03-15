@@ -17,12 +17,16 @@ binmode(STDOUT, ":utf8");
 binmode(STDERR, ":utf8");
 
 # Run with any value on the command line to get debugging info
-my ($verbose) = @ARGV;
 
-#my $config = LoadFile('config.yml');
+my $config = LoadFile('config.yml');
+my ($site, $verbose) = @ARGV;
+usage('Missing site') if not $site;
+usage("Invalid site '$site'") if not $config->{mymaven}{$site};
+my $source = $config->{mymaven}{$site}{articles};
+my $dest   = $config->{mymaven}{$site}{meta};
+usage('Missing source') if not $source;
+usage('Missing meta') if not $dest;
 
-my $dir = shift or die "Usage $0 path/to/articles\n";
-#$config->{mymaven}{articles};
 
 my $pages = get_pages();
 
@@ -106,8 +110,8 @@ sub process_files {
 
 sub save {
 	my ($file, $data) = @_;
-	die "'$dir/meta' does not exist" if not -d "$dir/meta";
-	my $path = "$dir/meta/$file.json";
+	die "'$dest' does not exist" if not -d $dest;
+	my $path = "$dest/$file.json";
 	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
 	print $fh to_json $data, { utf8 => 1, pretty => 1 };
 	close $fh;
@@ -117,7 +121,7 @@ sub save {
 sub get_pages {
 	my @pages;
 	foreach my $path ('', 'perldoc') {
-		foreach my $file (glob "$dir/$path/*.tt") {
+		foreach my $file (glob "$source/$path/*.tt") {
 			#say "Reading $file";
 			my $data = Perl::Maven::Page->new(file => $file)->read;
 			foreach my $field (qw(timestamp title status)) {
@@ -147,6 +151,22 @@ sub get_pages {
 
 	return [ sort { $b->{timestamp} cmp $a->{timestamp} } @selected ];
 }
+
+sub usage {
+	my ($msg) = @_;
+
+	print "*** $msg\n\n";
+	print "Usage $0 SITE\n";
+	foreach my $site (keys %{ $config->{mymaven} }) {
+		next if $site eq 'default';
+		print "$site\n";
+		my $source = $config->{mymaven}{$site}{articles} || $config->{mymaven}{default}{articles};
+		my $dest   = $config->{mymaven}{$site}{meta};
+		print "   $source => $dest\n";
+	}
+	exit;
+}
+
 
 # vim:noexpandtab
 
