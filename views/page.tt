@@ -40,7 +40,7 @@
          <div id="translator">
           <img src="/img/<% translator_img %>" />
           <div class="author_text">
-            Traduzido por<br><a href="http://www.leprevost.com.br/"><% translator_name %></a>
+            Traduzido por<br><a href="<%translator_google_plus_profile %>?rel=author "><% translator_name %></a>
           </div>
          </div>
       <% END %>
@@ -48,7 +48,7 @@
         <div id="author">
          <img src="/img/<% author_img %>"  />
          <div class="author_text">
-          Escrito por<br><a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
+          Escrito por<br><a href="<% author_google_plus_profile %>"><% author_name %></a>
          </div>
         </div>
      <% END %>
