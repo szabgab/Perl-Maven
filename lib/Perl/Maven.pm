@@ -599,6 +599,7 @@ sub _show {
 	if ($translator and $authors{$translator}) {
 		$tt->{translator_name} = $authors{$translator}{author_name};
 		$tt->{translator_img} = $authors{$translator}{author_img};
+		$tt->{translator_google_plus_profile} = $authors{$translator}{author_google_plus_profile};
 	}
 
 	my $books = delete $tt->{books};
