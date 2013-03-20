@@ -32,9 +32,9 @@ sub mymaven {
 
 	use Storable qw(dclone);
 	my $mymaven = dclone config->{mymaven}{default};
-	my $host = config->{mymaven}{$host};
-	foreach my $key (keys %$host) {
-		$mymaven->{$key} = $host->{$key};
+	my $myhost = config->{mymaven}{$host};
+	foreach my $key (keys %$myhost) {
+		$mymaven->{$key} = $myhost->{$key};
 	}
 	return $mymaven;
 }
