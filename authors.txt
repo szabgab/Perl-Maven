@@ -1,3 +1,4 @@
 szabgab;Gabor Szabo;szabgab.png;https://plus.google.com/102810219707784087582
 dmcbride;Darin McBride;dmcbride.png;https://plus.google.com/111788256959042644924
 leprevost;Felipe da Veiga Leprevost;leprevost.jpg;https://plus.google.com/107515431915475316857
+fredlopes;Frederico José Andires Lopes;fredlopes.jpg;https://plus.google.com/u/0/101664615812027775183
