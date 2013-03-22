@@ -783,7 +783,7 @@ sub get_download_files {
 sub read_authors {
 	return if %authors;
 
-	open my $fh, '<encoding(UTF-8)', config->{appdir} . "/authors.txt" or return;
+	open my $fh, '<encoding(UTF-8)', mymaven->{articles} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
