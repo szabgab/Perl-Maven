@@ -49,9 +49,12 @@ mymaven:
     meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
   br.perl5maven.com:
     lang: 'br'
+    title: 'Perl 5 Maven em Português'
     articles: '/home/gabor/work/br.perl5maven.com'
     meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
-
+    rss:
+      title: 'Perl 5 Maven em Português'
+      url: 'http://br.perl5maven.com'
 
 template: "template_toolkit"
 engines:
