@@ -43,6 +43,8 @@ mymaven:
   perl5maven.com:
     articles: '/home/gabor/work/perl5maven.com'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
+    mail: '/home/gabor/work/articles/mail'
+    perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.local:
     lang: 'br'
     articles: '/home/gabor/work/br.perl5maven.com'
