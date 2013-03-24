@@ -83,6 +83,7 @@ get '/search' => sub {
 	my ($keyword) = param('keyword');
 	return to_json({}) if not defined $keyword;
 	my $data = read_meta('keywords') || {};
+	$data->{$keyword} ||= {};
 	return to_json($data->{$keyword});
 };
 
