@@ -81,6 +81,7 @@ hook before_template => sub {
 
 get '/search' => sub {
 	my ($keyword) = param('keyword');
+	push_header 'Access-Control-Allow-Origin' => '*';
 	return to_json({}) if not defined $keyword;
 	my $data = read_meta('keywords') || {};
 	$data->{$keyword} ||= {};
