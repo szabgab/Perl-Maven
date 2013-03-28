@@ -5,12 +5,19 @@ use v5.12;
 
 use Data::Dumper qw(Dumper);
 use Getopt::Long qw(GetOptions);
-use MIME::Lite;
+#use MIME::Lite;
+use Email::Sender::Simple qw(sendmail);
+use Email::Sender::Transport::SMTP qw();
+use Email::MIME::Creator;
+#use Email::Sender;
 use Cwd qw(abs_path cwd);
 use File::Slurp    qw(read_file);
 use WWW::Mechanize;
 use DBI;
 use YAML qw();
+use Try::Tiny;
+
+binmode(STDOUT, ':utf8');
 
 
 
@@ -46,8 +53,9 @@ sub build_content {
 	my $subject = $mymaven->{prefix} . ' ' . $w->title;
 
 	my %content;
-	$content{html} = $w->content;
-	$content{text} = html2text($w->content);
+	my $utf8 = $w->content;
+	$content{html} = $utf8;
+	$content{text} = html2text($utf8);
 
 	return $subject, %content;
 }
@@ -60,7 +68,7 @@ sub send_messages {
 	    if ($to =~ /\@/) {
             $planned++;
             next if $sent{$to};
-		    sendmail($to);
+	    send_mail($to);
             $count++;
             $sent{$to} = 1;
 	    } else {
@@ -84,45 +92,74 @@ sub send_messages {
 			    $count++;
                 $sent{$address} = 1;
 			    say "$count out of $total to $address";
-			    sendmail($address);
+			    send_mail($address);
 			    sleep 1;
             }
 		}
 	}
-    say "Total sent $count. Planned: $planned";
+	say "Total sent $count. Planned: $planned";
 	return;
 }
 
-sub sendmail {
+sub send_mail {
 	my $to = shift;
-
-	my $msg = MIME::Lite->new(
-		'From'     => $from,
-		'To'       => $to,
-		'Type'     => 'multipart/alternative',
-		'Subject'  => $subject,
-		);
-	$msg->attr('List-Id'  => $mymaven->{listid}),
 
 	my %type = (
 		text => 'text/plain',
 		html => 'text/html',
 	);
+	#print $content{html};
+	#exit;
 
-	foreach my $t (qw(text html)) {
-		my $att = MIME::Lite->new(
-				Type     => 'text',
-				Data     => $content{$t},
-				Encoding => 'quoted-printable',
+	my @parts;
+	foreach my $t (qw(html text)) {
+		push @parts, Email::MIME->create(
+			attributes => {
+				content_type   => $type{$t},
+				($t eq 'text' ? (disposition  => 'attachment') : ()),
+				encoding       => 'quoted-printable',
+				charset         => 'UTF-8',
+				#($t eq 'text'? (filename => "$subject.txt") : ()),
+				#($t eq 'text'? (filename => 'plain.txt') : ()),
+			},
+			body_str => $content{$t},
 		);
-		$att->attr("content-type" => "$type{$t}; charset=UTF-8");
-		$att->replace("X-Mailer" => "");
-		$att->attr('mime-version' => '');
-		$att->attr('Content-Disposition' => '');
-
-		$msg->attach($att);
+		$parts[-1]->charset_set('UTF-8');
 	}
-	$msg->send(smtp => 'localhost');
+	#print $parts[0]->as_string;
+	#print $parts[1]->body_raw;
+	#print $parts[1]->as_string;
+	#exit;
+
+	my $msg = Email::MIME->create(
+		header_str => [
+			'From'     => $from,
+			'To'       => $to,
+			'Type'     => 'multipart/alternative',
+			'Subject'  => $subject,
+			'List-Id'  => $mymaven->{listid},
+			'Charset'  => 'UTF-8',
+			],
+		parts => \@parts,
+	);
+	$msg->charset_set('UTF-8');
+	#print $msg->as_string;
+	#exit;
+
+	try {
+		sendmail(
+			$msg,
+    			{
+				from => 'gabor@perl5maven.com', # TODO
+				transport => Email::Sender::Transport::SMTP->new({
+          				host => 'localhost',
+					#port => $SMTP_PORT,
+      				})
+    			}
+  		);
+	} catch {
+    		warn "sending failed: $_";
+	};
 
 	return;
 }
