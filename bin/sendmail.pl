@@ -12,6 +12,8 @@ use WWW::Mechanize;
 use DBI;
 use YAML qw();
 
+binmode(STDOUT, ':utf8');
+
 
 
 my $dsn = "dbi:SQLite:dbname=pm.db";
@@ -46,8 +48,9 @@ sub build_content {
 	my $subject = $mymaven->{prefix} . ' ' . $w->title;
 
 	my %content;
-	$content{html} = $w->content;
-	$content{text} = html2text($w->content);
+	my $utf8 = $w->content;
+	$content{html} = $utf8;
+	$content{text} = html2text($utf8);
 
 	return $subject, %content;
 }
