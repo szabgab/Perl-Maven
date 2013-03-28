@@ -108,23 +108,26 @@ sub send_mail {
 		text => 'text/plain',
 		html => 'text/html',
 	);
-	#print $content{text};
+	#print $content{html};
 	#exit;
 
 	my @parts;
-	foreach my $t (qw(text html)) {
+	foreach my $t (qw(html text)) {
 		push @parts, Email::MIME->create(
 			attributes => {
 				content_type   => $type{$t},
-				disposition    => 'attachment',
+				($t eq 'text' ? (disposition  => 'attachment') : ()),
 				encoding       => 'quoted-printable',
-				#encoding       => 'base64',
-				#encoding       => '8bit',
 				charset         => 'UTF-8',
+				#($t eq 'text'? (filename => "$subject.txt") : ()),
+				#($t eq 'text'? (filename => 'plain.txt') : ()),
 			},
 			body_str => $content{$t},
 		);
+		$parts[-1]->charset_set('UTF-8');
 	}
+	#print $parts[0]->as_string;
+	#print $parts[1]->body_raw;
 	#print $parts[1]->as_string;
 	#exit;
 
@@ -132,12 +135,14 @@ sub send_mail {
 		header_str => [
 			'From'     => $from,
 			'To'       => $to,
-			#'Type'     => 'multipart/alternative',
+			'Type'     => 'multipart/alternative',
 			'Subject'  => $subject,
 			'List-Id'  => $mymaven->{listid},
+			'Charset'  => 'UTF-8',
 			],
 		parts => \@parts,
 	);
+	$msg->charset_set('UTF-8');
 	#print $msg->as_string;
 	#exit;
 
