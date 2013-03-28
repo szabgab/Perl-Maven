@@ -1,28 +1,5 @@
 <% mycontent %>
 
-
-<style>
-#creators {
-/*  background-color: #DDDDDD; */
-  margin-top: 20px;
-  width: 500px;
-  height: 200px;
-}
-#creators img {
-}
-
-#translator {
-}
-#author {
-   position: relative;
-   float: right;
-   top: -155px;
-}
-.author_text {
-}
-
-</style>
-
 <% IF lang_en %>
    <div id="creators">
      <% IF author %>

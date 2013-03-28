@@ -67,4 +67,24 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   border-radius: 2px;
 }
 
+/* Credits section start */
+#creators {
+/*  background-color: #DDDDDD; */
+  margin-top: 20px;
+  width: 500px;
+  height: 200px;
+}
+#creators img {
+}
+
+#translator {
+}
+#author {
+   position: relative;
+   float: right;
+   top: -155px;
+}
+.author_text {
+}
+/* Credits section end */
 
