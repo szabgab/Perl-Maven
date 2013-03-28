@@ -5,12 +5,17 @@ use v5.12;
 
 use Data::Dumper qw(Dumper);
 use Getopt::Long qw(GetOptions);
-use MIME::Lite;
+#use MIME::Lite;
+use Email::Sender::Simple qw(sendmail);
+use Email::Sender::Transport::SMTP qw();
+use Email::MIME::Creator;
+#use Email::Sender;
 use Cwd qw(abs_path cwd);
 use File::Slurp    qw(read_file);
 use WWW::Mechanize;
 use DBI;
 use YAML qw();
+use Try::Tiny;
 
 binmode(STDOUT, ':utf8');
 
@@ -63,7 +68,7 @@ sub send_messages {
 	    if ($to =~ /\@/) {
             $planned++;
             next if $sent{$to};
-		    sendmail($to);
+	    send_mail($to);
             $count++;
             $sent{$to} = 1;
 	    } else {
@@ -87,45 +92,69 @@ sub send_messages {
 			    $count++;
                 $sent{$address} = 1;
 			    say "$count out of $total to $address";
-			    sendmail($address);
+			    send_mail($address);
 			    sleep 1;
             }
 		}
 	}
-    say "Total sent $count. Planned: $planned";
+	say "Total sent $count. Planned: $planned";
 	return;
 }
 
-sub sendmail {
+sub send_mail {
 	my $to = shift;
-
-	my $msg = MIME::Lite->new(
-		'From'     => $from,
-		'To'       => $to,
-		'Type'     => 'multipart/alternative',
-		'Subject'  => $subject,
-		);
-	$msg->attr('List-Id'  => $mymaven->{listid}),
 
 	my %type = (
 		text => 'text/plain',
 		html => 'text/html',
 	);
+	#print $content{text};
+	#exit;
 
+	my @parts;
 	foreach my $t (qw(text html)) {
-		my $att = MIME::Lite->new(
-				Type     => 'text',
-				Data     => $content{$t},
-				Encoding => 'quoted-printable',
+		push @parts, Email::MIME->create(
+			attributes => {
+				content_type   => $type{$t},
+				disposition    => 'attachment',
+				encoding       => 'quoted-printable',
+				#encoding       => 'base64',
+				#encoding       => '8bit',
+				charset         => 'UTF-8',
+			},
+			body_str => $content{$t},
 		);
-		$att->attr("content-type" => "$type{$t}; charset=UTF-8");
-		$att->replace("X-Mailer" => "");
-		$att->attr('mime-version' => '');
-		$att->attr('Content-Disposition' => '');
-
-		$msg->attach($att);
 	}
-	$msg->send(smtp => 'localhost');
+	#print $parts[1]->as_string;
+	#exit;
+
+	my $msg = Email::MIME->create(
+		header_str => [
+			'From'     => $from,
+			'To'       => $to,
+			#'Type'     => 'multipart/alternative',
+			'Subject'  => $subject,
+			'List-Id'  => $mymaven->{listid},
+			],
+		parts => \@parts,
+	);
+	#print $msg->as_string;
+	#exit;
+
+	try {
+		sendmail(
+			$msg,
+    			{
+				from => 'gabor@perl5maven.com', # TODO
+				transport => Email::Sender::Transport::SMTP->new({
+          				host => 'localhost',
+					#port => $SMTP_PORT,
+      				})
+    			}
+  		);
+	} catch {
+    		warn "sending failed: $_";
+	};
 
 	return;
 }
