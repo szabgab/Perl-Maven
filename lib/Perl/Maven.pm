@@ -51,7 +51,7 @@ my %authors;
 hook before => sub {
 	my $appdir = abs_path config->{appdir};
 
-	# Create a new Teamplte::Toolkit object for every call beacuse we cannot access the existing object
+	# Create a new Template::Toolkit object for every call because we cannot access the existing object
 	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
 	$engines->{template_toolkit}{INCLUDE_PATH} = ["$appdir/views", mymaven->{articles} . '/templates'];
