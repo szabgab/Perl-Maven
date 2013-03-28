@@ -1,4 +1,6 @@
+<div role="main">
 <% mycontent %>
+</div>
 
 <% INCLUDE incl/credits.tt %>
 
