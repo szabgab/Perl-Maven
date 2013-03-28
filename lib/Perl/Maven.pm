@@ -43,24 +43,22 @@ my $sandbox = 0;
 
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 my %products;
-# do we still need this? For testing?
-#if (not config->{appdir}) {
-#	set appdir => Cwd::cwd;
-#}
 
 ## configure relative pathes
-my $appdir = abs_path config->{appdir};
-my $engines = config->{engines};
-$engines->{template_toolkit}{INCLUDE_PATH} = "$appdir/views";
-set engines => $engines;
-
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
 
 hook before => sub {
+	my $appdir = abs_path config->{appdir};
+
+	# Create a new Teamplte::Toolkit object for every call beacuse we cannot access the existing object
+	# and thus we cannot change the include path before rendering
+	my $engines = config->{engines};
+	$engines->{template_toolkit}{INCLUDE_PATH} = ["$appdir/views", mymaven->{articles} . '/templates'];
+	Dancer::Template::TemplateToolkit->new( name => 'template_toolkit', type => 'template' , config => $engines->{template_toolkit});
+
 	read_authors();
 	my $p = $db->get_products;
-	#debug Dumper $p;
 	%products = %$p;
 };
 
