@@ -3,6 +3,9 @@
     <div class="span3">
       <div id="right-side">
         <% IF showright %>
+          <div>
+            <a href="http://br.perl5maven.com/">Perl 5 Maven em Português</a>
+          </div>
           <div id="newsletter-right-form">
              <h3>Do you want to improve your Perl?</h3>
              Register to the FREE newsletter now, get updates and a copy
