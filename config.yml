@@ -57,6 +57,19 @@ mymaven:
     rss:
       title: 'Perl 5 Maven em Português'
       url: 'http://br.perl5maven.com'
+  cn.perl5maven.local:
+    lang: 'cn'
+    articles: '/home/gabor/work/cn.perl5maven.com'
+    meta: '/home/gabor/work/articles/cn.perl5maven.com/meta'
+  cn.perl5maven.com:
+    lang: 'cn'
+    title: 'Perl 5 Maven in Chinese'
+    articles: '/home/gabor/work/cn.perl5maven.com'
+    meta: '/home/gabor/work/articles/cn.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in Chinese'
+      url: 'http://cn.perl5maven.com'
+
 
 template: "template_toolkit"
 engines:
