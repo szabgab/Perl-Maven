@@ -81,6 +81,18 @@ mymaven:
     rss:
       title: 'Perl 5 Maven en Español'
       url: 'http://es.perl5maven.com'
+  ro.perl5maven.local:
+    lang: 'ro'
+    articles: '/home/gabor/work/ro.perl5maven.com'
+    meta: '/home/gabor/work/articles/ro.perl5maven.com/meta'
+  ro.perl5maven.com:
+    lang: 'ro'
+    title: 'Perl 5 Maven in Romanian'
+    articles: '/home/gabor/work/ro.perl5maven.com'
+    meta: '/home/gabor/work/articles/ro.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in Romanian'
+      url: 'http://ro.perl5maven.com'
  
 
 template: "template_toolkit"
