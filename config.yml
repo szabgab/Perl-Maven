@@ -69,6 +69,18 @@ mymaven:
     rss:
       title: 'Perl 5 Maven in Chinese'
       url: 'http://cn.perl5maven.com'
+  de.perl5maven.local:
+    lang: 'de'
+    articles: '/home/gabor/work/de.perl5maven.com'
+    meta: '/home/gabor/work/articles/de.perl5maven.com/meta'
+  de.perl5maven.com:
+    lang: 'de'
+    title: 'Perl 5 Maven in German'
+    articles: '/home/gabor/work/de.perl5maven.com'
+    meta: '/home/gabor/work/articles/de.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in German'
+      url: 'http://de.perl5maven.com'
   es.perl5maven.local:
     lang: 'es'
     articles: '/home/gabor/work/es.perl5maven.com'
