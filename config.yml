@@ -81,6 +81,30 @@ mymaven:
     rss:
       title: 'Perl 5 Maven en Español'
       url: 'http://es.perl5maven.com'
+  it.perl5maven.local:
+    lang: 'it'
+    articles: '/home/gabor/work/it.perl5maven.com'
+    meta: '/home/gabor/work/articles/it.perl5maven.com/meta'
+  it.perl5maven.com:
+    lang: 'it'
+    title: 'Perl 5 Maven in Italian'
+    articles: '/home/gabor/work/it.perl5maven.com'
+    meta: '/home/gabor/work/articles/it.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in Italian'
+      url: 'http://it.perl5maven.com'
+  kr.perl5maven.local:
+    lang: 'kr'
+    articles: '/home/gabor/work/kr.perl5maven.com'
+    meta: '/home/gabor/work/articles/kr.perl5maven.com/meta'
+  kr.perl5maven.com:
+    lang: 'kr'
+    title: 'Perl 5 Maven in Korean'
+    articles: '/home/gabor/work/kr.perl5maven.com'
+    meta: '/home/gabor/work/articles/kr.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in Korean'
+      url: 'http://kr.perl5maven.com'
   ro.perl5maven.local:
     lang: 'ro'
     articles: '/home/gabor/work/ro.perl5maven.com'
@@ -93,7 +117,31 @@ mymaven:
     rss:
       title: 'Perl 5 Maven in Romanian'
       url: 'http://ro.perl5maven.com'
- 
+  ru.perl5maven.local:
+    lang: 'ru'
+    articles: '/home/gabor/work/ru.perl5maven.com'
+    meta: '/home/gabor/work/articles/ru.perl5maven.com/meta'
+  ru.perl5maven.com:
+    lang: 'ru'
+    title: 'Perl 5 Maven in Russian'
+    articles: '/home/gabor/work/ru.perl5maven.com'
+    meta: '/home/gabor/work/articles/ru.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in Russian'
+      url: 'http://ru.perl5maven.com'
+  tw.perl5maven.local:
+    lang: 'tw'
+    articles: '/home/gabor/work/tw.perl5maven.com'
+    meta: '/home/gabor/work/articles/tw.perl5maven.com/meta'
+  tw.perl5maven.com:
+    lang: 'tw'
+    title: 'Perl 5 Maven in Chinese'
+    articles: '/home/gabor/work/tw.perl5maven.com'
+    meta: '/home/gabor/work/articles/tw.perl5maven.com/meta'
+    rss:
+      title: 'Perl 5 Maven in Chinese'
+      url: 'http://tw.perl5maven.com'
+
 
 template: "template_toolkit"
 engines:

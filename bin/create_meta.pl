@@ -20,38 +20,48 @@ binmode(STDERR, ":utf8");
 
 my $config = LoadFile('config.yml');
 my ($site, $verbose) = @ARGV;
-usage('Missing site') if not $site;
-usage("Invalid site '$site'") if not $config->{mymaven}{$site};
-my $source = $config->{mymaven}{$site}{articles};
-my $dest   = $config->{mymaven}{$site}{meta};
-usage('Missing source') if not $source;
-usage('Missing meta') if not $dest;
-
-my @sources = (
-		{
-			path => $source,
-			uri  => '',
-		},
-);
-if ($config->{mymaven}{$site}{perldoc}) {
-	push @sources,
-		{
-			path => $config->{mymaven}{$site}{perldoc},
-			uri  => 'perldoc/',
-		};
+#usage('Missing site') if not $site;
+#usage("Invalid site '$site'") if not $config->{mymaven}{$site};
+#
+foreach my $site (keys  %{ $config->{mymaven} }) {
+	next if $site eq 'default';
+	process($site);
 }
-
-my $pages = get_pages(@sources);
-
-
-my ($keywords, $index, $archive, $feed, $sitemap) = process_files($pages);
-save ('index',   $index);
-save ('archive', $archive);
-save ('feed',    $feed);
-save ('keywords', $keywords);
-save ('sitemap', $sitemap);
 exit;
 ###############################################################################
+sub process {
+	my ($site) = @_;
+
+	my $source = $config->{mymaven}{$site}{articles};
+	my $dest   = $config->{mymaven}{$site}{meta};
+	usage("Missing source for $site") if not $source;
+
+	usage("Missing meta for $site") if not $dest;
+
+	my @sources = (
+			{
+				path => $source,
+				uri  => '',
+			},
+	);
+	if ($config->{mymaven}{$site}{perldoc}) {
+		push @sources,
+			{
+				path => $config->{mymaven}{$site}{perldoc},
+				uri  => 'perldoc/',
+			};
+	}
+
+	my $pages = get_pages(@sources);
+
+
+	my ($keywords, $index, $archive, $feed, $sitemap) = process_files($pages);
+	save('index',    $dest, $index);
+	save('archive',  $dest, $archive);
+	save('feed',     $dest, $feed);
+	save('keywords', $dest, $keywords);
+	save('sitemap',  $dest, $sitemap);
+}
 
 sub process_files {
 	my ($pages) = @_;
@@ -123,7 +133,8 @@ sub process_files {
 }
 
 sub save {
-	my ($file, $data) = @_;
+	my ($file, $dest, $data) = @_;
+
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
