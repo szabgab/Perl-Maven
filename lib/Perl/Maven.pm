@@ -600,6 +600,11 @@ sub _show {
 		$tt->{translator_name} = $authors{$translator}{author_name};
 		$tt->{translator_img} = $authors{$translator}{author_img};
 		$tt->{translator_google_plus_profile} = $authors{$translator}{author_google_plus_profile};
+	} else {
+		if ($translator) {
+			error("'$translator'");
+		}
+		delete $tt->{translator};
 	}
 
 	my $books = delete $tt->{books};
