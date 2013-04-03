@@ -786,7 +786,9 @@ sub get_download_files {
 }
 
 sub read_authors {
-	return if %authors;
+	# This is a nasty global variable but each site has its own list of authors so we'd better load the file every time
+	#return if %authors;
+	%authors = ();
 
 	open my $fh, '<encoding(UTF-8)', mymaven->{articles} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
