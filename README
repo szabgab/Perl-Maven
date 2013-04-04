@@ -1,2 +1,22 @@
 The source code of http://perl5maven.com/
 
+TODO
+
+- Create a Git repository for the unzipped sources
+- A tool that can download a distribution, unzip it and add it to the repository
+  that can check if the distribution we have is the latest or not,
+  that can replace the current one with the latest version (remove old version, add new version)
+- have an index file of what distributions we have
+  If I am not mistaken this is basically a local, unzipped, partial CPAN.
+
+- A tool that can convert the POD in the source files to HTML with the headers as the Perl 5 Maven site likes it.
+  That can also create indexes from each distribution.
+- Create a page for each distribution that allows for searching in the distribution.
+
+- Create indexes that unite a number of distributions. For example Dancer and
+  a number of Dancer plugins
+  ot Perl::Critic and all (or most of) the Perl::Critic related distributions.
+
+
+Index a module
+
