@@ -16,6 +16,7 @@ GetOptions(\%opt,
 	'root=s',
 	'cpan=s',
 	'update',
+	'module=s',
 ) or usage();
 usage() if $opt{help};
 
@@ -25,16 +26,19 @@ if ($opt{update}) {
 	$tool->get_index_files;
 	exit;
 }
-
-#$tool->list;
+if ($opt{module}) {
+	$tool->show_module_status($opt{module});
+	exit;
+}
 
 
 sub usage {
 	die <<"END_USAGE";
 Usage: $0
-    --help         this help
-    --root PATH    to directory where the distributions are saved. $opt{root}
-    --cpan URL     to your selected CPAN   $opt{cpan}
+    --help                   this help
+    --root PATH              to directory where the distributions are saved. $opt{root}
+    --cpan URL               to your selected CPAN   $opt{cpan}
+	--module Module::Name    show module status
 
     --update       update the index file from cpan
 END_USAGE
