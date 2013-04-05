@@ -16,7 +16,7 @@ GetOptions(\%opt,
 	'help',
 	'root=s',
 	'cpan=s',
-	'update',
+	'update=s',
 	'dist=s',
 ) or usage();
 usage() if $opt{help};
@@ -24,7 +24,7 @@ usage() if $opt{help};
 
 my $tool = Perl::Maven::Tool->new( %opt );
 if ($opt{update}) {
-	$tool->get_index_files;
+	$tool->get_distro($opt{update});
 	exit;
 }
 if ($opt{dist}) {
