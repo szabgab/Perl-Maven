@@ -11,12 +11,13 @@ my %opt = (
 	root => '/home/gabor/work/articles/cpan',
 	cpan => 'http://cpan.pair.com/',
 );
+usage() if not @ARGV;
 GetOptions(\%opt,
 	'help',
 	'root=s',
 	'cpan=s',
 	'update',
-	'module=s',
+	'dist=s',
 ) or usage();
 usage() if $opt{help};
 
@@ -26,8 +27,8 @@ if ($opt{update}) {
 	$tool->get_index_files;
 	exit;
 }
-if ($opt{module}) {
-	$tool->show_module_status($opt{module});
+if ($opt{dist}) {
+	$tool->show_distro_status($opt{dist});
 	exit;
 }
 
@@ -38,7 +39,7 @@ Usage: $0
     --help                   this help
     --root PATH              to directory where the distributions are saved. $opt{root}
     --cpan URL               to your selected CPAN   $opt{cpan}
-	--module Module::Name    show module status
+    --dist Distro-Name       show distribution status
 
     --update       update the index file from cpan
 END_USAGE
