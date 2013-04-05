@@ -6,7 +6,7 @@
 <script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
 
 <a href="http://twitter.com/share" class="twitter-share-button"
-data-text="<% title %>" data-url="<% permalink %>" data-count="vertical" data-via="perlmaven">Tweet</a>
+data-text="<% title %>" data-url="<% permalink %>" data-count="vertical" >Tweet</a>
 <script type="text/javascript" src="http://platform.twitter.com/widgets.js">
 </script>
 
