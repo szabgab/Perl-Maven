@@ -45,15 +45,6 @@ sub show_distro_status {
 		print "$_->{fields}->{distribution} $_->{fields}{version}\n";
 	}
 
-
-
-#	my $root = $self->get_root;
-#	my $file = "$root/.cpan/02packages.details.txt.gz";
-#	die if not -e $file;
-#	my $p = Parse::CPAN::Packages->new($file);
-#	my $m = $p->package($module);
-#	say 'Version on CPAN: ' . $m->version;
-
 	return;
 }
 
