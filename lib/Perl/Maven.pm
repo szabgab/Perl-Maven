@@ -54,7 +54,7 @@ hook before => sub {
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
 	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
-	$engines->{template_toolkit}{INCLUDE_PATH} = ["$appdir/views", mymaven->{articles} . '/templates'];
+	$engines->{template_toolkit}{INCLUDE_PATH} = [mymaven->{articles} . '/templates', "$appdir/views"];
 	Dancer::Template::TemplateToolkit->new( name => 'template_toolkit', type => 'template' , config => $engines->{template_toolkit});
 
 	read_authors();
