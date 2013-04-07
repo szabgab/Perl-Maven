@@ -35,6 +35,14 @@ mymaven:
     paypal:
       email: 'gabor@szabgab.com'
     download: '/home/gabor/work/articles/download'
+  perlmaven.win32:
+    articles: 'c:/work/perlmaven.com/articles'
+    meta: 'c:/work/articles/perlmaven.com/meta'
+  perl5maven.win32:
+    articles: 'c:/work/perl5maven.com'
+    meta: 'c:/work/articles/perl5maven.com/meta'
+    mail: 'c:/work/articles/mail'
+    perldoc: 'c:/work/articles/perldoc'
   perl5maven.local:
     articles: '/home/gabor/work/perl5maven.com'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
