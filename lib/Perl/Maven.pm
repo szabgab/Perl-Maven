@@ -74,6 +74,7 @@ hook before_template => sub {
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
+    $t->{resources} = read_resources();
 	return;
 };
 
@@ -783,6 +784,17 @@ sub get_download_files {
 		error "Could not open $manifest : $!";
 	}
 	return @files;
+}
+
+sub read_resources {
+    my %resources;
+	open my $fh, '<encoding(UTF-8)', mymaven->{articles} . "/resources.txt" or return \%resources;
+	while (my $line = <$fh>) {
+		chomp $line;
+		my ($field, $value) = split /=/, $line;
+		$resources{$field} = $value;
+	}
+	return \%resources;
 }
 
 sub read_authors {

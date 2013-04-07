@@ -1,7 +1,10 @@
 <% INCLUDE layouts/incl/header.tt %>
+<% DEFAULT
+   resources.recent_articles = 'recent_articles'
+%>
 
 <% content %>
-<h2>Recent articles</h2>
+<h2><% resources.recent_articles %></h2>
 <% FOR p IN pages %>
   <div class="abstract">
   <h2><a href="/<% p.filename %>"><% p.title %></a></h2>
