@@ -74,6 +74,7 @@ hook before_template => sub {
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
+    $t->{conf} = mymaven->{conf};
     $t->{resources} = read_resources();
 	return;
 };

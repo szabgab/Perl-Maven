@@ -27,6 +27,9 @@ mymaven:
     from: 'Perl 5 Maven <gabor@perl5maven.com>'
     listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
     prefix: '[Perl Maven]'
+    conf:
+      clicky: 1
+      google_analytics: 1
     rss:
       title: 'Perl 5 Maven'
       url: 'http://perl5maven.com'
@@ -36,12 +39,18 @@ mymaven:
       email: 'gabor@szabgab.com'
     download: '/home/gabor/work/articles/download'
   perlmaven.com:
+    conf:
+      clicky: 0
+      google_analytics: 0
     articles: '/home/gabor/work/perlmaven.com/articles'
     meta: '/home/gabor/work/articles/perlmaven.com/meta'
     rss:
       title: 'Perl Maven Show'
       url: 'http://perlmaven.com'
   perlmaven.win32:
+    conf:
+      clicky: 0
+      google_analytics: 0
     articles: 'c:/work/perlmaven.com/articles'
     meta: 'c:/work/articles/perlmaven.com/meta'
     rss:
