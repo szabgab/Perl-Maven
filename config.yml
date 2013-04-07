@@ -41,7 +41,7 @@ mymaven:
   perlmaven.com:
     conf:
       clicky: 100527028
-      google_analytics: 0
+      google_analytics: UA-12199211-13
     articles: '/home/gabor/work/perlmaven.com/articles'
     meta: '/home/gabor/work/articles/perlmaven.com/meta'
     rss:
@@ -50,7 +50,7 @@ mymaven:
   perlmaven.win32:
     conf:
       clicky: 100527028
-      google_analytics: 0
+      google_analytics: UA-12199211-13
     articles: 'c:/work/perlmaven.com/articles'
     meta: 'c:/work/articles/perlmaven.com/meta'
     rss:
