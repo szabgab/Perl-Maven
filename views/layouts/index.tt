@@ -1,7 +1,4 @@
 <% INCLUDE layouts/incl/header.tt %>
-<% DEFAULT
-   resources.recent_articles = 'recent_articles'
-%>
 
 <% content %>
 <h2><% resources.recent_articles %></h2>
