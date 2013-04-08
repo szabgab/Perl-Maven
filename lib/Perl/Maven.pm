@@ -76,6 +76,7 @@ hook before_template => sub {
 
     $t->{conf} = mymaven->{conf};
     $t->{resources} = read_resources();
+	$t->{comments} = 0 unless request->host =~ /^perl5maven/;
 	return;
 };
 
