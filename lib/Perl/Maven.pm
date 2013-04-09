@@ -568,6 +568,22 @@ get qr{/perldoc/(.+)} => sub {
 
 	return _show({ path => mymaven->{perldoc}, article => $article, template => 'page', layout => 'page' });
 };
+get qr{/video/(.+)} => sub {
+	my ($article) = splat;
+
+#	return if $article !~ /^[\w-]+\.(\w+)$/;
+	my $ext = $1;
+	if ($article =~ /mp4$/) {
+		send_file(
+			"/home/gabor/work/articles/video/$article",
+			content_type => $ext,
+			system_path => 1,
+		);
+	}
+
+	return _show({ path => mymaven->{video}, article => $article, template => 'page', layout => 'page' });
+};
+
 
 
 get qr{/(.+)} => sub {

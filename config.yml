@@ -65,11 +65,13 @@ mymaven:
     articles: '/home/gabor/work/perl5maven.com'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
     mail: '/home/gabor/work/articles/mail'
+    video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   perl5maven.com:
     articles: '/home/gabor/work/perl5maven.com'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
     mail: '/home/gabor/work/articles/mail'
+    video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.local:
     lang: 'br'
