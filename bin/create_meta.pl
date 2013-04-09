@@ -25,6 +25,7 @@ my ($site, $verbose) = @ARGV;
 #
 foreach my $site (keys  %{ $config->{mymaven} }) {
 	next if $site eq 'default';
+	next if $site !~ /.com$/;
 	process($site);
 }
 exit;
@@ -34,6 +35,8 @@ sub process {
 
 	my $source = $config->{mymaven}{$site}{articles};
 	my $dest   = $config->{mymaven}{$site}{meta};
+	return if $dest =~ /^c:/;
+
 	usage("Missing source for $site") if not $source;
 
 	usage("Missing meta for $site") if not $dest;
