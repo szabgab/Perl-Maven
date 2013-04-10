@@ -140,7 +140,7 @@ mymaven:
   ru.perl5maven.com:
     lang: 'ru'
     title: 'Perl 5 Maven in Russian'
-    root: '/home/gabor/work/ru.perl5maven.com/sites/ru'
+    root: '/home/gabor/work/perl5maven.com/sites/ru'
     meta: '/home/gabor/work/articles/ru.perl5maven.com/meta'
     rss:
       title: 'Perl 5 Maven in Russian'
@@ -148,7 +148,7 @@ mymaven:
   tw.perl5maven.com:
     lang: 'tw'
     title: 'Perl 5 Maven in Chinese (Taiwan)'
-    root: '/home/gabor/work/tw.perl5maven.com/sites/tw'
+    root: '/home/gabor/work/perl5maven.com/sites/tw'
     meta: '/home/gabor/work/articles/tw.perl5maven.com/meta'
     rss:
       title: 'Perl 5 Maven in Chinese (Taiwan)'
