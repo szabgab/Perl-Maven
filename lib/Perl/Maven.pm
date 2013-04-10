@@ -54,7 +54,7 @@ hook before => sub {
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
 	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
-	$engines->{template_toolkit}{INCLUDE_PATH} = [mymaven->{articles} . '/templates', "$appdir/views"];
+	$engines->{template_toolkit}{INCLUDE_PATH} = [mymaven->{root} . '/templates', "$appdir/views"];
 	Dancer::Template::TemplateToolkit->new( name => 'template_toolkit', type => 'template' , config => $engines->{template_toolkit});
 
 	read_authors();
@@ -535,7 +535,7 @@ get '/img/:file' => sub {
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
 	send_file(
-		mymaven->{articles} . "/img/$file",
+		mymaven->{root} . "/img/$file",
 #		"d:\\work\\articles\\img\\$file",
 		content_type => $ext,
 		system_path => 1,
@@ -598,7 +598,7 @@ sub _show {
 	my ($params, $data) = @_;
 	$data ||= {};
 
-	my $path = (delete $params->{path} || mymaven->{articles} ) . "/$params->{article}.tt";
+	my $path = (delete $params->{path} || (mymaven->{root} . "/pages" )) . "/$params->{article}.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
@@ -806,7 +806,7 @@ sub get_download_files {
 
 sub read_resources {
     my %resources;
-	open my $fh, '<encoding(UTF-8)', mymaven->{articles} . "/resources.txt" or return \%resources;
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/resources.txt" or return \%resources;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($field, $value) = split /=/, $line;
@@ -820,7 +820,7 @@ sub read_authors {
 	#return if %authors;
 	%authors = ();
 
-	open my $fh, '<encoding(UTF-8)', mymaven->{articles} . "/authors.txt" or return;
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
