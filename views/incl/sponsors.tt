@@ -1,6 +1,8 @@
 <div class="sponsor">
 Perl Jobs
 </div>
+
+<!--
 <div class="sponsor">
 <p>
 <a href="https://home.eease.adp.com/recruit/?id=794281">MediaMath is hiring Perl Developers:<br>Are you tired of Perl "scripting"?</a>
@@ -11,6 +13,17 @@ clean codebase that is not slapped together.  If interested in learning
 more please contact Marc Spinowitz, Recruiter at MediaMath at
 mspinowitz@mediamath.com or 646-532-5914
 </div>
+-->
+
+<div class="sponsor">
+<p>
+<a href="http://www.lokku.com/jobs/perl-developer-2013.html">Lokku is hiring Perl Developers to work on our Nestoria property search engine</a>
+</p>
+Nestoria are looking for Perl developers to work on search engine challenges
+such as geocoding, de-duplication, and localization. Contact us at
+perldeveloper@lokku.com if you're interested!"
+</div>
+
 
 <!--
 <div class="sponsor">
