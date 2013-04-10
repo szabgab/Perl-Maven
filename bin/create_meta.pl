@@ -26,6 +26,8 @@ my ($site, $verbose) = @ARGV;
 foreach my $site (keys  %{ $config->{mymaven} }) {
 	next if $site eq 'default';
 	next if $site !~ /.com$/;
+
+	next if $site eq 'perlmaven.com'; # ???
 	process($site);
 }
 exit;
@@ -33,7 +35,7 @@ exit;
 sub process {
 	my ($site) = @_;
 
-	my $source = $config->{mymaven}{$site}{articles};
+	my $source = $config->{mymaven}{$site}{root} . '/pages';
 	my $dest   = $config->{mymaven}{$site}{meta};
 	return if $dest =~ /^c:/;
 
@@ -191,7 +193,7 @@ sub usage {
 	foreach my $site (keys %{ $config->{mymaven} }) {
 		next if $site eq 'default';
 		print "$site\n";
-		my $source = $config->{mymaven}{$site}{articles} || $config->{mymaven}{default}{articles};
+		my $source = $config->{mymaven}{$site}{root};
 		my $dest   = $config->{mymaven}{$site}{meta};
 		print "   $source => $dest\n";
 	}
