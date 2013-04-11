@@ -22,13 +22,19 @@ my $config = LoadFile('config.yml');
 my ($site, $verbose) = @ARGV;
 #usage('Missing site') if not $site;
 #usage("Invalid site '$site'") if not $config->{mymaven}{$site};
-#
+
+my %translations;
 foreach my $site (keys  %{ $config->{mymaven} }) {
 	next if $site eq 'default';
 	next if $site !~ /.com$/;
 
 	next if $site eq 'perlmaven.com'; # ???
-	process($site);
+	my $orig = process($site);
+	my $lang = $config->{mymaven}{$site}{lang};
+	foreach my $trans (keys %$orig) {
+		$translations{ $orig->{$trans} }{$lang} = $trans;
+	}
+	save('translations', "$config->{mymaven}{'perl5maven.com'}{meta}/../../", \%translations);
 }
 exit;
 ###############################################################################
@@ -60,12 +66,14 @@ sub process {
 	my $pages = get_pages(@sources);
 
 
-	my ($keywords, $index, $archive, $feed, $sitemap) = process_files($pages);
+	my ($keywords, $index, $archive, $feed, $sitemap, $originals) = process_files($pages);
 	save('index',    $dest, $index);
 	save('archive',  $dest, $archive);
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
+	#save('originals', $dest', $originals);
+	return $originals;
 }
 
 sub process_files {
@@ -82,11 +90,15 @@ sub process_files {
 
 	my %keywords; # =indexes and =tags are united here
 	my (@index, @feed, @archive, @sitemap);
+	my %originals;
 
 	foreach my $p (@$pages) {
 		my $filename = substr($p->{url_path},  0, -3);
 		if ($verbose) {
 			say "Processing $filename";
+		}
+		if ($p->{original}) {
+			$originals{ $p->{url_path} } =  $p->{original};
 		}
 
 		foreach my $f (qw(indexes tags)) {
@@ -134,7 +146,7 @@ sub process_files {
 		};
 	}
 
-	return (\%keywords, \@index, \@archive, \@feed, \@sitemap);
+	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%originals);
 }
 
 sub save {

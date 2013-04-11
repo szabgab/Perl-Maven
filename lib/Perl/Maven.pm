@@ -78,17 +78,22 @@ hook before_template => sub {
     $t->{resources} = read_resources();
 	$t->{comments} = 0 unless request->host =~ /^perl5maven/;
 
+	# linking to translations
 	my $sites = read_sites();
-	# TODO: check for which language is there a relevant page
-	# append URL to 'host' and remove the ones that have no counterpart
-	# in other languages
-
+	my $translations = read_translations();
 	delete $sites->{$language};
 	my $path = request->path;
 	if ($path eq '/perl-tutorial') {
 		$sites->{$_}{url} .= 'perl-tutorial' for keys %$sites;
 	} elsif ($path ne '/') {
-		delete $sites->{$_} for keys %$sites;
+		my $filename = substr $path, 1;
+		for my $site (keys %$sites) {
+			if ($translations->{$filename}{$site}) {
+				$sites->{$site}{url} .= $translations->{$filename}{$site};
+			} else {
+				delete $sites->{$site};
+			}
+		}
 	}
 	$t->{languages} = $sites;
 
@@ -824,6 +829,15 @@ sub read_sites {
 	my $yaml = do { local $/ = undef; <$fh> };
 	return from_yaml $yaml
 }
+sub read_translations {
+	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . '/../../translations.json')) {
+		local $/ = undef;
+		my $json = <$fh>;
+		return from_json $json, {utf8 => 1};
+	}
+	return;
+}
+
 
 sub read_resources {
     my %resources;
