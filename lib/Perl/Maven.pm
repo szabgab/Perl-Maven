@@ -82,7 +82,14 @@ hook before_template => sub {
 	# TODO: check for which language is there a relevant page
 	# append URL to 'host' and remove the ones that have no counterpart
 	# in other languages
+
 	delete $sites->{$language};
+	my $path = request->path;
+	if ($path eq '/perl-tutorial') {
+		$sites->{$_}{url} .= 'perl-tutorial' for keys %$sites;
+	} elsif ($path ne '/') {
+		delete $sites->{$_} for keys %$sites;
+	}
 	$t->{languages} = $sites;
 
 	return;

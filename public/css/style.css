@@ -95,3 +95,10 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 #sites {
 	margin-top: 30px;
 }
+#sites ul {
+	margin-left: 0px;
+}
+#sites li {
+	list-style-type: none;
+}
+
