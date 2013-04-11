@@ -76,6 +76,8 @@ pre {
     <a href="http://perl5maven.com/advanced-perl-maven-e-book">Advanced Perl Maven</a>
     <% END %>
 
+    <% INCLUDE incl/languages.tt %>
+
   </div>
   <div class="span8">
 

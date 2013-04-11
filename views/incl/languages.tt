@@ -1,0 +1,9 @@
+<% IF languages %>
+<div id="sites">
+  <ul>
+  <% FOR lang IN languages.keys %>
+     <li><a href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
+  <% END %>
+  </ul>
+</div>
+<% END %>

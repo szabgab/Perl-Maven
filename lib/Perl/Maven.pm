@@ -77,6 +77,14 @@ hook before_template => sub {
     $t->{conf} = mymaven->{conf};
     $t->{resources} = read_resources();
 	$t->{comments} = 0 unless request->host =~ /^perl5maven/;
+
+	my $sites = read_sites();
+	# TODO: check for which language is there a relevant page
+	# append URL to 'host' and remove the ones that have no counterpart
+	# in other languages
+	delete $sites->{$language};
+	$t->{languages} = $sites;
+
 	return;
 };
 
@@ -802,6 +810,12 @@ sub get_download_files {
 		error "Could not open $manifest : $!";
 	}
 	return @files;
+}
+
+sub read_sites {
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/../../sites.yml" or return {};
+	my $yaml = do { local $/ = undef; <$fh> };
+	return from_yaml $yaml
 }
 
 sub read_resources {
