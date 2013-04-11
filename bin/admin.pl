@@ -22,6 +22,7 @@ GetOptions(\%opt,
 	'stats',
 	'show',
 	'list=s',
+	'replace=s',
 
 	'addsub=s',
 	'email=s',
@@ -53,6 +54,8 @@ if ($opt{products}) {
 	printf $format, "Distinct # of clients:", $distinct_subs;
 } elsif ($opt{show} and $opt{email}) {
 	show_people($opt{email});
+} elsif ($opt{replace} and $opt{email}) {
+	replace_email($opt{email}, $opt{replace});
 } elsif ($opt{addsub} and $opt{email}) {
 	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, $opt{addsub});
 	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
@@ -84,6 +87,13 @@ if ($opt{products}) {
 }
 exit;
 #######################################################################################################
+
+sub replace_email {
+	my ($old, $new) = @_;
+	show_people($old);
+	$dbh->do(q{UPDATE user SET email = ? WHERE email = ?}, undef, $new, $old);
+	show_people($new);
+}
 
 sub show_people {
 	my ($email) = @_;
@@ -119,6 +129,8 @@ Usage: $0
     --products                                   list of products
     --stats                                      subscription statistics
     --show   --email FILTER_FOR_EMAIL            list users
+
+    --replace NEW_EMAIL --email OLD_EMAIL
 
     --list PRODUCT                               list all the users who subscribe to this project
 
