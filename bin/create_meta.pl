@@ -72,7 +72,6 @@ sub process {
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
-	#save('originals', $dest', $originals);
 	return $originals;
 }
 
@@ -98,7 +97,7 @@ sub process_files {
 			say "Processing $filename";
 		}
 		if ($p->{original}) {
-			$originals{ $p->{url_path} } =  $p->{original};
+			$originals{ substr($p->{url_path}, 0, -3) } =  $p->{original};
 		}
 
 		foreach my $f (qw(indexes tags)) {

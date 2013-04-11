@@ -81,18 +81,22 @@ hook before_template => sub {
 	# linking to translations
 	my $sites = read_sites();
 	my $translations = read_translations();
-	delete $sites->{$language};
+	delete $sites->{$language}; # no link to the curren site
 	my $path = request->path;
-	if ($path eq '/perl-tutorial') {
-		$sites->{$_}{url} .= 'perl-tutorial' for keys %$sites;
-	} elsif ($path ne '/') {
-		my $filename = substr $path, 1;
-		for my $site (keys %$sites) {
-			if ($translations->{$filename}{$site}) {
-				$sites->{$site}{url} .= $translations->{$filename}{$site};
-			} else {
-				delete $sites->{$site};
+	if ($path ne '/') {
+		my $original = $language eq 'en' ? substr($path, 1) : $t->{original};
+		if ($original) {
+			for my $site (keys %$sites) {
+				if ($site ne 'perl5maven.local' and $site ne 'perl5maven.com') {
+					$sites->{$site}{url} .= $original;
+				} elsif ($translations->{$original}{$site}) {
+					$sites->{$site}{url} .= $translations->{$original}{$site};
+				} else {
+					delete $sites->{$site};
+				}
 			}
+		} else {
+			$sites = {};
 		}
 	}
 	$t->{languages} = $sites;
