@@ -15,6 +15,8 @@ use Perl::Maven::Page;
 
 binmode(STDOUT, ":utf8");
 binmode(STDERR, ":utf8");
+my $MAX_INDEX   = 3;
+my $MAX_FEED    = 10;
 
 # Run with any value on the command line to get debugging info
 
@@ -36,7 +38,16 @@ foreach my $site (keys  %{ $config->{mymaven} }) {
 		$translations{ $orig->{$trans} }{$lang} = $trans;
 	}
 	save('translations', "$config->{mymaven}{default}{meta}", \%translations);
-#	print Dumper \@latest;
+
+	my @meta_feed;
+	my $feed_cnt = 0;
+	for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @latest) {
+		$feed_cnt++;
+		push @meta_feed, $entry;
+		last if $feed_cnt >= $MAX_FEED;
+	}
+	save('feed', "$config->{mymaven}{default}{meta}/meta.perl5maven.com", \@meta_feed);
+
 }
 exit;
 ###############################################################################
@@ -75,7 +86,7 @@ sub process {
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
-	#push @latest, @$feed;
+	push @latest, map { $_->{site} = $site; $_ } @$feed;
 	return $originals;
 }
 
@@ -84,8 +95,6 @@ sub process_files {
 
 	my $count_index = 0;
 	my $count_feed  = 0;
-	my $MAX_INDEX   = 3;
-	my $MAX_FEED    = 10;
 
 	# TODO:
 	# I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
