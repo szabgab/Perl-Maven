@@ -30,32 +30,24 @@ mymaven:
     conf:
       clicky: 66509177
       google_analytics: UA-12199211-9
-    rss:
-      title: 'Perl 5 Maven'
-      url: 'http://perl5maven.com'
     admin:
       email: 'Gabor Szabo <gabor@szabgab.com>'
     paypal:
       email: 'gabor@szabgab.com'
     download: '/home/gabor/work/articles/download'
   perlmaven.com:
+    title: 'Perl Maven Show'
     conf:
       clicky: 100527028
       google_analytics: UA-12199211-13
     articles: '/home/gabor/work/perlmaven.com/articles'
     meta: '/home/gabor/work/articles/perlmaven.com/meta'
-    rss:
-      title: 'Perl Maven Show'
-      url: 'http://perlmaven.com'
   perlmaven.win32:
     conf:
       clicky: 100527028
       google_analytics: UA-12199211-13
     articles: 'c:/work/perlmaven.com/articles'
     meta: 'c:/work/articles/perlmaven.com/meta'
-    rss:
-      title: 'Perl Maven Show'
-      url: 'http://perlmaven.com'
   perl5maven.win32:
     root: 'c:/work/perl5maven.com/sites/en'
     meta: 'c:/work/articles/perl5maven.com/meta'
@@ -81,56 +73,38 @@ mymaven:
     lang: 'br'
     root: '/home/gabor/work/perl5maven.com/sites/br'
     meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
-    rss:
-      url: 'http://br.perl5maven.com'
   cn.perl5maven.com:
     lang: 'cn'
     root: '/home/gabor/work/perl5maven.com/sites/cn'
     meta: '/home/gabor/work/articles/cn.perl5maven.com/meta'
-    rss:
-      url: 'http://cn.perl5maven.com'
   de.perl5maven.com:
     lang: 'de'
     root: '/home/gabor/work/perl5maven.com/sites/de'
     meta: '/home/gabor/work/articles/de.perl5maven.com/meta'
-    rss:
-      url: 'http://de.perl5maven.com'
   es.perl5maven.com:
     lang: 'es'
     root: '/home/gabor/work/perl5maven.com/sites/es'
     meta: '/home/gabor/work/articles/es.perl5maven.com/meta'
-    rss:
-      url: 'http://es.perl5maven.com'
   it.perl5maven.com:
     lang: 'it'
     root: '/home/gabor/work/perl5maven.com/sites/it'
     meta: '/home/gabor/work/articles/it.perl5maven.com/meta'
-    rss:
-      url: 'http://it.perl5maven.com'
   ko.perl5maven.com:
     lang: 'ko'
     root: '/home/gabor/work/ko.perl5maven.com/sites/ko'
     meta: '/home/gabor/work/articles/ko.perl5maven.com/meta'
-    rss:
-      url: 'http://ko.perl5maven.com'
   ro.perl5maven.com:
     lang: 'ro'
     root: '/home/gabor/work/perl5maven.com/sites/ro'
     meta: '/home/gabor/work/articles/ro.perl5maven.com/meta'
-    rss:
-      url: 'http://ro.perl5maven.com'
   ru.perl5maven.com:
     lang: 'ru'
     root: '/home/gabor/work/perl5maven.com/sites/ru'
     meta: '/home/gabor/work/articles/ru.perl5maven.com/meta'
-    rss:
-      url: 'http://ru.perl5maven.com'
   tw.perl5maven.com:
     lang: 'tw'
     root: '/home/gabor/work/perl5maven.com/sites/tw'
     meta: '/home/gabor/work/articles/tw.perl5maven.com/meta'
-    rss:
-      url: 'http://tw.perl5maven.com'
 
 
 template: "template_toolkit"

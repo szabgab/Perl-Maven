@@ -131,8 +131,9 @@ get '/archive' => sub {
 
 get '/sitemap.xml' => sub {
 	my $pages = read_meta('sitemap') || [];
+	my $url = request->base;
+	$url =~ s{/$}{};
 
-	my $url = mymaven->{rss}{url};
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
 	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
@@ -148,13 +149,13 @@ get '/sitemap.xml' => sub {
 };
 get '/atom' => sub {
 	my $pages = read_meta('feed') || [];
-
 	my $mymaven = mymaven;
 
 	my $ts = DateTime->now;
 
-	my $url = $mymaven->{rss}{url};
-	my $title = $mymaven->{rss}{title};
+	my $url = request->base;
+	$url =~ s{/$}{};
+	my $title = $mymaven->{title};
 
 	my $xml = '';
 	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
