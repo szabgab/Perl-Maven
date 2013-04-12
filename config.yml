@@ -24,6 +24,7 @@ mymaven:
   default:
     lang: 'en'
     title: 'Perl 5 Maven'
+    root: '/home/gabor/work/perl5maven.com'
     from: 'Perl 5 Maven <gabor@perl5maven.com>'
     listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
     prefix: '[Perl Maven]'
@@ -49,61 +50,48 @@ mymaven:
     articles: 'c:/work/perlmaven.com/articles'
     meta: 'c:/work/articles/perlmaven.com/meta'
   perl5maven.win32:
-    root: 'c:/work/perl5maven.com/sites/en'
     meta: 'c:/work/articles/perl5maven.com/meta'
     mail: 'c:/work/articles/mail'
     perldoc: 'c:/work/articles/perldoc'
   perl5maven.local:
-    root: '/home/gabor/work/perl5maven.com/sites/en'
-    meta: '/home/gabor/work/articles/perl5maven.com/meta'
-    mail: '/home/gabor/work/articles/mail'
-    video: '/home/gabor/work/articles/video'
-    perldoc: '/home/gabor/work/articles/perldoc'
-  perl5maven.com:
-    root: '/home/gabor/work/perl5maven.com/sites/en'
     meta: '/home/gabor/work/articles/perl5maven.com/meta'
     mail: '/home/gabor/work/articles/mail'
     video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.local:
     lang: 'br'
-    root: '/home/gabor/work/perl5maven.com/sites/br'
     meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
+  perl5maven.com:
+    meta: '/home/gabor/work/articles/perl5maven.com/meta'
+    mail: '/home/gabor/work/articles/mail'
+    video: '/home/gabor/work/articles/video'
+    perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.com:
     lang: 'br'
-    root: '/home/gabor/work/perl5maven.com/sites/br'
     meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
   cn.perl5maven.com:
     lang: 'cn'
-    root: '/home/gabor/work/perl5maven.com/sites/cn'
     meta: '/home/gabor/work/articles/cn.perl5maven.com/meta'
   de.perl5maven.com:
     lang: 'de'
-    root: '/home/gabor/work/perl5maven.com/sites/de'
     meta: '/home/gabor/work/articles/de.perl5maven.com/meta'
   es.perl5maven.com:
     lang: 'es'
-    root: '/home/gabor/work/perl5maven.com/sites/es'
     meta: '/home/gabor/work/articles/es.perl5maven.com/meta'
   it.perl5maven.com:
     lang: 'it'
-    root: '/home/gabor/work/perl5maven.com/sites/it'
     meta: '/home/gabor/work/articles/it.perl5maven.com/meta'
   ko.perl5maven.com:
     lang: 'ko'
-    root: '/home/gabor/work/ko.perl5maven.com/sites/ko'
     meta: '/home/gabor/work/articles/ko.perl5maven.com/meta'
   ro.perl5maven.com:
     lang: 'ro'
-    root: '/home/gabor/work/perl5maven.com/sites/ro'
     meta: '/home/gabor/work/articles/ro.perl5maven.com/meta'
   ru.perl5maven.com:
     lang: 'ru'
-    root: '/home/gabor/work/perl5maven.com/sites/ru'
     meta: '/home/gabor/work/articles/ru.perl5maven.com/meta'
   tw.perl5maven.com:
     lang: 'tw'
-    root: '/home/gabor/work/perl5maven.com/sites/tw'
     meta: '/home/gabor/work/articles/tw.perl5maven.com/meta'
 
 

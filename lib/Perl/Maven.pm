@@ -36,6 +36,9 @@ sub mymaven {
 	foreach my $key (keys %$myhost) {
 		$mymaven->{$key} = $myhost->{$key};
 	}
+	#die Dumper $mymaven if not defined $mymaven->{root};
+	#die 'lang' if not defined $mymaven->{lang};
+	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};
 	return $mymaven;
 }
 
@@ -54,7 +57,7 @@ hook before => sub {
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
 	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
-	$engines->{template_toolkit}{INCLUDE_PATH} = [mymaven->{root} . '/templates', "$appdir/views"];
+	$engines->{template_toolkit}{INCLUDE_PATH} = [mymaven->{site}. '/templates', "$appdir/views"];
 	Dancer::Template::TemplateToolkit->new( name => 'template_toolkit', type => 'template' , config => $engines->{template_toolkit});
 
 	read_authors();
@@ -561,8 +564,7 @@ get '/img/:file' => sub {
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
 	send_file(
-		mymaven->{root} . "/img/$file",
-#		"d:\\work\\articles\\img\\$file",
+		mymaven->{site} . "/img/$file",
 		content_type => $ext,
 		system_path => 1,
 	);
@@ -624,7 +626,7 @@ sub _show {
 	my ($params, $data) = @_;
 	$data ||= {};
 
-	my $path = (delete $params->{path} || (mymaven->{root} . "/pages" )) . "/$params->{article}.tt";
+	my $path = (delete $params->{path} || (mymaven->{site} . "/pages" )) . "/$params->{article}.tt";
 	return template 'error', {'no_such_article' => 1} if not -e $path;
 
 	my $tt = read_tt($path);
@@ -831,7 +833,7 @@ sub get_download_files {
 }
 
 sub read_sites {
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/../../sites.yml" or return {};
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/sites.yml" or return {};
 	my $yaml = do { local $/ = undef; <$fh> };
 	return from_yaml $yaml
 }
@@ -847,7 +849,7 @@ sub read_translations {
 
 sub read_resources {
     my %resources;
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/resources.txt" or return \%resources;
+	open my $fh, '<encoding(UTF-8)', mymaven->{site} . "/resources.txt" or return \%resources;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($field, $value) = split /=/, $line;
@@ -861,7 +863,7 @@ sub read_authors {
 	#return if %authors;
 	%authors = ();
 
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/authors.txt" or return;
+	open my $fh, '<encoding(UTF-8)', mymaven->{site} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
