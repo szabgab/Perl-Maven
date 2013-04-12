@@ -24,6 +24,7 @@ my ($site, $verbose) = @ARGV;
 #usage("Invalid site '$site'") if not $config->{mymaven}{$site};
 
 my %translations;
+my @latest;
 foreach my $site (keys  %{ $config->{mymaven} }) {
 	next if $site eq 'default';
 	next if $site !~ /.com$/;
@@ -34,15 +35,17 @@ foreach my $site (keys  %{ $config->{mymaven} }) {
 	foreach my $trans (keys %$orig) {
 		$translations{ $orig->{$trans} }{$lang} = $trans;
 	}
-	save('translations', "$config->{mymaven}{'perl5maven.com'}{meta}/../../", \%translations);
+	save('translations', "$config->{mymaven}{default}{meta}", \%translations);
+#	print Dumper \@latest;
 }
 exit;
 ###############################################################################
 sub process {
 	my ($site) = @_;
 
-	my $source = $config->{mymaven}{$site}{root} . '/pages';
-	my $dest   = $config->{mymaven}{$site}{meta};
+	my $lang = $site eq 'perl5maven.com' ? 'en' : $config->{mymaven}{$site}{lang};
+	my $source = $config->{mymaven}{default}{root} . '/sites/' . $lang . '/pages';
+	my $dest   = $config->{mymaven}{default}{meta} . "/$site/meta";
 	return if $dest =~ /^c:/;
 
 	usage("Missing source for $site") if not $source;
@@ -72,6 +75,7 @@ sub process {
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
+	#push @latest, @$feed;
 	return $originals;
 }
 
