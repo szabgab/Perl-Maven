@@ -838,7 +838,7 @@ sub read_sites {
 	return from_yaml $yaml
 }
 sub read_translations {
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . '/../../translations.json')) {
+	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . '/translations.json')) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};
@@ -887,7 +887,11 @@ sub paypal {
 
 sub read_meta {
 	my ($file) = @_;
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta}, "$file.json")) {
+
+	my $host = request->host;
+	$host =~ s/:.*//; # remove port
+	$host =~ s/local|win32/com/g;  # TODO this is a private patch for perl5maven.local and perl5maven.win32
+	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . "/$host/meta/$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};

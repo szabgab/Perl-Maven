@@ -36,6 +36,7 @@ mymaven:
     paypal:
       email: 'gabor@szabgab.com'
     download: '/home/gabor/work/articles/download'
+    meta: '/home/gabor/work/articles'
   perlmaven.com:
     title: 'Perl Maven Show'
     conf:
@@ -50,49 +51,36 @@ mymaven:
     articles: 'c:/work/perlmaven.com/articles'
     meta: 'c:/work/articles/perlmaven.com/meta'
   perl5maven.win32:
-    meta: 'c:/work/articles/perl5maven.com/meta'
     mail: 'c:/work/articles/mail'
     perldoc: 'c:/work/articles/perldoc'
   perl5maven.local:
-    meta: '/home/gabor/work/articles/perl5maven.com/meta'
     mail: '/home/gabor/work/articles/mail'
     video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.local:
     lang: 'br'
-    meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
   perl5maven.com:
-    meta: '/home/gabor/work/articles/perl5maven.com/meta'
     mail: '/home/gabor/work/articles/mail'
     video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.com:
     lang: 'br'
-    meta: '/home/gabor/work/articles/br.perl5maven.com/meta'
   cn.perl5maven.com:
     lang: 'cn'
-    meta: '/home/gabor/work/articles/cn.perl5maven.com/meta'
   de.perl5maven.com:
     lang: 'de'
-    meta: '/home/gabor/work/articles/de.perl5maven.com/meta'
   es.perl5maven.com:
     lang: 'es'
-    meta: '/home/gabor/work/articles/es.perl5maven.com/meta'
   it.perl5maven.com:
     lang: 'it'
-    meta: '/home/gabor/work/articles/it.perl5maven.com/meta'
   ko.perl5maven.com:
     lang: 'ko'
-    meta: '/home/gabor/work/articles/ko.perl5maven.com/meta'
   ro.perl5maven.com:
     lang: 'ro'
-    meta: '/home/gabor/work/articles/ro.perl5maven.com/meta'
   ru.perl5maven.com:
     lang: 'ru'
-    meta: '/home/gabor/work/articles/ru.perl5maven.com/meta'
   tw.perl5maven.com:
     lang: 'tw'
-    meta: '/home/gabor/work/articles/tw.perl5maven.com/meta'
 
 
 template: "template_toolkit"
