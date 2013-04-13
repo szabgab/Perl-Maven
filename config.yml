@@ -38,12 +38,16 @@ mymaven:
     download: '/home/gabor/work/articles/download'
     meta: '/home/gabor/work/articles'
   perlmaven.com:
-    title: 'Perl Maven Show'
+    title: 'Perl Maven'
     conf:
       clicky: 100527028
       google_analytics: UA-12199211-13
-    articles: '/home/gabor/work/perlmaven.com/articles'
+    root: '/home/gabor/work/perlmaven.com'
     meta: '/home/gabor/work/articles/perlmaven.com/meta'
+  perlmaven.local:
+    title: 'Perl Maven'
+    root: '/home/gabor/work/perlmaven.com'
+    media: '/home/gabor/work/media.perlmaven.com'
   perlmaven.win32:
     conf:
       clicky: 100527028
@@ -55,13 +59,11 @@ mymaven:
     perldoc: 'c:/work/articles/perldoc'
   perl5maven.local:
     mail: '/home/gabor/work/articles/mail'
-    video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.local:
     lang: 'br'
   perl5maven.com:
     mail: '/home/gabor/work/articles/mail'
-    video: '/home/gabor/work/articles/video'
     perldoc: '/home/gabor/work/articles/perldoc'
   br.perl5maven.com:
     lang: 'br'

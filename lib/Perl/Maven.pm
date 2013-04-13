@@ -596,20 +596,22 @@ get qr{/perldoc/(.+)} => sub {
 
 	return _show({ path => mymaven->{perldoc}, article => $article, template => 'page', layout => 'page' });
 };
-get qr{/video/(.+)} => sub {
-	my ($article) = splat;
+#get qr{/videos/(.+)} => sub {
+#	my ($article) = splat;
+#
+#	return _show({ path => mymaven->{videos}, article => $article, template => 'page', layout => 'page' });
+#};
 
-#	return if $article !~ /^[\w-]+\.(\w+)$/;
-	my $ext = $1;
+get qr{/media/(.+)} => sub {
+	my ($article) = splat;
 	if ($article =~ /mp4$/) {
 		send_file(
-			"/home/gabor/work/articles/video/$article",
-			content_type => $ext,
+			mymaven->{media} . "/$article",
+			content_type => 'mp4',
 			system_path => 1,
 		);
 	}
-
-	return _show({ path => mymaven->{video}, article => $article, template => 'page', layout => 'page' });
+	return 'media error';
 };
 
 
