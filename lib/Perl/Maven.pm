@@ -79,7 +79,14 @@ hook before_template => sub {
 
     $t->{conf} = mymaven->{conf};
     $t->{resources} = read_resources();
-	$t->{comments} = 0 unless request->host =~ /^perl5maven/;
+	$t->{comments} = 0 unless request->host =~ /^perl5maven/; # TODO hard coding!
+	# TODO get rid of this hard coding
+	if (request->host =~ /perl5maven/) {
+		$t->{show_sponsors} = 1;
+		$t->{show_newsletter_form} = 1;
+	} else {
+		delete $t->{indexes};
+	}
 
 	# linking to translations
 	my $sites = read_sites();
@@ -596,12 +603,6 @@ get qr{/perldoc/(.+)} => sub {
 
 	return _show({ path => mymaven->{perldoc}, article => $article, template => 'page', layout => 'page' });
 };
-#get qr{/videos/(.+)} => sub {
-#	my ($article) = splat;
-#
-#	return _show({ path => mymaven->{videos}, article => $article, template => 'page', layout => 'page' });
-#};
-
 get qr{/media/(.+)} => sub {
 	my ($article) = splat;
 	if ($article =~ /mp4$/) {
