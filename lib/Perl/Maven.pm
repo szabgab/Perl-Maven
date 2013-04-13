@@ -607,7 +607,7 @@ get qr{/media/(.+)} => sub {
 	if ($article =~ /mp4$/) {
 		send_file(
 			mymaven->{media} . "/$article",
-			content_type => 'mp4',
+			content_type => 'video/mp4',
 			system_path => 1,
 		);
 	}

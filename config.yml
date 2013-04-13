@@ -44,6 +44,7 @@ mymaven:
       google_analytics: UA-12199211-13
     root: '/home/gabor/work/perlmaven.com'
     meta: '/home/gabor/work/articles/perlmaven.com/meta'
+    media: '/home/gabor/work/media.perlmaven.com'
   perlmaven.local:
     title: 'Perl Maven'
     root: '/home/gabor/work/perlmaven.com'
