@@ -1,3 +1,4 @@
+<% IF show_sponsors %>
 <div class="sponsor">
 Perl Jobs
 </div>
@@ -43,4 +44,4 @@ Booking.com in Amsterdam. Do awesome things.
 </p>
 Come join a small team in Oxford, UK where you can make a real difference. Get in touch at jobs@adestra.com.
 </div>
-
+<% END %>
