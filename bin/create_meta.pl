@@ -167,7 +167,7 @@ sub save {
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
-	print $fh to_json $data, { utf8 => 1, pretty => 1 };
+	print $fh to_json $data, { utf8 => 1, pretty => 1, canonical => 1 };
 	close $fh;
 	return;
 }
