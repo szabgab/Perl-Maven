@@ -44,12 +44,14 @@ sub config {
 
 	my $mymaven = dclone $config->{$domain};
 	$mymaven->{lang} = $lang;
-	#my $host_config = $config->{$domain}{sites}{$host};
-	#if ($host_config) {
-	#	foreach my $key (keys %$host_config) {
-	#		$mymaven->{$key} = $host_config->{$key};
-	#	}
-	#}
+	if ($config->{$domain}{sites}{$host}) {
+		my $host_config = $config->{$domain}{sites}{$host};
+		if ($host_config) {
+			foreach my $key (keys %$host_config) {
+				$mymaven->{$key} = $host_config->{$key};
+			}
+		}
+	}
 
 	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};
 	#die Dumper $mymaven;

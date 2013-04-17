@@ -407,7 +407,7 @@ get '/download/:dir/:file' => sub {
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
-	send_file(path(mymaven->{download}, $dir, $file), system_path => 1);
+	send_file(path(mymaven->{dir}{download}, $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -563,7 +563,7 @@ get '/mail/:article' => sub {
 
 	my $article = param('article');
 
-	my $path = mymaven->{mail} . "/$article.tt";
+	my $path = mymaven->{dirs}{mail} . "/$article.tt";
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
@@ -571,6 +571,11 @@ get '/mail/:article' => sub {
 		if not $tt->{status} or $tt->{status} ne 'show';
 
 	return template 'mail', $tt, {	layout => 'newsletter' };
+};
+get qr{/perldoc/(.+)} => sub {
+	my ($article) = splat;
+
+	return _show({ path => mymaven->{dirs}{perldoc}, article => $article, template => 'page', layout => 'page' });
 };
 
 get '/svg.xml' => sub {
@@ -580,16 +585,11 @@ get '/svg.xml' => sub {
 	return $xml;
 };
 
-get qr{/perldoc/(.+)} => sub {
-	my ($article) = splat;
-
-	return _show({ path => mymaven->{perldoc}, article => $article, template => 'page', layout => 'page' });
-};
 get qr{/media/(.+)} => sub {
 	my ($article) = splat;
 	if ($article =~ /mp4$/) {
 		send_file(
-			mymaven->{media} . "/$article",
+			mymaven->{dirs}{media} . "/$article",
 			content_type => 'video/mp4',
 			system_path => 1,
 		);
@@ -799,7 +799,7 @@ sub _generate_code {
 sub get_download_files {
 	my ($subdir) = @_;
 
-	my $manifest = path mymaven->{download}, $subdir, 'manifest.csv';
+	my $manifest = path mymaven->{dir}{download}, $subdir, 'manifest.csv';
 	#debug $manifest;
 	my @files;
 	if (open my $fh, $manifest) {
