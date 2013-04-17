@@ -186,8 +186,9 @@ Usage: $0 --url http://url
 END_USAGE
 
 	my $products = $dbh->selectall_arrayref(q{
-	   SELECT code, name
-	   FROM product
+		SELECT code, name
+		FROM product
+		ORDER BY name
 	});
 	foreach my $p (@$products) {
 		say "    --to $p->[0]";

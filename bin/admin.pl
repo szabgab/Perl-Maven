@@ -27,7 +27,7 @@ GetOptions(\%opt,
 	'addsub=s',
 	'email=s',
 
-	'unsub',
+	'unsub=s',
 ) or usage();
 
 if ($opt{products}) {
@@ -65,7 +65,7 @@ if ($opt{products}) {
 	$dbh->do(q{INSERT INTO subscription (uid, pid) VALUES (?, ?)}, undef, $uid, $pid);
 	show_people($opt{email});
 } elsif ($opt{unsub} and $opt{email}) {
-	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, 'perl_maven_cookbook');
+	my $pid = $dbh->selectrow_array(q{SELECT id FROM product WHERE code = ?}, undef, $opt{unsub});
 	my $uid = $dbh->selectrow_array(q{SELECT id FROM user WHERE email = ?},   undef, $opt{email});
 	print "PID: $pid  UID: $uid\n";
 	$dbh->do(q{DELETE FROM subscription WHERE uid=? AND pid=?}, undef, $uid, $pid);
@@ -126,17 +126,31 @@ sub usage {
 
 	print <<"END_USAGE";
 Usage: $0
-    --products                                   list of products
-    --stats                                      subscription statistics
-    --show   --email FILTER_FOR_EMAIL            list users
+    --products                               list of products
+    --stats                                  subscription statistics
+    --show   --email FILTER_FOR_EMAIL        list users
 
     --replace NEW_EMAIL --email OLD_EMAIL
 
-    --list PRODUCT                               list all the users who subscribe to this project
+    --list PRODUCT                           list all the users who subscribe to this project
 
-    --addsub  product  --email  email\@address   add the specific product to the specific user
-    --unsub  --email  email\@address   remove the perl_maven_cookbook from the specific user
+    --addsub product --email email\@address  add the specific product to the specific user
+    --unsub  product --email email\@address  remove the perl_maven_cookbook from the specific user
+
+Products:
 END_USAGE
+
+
+	my $products = $dbh->selectall_arrayref(q{
+	   SELECT code, name
+	   FROM product
+       ORDER BY name
+	});
+	foreach my $p (@$products) {
+		say "   $p->[0]";
+	}
+
+
 	exit;
 }
 
