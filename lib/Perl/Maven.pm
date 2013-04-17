@@ -17,38 +17,12 @@ use File::Basename qw(fileparse);
 use POSIX ();
 
 use Perl::Maven::Page;
+use Perl::Maven::Config;
 
 sub mymaven {
-	my $host = request->host;
-
-	die 'localhost is not supported' if $host =~ /localhost/; # avoid stupid mistakes
-
-	$host =~ s/:.*//; # remove port
-
-	# TODO check in the sites.yml file?
-	#if (! config->{mymaven}{$host}) {
-	#	die "No such host '$host'"; # Avoid more stupid mistakes
-		#return config->{mymaven}{default};
-	#}
-
-	use Storable qw(dclone);
-	my $mymaven = dclone config->{mymaven}{default};
-	my $myhost = config->{mymaven}{$host};
-	foreach my $key (keys %$myhost) {
-		$mymaven->{$key} = $myhost->{$key};
-	}
-
-	if ($host =~ /^(\w\w)\./) {
-		$mymaven->{lang} = $1;
-	} else {
-		$mymaven->{lang} = 'en';
-	}
-
-	#die Dumper $mymaven if not defined $mymaven->{root};
-	#die 'lang' if not defined $mymaven->{lang};
-	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};
-	return $mymaven;
-}
+	my $mymaven = Perl::Maven::Config->new(request->host, path(config->{appdir}, config->{mymaven}));
+	return $mymaven->config;
+};
 
 my $sandbox = 0;
 
@@ -899,9 +873,7 @@ sub paypal {
 sub read_meta {
 	my ($file) = @_;
 
-	my $host = request->host;
-	$host =~ s/:.*//; # remove port
-	$host =~ s/local|win32/com/g;  # TODO this is a private patch for perl5maven.local and perl5maven.win32
+	my $host = Perl::Maven::Config::host(request->host);
 	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . "/$host/meta/$file.json")) {
 		local $/ = undef;
 		my $json = <$fh>;

@@ -1,0 +1,59 @@
+# The main entries in mymaven are domain names. (e.g. perl5maven.com)
+# domain: what to do when perl5maven.com     is accessed
+# www:    what to do when www.perl5maven.com is accessed
+#   possible fields:
+#      redirect: 0|URL
+#      site:   the hostname of the site (e.g. meta or en) that should be served on the this hostname
+# title: of the site (TODO: should be in sites.yml
+# root: where the whole site lives, see the layout on https://github.com/szabgab/perl5maven.com
+# meta: where the meta files are generated and read from
+
+perl5maven.com:
+  domain:
+    site: en
+    redirect: 0
+  www:
+    redirect: http://perl5maven.com/
+  root: '/home/gabor/work/perl5maven.com'
+  meta: '/home/gabor/work/articles'
+  title: 'Perl 5 Maven'
+  from: 'Perl 5 Maven <gabor@perl5maven.com>'
+  listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
+  prefix: '[Perl Maven]'
+  conf:
+    clicky: 66509177
+    google_analytics: UA-12199211-9
+  admin:
+    email: 'Gabor Szabo <gabor@szabgab.com>'
+  paypal:
+    email: 'gabor@szabgab.com'
+  dev:
+    win32:
+      mail: 'c:/work/articles/mail'
+      perldoc: 'c:/work/articles/perldoc'
+  sites:
+    perl5maven.com:
+      dirs:
+        mail: '/home/gabor/work/articles/mail'
+        perldoc: '/home/gabor/work/articles/perldoc'
+        download: '/home/gabor/work/articles/download'
+perlmaven.com:
+  domain:
+    site: en
+    redirect: 0
+  title: 'Perl Maven'
+  root: '/home/gabor/work/perlmaven.com'
+  meta: '/home/gabor/work/articles/perlmaven.com/meta'
+  conf:
+    clicky: 100527028
+    google_analytics: UA-12199211-13
+  dev:
+    win32:
+      articles: 'c:/work/perlmaven.com/articles'
+      meta: 'c:/work/articles/perlmaven.com/meta'
+  sites:
+    perlmaven.com:
+      dirs:
+        media: '/home/gabor/work/media.perlmaven.com'
+
+

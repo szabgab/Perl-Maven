@@ -20,55 +20,12 @@ charset: "UTF-8"
 
 # template: "simple"
 
-mymaven:
-  default:
-    title: 'Perl 5 Maven'
-    root: '/home/gabor/work/perl5maven.com'
-    from: 'Perl 5 Maven <gabor@perl5maven.com>'
-    listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
-    prefix: '[Perl Maven]'
-    conf:
-      clicky: 66509177
-      google_analytics: UA-12199211-9
-    admin:
-      email: 'Gabor Szabo <gabor@szabgab.com>'
-    paypal:
-      email: 'gabor@szabgab.com'
-    download: '/home/gabor/work/articles/download'
-    meta: '/home/gabor/work/articles'
-  perlmaven.com:
-    title: 'Perl Maven'
-    conf:
-      clicky: 100527028
-      google_analytics: UA-12199211-13
-    root: '/home/gabor/work/perlmaven.com'
-    meta: '/home/gabor/work/articles/perlmaven.com/meta'
-    media: '/home/gabor/work/media.perlmaven.com'
-  perlmaven.local:
-    title: 'Perl Maven'
-    root: '/home/gabor/work/perlmaven.com'
-    media: '/home/gabor/work/media.perlmaven.com'
-  perlmaven.win32:
-    conf:
-      clicky: 100527028
-      google_analytics: UA-12199211-13
-    articles: 'c:/work/perlmaven.com/articles'
-    meta: 'c:/work/articles/perlmaven.com/meta'
-  perl5maven.win32:
-    mail: 'c:/work/articles/mail'
-    perldoc: 'c:/work/articles/perldoc'
-  perl5maven.local:
-    mail: '/home/gabor/work/articles/mail'
-    perldoc: '/home/gabor/work/articles/perldoc'
-  perl5maven.com:
-    mail: '/home/gabor/work/articles/mail'
-    perldoc: '/home/gabor/work/articles/perldoc'
-
+mymaven: "mymaven.yml"
 
 template: "template_toolkit"
 engines:
   template_toolkit:
-    INCLUDE_PATH: '/home/gabor/work/Perl-Maven/views'
+#    INCLUDE_PATH: '/home/gabor/work/Perl-Maven/views'
     encoding:  'utf8'
 #     start_tag: '[%'
 #     end_tag:   '%]'
