@@ -25,10 +25,11 @@ sub mymaven {
 
 	$host =~ s/:.*//; # remove port
 
-	if (! config->{mymaven}{$host}) {
-		die "No such host '$host'"; # Avoid more stupid mistakes
+	# TODO check in the sites.yml file?
+	#if (! config->{mymaven}{$host}) {
+	#	die "No such host '$host'"; # Avoid more stupid mistakes
 		#return config->{mymaven}{default};
-	}
+	#}
 
 	use Storable qw(dclone);
 	my $mymaven = dclone config->{mymaven}{default};
@@ -36,6 +37,13 @@ sub mymaven {
 	foreach my $key (keys %$myhost) {
 		$mymaven->{$key} = $myhost->{$key};
 	}
+
+	if ($host =~ /^(\w\w)\./) {
+		$mymaven->{lang} = $1;
+	} else {
+		$mymaven->{lang} = 'en';
+	}
+
 	#die Dumper $mymaven if not defined $mymaven->{root};
 	#die 'lang' if not defined $mymaven->{lang};
 	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};

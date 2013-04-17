@@ -22,7 +22,6 @@ charset: "UTF-8"
 
 mymaven:
   default:
-    lang: 'en'
     title: 'Perl 5 Maven'
     root: '/home/gabor/work/perl5maven.com'
     from: 'Perl 5 Maven <gabor@perl5maven.com>'
@@ -61,29 +60,9 @@ mymaven:
   perl5maven.local:
     mail: '/home/gabor/work/articles/mail'
     perldoc: '/home/gabor/work/articles/perldoc'
-  br.perl5maven.local:
-    lang: 'br'
   perl5maven.com:
     mail: '/home/gabor/work/articles/mail'
     perldoc: '/home/gabor/work/articles/perldoc'
-  br.perl5maven.com:
-    lang: 'br'
-  cn.perl5maven.com:
-    lang: 'cn'
-  de.perl5maven.com:
-    lang: 'de'
-  es.perl5maven.com:
-    lang: 'es'
-  it.perl5maven.com:
-    lang: 'it'
-  ko.perl5maven.com:
-    lang: 'ko'
-  ro.perl5maven.com:
-    lang: 'ro'
-  ru.perl5maven.com:
-    lang: 'ru'
-  tw.perl5maven.com:
-    lang: 'tw'
 
 
 template: "template_toolkit"
