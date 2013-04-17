@@ -27,13 +27,11 @@ my ($site, $verbose) = @ARGV;
 
 my %translations;
 my @latest;
-foreach my $site (keys  %{ $config->{mymaven} }) {
-	next if $site eq 'default';
-	next if $site !~ /.com$/;
 
-	next if $site eq 'perlmaven.com'; # ???
-	my $orig = process($site);
-	my $lang = $config->{mymaven}{$site}{lang};
+my $sites = LoadFile("$config->{mymaven}{default}{root}/sites.yml");
+
+foreach my $lang (keys  %$sites) {
+	my $orig = process($lang);
 	foreach my $trans (keys %$orig) {
 		$translations{ $orig->{$trans} }{$lang} = $trans;
 	}
@@ -52,16 +50,16 @@ foreach my $site (keys  %{ $config->{mymaven} }) {
 exit;
 ###############################################################################
 sub process {
-	my ($site) = @_;
+	my ($lang) = @_;
 
-	my $lang = $site eq 'perl5maven.com' ? 'en' : $config->{mymaven}{$site}{lang};
+	my $site = ($lang eq 'en' ? '' : "$lang.") . 'perl5maven.com';
 	my $source = $config->{mymaven}{default}{root} . '/sites/' . $lang . '/pages';
 	my $dest   = $config->{mymaven}{default}{meta} . "/$site/meta";
 	return if $dest =~ /^c:/;
 
-	usage("Missing source for $site") if not $source;
+	usage("Missing source for $lang") if not -e $source;
 
-	usage("Missing meta for $site") if not $dest;
+	usage("Missing meta for $lang") if not -e $dest;
 
 	my @sources = (
 			{
