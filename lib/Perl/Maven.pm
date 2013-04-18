@@ -407,7 +407,7 @@ get '/download/:dir/:file' => sub {
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
 
-	send_file(path(mymaven->{dir}{download}, $dir, $file), system_path => 1);
+	send_file(path(mymaven->{dirs}{download}, $dir, $file), system_path => 1);
 };
 
 get '/verify/:id/:code' => sub {
@@ -799,7 +799,7 @@ sub _generate_code {
 sub get_download_files {
 	my ($subdir) = @_;
 
-	my $manifest = path mymaven->{dir}{download}, $subdir, 'manifest.csv';
+	my $manifest = path mymaven->{dirs}{download}, $subdir, 'manifest.csv';
 	#debug $manifest;
 	my @files;
 	if (open my $fh, $manifest) {
