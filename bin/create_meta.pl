@@ -12,6 +12,7 @@ use YAML qw(LoadFile);
 
 use lib 'lib';
 use Perl::Maven::Page;
+use Perl::Maven::Config;
 
 binmode(STDOUT, ":utf8");
 binmode(STDERR, ":utf8");
@@ -20,7 +21,9 @@ my $MAX_FEED    = 10;
 
 # Run with any value on the command line to get debugging info
 
-my $config = LoadFile('config.yml');
+my $cfg = LoadFile('config.yml');
+my $mymaven = Perl::Maven::Config->new('perl5maven.com', $cfg->{mymaven});
+my $config =$mymaven->config;
 my ($site, $verbose) = @ARGV;
 #usage('Missing site') if not $site;
 #usage("Invalid site '$site'") if not $config->{mymaven}{$site};
@@ -28,14 +31,14 @@ my ($site, $verbose) = @ARGV;
 my %translations;
 my @latest;
 
-my $sites = LoadFile("$config->{mymaven}{default}{root}/sites.yml");
+my $sites = LoadFile("$config->{root}/sites.yml");
 
 foreach my $lang (keys  %$sites) {
 	my $orig = process($lang);
 	foreach my $trans (keys %$orig) {
 		$translations{ $orig->{$trans} }{$lang} = $trans;
 	}
-	save('translations', "$config->{mymaven}{default}{meta}", \%translations);
+	save('translations', "$config->{meta}", \%translations);
 
 	my @meta_feed;
 	my $feed_cnt = 0;
@@ -44,7 +47,7 @@ foreach my $lang (keys  %$sites) {
 		push @meta_feed, $entry;
 		last if $feed_cnt >= $MAX_FEED;
 	}
-	save('feed', "$config->{mymaven}{default}{meta}/meta.perl5maven.com", \@meta_feed);
+	save('feed', "$config->{meta}/meta.perl5maven.com", \@meta_feed);
 
 }
 exit;
@@ -53,8 +56,8 @@ sub process {
 	my ($lang) = @_;
 
 	my $site = ($lang eq 'en' ? '' : "$lang.") . 'perl5maven.com';
-	my $source = $config->{mymaven}{default}{root} . '/sites/' . $lang . '/pages';
-	my $dest   = $config->{mymaven}{default}{meta} . "/$site/meta";
+	my $source = $config->{root} . '/sites/' . $lang . '/pages';
+	my $dest   = $config->{meta} . "/$site/meta";
 	return if $dest =~ /^c:/;
 
 	usage("Missing source for $lang") if not -e $source;
@@ -67,10 +70,11 @@ sub process {
 				uri  => '',
 			},
 	);
-	if ($config->{mymaven}{$site}{perldoc}) {
+	my $perldoc = $config->{sites}{$site}{dirs}{perldoc};
+	if ($perldoc) {
 		push @sources,
 			{
-				path => $config->{mymaven}{$site}{perldoc},
+				path => $perldoc,
 				uri  => 'perldoc/',
 			};
 	}
@@ -175,6 +179,7 @@ sub get_pages {
 
 	my @pages;
 	foreach my $s (@sources) {
+		die Dumper $s if not $s->{path};
 		say $s->{path};
 		foreach my $file (glob "$s->{path}/*.tt") {
 			#say "Reading $file";
@@ -212,13 +217,13 @@ sub usage {
 
 	print "*** $msg\n\n";
 	print "Usage $0 SITE\n";
-	foreach my $site (keys %{ $config->{mymaven} }) {
-		next if $site eq 'default';
-		print "$site\n";
-		my $source = $config->{mymaven}{$site}{root};
-		my $dest   = $config->{mymaven}{$site}{meta};
-		print "   $source => $dest\n";
-	}
+#	foreach my $site (keys %{ $config->{mymaven} }) {
+#		next if $site eq 'default';
+#		print "$site\n";
+#		my $source = $config->{mymaven}{$site}{root};
+#		my $dest   = $config->{mymaven}{$site}{meta};
+#		print "   $source => $dest\n";
+#	}
 	exit;
 }
 

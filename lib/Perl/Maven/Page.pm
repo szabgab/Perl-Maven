@@ -103,7 +103,7 @@ sub read {
 		}
 	}
 	$data{mycontent} = $cont;
-	if (length $data{abstract} > 800) {
+	if (length $data{abstract} > 900) {
 		die sprintf("Abstract of %s is too long. It has %s character", $self->file, length $data{abstract});
 	}
 
