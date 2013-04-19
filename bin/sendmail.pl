@@ -19,6 +19,8 @@ use Try::Tiny;
 
 binmode(STDOUT, ':utf8');
 
+use lib 'lib';
+use Perl::Maven::Config;
 
 
 my $dsn = "dbi:SQLite:dbname=pm.db";
@@ -29,8 +31,10 @@ my $dbh = DBI->connect($dsn, "", "", {
 	AutoCommit => 1,
 });
 
-my $config = YAML::LoadFile('config.yml');
-my $mymaven = $config->{mymaven}{default};
+my $cfg = YAML::LoadFile('config.yml');
+my $mymaven = Perl::Maven::Config->new('perl5maven.com', $cfg->{mymaven});
+my $config =$mymaven->config;
+$mymaven = $config;
 my $from = $mymaven->{from};
 
 my %opt;

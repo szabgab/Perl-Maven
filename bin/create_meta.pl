@@ -18,6 +18,7 @@ binmode(STDOUT, ":utf8");
 binmode(STDERR, ":utf8");
 my $MAX_INDEX   = 3;
 my $MAX_FEED    = 10;
+my $MAX_META_FEED = 20;
 
 # Run with any value on the command line to get debugging info
 
@@ -45,7 +46,7 @@ foreach my $lang (keys  %$sites) {
 	for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @latest) {
 		$feed_cnt++;
 		push @meta_feed, $entry;
-		last if $feed_cnt >= $MAX_FEED;
+		last if $feed_cnt >= $MAX_META_FEED;
 	}
 	save('feed', "$config->{meta}/meta.perl5maven.com", \@meta_feed);
 
