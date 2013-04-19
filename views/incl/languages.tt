@@ -1,4 +1,4 @@
-<% IF languages %>
+<% IF languages.keys.size %>
 <div id="sites">
   <ul>
   <% FOR lang IN languages.keys %>
