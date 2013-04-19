@@ -10,13 +10,15 @@
             choice = Math.int(c)
             %>
             <% IF choice %>
-               I run a
-               <a href="http://szabgab.com/yapc-na-2013-training-classes.html">Test Automation using Perl</a>
-               course in June in Austin, Texas. <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
+               I run a <a href="http://szabgab.com/yapc-na-2013-training-classes.html">Test Automation using Perl</a> course
+               on June 1-2, in Austin, Texas. Just before <a href="http://www.yapcna.org/">YAPC::NA</a>.
+               <br>
+               <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
             <% ELSE %>
-               I run a
-               <a href="http://szabgab.com/yapc-na-2013-training-classes.html">Mobile web development and Perl</a>
-               course in June in Austin, Texas. Join me!
+               I run a <a href="http://szabgab.com/yapc-na-2013-training-classes.html">Mobile web development and Perl</a> course
+               on June 6-7, in Austin, Texas.  Just before <a href="http://www.yapcna.org/">YAPC::NA</a>.
+               <br>
+               <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
             <% END %>
           </div>
           <% IF show_newsletter_form %>
