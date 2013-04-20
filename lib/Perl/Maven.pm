@@ -730,8 +730,12 @@ sub log_paypal {
 
 sub read_tt {
 	my $file = shift;
-
-	return Perl::Maven::Page->new(file => $file)->read;
+	my $tt = eval { Perl::Maven::Page->new(file => $file)->read };
+	if ($@) {
+		return {}; # hmm, this should have been caught when the meta files were generated...
+	} else {
+		return $tt;
+	}
 }
 
 
