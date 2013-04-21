@@ -20,8 +20,8 @@ use Perl::Maven::Page;
 use Perl::Maven::Config;
 
 sub mymaven {
-	my $mymaven = Perl::Maven::Config->new(request->host, path(config->{appdir}, config->{mymaven}));
-	return $mymaven->config;
+	my $mymaven = Perl::Maven::Config->new(path(config->{appdir}, config->{mymaven}));
+	return $mymaven->config(request->host);
 };
 
 my $sandbox = 0;

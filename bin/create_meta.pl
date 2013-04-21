@@ -23,8 +23,8 @@ my $MAX_META_FEED = 20;
 # Run with any value on the command line to get debugging info
 
 my $cfg = LoadFile('config.yml');
-my $mymaven = Perl::Maven::Config->new('perl5maven.com', $cfg->{mymaven});
-my $config =$mymaven->config;
+my $mymaven = Perl::Maven::Config->new($cfg->{mymaven});
+my $config =$mymaven->config('perl5maven.com');
 my ($site, $verbose) = @ARGV;
 #usage('Missing site') if not $site;
 #usage("Invalid site '$site'") if not $config->{mymaven}{$site};

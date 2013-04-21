@@ -7,19 +7,18 @@ use YAML         qw(LoadFile);
 use Storable     qw(dclone);
 
 sub new {
-	my ($class, $host, $path) = @_;
+	my ($class, $path) = @_;
 
 	return bless {
-		host     => host($host),
-		realhost => realhost($host),
 		path     => $path,
+		config   => scalar LoadFile($path),
 	}, $class;
 }
 
 sub config {
-	my ($self) = @_;
+	my ($self, $fullhost) = @_;
 
-	my $host = $self->{host};
+	my $host = host($fullhost);
 	my $domain;
 	if ($host =~ /([^.]+\.(com|net|org))$/) {
 		$domain = $1;
@@ -40,8 +39,7 @@ sub config {
 		#return config->{mymaven}{default};
 	#}
 
-	my $config = LoadFile($self->{path});
-
+	my $config = $self->{config};
 	my $mymaven = dclone $config->{$domain};
 	$mymaven->{lang} = $lang;
 	if ($config->{$domain}{sites}{$host}) {
