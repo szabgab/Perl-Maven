@@ -5,6 +5,7 @@ use v5.10;
 
 #use Cwd qw(abs_path);
 use File::Basename qw(basename dirname);
+use Getopt::Long qw(GetOptions);
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use JSON qw(to_json);
@@ -24,10 +25,15 @@ my $MAX_META_FEED = 20;
 
 my $cfg = LoadFile('config.yml');
 my $mymaven = Perl::Maven::Config->new($cfg->{mymaven});
-my $config =$mymaven->config('perl5maven.com');
-my ($site, $verbose) = @ARGV;
-#usage('Missing site') if not $site;
-#usage("Invalid site '$site'") if not $config->{mymaven}{$site};
+
+GetOptions(
+	'domain=s' => \my $domain,
+	'verbose'  => \my $verbose,
+);
+usage('Missing domain') if not $domain;
+usage("Invalid site '$domain'") if not $mymaven->{config}{$domain};
+
+my $config =$mymaven->config($domain);
 
 my %translations;
 my @latest;
@@ -48,7 +54,7 @@ foreach my $lang (keys  %$sites) {
 		push @meta_feed, $entry;
 		last if $feed_cnt >= $MAX_META_FEED;
 	}
-	save('feed', "$config->{meta}/meta.perl5maven.com", \@meta_feed);
+	save('feed', "$config->{meta}/meta.$domain", \@meta_feed);
 
 }
 exit;
@@ -56,7 +62,7 @@ exit;
 sub process {
 	my ($lang) = @_;
 
-	my $site = ($lang eq 'en' ? '' : "$lang.") . 'perl5maven.com';
+	my $site = ($lang eq 'en' ? '' : "$lang.") . $domain;
 	my $source = $config->{root} . '/sites/' . $lang . '/pages';
 	my $dest   = $config->{meta} . "/$site/meta";
 	return if $dest =~ /^c:/;
@@ -217,14 +223,10 @@ sub usage {
 	my ($msg) = @_;
 
 	print "*** $msg\n\n";
-	print "Usage $0 SITE\n";
-#	foreach my $site (keys %{ $config->{mymaven} }) {
-#		next if $site eq 'default';
-#		print "$site\n";
-#		my $source = $config->{mymaven}{$site}{root};
-#		my $dest   = $config->{mymaven}{$site}{meta};
-#		print "   $source => $dest\n";
-#	}
+	print "Usage $0 --domain DOMAIN --verbose\n";
+	foreach my $domain (keys %{ $mymaven->{config} }) {
+		print "$domain\n";
+	}
 	exit;
 }
 
