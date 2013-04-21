@@ -3,13 +3,11 @@ use strict;
 use warnings;
 use v5.10;
 
-#use Cwd qw(abs_path);
 use File::Basename qw(basename dirname);
-use Getopt::Long qw(GetOptions);
-use Cwd qw(abs_path);
-use Data::Dumper qw(Dumper);
-use JSON qw(to_json);
-use YAML qw(LoadFile);
+use Getopt::Long   qw(GetOptions);
+use Data::Dumper   qw(Dumper);
+use JSON           qw(to_json);
+use YAML           qw(LoadFile);
 
 use lib 'lib';
 use Perl::Maven::Page;
