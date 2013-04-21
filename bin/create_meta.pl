@@ -4,6 +4,7 @@ use warnings;
 use v5.10;
 
 use File::Basename qw(basename dirname);
+use File::Path     qw(mkpath);
 use Getopt::Long   qw(GetOptions);
 use Data::Dumper   qw(Dumper);
 use JSON           qw(to_json);
@@ -67,6 +68,7 @@ sub process {
 
 	usage("Missing source for $lang") if not -e $source;
 
+	mkpath $dest;
 	usage("Missing meta for $lang") if not -e $dest;
 
 	my @sources = (
@@ -171,6 +173,7 @@ sub process_files {
 sub save {
 	my ($file, $dest, $data) = @_;
 
+	mkpath $dest;
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
