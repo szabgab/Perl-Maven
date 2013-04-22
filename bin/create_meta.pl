@@ -4,6 +4,7 @@ use warnings;
 use v5.10;
 
 use File::Basename qw(basename dirname);
+use File::Find::Rule;
 use File::Path     qw(mkpath);
 use Getopt::Long   qw(GetOptions);
 use Data::Dumper   qw(Dumper);
@@ -205,18 +206,19 @@ sub get_pages {
 	foreach my $s (@sources) {
 		die Dumper $s if not $s->{path};
 		say $s->{path};
-		foreach my $file (glob "$s->{path}/*.tt") {
-			#say "Reading $file";
-			my $data = Perl::Maven::Page->new(file => $file)->read;
+		foreach my $file (File::Find::Rule->file()->name('*.tt')->relative()->in($s->{path})) {
+			say "Reading $file" if $verbose;
+			my $path = "$s->{path}/$file";
+			my $data = Perl::Maven::Page->new(file => $path)->read;
 			foreach my $field (qw(timestamp title status)) {
-				die "No $field in $file" if not $data->{$field};
+				die "No $field in $path" if not $data->{$field};
 			}
 			die "Invalid status $data->{status} in $file"
 				if $data->{status} !~ /^(show|hide|draft|ready)/;
 
 			push @pages, {
 					file  => $file,
-					url_path => $s->{uri} . basename($file),
+					url_path => $s->{uri} . $file,
 					%$data,
 			};
 		}
