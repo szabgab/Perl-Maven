@@ -26,6 +26,7 @@ perl5maven.com:
     show_sponsors: 1
     show_newsletter_form: 1
     show_indexes: 1
+    enable_comments: 0
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:
@@ -40,6 +41,8 @@ perl5maven.com:
         mail: '/home/gabor/work/articles/mail'
         perldoc: '/home/gabor/work/articles/perldoc'
         download: '/home/gabor/work/articles/download'
+      conf:
+        enable_comments: 1
 perlmaven.com:
   domain:
     site: en
