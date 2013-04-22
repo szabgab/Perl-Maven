@@ -31,10 +31,6 @@ perl5maven.com:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:
     email: 'gabor@szabgab.com'
-  dev:
-    win32:
-      mail: 'c:/work/articles/mail'
-      perldoc: 'c:/work/articles/perldoc'
   sites:
     perl5maven.com:
       dirs:
@@ -44,6 +40,13 @@ perl5maven.com:
       conf:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
+    perl5maven.com.win32:
+      root: 'c:/work/perl5maven.com'
+      meta: 'c:/work/articles'
+      dirs:
+        mail: 'c:/work/articles/mail'
+        perldoc: 'c:/work/articles/perldoc'
+        download: 'c:/work/articles/download'
 perlmaven.com:
   domain:
     site: en

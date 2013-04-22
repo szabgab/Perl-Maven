@@ -47,6 +47,10 @@ sub config {
 	if ($host_config) {
 		$mymaven = merge( $mymaven, $host_config );
 	}
+	my $real_host_config = $mymaven->{sites}{ realhost($fullhost) };
+	if ($real_host_config) {
+		$mymaven = merge( $mymaven, $real_host_config );
+	}
 	delete $mymaven->{sites};
 
 	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};
