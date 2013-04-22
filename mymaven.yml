@@ -41,9 +41,11 @@ perlmaven.com:
   domain:
     site: en
     redirect: 0
+  www:
+    redirect: http://perlmaven.com/
   title: 'Perl Maven'
   root: '/home/gabor/work/perlmaven.com'
-  meta: '/home/gabor/work/articles/perlmaven.com/meta'
+  meta: '/home/gabor/work/articles/'
   conf:
     clicky: 100527028
     google_analytics: UA-12199211-13

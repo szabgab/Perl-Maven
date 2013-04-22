@@ -26,19 +26,26 @@ my $cfg = LoadFile('config.yml');
 my $mymaven = Perl::Maven::Config->new($cfg->{mymaven});
 
 GetOptions(
-	'domain=s' => \my $domain,
+	'domain=s' => \my $domain_name,
 	'verbose'  => \my $verbose,
+	'all'      => \my $all,
 );
-usage('Missing domain') if not $domain;
-usage("Invalid site '$domain'") if not $mymaven->{config}{$domain};
 
-process_domain($domain);
+if ($all) {
+	process_domain($_) for keys %{ $mymaven->{config} };
+} else {
+	usage('Missing domain') if not $domain_name;
+	usage("Invalid site '$domain_name'") if not $mymaven->{config}{$domain_name};
+	process_domain($domain_name);
+}
+
 
 exit;
 ###############################################################################
 
 sub process_domain {
 	my ($domain) = @_;
+	print "** Processing domain $domain\n";
 
 	my $config =$mymaven->config($domain);
 
@@ -48,7 +55,7 @@ sub process_domain {
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
 	foreach my $lang (keys  %$sites) {
-		my $orig = process($config, $lang, \@latest);
+		my $orig = process($config, $domain, $lang, \@latest);
 		foreach my $trans (keys %$orig) {
 			$translations{ $orig->{$trans} }{$lang} = $trans;
 		}
@@ -67,7 +74,7 @@ sub process_domain {
 }
 
 sub process {
-	my ($config, $lang, $latest) = @_;
+	my ($config, $domain, $lang, $latest) = @_;
 
 	my $site = ($lang eq 'en' ? '' : "$lang.") . $domain;
 	my $source = $config->{root} . '/sites/' . $lang . '/pages';
@@ -233,9 +240,13 @@ sub usage {
 	my ($msg) = @_;
 
 	print "*** $msg\n\n";
-	print "Usage $0 --domain DOMAIN --verbose\n";
+	print "Usage $0\n";
+	print "         --domain DOMAIN\n";
+	print "         --all             all the domains\n";
+	print "         --verbose\n";
+	print "The domains:\n";
 	foreach my $domain (keys %{ $mymaven->{config} }) {
-		print "$domain\n";
+		print "  $domain\n";
 	}
 	exit;
 }
