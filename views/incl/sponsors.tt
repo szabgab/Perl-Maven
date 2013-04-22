@@ -1,7 +1,10 @@
 <% IF show_sponsors %>
+
+<!--
 <div class="sponsor">
 Perl Jobs
 </div>
+-->
 
 <!--
 <div class="sponsor">
@@ -16,6 +19,7 @@ mspinowitz@mediamath.com or 646-532-5914
 </div>
 -->
 
+<!--
 <div class="sponsor">
 <p>
 <a href="http://www.lokku.com/jobs/perl-developer-2013.html">Lokku is hiring Perl Developers to work on our Nestoria property search engine</a>
@@ -24,7 +28,7 @@ Nestoria are looking for Perl developers to work on search engine challenges
 such as geocoding, de-duplication, and localization. Contact us at
 perldeveloper@lokku.com if you're interested!"
 </div>
-
+-->
 
 <!--
 <div class="sponsor">
@@ -38,10 +42,13 @@ Booking.com in Amsterdam. Do awesome things.
 </div>
 -->
 
+<!--
 <div class="sponsor">
 <p>
 <a href="http://www.adestra.com/vacancies/perl-developer/">Adestra are hiring Perl developers to work on our Modern Perl/Catalyst/Moose/DBIC codebase.</a>
 </p>
 Come join a small team in Oxford, UK where you can make a real difference. Get in touch at jobs@adestra.com.
 </div>
+-->
+
 <% END %>
