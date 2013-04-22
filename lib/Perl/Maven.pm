@@ -53,6 +53,13 @@ hook before_template => sub {
 	if (logged_in()) {
 		($t->{username}) = split /@/, session 'email';
 	}
+
+
+	# we assume that the whole complex is written in one leading language
+	# and some of the pages are to other languages The domain-site give the name of the
+	# default language and this is the same content that is displayed on the site
+	# without a hostname: 	# http://domain.com
+	my $original_language = mymaven->{domain}{site};
 	my $language = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
 	my $data = read_meta('keywords') || {};
@@ -77,15 +84,15 @@ hook before_template => sub {
 	my $path = request->path;
 	my %links;
 	if ($path ne '/') {
-		my $original = $language eq 'en' ? substr($path, 1) : $t->{original};
+		my $original = $language eq $original_language ? substr($path, 1) : $t->{original};
 		if ($original) {
 			foreach my $language_code ( keys %{ $translations->{$original} } ) {
 				$sites->{$language_code}{url} .= $translations->{$original}{$language_code};
 				$links{$language_code} = $sites->{$language_code};
 			}
-			if ($language ne 'en') {
-				$sites->{en}{url} .= $original;
-				$links{en} = $sites->{en};
+			if ($language ne $original_language) {
+				$sites->{$original_language}{url} .= $original;
+				$links{$original_language} = $sites->{$original_language};
 			}
 		}
 	} else {
