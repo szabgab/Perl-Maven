@@ -23,6 +23,9 @@ perl5maven.com:
   conf:
     clicky: 66509177
     google_analytics: UA-12199211-9
+    show_sponsors: 1
+    show_newsletter_form: 1
+    show_indexes: 1
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:

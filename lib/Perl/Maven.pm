@@ -69,11 +69,9 @@ hook before_template => sub {
     $t->{conf} = mymaven->{conf};
     $t->{resources} = read_resources();
 	$t->{comments} = 0 unless request->host =~ /^perl5maven/; # TODO hard coding!
-	# TODO get rid of this hard coding
-	if (request->host =~ /perl5maven/) {
-		$t->{show_sponsors} = 1;
-		$t->{show_newsletter_form} = 1;
-	} else {
+	$t->{show_sponsors}        = mymaven->{conf}{show_sponsors};
+	$t->{show_newsletter_form} = mymaven->{conf}{show_newsletter_form};
+	if (not mymaven->{conf}{show_indexes}) {
 		delete $t->{indexes};
 	}
 
