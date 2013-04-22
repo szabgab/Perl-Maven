@@ -159,6 +159,11 @@ sub process_files {
 				filename  => $filename,
 			}
 		}
+
+		# TODO what to do when there is no abstract might need some configuration
+		# let's put the title in the abstract for now.
+		#$p->{abstract} ||= $p->{title};
+		#$p->{abstract} ||= ' ';
 		if ($p->{index} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
 			push @index, {
 				title => $p->{title},
