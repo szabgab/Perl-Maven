@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Data::Dumper qw(Dumper);
+use Hash::Merge::Simple qw(merge);
 use YAML         qw(LoadFile);
 use Storable     qw(dclone);
 
@@ -42,14 +43,11 @@ sub config {
 	my $config = $self->{config};
 	my $mymaven = dclone $config->{$domain};
 	$mymaven->{lang} = $lang;
-	if ($config->{$domain}{sites}{$host}) {
-		my $host_config = $config->{$domain}{sites}{$host};
-		if ($host_config) {
-			foreach my $key (keys %$host_config) {
-				$mymaven->{$key} = $host_config->{$key};
-			}
-		}
+	my $host_config = $mymaven->{sites}{$host};
+	if ($host_config) {
+		$mymaven = merge( $mymaven, $host_config );
 	}
+	delete $mymaven->{sites};
 
 	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};
 	#die Dumper $mymaven;

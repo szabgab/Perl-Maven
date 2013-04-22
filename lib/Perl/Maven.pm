@@ -66,16 +66,10 @@ hook before_template => sub {
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
-    $t->{conf} = mymaven->{conf};
-    $t->{resources} = read_resources();
-	$t->{comments} &&= mymaven->{conf}{enable_comments};
-	$t->{disqus}               = mymaven->{conf}{disqus};
-	$t->{show_sponsors}        = mymaven->{conf}{show_sponsors};
-	$t->{show_newsletter_form} = mymaven->{conf}{show_newsletter_form};
-	if (not mymaven->{conf}{show_indexes}) {
-		delete $t->{indexes};
-	}
-
+    $t->{conf}                 = mymaven->{conf};
+    $t->{resources}            = read_resources();
+	$t->{comments}           &&= mymaven->{conf}{enable_comments};
+#die Dumper $t->{conf};
 	# linking to translations
 	my $sites = read_sites();
 	my $translations = read_translations();

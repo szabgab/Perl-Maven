@@ -21,7 +21,7 @@
                <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
             <% END %>
           </div>
-          <% IF show_newsletter_form %>
+          <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
                <h3>Do you want to improve your Perl?</h3>
                Register to the FREE newsletter now, get updates and a copy

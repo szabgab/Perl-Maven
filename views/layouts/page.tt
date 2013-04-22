@@ -12,7 +12,7 @@
 }
 </style>
 
-<% IF indexes %>
+<% IF conf.show_indexes %>
   <div id="indexes">
     <ul>
       <% FOR k IN indexes %>

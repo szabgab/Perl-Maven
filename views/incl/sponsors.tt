@@ -1,4 +1,4 @@
-<% IF show_sponsors %>
+<% IF conf.show_sponsors %>
 
 <!--
 <div class="sponsor">
