@@ -35,6 +35,6 @@
   </p>
 <% END %>
 
-<% INCLUDE incl/disqus.tt %>
+<% INCLUDE incl/comments.tt %>
 
 <% INCLUDE layouts/incl/footer.tt %>

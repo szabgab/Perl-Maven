@@ -42,7 +42,8 @@ perl5maven.com:
         perldoc: '/home/gabor/work/articles/perldoc'
         download: '/home/gabor/work/articles/download'
       conf:
-        enable_comments: 1
+        enable_comments: 'disqus'
+        disqus: 'perl5maven'
 perlmaven.com:
   domain:
     site: en

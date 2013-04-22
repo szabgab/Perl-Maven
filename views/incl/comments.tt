@@ -1,0 +1,9 @@
+<% IF comments %>
+<h2>Comments</h2>
+
+<% IF disqus %>
+  <% INCLUDE incl/disqus.tt %>
+<% END %>
+
+<% END %>
+
