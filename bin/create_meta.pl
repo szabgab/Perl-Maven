@@ -32,34 +32,42 @@ GetOptions(
 usage('Missing domain') if not $domain;
 usage("Invalid site '$domain'") if not $mymaven->{config}{$domain};
 
-my $config =$mymaven->config($domain);
+process_domain($domain);
 
-my %translations;
-my @latest;
-
-my $sites = LoadFile("$config->{root}/sites.yml");
-
-foreach my $lang (keys  %$sites) {
-	my $orig = process($lang);
-	foreach my $trans (keys %$orig) {
-		$translations{ $orig->{$trans} }{$lang} = $trans;
-	}
-	save('translations', "$config->{meta}", \%translations);
-
-	my @meta_feed;
-	my $feed_cnt = 0;
-	for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @latest) {
-		$feed_cnt++;
-		push @meta_feed, $entry;
-		last if $feed_cnt >= $MAX_META_FEED;
-	}
-	save('feed', "$config->{meta}/meta.$domain", \@meta_feed);
-
-}
 exit;
 ###############################################################################
+
+sub process_domain {
+	my ($domain) = @_;
+
+	my $config =$mymaven->config($domain);
+
+	my %translations;
+	my @latest;
+
+	my $sites = LoadFile("$config->{root}/sites.yml");
+
+	foreach my $lang (keys  %$sites) {
+		my $orig = process($config, $lang, \@latest);
+		foreach my $trans (keys %$orig) {
+			$translations{ $orig->{$trans} }{$lang} = $trans;
+		}
+		save('translations', "$config->{meta}", \%translations);
+
+		my @meta_feed;
+		my $feed_cnt = 0;
+		for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @latest) {
+			$feed_cnt++;
+			push @meta_feed, $entry;
+			last if $feed_cnt >= $MAX_META_FEED;
+		}
+		save('feed', "$config->{meta}/meta.$domain", \@meta_feed);
+
+	}
+}
+
 sub process {
-	my ($lang) = @_;
+	my ($config, $lang, $latest) = @_;
 
 	my $site = ($lang eq 'en' ? '' : "$lang.") . $domain;
 	my $source = $config->{root} . '/sites/' . $lang . '/pages';
@@ -95,7 +103,8 @@ sub process {
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
-	push @latest, map { $_->{site} = $site; $_ } @$feed;
+	push @$latest, map { $_->{site} = $site; $_ } @$feed;
+
 	return $originals;
 }
 
