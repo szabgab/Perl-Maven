@@ -71,6 +71,7 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 /* Credits section start */
 #creators {
 /*  background-color: #DDDDDD; */
+  text-align: left;
   position: relative;
   margin-top: 20px;
   margin-bottom: 40px;
