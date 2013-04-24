@@ -35,18 +35,18 @@ sub process_domain {
 		foreach my $trans (keys %$orig) {
 			$translations{ $orig->{$trans} }{$lang} = $trans;
 		}
-
-		my @meta_feed;
-		my $feed_cnt = 0;
-		for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_feed }) {
-			$feed_cnt++;
-			push @meta_feed, $entry;
-			last if $feed_cnt >= $MAX_META_FEED;
-		}
-		my @meta_archive = reverse sort {$a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
-		save('feed',    "$config->{meta}/meta.$domain/meta", \@meta_feed);
-		save('archive', "$config->{meta}/meta.$domain/meta", \@meta_archive);
 	}
+	my @meta_feed;
+	my $feed_cnt = 0;
+	for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_feed }) {
+		$feed_cnt++;
+		push @meta_feed, $entry;
+		last if $feed_cnt >= $MAX_META_FEED;
+	}
+	my @meta_archive = reverse sort {$a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
+	save('feed',    "$config->{meta}/meta.$domain/meta", \@meta_feed);
+	save('archive', "$config->{meta}/meta.$domain/meta", \@meta_archive);
+
 	save('translations', "$config->{meta}", \%translations);
 }
 
