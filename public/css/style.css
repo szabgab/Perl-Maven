@@ -65,6 +65,7 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   /* font-size: smaller; */
   padding: 3px 6px;
   border-radius: 2px;
+  direction: ltr;
 }
 
 /* Credits section start */
