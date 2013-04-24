@@ -68,7 +68,7 @@ sub process_domain {
 			push @meta_feed, $entry;
 			last if $feed_cnt >= $MAX_META_FEED;
 		}
-		save('feed', "$config->{meta}/meta.$domain", \@meta_feed);
+		save('feed', "$config->{meta}/meta.$domain/meta", \@meta_feed);
 	}
 	save('translations', "$config->{meta}", \%translations);
 }

@@ -1,0 +1,14 @@
+<% INCLUDE layouts/incl/header.tt %>
+
+
+<h2>Contributors</h2>
+<div id="translators">
+<ul>
+<% FOR a IN authors.keys %>
+  <li><img src="/img/<% authors.$a.author_img %>" alt="<% authors.$a.author_name %>" /><br><% authors.$a.author_name %></li>
+<% END %>
+</ul>
+</div>
+
+<% INCLUDE layouts/incl/footer.tt %>
+

@@ -108,6 +108,13 @@ get '/search' => sub {
 };
 
 get '/' => sub {
+	if (request->host =~ /^meta\./) {
+		return _show({ article => 'index',  template => 'page', layout => 'meta' }, {
+			authors => \%authors,
+			pages => (read_meta('index') || []),
+		});
+	}
+
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => (read_meta('index') || []) });
 };
 
