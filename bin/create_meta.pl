@@ -60,7 +60,6 @@ sub process_domain {
 		foreach my $trans (keys %$orig) {
 			$translations{ $orig->{$trans} }{$lang} = $trans;
 		}
-		save('translations', "$config->{meta}", \%translations);
 
 		my @meta_feed;
 		my $feed_cnt = 0;
@@ -70,8 +69,8 @@ sub process_domain {
 			last if $feed_cnt >= $MAX_META_FEED;
 		}
 		save('feed', "$config->{meta}/meta.$domain", \@meta_feed);
-
 	}
+	save('translations', "$config->{meta}", \%translations);
 }
 
 sub process {
