@@ -1,7 +1,9 @@
 package Perl::Maven::Meta;
-use strict;
-use warnings;
+use Moo;
 use 5.010;
+
+has mymaven => (is => 'ro');
+has verbose => (is => 'ro');
 
 use Data::Dumper   qw(Dumper);
 use File::Find::Rule;
@@ -15,18 +17,12 @@ my $MAX_INDEX   = 3;
 my $MAX_FEED    = 10;
 my $MAX_META_FEED = 20;
 
-sub new {
-	my ($class, %args) = @_;
-
-	return bless \%args, $class;
-}
-
 sub process_domain {
 	my ($self, $domain) = @_;
 
 	print "** Processing domain $domain\n";
 
-	my $config = $self->{mymaven}->config($domain);
+	my $config = $self->mymaven->config($domain);
 
 	my %translations;
 	my @latest;
@@ -109,7 +105,7 @@ sub process_files {
 
 	foreach my $p (@$pages) {
 		my $filename = substr($p->{url_path},  0, -3);
-		if ($self->{verbose}) {
+		if ($self->verbose) {
 			say "Processing $filename";
 		}
 		if ($p->{original}) {
@@ -189,7 +185,7 @@ sub get_pages {
 		die Dumper $s if not $s->{path};
 		say $s->{path};
 		foreach my $file (File::Find::Rule->file()->name('*.tt')->relative()->in($s->{path})) {
-			say "Reading $file" if $self->{verbose};
+			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
 			my $data = Perl::Maven::Page->new(file => $path)->read;
 			foreach my $field (qw(timestamp title status)) {

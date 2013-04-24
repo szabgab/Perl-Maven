@@ -23,6 +23,7 @@ WriteMakefile(
         'Email::Valid' => 0,
         'Test::WWW::Mechanize' => 0,
         'MIME::Lite' => 0,
+        'Moo'        => 1,
         'YAML'       => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
