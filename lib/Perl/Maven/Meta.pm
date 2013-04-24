@@ -7,6 +7,7 @@ has verbose => (is => 'ro');
 has meta_feed     => (is => 'ro', default => sub { [] } );
 has meta_archive  => (is => 'ro', default => sub { [] } );
 has translations  => (is => 'ro', default => sub { {} } );
+has stats         => (is => 'ro', default => sub { {} } );
 
 use Data::Dumper   qw(Dumper);
 use File::Find::Rule;
@@ -42,8 +43,16 @@ sub process_domain {
 	my @meta_archive = reverse sort {$a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
 	save('feed',    "$config->{meta}/meta.$domain/meta", \@meta_feed);
 	save('archive', "$config->{meta}/meta.$domain/meta", \@meta_archive);
-
 	save('translations', "$config->{meta}", $self->translations);
+
+	my %stats;
+	$self->stats->{pagecount}{$_} ||= 0 for keys  %$sites;
+	foreach my $lang (reverse sort { $self->stats->{pagecount}{$a} <=> $self->stats->{pagecount}{$b} } keys  %$sites) {
+		$sites->{$lang}{pagecount} = $self->stats->{pagecount}{$lang} - 6; # there are 6 skeleton pages
+		$sites->{$lang}{lang} = $lang;
+		push @{ $stats{sites} }, $sites->{$lang};
+	}
+	save('stats',        "$config->{meta}", \%stats);
 }
 
 sub process {
@@ -107,6 +116,7 @@ sub process_files {
 		if ($self->verbose) {
 			say "Processing $filename";
 		}
+		$self->stats->{pagecount}{$lang}++;
 		if ($p->{original}) {
 			$self->translations->{ $p->{original} }{ $lang } = $filename;
 		}

@@ -69,10 +69,10 @@ hook before_template => sub {
     $t->{conf}                 = mymaven->{conf};
     $t->{resources}            = read_resources();
 	$t->{comments}           &&= mymaven->{conf}{enable_comments};
-#die Dumper $t->{conf};
+
 	# linking to translations
 	my $sites = read_sites();
-	my $translations = read_translations();
+	my $translations = read_meta_meta('translations');
 	delete $sites->{$language}; # no link to the curren site
 	my $path = request->path;
 	my %links;
@@ -111,7 +111,8 @@ get '/' => sub {
 	if (request->host =~ /^meta\./) {
 		return _show({ article => 'index',  template => 'page', layout => 'meta' }, {
 			authors => \%authors,
-			pages => (read_meta('index') || []),
+			stats   => read_meta_meta('stats'),
+#			pages => (read_meta('index') || []),
 		});
 	}
 
@@ -836,15 +837,6 @@ sub read_sites {
 	my $yaml = do { local $/ = undef; <$fh> };
 	return from_yaml $yaml
 }
-sub read_translations {
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . '/translations.json')) {
-		local $/ = undef;
-		my $json = <$fh>;
-		return from_json $json, {utf8 => 1};
-	}
-	return;
-}
-
 
 sub read_resources {
     my %resources;
@@ -888,13 +880,25 @@ sub read_meta {
 	my ($file) = @_;
 
 	my $host = Perl::Maven::Config::host(request->host);
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . "/$host/meta/$file.json")) {
+	return read_json(path(mymaven->{meta} . "/$host/meta/$file.json"));
+}
+
+sub read_meta_meta {
+	my ($file) = @_;
+
+	return read_json(path(mymaven->{meta} . "/$file.json"));
+}
+sub read_json {
+	my ($file) = @_;
+
+	if (open my $fh, '<encoding(UTF-8)', $file) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};
 	}
 	return;
 }
+
 
 true;
 
