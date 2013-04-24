@@ -79,7 +79,7 @@ sub read {
 				my $language = $1 || '';
 				$in_code = 1;
 				if ($language eq 'perl') {
-					$cont .= qq{<pre class="prettyprint linenums languague-perl">\n};
+					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
 				} else {
 					$cont .= qq{<pre class="prettyprint">\n};
 				}

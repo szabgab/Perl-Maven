@@ -38,6 +38,9 @@ perl5maven.com:
       mail: 'c:/work/articles/mail'
       perldoc: 'c:/work/articles/perldoc'
   sites:
+    he.perl5maven.com:
+      conf:
+        rtl: 1
     perl5maven.com:
       dirs:
         mail: '/home/gabor/work/articles/mail'

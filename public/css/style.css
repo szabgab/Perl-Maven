@@ -128,3 +128,8 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 	border-radius: 15px;
 }
 
+.prettyprint {
+    dir: ltr;
+	text-align: left;
+}
+
