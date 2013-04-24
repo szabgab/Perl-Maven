@@ -6,6 +6,7 @@ has mymaven => (is => 'ro');
 has verbose => (is => 'ro');
 has meta_feed     => (is => 'ro', default => sub { [] } );
 has meta_archive  => (is => 'ro', default => sub { [] } );
+has translations  => (is => 'ro', default => sub { {} } );
 
 use Data::Dumper   qw(Dumper);
 use File::Find::Rule;
@@ -26,15 +27,10 @@ sub process_domain {
 
 	my $config = $self->mymaven->config($domain);
 
-	my %translations;
-
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
 	foreach my $lang (keys  %$sites) {
-		my $orig = $self->process($config, $domain, $lang);
-		foreach my $trans (keys %$orig) {
-			$translations{ $orig->{$trans} }{$lang} = $trans;
-		}
+		$self->process($config, $domain, $lang);
 	}
 	my @meta_feed;
 	my $feed_cnt = 0;
@@ -47,7 +43,7 @@ sub process_domain {
 	save('feed',    "$config->{meta}/meta.$domain/meta", \@meta_feed);
 	save('archive', "$config->{meta}/meta.$domain/meta", \@meta_archive);
 
-	save('translations', "$config->{meta}", \%translations);
+	save('translations', "$config->{meta}", $self->translations);
 }
 
 sub process {
@@ -81,7 +77,7 @@ sub process {
 	my $pages = $self->get_pages(@sources);
 
 
-	my ($keywords, $index, $archive, $feed, $sitemap, $originals) = $self->process_files($pages);
+	my ($keywords, $index, $archive, $feed, $sitemap) = $self->process_files($pages, $lang);
 	save('index',    $dest, $index);
 	save('archive',  $dest, $archive);
 	save('feed',     $dest, $feed);
@@ -90,11 +86,11 @@ sub process {
 	push @{ $self->meta_feed    }, map { $_->{url} = "http://$site"; $_ } @$feed;
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
-	return $originals;
+	return;
 }
 
 sub process_files {
-	my ($self, $pages) = @_;
+	my ($self, $pages, $lang) = @_;
 
 	my $count_index = 0;
 	my $count_feed  = 0;
@@ -105,7 +101,6 @@ sub process_files {
 
 	my %keywords; # =indexes and =tags are united here
 	my (@index, @feed, @archive, @sitemap);
-	my %originals;
 
 	foreach my $p (@$pages) {
 		my $filename = substr($p->{url_path},  0, -3);
@@ -113,7 +108,7 @@ sub process_files {
 			say "Processing $filename";
 		}
 		if ($p->{original}) {
-			$originals{ substr($p->{url_path}, 0, -3) } =  $p->{original};
+			$self->translations->{ $p->{original} }{ $lang } = $filename;
 		}
 
 		foreach my $f (qw(indexes tags)) {
@@ -166,7 +161,7 @@ sub process_files {
 		};
 	}
 
-	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%originals);
+	return (\%keywords, \@index, \@archive, \@feed, \@sitemap);
 }
 
 sub save {
