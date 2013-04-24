@@ -854,7 +854,7 @@ sub read_authors {
 	#return if %authors;
 	%authors = ();
 
-	open my $fh, '<encoding(UTF-8)', mymaven->{site} . "/authors.txt" or return;
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
