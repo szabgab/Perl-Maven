@@ -20,6 +20,8 @@ perl5maven.com:
   from: 'Perl 5 Maven <gabor@perl5maven.com>'
   listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
   prefix: '[Perl Maven]'
+  dirs:
+    img: '/home/gabor/work/perl5maven.com/sites/en/img'
   conf:
     clicky: 66509177
     google_analytics: UA-12199211-9

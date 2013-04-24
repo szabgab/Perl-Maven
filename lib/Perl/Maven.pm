@@ -554,7 +554,7 @@ get '/img/:file' => sub {
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
 	send_file(
-		mymaven->{site} . "/img/$file",
+		mymaven->{dirs}{img} . "/$file",
 		content_type => $ext,
 		system_path => 1,
 	);
