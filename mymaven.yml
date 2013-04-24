@@ -15,7 +15,7 @@ perl5maven.com:
   www:
     redirect: http://perl5maven.com/
   root: '/home/gabor/work/perl5maven.com'
-  meta: '/home/gabor/work/articles'
+  meta: '/home/gabor/work/articles/perl5maven.com'
   title: 'Perl 5 Maven'
   from: 'Perl 5 Maven <gabor@perl5maven.com>'
   listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
@@ -52,14 +52,14 @@ perlmaven.com:
     redirect: http://perlmaven.com/
   title: 'Perl Maven'
   root: '/home/gabor/work/perlmaven.com'
-  meta: '/home/gabor/work/articles/'
+  meta: '/home/gabor/work/articles/perlmaven.com'
   conf:
     clicky: 100527028
     google_analytics: UA-12199211-13
   dev:
     win32:
       articles: 'c:/work/perlmaven.com/articles'
-      meta: 'c:/work/articles/perlmaven.com/meta'
+      meta: 'c:/work/articles/perlmaven.com'
   sites:
     perlmaven.com:
       dirs:
