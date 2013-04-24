@@ -2,7 +2,7 @@
 
 <ul>
 <% FOR p IN pages %>
- <li><a href="/<% p.filename %>"><% p.title %></a> <% p.date %></li>
+ <li><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a> <% p.date %></li>
 <% END %>
 </ul>
 

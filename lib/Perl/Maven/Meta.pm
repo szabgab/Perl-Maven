@@ -4,7 +4,8 @@ use 5.010;
 
 has mymaven => (is => 'ro');
 has verbose => (is => 'ro');
-has latest  => (is => 'ro', default => sub { [] } );
+has meta_feed     => (is => 'ro', default => sub { [] } );
+has meta_archive  => (is => 'ro', default => sub { [] } );
 
 use Data::Dumper   qw(Dumper);
 use File::Find::Rule;
@@ -37,12 +38,14 @@ sub process_domain {
 
 		my @meta_feed;
 		my $feed_cnt = 0;
-		for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->latest }) {
+		for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_feed }) {
 			$feed_cnt++;
 			push @meta_feed, $entry;
 			last if $feed_cnt >= $MAX_META_FEED;
 		}
-		save('feed', "$config->{meta}/meta.$domain/meta", \@meta_feed);
+		my @meta_archive = reverse sort {$a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
+		save('feed',    "$config->{meta}/meta.$domain/meta", \@meta_feed);
+		save('archive', "$config->{meta}/meta.$domain/meta", \@meta_archive);
 	}
 	save('translations', "$config->{meta}", \%translations);
 }
@@ -84,7 +87,8 @@ sub process {
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
-	push @{ $self->latest }, map { $_->{site} = $site; $_ } @$feed;
+	push @{ $self->meta_feed    }, map { $_->{url} = "http://$site"; $_ } @$feed;
+	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
 	return $originals;
 }
