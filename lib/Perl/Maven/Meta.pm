@@ -4,6 +4,7 @@ use 5.010;
 
 has mymaven => (is => 'ro');
 has verbose => (is => 'ro');
+has latest  => (is => 'ro', default => sub { [] } );
 
 use Data::Dumper   qw(Dumper);
 use File::Find::Rule;
@@ -25,19 +26,18 @@ sub process_domain {
 	my $config = $self->mymaven->config($domain);
 
 	my %translations;
-	my @latest;
 
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
 	foreach my $lang (keys  %$sites) {
-		my $orig = $self->process($config, $domain, $lang, \@latest);
+		my $orig = $self->process($config, $domain, $lang);
 		foreach my $trans (keys %$orig) {
 			$translations{ $orig->{$trans} }{$lang} = $trans;
 		}
 
 		my @meta_feed;
 		my $feed_cnt = 0;
-		for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @latest) {
+		for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->latest }) {
 			$feed_cnt++;
 			push @meta_feed, $entry;
 			last if $feed_cnt >= $MAX_META_FEED;
@@ -48,7 +48,7 @@ sub process_domain {
 }
 
 sub process {
-	my ($self, $config, $domain, $lang, $latest) = @_;
+	my ($self, $config, $domain, $lang) = @_;
 
 	my $site = ($lang eq 'en' ? '' : "$lang.") . $domain;
 	my $source = $config->{root} . '/sites/' . $lang . '/pages';
@@ -84,7 +84,7 @@ sub process {
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
-	push @$latest, map { $_->{site} = $site; $_ } @$feed;
+	push @{ $self->latest }, map { $_->{site} = $site; $_ } @$feed;
 
 	return $originals;
 }
