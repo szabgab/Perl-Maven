@@ -129,7 +129,7 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 }
 
 .prettyprint {
-    dir: ltr;
+    direction: ltr;
 	text-align: left;
 }
 
