@@ -92,6 +92,7 @@ hook before_template => sub {
 		%links = %$sites;
 	}
 
+	#$t->{uri_base}  = request->uri_base;
 	$t->{languages} = \%links;
 
 	return;

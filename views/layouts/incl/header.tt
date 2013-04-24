@@ -29,7 +29,7 @@ pre {
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/bootstrap/ico/apple-touch-icon-72-precomposed.png">
 <link rel="apple-touch-icon-precomposed" href="/bootstrap/ico/apple-touch-icon-57-precomposed.png">
 
-<link href="http://perl5maven.com/atom" rel="alternate" type="application/atom+xml" title ="Perl 5 Maven" />
+<link href="/atom" rel="alternate" type="application/atom+xml" title ="Perl 5 Maven" />
 
 <title><% title %></title>
 <meta name="description" content="<% description %>">
