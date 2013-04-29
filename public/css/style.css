@@ -136,3 +136,19 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 	text-align: left;
 }
 
+#indexes li {
+    list-style: none;
+    display: inline;
+}
+#indexes ul li button {
+    margin-bottom: 2px;
+}
+body {
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+  font-size: 15px;
+}
+pre {
+  font-size: 15px;
+}
+
+
