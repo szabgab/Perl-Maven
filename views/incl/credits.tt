@@ -2,7 +2,12 @@
   <% IF author %>
    <img src="/img/<% author_img %>"  />
       <div class="author_text">
-           Written by<br><a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
+           Written by<br>
+           <% IF author_google_plus_profile %>
+             <a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
+           <% ELSE %>
+             <% author_name %>
+          <% END %>
        </div>
   <% END %>
 </div>
