@@ -151,4 +151,19 @@ pre {
   font-size: 15px;
 }
 
+#keyword-list li {
+   margin-bottom: 10px;
+}
+#keyword-list li li {
+   margin-bottom: 1px;
+}
+#typeahead {
+	margin-top:6px;
+	height:27px;
+}
+#atom-icon {
+	vertical-align: middle;
+	border: 0;
+}
+
 
