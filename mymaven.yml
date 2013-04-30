@@ -55,19 +55,44 @@ perlmaven.com:
     redirect: 0
   www:
     redirect: http://perlmaven.com/
+  root: '/home/gabor/work/perl5maven.com'
+  meta: '/home/gabor/work/articles/perl5maven.com'
   title: 'Perl Maven'
-  root: '/home/gabor/work/perlmaven.com'
-  meta: '/home/gabor/work/articles/perlmaven.com'
+  from: 'Perl Maven <gabor@perlmaven.com>'
+  listid: 'Perl Maven newsletter <newsletter.perlmaven.com>'
+  prefix: '[Perl Maven]'
+  dirs:
+    img: '/home/gabor/work/perl5maven.com/sites/en/img'
   conf:
-    clicky: 100527028
-    google_analytics: UA-12199211-13
+    clicky: 66509177
+    google_analytics: UA-12199211-9
+    show_sponsors: 1
+    show_newsletter_form: 1
+    show_indexes: 1
+    enable_comments: 0
+  admin:
+    email: 'Gabor Szabo <gabor@szabgab.com>'
+  paypal:
+    email: 'gabor@szabgab.com'
   dev:
     win32:
+      mail: 'c:/work/articles/mail'
+      perldoc: 'c:/work/articles/perldoc'
       articles: 'c:/work/perlmaven.com/articles'
-      meta: 'c:/work/articles/perlmaven.com'
+      meta: 'c:/work/articles/perl5maven.com'
   sites:
+    he.perlmaven.com:
+      conf:
+        rtl: 1
     perlmaven.com:
       dirs:
+        mail: '/home/gabor/work/articles/mail'
+        perldoc: '/home/gabor/work/articles/perldoc'
+        download: '/home/gabor/work/articles/download'
         media: '/home/gabor/work/media.perlmaven.com'
+        video: '/home/gabor/work/perlmaven.com/sites/en/pages/video'
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'perl5maven'
 
 
