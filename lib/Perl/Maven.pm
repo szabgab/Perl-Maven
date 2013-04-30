@@ -582,12 +582,15 @@ get '/mail/:article' => sub {
 
 	return template 'mail', $tt, {	layout => 'newsletter' };
 };
-get qr{/perldoc/(.+)} => sub {
-	my ($article) = splat;
 
-	return _show({ path => mymaven->{dirs}{perldoc}, article => $article, template => 'page', layout => 'page' });
+# TODO this should not be here!!
+get qr{/(perldoc|videos)/(.+)} => sub {
+	my ($dir, $article) = splat;
+
+	return _show({ path => mymaven->{dirs}{$dir}, article => $article, template => 'page', layout => 'page' });
 };
 
+# TODO move this to a plugin
 get '/svg.xml' => sub {
 	my %query = params();
 	require Perl::Maven::SVG;

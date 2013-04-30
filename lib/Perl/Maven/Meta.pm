@@ -74,12 +74,14 @@ sub process {
 				uri  => '',
 			},
 	);
-	my $perldoc = $config->{dirs}{perldoc};
-	if ($perldoc) {
+	foreach my $dir (keys %{ $config->{dirs} }) {
+		next if $dir ne 'perldoc' and $dir ne 'videos';
+		# TODO the config file should indeicate which extra directory to index and which one not
+		my $path = $config->{dirs}{$dir};
 		push @sources,
 			{
-				path => $perldoc,
-				uri  => 'perldoc/',
+				path => $path,
+				uri  => "$dir/",
 			};
 	}
 

@@ -90,7 +90,7 @@ perlmaven.com:
         perldoc: '/home/gabor/work/articles/perldoc'
         download: '/home/gabor/work/articles/download'
         media: '/home/gabor/work/media.perlmaven.com'
-        video: '/home/gabor/work/perlmaven.com/sites/en/pages/video'
+        videos: '/home/gabor/work/perlmaven.com/sites/en/pages/videos'
       conf:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
