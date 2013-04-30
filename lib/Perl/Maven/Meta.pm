@@ -74,7 +74,7 @@ sub process {
 				uri  => '',
 			},
 	);
-	my $perldoc = $config->{sites}{$site}{dirs}{perldoc};
+	my $perldoc = $config->{dirs}{perldoc};
 	if ($perldoc) {
 		push @sources,
 			{
