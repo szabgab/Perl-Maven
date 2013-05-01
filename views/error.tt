@@ -53,11 +53,11 @@ The password was set successfully. <a href="/account">account</a>
 <% END %>
 
 <% IF unsubscribed %>
-Unsubscribed from the Perl 5 Maven newsletter.
+Unsubscribed from the Perl Maven newsletter.
 <% END %>
 
 <% IF subscribed %>
-Subscribed to the Perl 5 Maven newsletter. Please visit your <a href="/account">account</a> to get a free copy of the Perl 5 Maven Cookbook.
+Subscribed to the Perl Maven newsletter. Please visit your <a href="/account">account</a> to get a free copy of the Perl Maven Cookbook.
 <% END %>
 
 <% IF no_product_specified %>

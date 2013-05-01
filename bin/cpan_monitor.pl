@@ -184,7 +184,7 @@ sub send_messages {
 #        say "Subscriber $uid";
         if ($data->{subscribers}{$uid}{msg}) {
           my $msg = MIME::Lite->new(
-            From    => 'Perl Maven <gabor@perl5maven.com>',
+            From    => 'Perl Maven <gabor@perlmaven.com>',
             To      => $data->{subscribers}{$uid}{email},
             Subject => 'Perl Maven CPAN update',
             Data    => $data->{subscribers}{$uid}{msg},

@@ -82,12 +82,12 @@ my $w = Test::WWW::Mechanize->new;
 
 =cut
 
-diag('subscribe to free Perl 5 Maven newsletter, let them download the cookbook');
+diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 {
 	$w->get_ok($URL);
-	$w->content_like(qr/Perl 5 Maven/);
+	$w->content_like(qr/Perl Maven/);
 	$w->submit_form_ok( {
 		form_name => 'registration_form',
 		fields => {
@@ -160,7 +160,7 @@ diag('subscribe to free Perl 5 Maven newsletter, let them download the cookbook'
 
 # after verifying the e-mail allow the user to set his her password
 # after logging in
-#   Allow user to mark "unregistered" from the Perl 5 Maven newsletter (but keep e-mail, passsword)
+#   Allow user to mark "unregistered" from the Perl Maven newsletter (but keep e-mail, passsword)
 #   If registered to the mailing list, let the person download the latest edition of the cookbook
 
 # login

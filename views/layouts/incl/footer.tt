@@ -79,7 +79,7 @@ $('#typeahead').typeahead( { 'source' : <% keywords %>, items : 15  });
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '<% conf.google_analytics %>']);
-  _gaq.push(['_setDomainName', 'perl5maven.com']);
+  _gaq.push(['_setDomainName', 'perlmaven.com']);
   _gaq.push(['_trackPageview']);
 
   (function() {

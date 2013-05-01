@@ -33,7 +33,7 @@ my $dbh = DBI->connect($dsn, "", "", {
 
 my $cfg = YAML::LoadFile('config.yml');
 my $mymaven = Perl::Maven::Config->new($cfg->{mymaven});
-my $config =$mymaven->config('perl5maven.com');
+my $config = $mymaven->config('perlmaven.com');
 $mymaven = $config;
 my $from = $mymaven->{from};
 
@@ -150,11 +150,15 @@ sub send_mail {
 	#print $msg->as_string;
 	#exit;
 
+	# TODO this is not the best solution to extract the e-mail address
+	# but works for now.
+	my ($return_path) = $from =~ /<(.*)>/;
+	die 'time to fix this regex' if not $return_path;
 	try {
 		sendmail(
 			$msg,
     			{
-				from => 'gabor@perl5maven.com', # TODO
+				from => $return_path,
 				transport => Email::Sender::Transport::SMTP->new({
           				host => 'localhost',
 					#port => $SMTP_PORT,

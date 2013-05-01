@@ -29,7 +29,7 @@ my $admin = "$^X -Ilib bin/admin.pl";
            [
              2,
              'beginner_perl_maven_ebook',
-             'Beginner Perl 5 Maven e-book',
+             'Beginner Perl Maven e-book',
              '0.01'
            ],
            [
