@@ -20,6 +20,8 @@ perlmaven.com:
   from: 'Perl Maven <gabor@perlmaven.com>'
   listid: 'Perl Maven newsletter <newsletter.perlmaven.com>'
   prefix: '[Perl Maven]'
+  redirect:
+    'linode': 'http://www.linode.com/?r=cccf1376edd5c6f0b8eccb97e0741a1f24584e43'
   dirs:
     img: '/home/gabor/work/perl5maven.com/sites/en/img'
   conf:
