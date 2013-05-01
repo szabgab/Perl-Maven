@@ -31,7 +31,8 @@ sub process_domain {
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
 	foreach my $lang (keys  %$sites) {
-		$self->process($config, $domain, $lang);
+		my $lang_config = $lang eq 'en' ? $config : $self->mymaven->config("$lang.$domain");
+		$self->process($lang_config, $domain, $lang);
 	}
 	my @meta_feed;
 	my $feed_cnt = 0;
@@ -74,6 +75,7 @@ sub process {
 				uri  => '',
 			},
 	);
+print Dumper $config;
 	foreach my $dir (keys %{ $config->{dirs} }) {
 		next if $dir ne 'perldoc' and $dir ne 'videos';
 		# TODO the config file should indeicate which extra directory to index and which one not
