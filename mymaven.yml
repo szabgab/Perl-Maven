@@ -51,6 +51,14 @@ perlmaven.com:
         rtl: 1
         enable_comments: 'disqus'
         disqus: 'he-perlmaven'
+    ko.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'ko-perlmaven'
+    te.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'te-perlmaven'
     perlmaven.com:
       dirs:
         mail: '/home/gabor/work/articles/mail'
