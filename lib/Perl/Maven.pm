@@ -612,7 +612,15 @@ get qr{/media/(.+)} => sub {
 			content_type => "video/$ext",
 			system_path => 1,
 		);
+	} elsif ($article =~ /\.(mp3)$/) {
+		my $ext = $1;
+		send_file(
+			mymaven->{dirs}{media} . "/$article",
+			content_type => "audio/mpeg",
+			system_path => 1,
+		);
 	}
+
 	return 'media error';
 };
 
