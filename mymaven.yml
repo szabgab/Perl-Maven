@@ -49,6 +49,8 @@ perlmaven.com:
     he.perlmaven.com:
       conf:
         rtl: 1
+        enable_comments: 'disqus'
+        disqus: 'he-perlmaven'
     perlmaven.com:
       dirs:
         mail: '/home/gabor/work/articles/mail'
