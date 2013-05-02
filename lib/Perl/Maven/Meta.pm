@@ -77,7 +77,7 @@ sub process {
 	);
 #print Dumper $config;
 	foreach my $dir (keys %{ $config->{dirs} }) {
-		next if $dir ne 'perldoc' and $dir ne 'videos';
+		next if $dir ne 'perldoc';
 		# TODO the config file should indeicate which extra directory to index and which one not
 		my $path = $config->{dirs}{$dir};
 		push @sources,
