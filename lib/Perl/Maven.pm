@@ -98,6 +98,15 @@ hook before_template => sub {
 	return;
 };
 
+get qr{/(.+)} => sub {
+	my ($article) = splat;
+
+	if (mymaven->{redirect}{$article}) {
+		return redirect mymaven->{redirect}{$article};
+	}
+	pass;
+};
+
 get '/search' => sub {
 	my ($keyword) = param('keyword');
 	push_header 'Access-Control-Allow-Origin' => '*';
@@ -611,10 +620,6 @@ get qr{/media/(.+)} => sub {
 
 get qr{/(.+)} => sub {
 	my ($article) = splat;
-
-	if (mymaven->{redirect}{$article}) {
-		return redirect mymaven->{redirect}{$article};
-	}
 
 	return _show({ article => $article, template => 'page', layout => 'page' });
 };
