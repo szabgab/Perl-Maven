@@ -42,6 +42,10 @@ perlmaven.com:
       articles: 'c:/work/perlmaven.com/articles'
       meta: 'c:/work/articles/perl5maven.com'
   sites:
+    br.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'br-perlmaven'
     he.perlmaven.com:
       conf:
         rtl: 1
