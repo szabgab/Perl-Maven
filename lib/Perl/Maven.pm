@@ -589,7 +589,7 @@ get '/mail/:article' => sub {
 };
 
 # TODO this should not be here!!
-get qr{/(perldoc|videos)/(.+)} => sub {
+get qr{/(perldoc)/(.+)} => sub {
 	my ($dir, $article) = splat;
 
 	return _show({ path => mymaven->{dirs}{$dir}, article => $article, template => 'page', layout => 'page' });

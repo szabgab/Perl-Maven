@@ -22,8 +22,11 @@ perlmaven.com:
   prefix: '[Perl Maven]'
   redirect:
     'linode': 'http://www.linode.com/?r=cccf1376edd5c6f0b8eccb97e0741a1f24584e43'
-    'videos/jeffrey-thalhammer-perl-critic-and-pinto': 'jeffrey-thalhammer-perl-critic-and-pinto'
-    'videos/michael-schwern-on-test-automation-and-git': 'michael-schwern-on-test-automation-and-git'
+#    'videos/jeffrey-thalhammer-perl-critic-and-pinto': 'jeffrey-thalhammer-perl-critic-and-pinto'
+#    'videos/michael-schwern-on-test-automation-and-git': 'michael-schwern-on-test-automation-and-git'
+#    'videos/getting-started-with-perl-dancer': 'getting-started-with-perl-dancer'
+#    'videos/modern-web-with-perl': 'modern-web-with-perl'
+#    'videos/oop-with-moo': 'oop-with-moo'
   dirs:
     img: '/home/gabor/work/perl5maven.com/sites/en/img'
   conf:
@@ -67,7 +70,7 @@ perlmaven.com:
         perldoc: '/home/gabor/work/articles/perldoc'
         download: '/home/gabor/work/articles/download'
         media: '/home/gabor/work/media.perlmaven.com'
-        videos: '/home/gabor/work/perlmaven.com/sites/en/pages/videos'
+#        videos: '/home/gabor/work/perlmaven.com/sites/en/pages/videos'
       conf:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
