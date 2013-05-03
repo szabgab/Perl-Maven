@@ -588,6 +588,11 @@ get '/mail/:article' => sub {
 	return template 'mail', $tt, {	layout => 'newsletter' };
 };
 
+get '/tv' => sub {
+	my $tag = 'interview';
+	_show({ article => 'tv', template => 'archive', layout => 'system' }, { pages => (read_meta("archive_$tag") || []) });
+};
+
 # TODO this should not be here!!
 get qr{/(perldoc)/(.+)} => sub {
 	my ($dir, $article) = splat;

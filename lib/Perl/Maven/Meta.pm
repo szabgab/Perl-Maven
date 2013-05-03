@@ -21,6 +21,8 @@ my $MAX_INDEX   = 3;
 my $MAX_FEED    = 10;
 my $MAX_META_FEED = 20;
 
+my @tags = ('interview');
+
 sub process_domain {
 	my ($self, $domain) = @_;
 
@@ -90,7 +92,7 @@ sub process {
 	my $pages = $self->get_pages(@sources);
 
 
-	my ($keywords, $index, $archive, $feed, $sitemap) = $self->process_files($pages, $lang);
+	my ($keywords, $index, $archive, $feed, $sitemap, $arch) = $self->process_files($pages, $lang);
 	save('index',    $dest, $index);
 	save('archive',  $dest, $archive);
 	save('feed',     $dest, $feed);
@@ -98,6 +100,12 @@ sub process {
 	save('sitemap',  $dest, $sitemap);
 	push @{ $self->meta_feed    }, map { $_->{url} = "http://$site"; $_ } @$feed;
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
+
+	foreach my $tag (@tags) {
+		if ($arch->{$tag}) {
+			save("archive_$tag",  $dest, $arch->{$tag});
+		}
+	}
 
 	return;
 }
@@ -113,7 +121,7 @@ sub process_files {
 	# might want to search for. Or the other way around.
 
 	my %keywords; # =indexes and =tags are united here
-	my (@index, @feed, @archive, @sitemap);
+	my (@index, @feed, @archive, @sitemap, %arch);
 
 	foreach my $p (@$pages) {
 		my $filename = substr($p->{url_path},  0, -3);
@@ -138,11 +146,17 @@ sub process_files {
 		#say "$p->{timestamp} $p->{file}";
 		if ($p->{archive}) {
 			my ($date) = split /T/, $p->{timestamp};
-			push @archive, {
+			my $e = {
 				title => $p->{title},
 				timestamp => $p->{timestamp},
 				date      => $date,
 				filename  => $filename,
+			};
+			push @archive, $e;
+			foreach my $tag (@tags) {
+				if (grep { $_ eq $tag } @{ $p->{indexes} || [] }) {
+					push @{ $arch{$tag} }, $e;
+				}
 			}
 		}
 
@@ -175,7 +189,7 @@ sub process_files {
 		};
 	}
 
-	return (\%keywords, \@index, \@archive, \@feed, \@sitemap);
+	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%arch);
 }
 
 sub save {
