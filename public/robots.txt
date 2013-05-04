@@ -1,1 +1,2 @@
-Sitemap: http://perl5maven.com/sitemap.xml
+Sitemap: http://perlmaven.com/sitemap.xml
+Disallow: /media/*
