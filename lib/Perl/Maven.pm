@@ -149,7 +149,9 @@ get '/sitemap.xml' => sub {
 	foreach my $p (@$pages) {
 		$xml .= qq{  <url>\n};
       	$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
-      	$xml .= qq{    <lastmod>$p->{timestamp}</lastmod>\n};
+		if ($p->{timestamp}) {
+      		$xml .= sprintf qq{    <lastmod>%s</lastmod>\n}, substr($p->{timestamp}, 0, 10);
+		}
       	#$xml .= qq{    <changefreq>monthly</changefreq>\n};
       	#$xml .= qq{    <priority>0.8</priority>\n};
    		$xml .= qq{  </url>\n};
