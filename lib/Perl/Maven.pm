@@ -143,6 +143,7 @@ get '/sitemap.xml' => sub {
 	my $pages = read_meta('sitemap') || [];
 	my $url = request->base;
 	$url =~ s{/$}{};
+	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
 	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
