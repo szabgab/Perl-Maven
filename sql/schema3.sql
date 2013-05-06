@@ -6,5 +6,5 @@ CREATE TABLE transactions (
 );
 ALTER TABLE product ADD COLUMN price NUMERIC;
 UPDATE product SET price = 0 WHERE id = 1;
-INSERT INTO product (id, code, name, price) VALUES (2, 'beginner_perl_maven_ebook', 'Beginner Perl 5 Maven e-book', 0.01); 
+INSERT INTO product (id, code, name, price) VALUES (2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', 0.01);
 
