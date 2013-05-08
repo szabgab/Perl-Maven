@@ -92,6 +92,20 @@ hook before_template => sub {
 		%links = %$sites;
 	}
 
+	my $url = request->uri_base . request->path;
+	foreach my $field (qw(reddit_url twitter_data_url twitter_data_counturl google_plus_href)) {
+		$t->{$field} = $url;
+	}
+
+	# on May 1 2013 the site was redirected from perl5maven.com to perlmaven.com
+	# we try to salvage some of the social proof.
+	if ($t->{date} le '2013-05-01') {
+		foreach my $field (qw(reddit_url twitter_data_counturl)) {
+			$t->{$field} =~ s/perlmaven.com/perl5maven.com/;
+		}
+	}
+
+	#my $host = Perl::Maven::Config::host(request->host);
 	#$t->{uri_base}  = request->uri_base;
 	$t->{languages} = \%links;
 
