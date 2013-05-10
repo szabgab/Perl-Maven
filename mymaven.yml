@@ -47,26 +47,34 @@ perlmaven.com:
       articles: 'c:/work/perlmaven.com/articles'
       meta: 'c:/work/articles/perl5maven.com'
   sites:
-    cn.perlmaven.com:
-      redirect:
-        'products': 'http://perlmaven.com/products'
     br.perlmaven.com:
       conf:
         enable_comments: 'disqus'
         disqus: 'br-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    cn.perlmaven.com:
+      redirect:
+        'products': 'http://perlmaven.com/products'
     he.perlmaven.com:
       conf:
         rtl: 1
         enable_comments: 'disqus'
         disqus: 'he-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
     ko.perlmaven.com:
       conf:
         enable_comments: 'disqus'
         disqus: 'ko-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
     te.perlmaven.com:
       conf:
         enable_comments: 'disqus'
         disqus: 'te-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
     perlmaven.com:
       dirs:
         mail: '/home/gabor/work/articles/mail'
