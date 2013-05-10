@@ -47,6 +47,9 @@ perlmaven.com:
       articles: 'c:/work/perlmaven.com/articles'
       meta: 'c:/work/articles/perl5maven.com'
   sites:
+    cn.perlmaven.com:
+      redirect:
+        'products': 'http://perlmaven.com/products'
     br.perlmaven.com:
       conf:
         enable_comments: 'disqus'
