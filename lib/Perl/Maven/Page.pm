@@ -2,6 +2,8 @@ package Perl::Maven::Page;
 use Moose;
 
 use 5.014;
+use Carp; # needed by DateTime::Tiny 1.04
+use DateTime::Tiny;
 
 
 has file => (is => 'ro', isa => 'Str', required => 1);
@@ -56,6 +58,12 @@ sub read {
 			} else {
 				die "Invalid entry in header for '$field' in line '$line' file $file\n";
 			}
+		}
+		die "=timestamp missing in file $file\n" if not $data{timestamp};
+		die "Invalid =timestamp '$data{timestamp}' in file $file\n" if $data{timestamp} !~ /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$/;
+		eval {DateTime::Tiny->from_string($data{timestamp})}; # just check if it is valid
+		if ($@) {
+			die "$@  in file $file\n";
 		}
 
 		my $line = <$fh>;

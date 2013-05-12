@@ -15,6 +15,7 @@ WriteMakefile(
         'Test::More'   => 0,
         'YAML'         => 0,
         'Dancer'     => 1.3095,
+        'DateTime::Tiny' => 1.04,
         'DBI'          => 0,
         'DBD::SQLite'  => 0,
         'DBIx::RunSQL' => 0,
