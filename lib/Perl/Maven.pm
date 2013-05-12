@@ -112,6 +112,18 @@ hook before_template => sub {
 	return;
 };
 
+# Dynamic robots.txt generation to allow dynamic Sitemap URL
+get '/robots.txt' => sub {
+	my $host = request->host;
+	my $txt = <<"END_TXT";
+Sitemap: http://$host/sitemap.xml
+Disallow: /media/*
+END_TXT
+
+	content_type 'text/plain';
+	return $txt;
+};
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
