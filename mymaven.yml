@@ -54,6 +54,7 @@ perlmaven.com:
         disqus: 'br-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
+        'como-substituir-uma-string-em-um-arquivo-com-perl': 'como-substituir-uma-string-em-um-arquivo-usando-perl'
     cn.perlmaven.com:
       redirect:
         'products': 'http://perlmaven.com/products'
