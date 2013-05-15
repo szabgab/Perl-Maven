@@ -1,9 +1,10 @@
-          <a class="brand" href="/">Perl 5 Maven</a>
+          <a class="brand" href="/">Perl Maven</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="/perl-tutorial">Perl Tutorial</a></li>
 <!--              <li><a href="/perl-maven-cookbook">Newsletter and Cookbook</a></li>-->
               <li><a href="/products">Products</a></li>
+              <li><a href="/tv">TV</a></li>
               <% IF username %>
                  <li><a href="/account">hi <% username %></a></li>
               <% ELSE %>
@@ -12,12 +13,11 @@
             </ul>
             <ul class="nav pull-right">
               <li><a href="/keywords">Type keyword:</a></li>
-              <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" style="margin-top:6px; height:27px"></li>
+              <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" ></li>
               <li><a href="/archive">Archive</a></li>
               <li><a href="/about">About</a></li>
               <li><a href="/atom" rel="alternate" type="application/atom+xml"><img
-                   src="/img/feed-icon16x16.png" alt=""
-                   style="vertical-align:middle;border:0"/></a>
+                   src="/img/feed-icon16x16.png" id="atom-icon" alt="" /></a>
               </li>
             </ul>
           </div><!--/.nav-collapse -->

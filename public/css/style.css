@@ -65,11 +65,14 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   /* font-size: smaller; */
   padding: 3px 6px;
   border-radius: 2px;
+  direction: ltr;
+  unicode-bidi:bidi-override;
 }
 
 /* Credits section start */
 #creators {
 /*  background-color: #DDDDDD; */
+  text-align: left;
   position: relative;
   margin-top: 20px;
   margin-bottom: 40px;
@@ -127,4 +130,40 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 	-webkit-border-radius: 15px;
 	border-radius: 15px;
 }
+
+.prettyprint {
+    direction: ltr;
+	text-align: left;
+}
+
+#indexes li {
+    list-style: none;
+    display: inline;
+}
+#indexes ul li button {
+    margin-bottom: 2px;
+}
+body {
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+  font-size: 15px;
+}
+pre {
+  font-size: 15px;
+}
+
+#keyword-list li {
+   margin-bottom: 10px;
+}
+#keyword-list li li {
+   margin-bottom: 1px;
+}
+#typeahead {
+	margin-top:6px;
+	height:27px;
+}
+#atom-icon {
+	vertical-align: middle;
+	border: 0;
+}
+
 

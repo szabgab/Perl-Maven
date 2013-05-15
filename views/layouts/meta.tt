@@ -1,0 +1,25 @@
+<% INCLUDE layouts/incl/header.tt %>
+
+
+<h2>Contributors</h2>
+<div id="translators">
+<ul>
+<% FOR a IN authors.keys %>
+  <li><img src="/img/<% authors.$a.author_img %>" alt="<% authors.$a.author_name %>" /><br><% authors.$a.author_name %></li>
+<% END %>
+</ul>
+</div>
+
+<h2>Translations</h2>
+(Number of pages)
+
+<div id="translations">
+<ul>
+<% FOR site IN stats.sites %>
+  <li><a href="<% site.url %>"><% site.english %> (<% site.lang %>) <% site.name %></a> (<% site.pagecount %>)</li>
+<% END %>
+</ul>
+</div>
+
+<% INCLUDE layouts/incl/footer.tt %>
+

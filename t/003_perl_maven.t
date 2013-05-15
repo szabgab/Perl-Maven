@@ -17,7 +17,7 @@ eval "use Test::Deep";
 require Test::WWW::Mechanize;
 plan( skip_all => 'Unsupported OS' ) if not $run;
 
-my $url = "http://localhost:$ENV{PERL_MAVEN_PORT}";
+my $url = "http://perlmaven.com.local:$ENV{PERL_MAVEN_PORT}";
 my $URL = "$url/";
 
 #diag($url);
@@ -45,7 +45,7 @@ my $w = Test::WWW::Mechanize->new;
 	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
 	unlink $ENV{PERL_MAVEN_MAIL};
 	#diag $mail;
-	my $mail_regex = qr{<a href="(http://localhost:$ENV{PERL_MAVEN_PORT}/set-password/1/(\w+))">set new password</a>};
+	my $mail_regex = qr{<a href="($url/set-password/1/(\w+))">set new password</a>};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok($set_url, 'mail with set url address');
 	diag($set_url);
@@ -82,31 +82,31 @@ my $w = Test::WWW::Mechanize->new;
 
 =cut
 
-diag('subscribe to free Perl 5 Maven newsletter, let them download the cookbook');
+diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 {
 	$w->get_ok($URL);
-	$w->content_like(qr/Perl 5 Maven/);
+	$w->content_like(qr/Perl Maven/);
 	$w->submit_form_ok( {
 		form_name => 'registration_form',
 		fields => {
 			email => 'gabor@szabgab.com',
 		},
-	}, 'register form');
+	}, 'has registeration form');
 	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
 	unlink $ENV{PERL_MAVEN_MAIL};
 	#diag($mail);
-	#exit;
-	my $mail_regex = qr{<a href="(http://localhost:$ENV{PERL_MAVEN_PORT}/verify/1/\w+)">verify</a>};
+
+	my $mail_regex = qr{<a href="($url/verify/1/\w+)">verify</a>};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok($set_url, 'mail with set url address');
 	diag($set_url);
 
-	$w->get_ok("http://localhost:$ENV{PERL_MAVEN_PORT}/verify/20/1234567");
+	$w->get_ok("$url/verify/20/1234567");
 	$w->content_like(qr{User not found}, 'no such user');
 
-	$w->get_ok("http://localhost:$ENV{PERL_MAVEN_PORT}/verify/1/1234567");
+	$w->get_ok("$url/verify/1/1234567");
 	$w->content_like(qr{Invalid or missing code}, 'incorrect code');
 	#diag($w->content);
 
@@ -139,7 +139,7 @@ diag('subscribe to free Perl 5 Maven newsletter, let them download the cookbook'
 		skip('PDF is not the same size on Windows?', 1) if $^O eq 'MSWin32';
 		ok($w->content eq $src_pdf, 'pdf downloaded');
 	}
-	
+
 	#open my $t, '>', 'a.pdf' or die;
 	#print $out $w->content;
 	#diag($w->content);
@@ -160,7 +160,7 @@ diag('subscribe to free Perl 5 Maven newsletter, let them download the cookbook'
 
 # after verifying the e-mail allow the user to set his her password
 # after logging in
-#   Allow user to mark "unregistered" from the Perl 5 Maven newsletter (but keep e-mail, passsword)
+#   Allow user to mark "unregistered" from the Perl Maven newsletter (but keep e-mail, passsword)
 #   If registered to the mailing list, let the person download the latest edition of the cookbook
 
 # login

@@ -1,6 +1,6 @@
-# The main entries in mymaven are domain names. (e.g. perl5maven.com)
-# domain: what to do when perl5maven.com     is accessed
-# www:    what to do when www.perl5maven.com is accessed
+# The main entries in mymaven are domain names. (e.g. perlmaven.com)
+# domain: what to do when perlmaven.com     is accessed
+# www:    what to do when www.perlmaven.com is accessed
 #   possible fields:
 #      redirect: 0|URL
 #      site:   the hostname of the site (e.g. meta or en) that should be served on the this hostname
@@ -8,18 +8,28 @@
 # root: where the whole site lives, see the layout on https://github.com/szabgab/perl5maven.com
 # meta: where the meta files are generated and read from
 
-perl5maven.com:
+perlmaven.com:
   domain:
     site: en
     redirect: 0
   www:
-    redirect: http://perl5maven.com/
+    redirect: http://perlmaven.com/
   root: '/home/gabor/work/perl5maven.com'
-  meta: '/home/gabor/work/articles'
-  title: 'Perl 5 Maven'
-  from: 'Perl 5 Maven <gabor@perl5maven.com>'
-  listid: 'Perl 5 Maven newsletter <newsletter.perl5maven.com>'
+  meta: '/home/gabor/work/articles/perlmaven.com'
+  title: 'Perl Maven'
+  from: 'Perl Maven <gabor@perlmaven.com>'
+  listid: 'Perl Maven newsletter <newsletter.perlmaven.com>'
   prefix: '[Perl Maven]'
+  redirect:
+    'linode': 'http://www.linode.com/?r=cccf1376edd5c6f0b8eccb97e0741a1f24584e43'
+    'newsletter': 'perl-maven-newsletter'
+#    'videos/jeffrey-thalhammer-perl-critic-and-pinto': 'jeffrey-thalhammer-perl-critic-and-pinto'
+#    'videos/michael-schwern-on-test-automation-and-git': 'michael-schwern-on-test-automation-and-git'
+#    'videos/getting-started-with-perl-dancer': 'getting-started-with-perl-dancer'
+#    'videos/modern-web-with-perl': 'modern-web-with-perl'
+#    'videos/oop-with-moo': 'oop-with-moo'
+  dirs:
+    img: '/home/gabor/work/perl5maven.com/sites/en/img'
   conf:
     clicky: 66509177
     google_analytics: UA-12199211-9
@@ -32,40 +42,44 @@ perl5maven.com:
   paypal:
     email: 'gabor@szabgab.com'
   sites:
-    perl5maven.com:
+    br.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'br-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+        'como-substituir-uma-string-em-um-arquivo-com-perl': 'como-substituir-uma-string-em-um-arquivo-usando-perl'
+    cn.perlmaven.com:
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    he.perlmaven.com:
+      conf:
+        rtl: 1
+        enable_comments: 'disqus'
+        disqus: 'he-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    ko.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'ko-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    te.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'te-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    perlmaven.com:
       dirs:
         mail: '/home/gabor/work/articles/mail'
         perldoc: '/home/gabor/work/articles/perldoc'
         download: '/home/gabor/work/articles/download'
+        media: '/home/gabor/work/media.perlmaven.com'
+#        videos: '/home/gabor/work/perlmaven.com/sites/en/pages/videos'
       conf:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
-    perl5maven.com.win32:
-      root: 'c:/work/perl5maven.com'
-      meta: 'c:/work/articles'
-      dirs:
-        mail: 'c:/work/articles/mail'
-        perldoc: 'c:/work/articles/perldoc'
-        download: 'c:/work/articles/download'
-perlmaven.com:
-  domain:
-    site: en
-    redirect: 0
-  www:
-    redirect: http://perlmaven.com/
-  title: 'Perl Maven'
-  root: '/home/gabor/work/perlmaven.com'
-  meta: '/home/gabor/work/articles/'
-  conf:
-    clicky: 100527028
-    google_analytics: UA-12199211-13
-  dev:
-    win32:
-      articles: 'c:/work/perlmaven.com/articles'
-      meta: 'c:/work/articles/perlmaven.com/meta'
-  sites:
-    perlmaven.com:
-      dirs:
-        media: '/home/gabor/work/media.perlmaven.com'
 
 

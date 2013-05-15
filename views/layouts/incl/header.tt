@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="/style.css" type="text/css" />
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/css/style.css" rel="stylesheet">
 <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
 
@@ -12,15 +11,6 @@
 
 
 
-<style>
-body {
-  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-  font-size: 15px;
-}
-pre {
-  font-size: 15px;
-}
-</style>
 <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
 <link rel="shortcut icon" href="/bootstrap/ico/favicon.ico">
@@ -29,11 +19,16 @@ pre {
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/bootstrap/ico/apple-touch-icon-72-precomposed.png">
 <link rel="apple-touch-icon-precomposed" href="/bootstrap/ico/apple-touch-icon-57-precomposed.png">
 
-<link href="http://perl5maven.com/atom" rel="alternate" type="application/atom+xml" title ="Perl 5 Maven" />
+<link href="/atom" rel="alternate" type="application/atom+xml" title ="Perl Maven" />
 
 <title><% title %></title>
 <meta name="description" content="<% description %>">
 <meta name="author" content="<% author %>">
+
+<link href="/css/style.css" rel="stylesheet">
+<% IF conf.rtl %>
+	<link href="/css/rtl.css" rel="stylesheet">
+<% END %>
 
 </head>
 <body onload="prettyPrint()" >
@@ -69,11 +64,11 @@ pre {
 
     <% IF beginner_book %>
       <div id="bookimg">
-      <a href="http://perl5maven.com/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
+      <a href="http://perlmaven.com/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
       </div>
     <% END %>
     <% IF advanced_book %>
-    <a href="http://perl5maven.com/advanced-perl-maven-e-book">Advanced Perl Maven</a>
+    <a href="http://perlmaven.com/advanced-perl-maven-e-book">Advanced Perl Maven</a>
     <% END %>
 
     <% INCLUDE incl/languages.tt %>

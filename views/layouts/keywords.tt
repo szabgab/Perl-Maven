@@ -2,15 +2,6 @@
 
 <% content %>
 
-<style>
-#keyword-list li {
-   margin-bottom: 10px;
-}
-#keyword-list li li {
-   margin-bottom: 1px;
-}
-</style>
-
 <div id="keyword-list">
 <ul>
 <% FOR k IN kw.keys.sort %>

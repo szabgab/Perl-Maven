@@ -2,16 +2,6 @@
 
 <h1><% title %></h1>
 
-<style>
-#indexes li {
-    list-style: none;
-    display: inline;
-}
-#indexes ul li button {
-    margin-bottom: 2px;
-}
-</style>
-
 <% IF conf.show_indexes %>
   <div id="indexes">
     <ul>

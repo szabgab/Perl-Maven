@@ -69,10 +69,10 @@ hook before_template => sub {
     $t->{conf}                 = mymaven->{conf};
     $t->{resources}            = read_resources();
 	$t->{comments}           &&= mymaven->{conf}{enable_comments};
-#die Dumper $t->{conf};
+
 	# linking to translations
 	my $sites = read_sites();
-	my $translations = read_translations();
+	my $translations = read_meta_meta('translations');
 	delete $sites->{$language}; # no link to the curren site
 	my $path = request->path;
 	my %links;
@@ -92,9 +92,45 @@ hook before_template => sub {
 		%links = %$sites;
 	}
 
+	my $url = request->uri_base . request->path;
+	foreach my $field (qw(reddit_url twitter_data_url twitter_data_counturl google_plus_href)) {
+		$t->{$field} = $url;
+	}
+
+	# on May 1 2013 the site was redirected from perl5maven.com to perlmaven.com
+	# we try to salvage some of the social proof.
+	if ($t->{date} le '2013-05-01') {
+		foreach my $field (qw(reddit_url twitter_data_counturl)) {
+			$t->{$field} =~ s/perlmaven.com/perl5maven.com/;
+		}
+	}
+
+	#my $host = Perl::Maven::Config::host(request->host);
+	#$t->{uri_base}  = request->uri_base;
 	$t->{languages} = \%links;
 
 	return;
+};
+
+# Dynamic robots.txt generation to allow dynamic Sitemap URL
+get '/robots.txt' => sub {
+	my $host = request->host;
+	my $txt = <<"END_TXT";
+Sitemap: http://$host/sitemap.xml
+Disallow: /media/*
+END_TXT
+
+	content_type 'text/plain';
+	return $txt;
+};
+
+get qr{/(.+)} => sub {
+	my ($article) = splat;
+
+	if (mymaven->{redirect}{$article}) {
+		return redirect mymaven->{redirect}{$article};
+	}
+	pass;
 };
 
 get '/search' => sub {
@@ -107,6 +143,14 @@ get '/search' => sub {
 };
 
 get '/' => sub {
+	if (request->host =~ /^meta\./) {
+		return _show({ article => 'index',  template => 'page', layout => 'meta' }, {
+			authors => \%authors,
+			stats   => read_meta_meta('stats'),
+#			pages => (read_meta('index') || []),
+		});
+	}
+
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => (read_meta('index') || []) });
 };
 
@@ -125,13 +169,16 @@ get '/sitemap.xml' => sub {
 	my $pages = read_meta('sitemap') || [];
 	my $url = request->base;
 	$url =~ s{/$}{};
+	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
 	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
 		$xml .= qq{  <url>\n};
       	$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
-      	$xml .= qq{    <lastmod>$p->{timestamp}</lastmod>\n};
+		if ($p->{timestamp}) {
+      		$xml .= sprintf qq{    <lastmod>%s</lastmod>\n}, substr($p->{timestamp}, 0, 10);
+		}
       	#$xml .= qq{    <changefreq>monthly</changefreq>\n};
       	#$xml .= qq{    <priority>0.8</priority>\n};
    		$xml .= qq{  </url>\n};
@@ -161,6 +208,7 @@ get '/atom' => sub {
 		$xml .= qq{  <title>$p->{title}</title>\n};
 		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
 		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
+		$url = $p->{url} ? $p->{url} : $url;
 		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
 		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
 		$xml .= qq{  <id>$id</id>\n};
@@ -274,10 +322,6 @@ post '/login' => sub {
 	session last_seen => time;
 
 	redirect '/account';
-};
-
-get '/linode' => sub {
-	redirect 'http://www.linode.com/?r=cccf1376edd5c6f0b8eccb97e0741a1f24584e43';
 };
 
 get '/unsubscribe' => sub {
@@ -553,7 +597,7 @@ get '/img/:file' => sub {
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
 	send_file(
-		mymaven->{site} . "/img/$file",
+		mymaven->{dirs}{img} . "/$file",
 		content_type => $ext,
 		system_path => 1,
 	);
@@ -572,12 +616,20 @@ get '/mail/:article' => sub {
 
 	return template 'mail', $tt, {	layout => 'newsletter' };
 };
-get qr{/perldoc/(.+)} => sub {
-	my ($article) = splat;
 
-	return _show({ path => mymaven->{dirs}{perldoc}, article => $article, template => 'page', layout => 'page' });
+get '/tv' => sub {
+	my $tag = 'interview';
+	_show({ article => 'tv', template => 'archive', layout => 'system' }, { pages => (read_meta("archive_$tag") || []) });
 };
 
+# TODO this should not be here!!
+get qr{/(perldoc)/(.+)} => sub {
+	my ($dir, $article) = splat;
+
+	return _show({ path => mymaven->{dirs}{$dir}, article => $article, template => 'page', layout => 'page' });
+};
+
+# TODO move this to a plugin
 get '/svg.xml' => sub {
 	my %query = params();
 	require Perl::Maven::SVG;
@@ -594,7 +646,15 @@ get qr{/media/(.+)} => sub {
 			content_type => "video/$ext",
 			system_path => 1,
 		);
+	} elsif ($article =~ /\.(mp3)$/) {
+		my $ext = $1;
+		send_file(
+			mymaven->{dirs}{media} . "/$article",
+			content_type => "audio/mpeg",
+			system_path => 1,
+		);
 	}
+
 	return 'media error';
 };
 
@@ -827,15 +887,6 @@ sub read_sites {
 	my $yaml = do { local $/ = undef; <$fh> };
 	return from_yaml $yaml
 }
-sub read_translations {
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . '/translations.json')) {
-		local $/ = undef;
-		my $json = <$fh>;
-		return from_json $json, {utf8 => 1};
-	}
-	return;
-}
-
 
 sub read_resources {
     my %resources;
@@ -853,7 +904,7 @@ sub read_authors {
 	#return if %authors;
 	%authors = ();
 
-	open my $fh, '<encoding(UTF-8)', mymaven->{site} . "/authors.txt" or return;
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/authors.txt" or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
@@ -879,13 +930,25 @@ sub read_meta {
 	my ($file) = @_;
 
 	my $host = Perl::Maven::Config::host(request->host);
-	if (open my $fh, '<encoding(UTF-8)', path(mymaven->{meta} . "/$host/meta/$file.json")) {
+	return read_json(path(mymaven->{meta} . "/$host/meta/$file.json"));
+}
+
+sub read_meta_meta {
+	my ($file) = @_;
+
+	return read_json(path(mymaven->{meta} . "/$file.json"));
+}
+sub read_json {
+	my ($file) = @_;
+
+	if (open my $fh, '<encoding(UTF-8)', $file) {
 		local $/ = undef;
 		my $json = <$fh>;
 		return from_json $json, {utf8 => 1};
 	}
 	return;
 }
+
 
 true;
 
