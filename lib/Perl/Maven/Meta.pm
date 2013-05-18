@@ -8,6 +8,7 @@ has meta_feed     => (is => 'ro', default => sub { [] } );
 has meta_archive  => (is => 'ro', default => sub { [] } );
 has translations  => (is => 'ro', default => sub { {} } );
 has stats         => (is => 'ro', default => sub { {} } );
+has latest        => (is => 'ro', default => sub { {} } );
 
 use Data::Dumper   qw(Dumper);
 use File::Find::Rule;
@@ -53,6 +54,7 @@ sub process_domain {
 	foreach my $lang (reverse sort { $self->stats->{pagecount}{$a} <=> $self->stats->{pagecount}{$b} } keys  %$sites) {
 		$sites->{$lang}{pagecount} = $self->stats->{pagecount}{$lang} - 6; # there are 6 skeleton pages
 		$sites->{$lang}{lang} = $lang;
+		$sites->{$lang}{latest} = $self->latest->{$lang};
 		push @{ $stats{sites} }, $sites->{$lang};
 	}
 	save('stats',        "$config->{meta}", \%stats);
@@ -187,6 +189,9 @@ sub process_files {
 			filename => ($filename eq 'index' ? '' : $filename),
 			timestamp => $p->{timestamp},
 		};
+	}
+	if (@archive) {
+		$self->latest->{$lang} = $archive[0];
 	}
 
 	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%arch);

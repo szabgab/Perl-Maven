@@ -19,12 +19,26 @@
 <h2>Translations</h2>
 (Number of pages)
 
+<style>
+td {
+   padding-right: 20px;
+}
+</style>
 <div id="translations">
-<ul>
+<table>
+  <tr><td>Language</td><td># of pages</td><td>latest</td></tr>
 <% FOR site IN stats.sites %>
-  <li><a href="<% site.url %>"><% site.english %> (<% site.lang %>) <% site.name %></a> (<% site.pagecount %>) (<% site.last_article %>)</li>
+  <tr>
+      <td><a href="<% site.url %>"><% site.english %> (<% site.lang %>) <% site.name %></a></td>
+      <td><% site.pagecount %></td>
+      <td>
+        <% IF site.latest %>
+          <a href="<% site.latest.url %>/<% site.latest.filename %>"><% site.latest.date %></a>
+        <% END %>
+     </td>
+  </tr>
 <% END %>
-</ul>
+</table>
 </div>
 
 <% INCLUDE layouts/incl/footer.tt %>
