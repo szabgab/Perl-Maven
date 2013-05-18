@@ -5,7 +5,7 @@
 <div id="translators">
 <ul>
 <% FOR a IN authors.keys %>
-  <li><img src="/img/<% authors.$a.author_img %>" alt="<% authors.$a.author_name %>" /><br><% authors.$a.author_name %></li>
+  <li><img src="/img/<% IF authors.$a.author_img %><% authors.$a.author_img %><% ELSE %>white_square.png<% END %>" alt="<% authors.$a.author_name %>" /><br><% authors.$a.author_name %></li>
 <% END %>
 </ul>
 </div>
@@ -16,7 +16,7 @@
 <div id="translations">
 <ul>
 <% FOR site IN stats.sites %>
-  <li><a href="<% site.url %>"><% site.english %> (<% site.lang %>) <% site.name %></a> (<% site.pagecount %>)</li>
+  <li><a href="<% site.url %>"><% site.english %> (<% site.lang %>) <% site.name %></a> (<% site.pagecount %>) (<% site.last_article %>)</li>
 <% END %>
 </ul>
 </div>
