@@ -910,7 +910,7 @@ sub read_authors {
 		my ($nick, $name, $img, $google_plus_profile) = split /;/, $line;
 		$authors{$nick} = {
 			author_name => $name,
-			author_img  => $img,
+			author_img  => ($img || 'white_square.png'),
 			author_google_plus_profile => $google_plus_profile,
 		};
 	}
