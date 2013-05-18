@@ -5,7 +5,13 @@
 <div id="translators">
 <ul>
 <% FOR a IN authors.keys %>
-  <li><img src="/img/<% IF authors.$a.author_img %><% authors.$a.author_img %><% ELSE %>white_square.png<% END %>" alt="<% authors.$a.author_name %>" /><br><% authors.$a.author_name %></li>
+  <li><img src="/img/<% authors.$a.author_img %>" alt="<% authors.$a.author_name %>" /><br>
+  <% IF authors.$a.author_google_plus_profile %>
+    <a href="<% authors.$a.author_google_plus_profile %>"><% authors.$a.author_name %></a>
+  <% ELSE %>
+    <% authors.$a.author_name %>
+  <% END %>
+  </li>
 <% END %>
 </ul>
 </div>
