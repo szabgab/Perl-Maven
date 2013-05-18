@@ -52,7 +52,7 @@ sub process_domain {
 	my %stats;
 	$self->stats->{pagecount}{$_} ||= 0 for keys  %$sites;
 	foreach my $lang (reverse sort { $self->stats->{pagecount}{$a} <=> $self->stats->{pagecount}{$b} } keys  %$sites) {
-		$sites->{$lang}{pagecount} = $self->stats->{pagecount}{$lang} - 6; # there are 6 skeleton pages
+		$sites->{$lang}{pagecount} = $self->stats->{pagecount}{$lang};
 		$sites->{$lang}{lang} = $lang;
 		$sites->{$lang}{latest} = $self->latest->{$lang};
 		push @{ $stats{sites} }, $sites->{$lang};
@@ -124,13 +124,13 @@ sub process_files {
 
 	my %keywords; # =indexes and =tags are united here
 	my (@index, @feed, @archive, @sitemap, %arch);
+	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
 	foreach my $p (@$pages) {
 		my $filename = substr($p->{url_path},  0, -3);
 		if ($self->verbose) {
 			say "Processing $filename";
 		}
-		$self->stats->{pagecount}{$lang}++;
 		if ($p->{original}) {
 			$self->translations->{ $p->{original} }{ $lang } = $filename;
 		}
@@ -147,6 +147,7 @@ sub process_files {
 
 		#say "$p->{timestamp} $p->{file}";
 		if ($p->{archive}) {
+			$self->stats->{pagecount}{$lang}++;
 			my ($date) = split /T/, $p->{timestamp};
 			my $e = {
 				title => $p->{title},
