@@ -2,6 +2,14 @@ The source code of http://perl5maven.com/
 
 TODO
 
+
+podfeed:
+Philip Durbin
+podcatcher 
+https://github.com/inoks/dropcast can make a feed. I subscribe to feeds in BeyondPod on Android.
+You could make a feed for all of us to subscribe to the audio at http://huffduffer.com﻿
+
+
 - Create a Git repository for the unzipped sources
 - A tool that can download a distribution, unzip it and add it to the repository
   that can check if the distribution we have is the latest or not,
