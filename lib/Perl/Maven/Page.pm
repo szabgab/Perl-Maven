@@ -89,7 +89,8 @@ sub read {
 				if ($language eq 'perl') {
 					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
 				} else {
-					$cont .= qq{<pre class="prettyprint">\n};
+					# Without linenumst IE10 does not respect newlines and smashes everything together
+					$cont .= qq{<pre class="prettyprint linenums">\n};
 				}
 				next;
 			}
