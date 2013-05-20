@@ -5,9 +5,9 @@ TODO
 
 podfeed:
 Philip Durbin
-podcatcher 
+podcatcher http://en.wikipedia.org/wiki/List_of_podcatchers
 https://github.com/inoks/dropcast can make a feed. I subscribe to feeds in BeyondPod on Android.
-You could make a feed for all of us to subscribe to the audio at http://huffduffer.com﻿
+You could make a feed for all of us to subscribe to the audio at http://huffduffer.com
 
 
 - Create a Git repository for the unzipped sources
