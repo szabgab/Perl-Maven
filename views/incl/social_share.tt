@@ -14,5 +14,7 @@ data-text="<% title %>" data-url="<% twitter_data_url %>" data-count="vertical" 
 <g:plusone size="tall" href="<% google_plus_href %>"></g:plusone>
 </div>
 
+<div class="fb-like" data-href="<% facebook_href %>" data-send="false" data-layout="box_count" data-width="450" data-show-faces="false"></div>
+
 <% END %>
 
