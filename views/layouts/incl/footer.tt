@@ -3,6 +3,7 @@
     <div class="span3">
       <div id="right-side">
         <% IF showright %>
+<!--
           <div id="top-poster">
            <%
             USE Math;
@@ -21,6 +22,7 @@
                <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
             <% END %>
           </div>
+-->
           <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
                <h3>Do you want to improve your Perl?</h3>
