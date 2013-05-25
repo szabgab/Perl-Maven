@@ -15,6 +15,7 @@ use Email::Valid;
 use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
+use Storable     qw(dclone);
 
 use Perl::Maven::Page;
 use Perl::Maven::Config;
@@ -73,9 +74,9 @@ hook before_template => sub {
 	# linking to translations
 	my $sites = read_sites();
 	my $translations = read_meta_meta('translations');
-	delete $sites->{$language}; # no link to the curren site
 	my $path = request->path;
 	my %links;
+
 	if ($path ne '/') {
 		my $original = $language eq $original_language ? substr($path, 1) : $t->{original};
 		if ($original) {
@@ -83,14 +84,28 @@ hook before_template => sub {
 				$sites->{$language_code}{url} .= $translations->{$original}{$language_code};
 				$links{$language_code} = $sites->{$language_code};
 			}
-			if ($language ne $original_language) {
+			#if ($language ne $original_language) {
 				$sites->{$original_language}{url} .= $original;
 				$links{$original_language} = $sites->{$original_language};
-			}
+			#}
 		}
 	} else {
 		%links = %$sites;
 	}
+
+	# For cases where our language code does not match the standard:
+	# See http://support.google.com/webmasters/bin/answer.py?hl=en&answer=189077&topic=2370587&ctx=topic
+	# http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	my %ISO_LANG = (
+		br => 'pt',
+		cn => 'zh-Hans',
+		tw => 'zh-Hant',
+	);
+	my %localized = map { ($ISO_LANG{$_} || $_) => $links{$_} } keys %links;
+	$t->{localized_versions} = \%localized;
+
+	delete $links{$language}; # no link to the curren site
+	$t->{languages} = \%links;
 
 	my $url = request->uri_base . request->path;
 	foreach my $field (qw(reddit_url twitter_data_url twitter_data_counturl google_plus_href facebook_href)) {
@@ -107,7 +122,7 @@ hook before_template => sub {
 
 	#my $host = Perl::Maven::Config::host(request->host);
 	#$t->{uri_base}  = request->uri_base;
-	$t->{languages} = \%links;
+
 
 	return;
 };
