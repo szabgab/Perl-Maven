@@ -469,6 +469,22 @@ get '/download/:dir/:file' => sub {
 	send_file(path(mymaven->{dirs}{download}, $dir, $file), system_path => 1);
 };
 
+get '/pro/:file' => sub {
+	#my $dir  = param('dir');
+    my $dir = 'pro';
+	my $file = param('file');
+
+	# TODO better error reporting or handling when not logged in
+	return redirect '/'
+		if not logged_in();
+	return redirect '/' if not $products{$dir}; # no such product
+
+	# check if the user is really subscribed to the newsletter?
+	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
+    pass;
+	#send_file(path(mymaven->{dirs}{download}, $dir, $file), system_path => 1);
+};
+
 get '/verify/:id/:code' => sub {
 	my $id = param('id');
 	my $code = param('code');

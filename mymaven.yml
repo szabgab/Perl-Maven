@@ -77,6 +77,7 @@ perlmaven.com:
         perldoc: '/home/gabor/work/articles/perldoc'
         download: '/home/gabor/work/articles/download'
         media: '/home/gabor/work/media.perlmaven.com'
+        pro: '/home/gabor/work/articles/pro'
 #        videos: '/home/gabor/work/perlmaven.com/sites/en/pages/videos'
       conf:
         enable_comments: 'disqus'
