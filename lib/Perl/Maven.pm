@@ -471,13 +471,14 @@ get '/download/:dir/:file' => sub {
 
 get '/pro/:file' => sub {
 	#my $dir  = param('dir');
-    my $dir = 'pro';
+    my $dir = 'perl_maven_pro'; # here dir and product name is not the same!
 	my $file = param('file');
 
 	# TODO better error reporting or handling when not logged in
-	return redirect '/'
+	return 'Please <a href="/login">login</a> first'
 		if not logged_in();
-	return redirect '/' if not $products{$dir}; # no such product
+	return 'Sorry, we could not find your "pro" subscription.'
+		if not $products{$dir}; # no such product
 
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
@@ -654,7 +655,7 @@ get '/tv' => sub {
 };
 
 # TODO this should not be here!!
-get qr{/(perldoc)/(.+)} => sub {
+get qr{/(pro|perldoc)/(.+)} => sub {
 	my ($dir, $article) = splat;
 
 	return _show({ path => mymaven->{dirs}{$dir}, article => $article, template => 'page', layout => 'page' });
