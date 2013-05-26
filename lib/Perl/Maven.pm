@@ -474,11 +474,14 @@ get '/pro/:file' => sub {
     my $dir = 'perl_maven_pro'; # here dir and product name is not the same!
 	my $file = param('file');
 
+	return redirect '/pro'
+		if not logged_in()
+		or not $db->is_subscribed(session('email'), $dir);
 	# TODO better error reporting or handling when not logged in
-	return 'Please <a href="/login">login</a> first'
-		if not logged_in();
-	return 'Sorry, we could not find your "pro" subscription.'
-		if not $products{$dir}; # no such product
+	#return 'Please <a href="/login">login</a> first'
+	#	if not logged_in();
+	#return 'Sorry, we could not find your "pro" subscription.'
+	#	if not $products{$dir}; # no such product
 
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
