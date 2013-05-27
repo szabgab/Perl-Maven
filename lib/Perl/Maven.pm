@@ -114,7 +114,7 @@ hook before_template => sub {
 
 	# on May 1 2013 the site was redirected from perl5maven.com to perlmaven.com
 	# we try to salvage some of the social proof.
-	if ($t->{date} le '2013-05-01') {
+	if ($t->{date} and $t->{date} le '2013-05-01') {
 		foreach my $field (qw(reddit_url twitter_data_counturl)) {
 			$t->{$field} =~ s/perlmaven.com/perl5maven.com/;
 		}
@@ -777,6 +777,22 @@ sub paypal_buy {
 
 	my $paypal = paypal();
 
+	# special case for recurring payment
+	my %params;
+	if ($what eq 'perl_maven_pro') {
+		%params = (
+			src => 1,
+			cmd => '_xclick-subscriptions',
+
+			a3 => $usd,
+			p3 => 1,
+			t3 => 'M',  # monthly
+		);
+	} else {
+		$params{amount} = $usd;
+	}
+
+
 	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
 	# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
@@ -786,11 +802,11 @@ sub paypal_buy {
 	my $button = $paypal->button(
 		business       => mymaven->{paypal}{email},
 		item_name      => $item,
-		amount         => $usd,
 		quantity       => $quantity,
 		return         => "$return_url",
 		cancel_return  => "$cancel_url",
 		notify_url     => "$notify_url",
+		%params,
 	);
 	my $id = $paypal->id;
 	#debug $button;
