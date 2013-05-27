@@ -470,23 +470,16 @@ get '/download/:dir/:file' => sub {
 };
 
 get '/pro/:file' => sub {
-	#my $dir  = param('dir');
-    my $dir = 'perl_maven_pro'; # here dir and product name is not the same!
+    my $product = 'perl_maven_pro';
+    my $dir = 'pro';
 	my $file = param('file');
 
-	return redirect '/pro'
-		if not logged_in()
-		or not $db->is_subscribed(session('email'), $dir);
-	# TODO better error reporting or handling when not logged in
-	#return 'Please <a href="/login">login</a> first'
-	#	if not logged_in();
-	#return 'Sorry, we could not find your "pro" subscription.'
-	#	if not $products{$dir}; # no such product
+	my $path = mymaven->{dirs}{$dir} . "/$file.tt";
+	pass if not -e $path; # will show invalid page
+	pass if logged_in()
+		and $db->is_subscribed(session('email'), $product);
 
-	# check if the user is really subscribed to the newsletter?
-	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
-    pass;
-	#send_file(path(mymaven->{dirs}{download}, $dir, $file), system_path => 1);
+	_show_abstract({ path => $path });
 };
 
 get '/verify/:id/:code' => sub {
@@ -702,6 +695,15 @@ get qr{/(.+)} => sub {
 };
 
 ##########################################################################################
+sub _show_abstract {
+	my ($params) = @_;
+	my $tt = read_tt( $params->{path} );
+#		if not logged_in(), tell the user to subscribe or log in
+#
+#		if logged in but not subscribed, tell the user to subscribe
+	delete $tt->{mycontent};
+	return template 'propage', $tt, { layout => 'page' };
+}
 
 sub _show {
 	my ($params, $data) = @_;
