@@ -30,6 +30,8 @@ to the web site, and then pay via PayPal:
 </p>
 <p>
 <div class="btn"><a href="/buy?product=perl_maven_pro">Subscribe for just $9 per month</a></div>
+or
+<div class="btn"><a href="/buy?product=perl_maven_pro&type=annual">$99 per year</a></div>
 </p>
 
 <p>

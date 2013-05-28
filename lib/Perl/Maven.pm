@@ -549,15 +549,19 @@ get '/buy' => sub {
 		# TODO redirect back the user once logged in!!!
 	}
 	my $what = param('product');
+	my $type = param('type') || 'standard';
 	if (not $what) {
 		return template 'error', {'no_product_specified' => 1};
 	}
 	if (not $products{$what}) {
 		return template 'error', {'invalid_product_specified' => 1};
 	}
+	if ($type eq 'annual') { # TODO remove hardcoding
+		$products{$what}{price} = 99;
+	}
 	return template 'buy', {
 		%{ $products{$what} },
-		button => paypal_buy($what, 1),
+		button => paypal_buy($what, $type, 1),
 	};
 };
 get '/canceled' => sub {
@@ -772,11 +776,11 @@ sub pw_form {
 }
 
 sub paypal_buy {
-	my ($what, $quantity) = @_;
+	my ($what, $type, $quantity) = @_;
 
 	my $usd  = $products{$what}{price};
 
-	# special case for recurring payment
+	# TODO remove special case for recurring payment
 	my %params;
 	if ($what eq 'perl_maven_pro') {
 		%params = (
@@ -787,10 +791,14 @@ sub paypal_buy {
 			p3 => 1,
 			t3 => 'M',  # monthly
 		);
+		if ($type eq 'annual') { # TODO remove hardcoding
+			$usd = 99;
+			$params{a3} = $usd;
+			$params{t3} = 'Y';
+		}
 	} else {
 		$params{amount} = $usd;
 	}
-
 
 	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
