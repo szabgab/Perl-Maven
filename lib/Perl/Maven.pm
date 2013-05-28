@@ -469,6 +469,11 @@ get '/download/:dir/:file' => sub {
 	send_file(path(mymaven->{dirs}{download}, $dir, $file), system_path => 1);
 };
 
+get '/pro' => sub {
+	my $path = mymaven->{site} . "/pages/pro.tt";
+	_show_abstract({ path => $path });
+};
+
 get '/pro/:file' => sub {
     my $product = 'perl_maven_pro';
     my $dir = 'pro';
