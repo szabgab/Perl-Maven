@@ -774,10 +774,7 @@ sub pw_form {
 sub paypal_buy {
 	my ($what, $quantity) = @_;
 
-	my $item = $products{$what}{name};
 	my $usd  = $products{$what}{price};
-
-	my $paypal = paypal();
 
 	# special case for recurring payment
 	my %params;
@@ -801,9 +798,10 @@ sub paypal_buy {
 	my $cancel_url = uri_for('/canceled');
 	my $return_url = uri_for('/paid');
 	my $notify_url = uri_for('/paypal');
+	my $paypal = paypal();
 	my $button = $paypal->button(
 		business       => mymaven->{paypal}{email},
-		item_name      => $item,
+		item_name      => $products{$what}{name},
 		quantity       => $quantity,
 		return         => "$return_url",
 		cancel_return  => "$cancel_url",
