@@ -562,7 +562,7 @@ get '/buy' => sub {
 		return template 'error', {'invalid_product_specified' => 1};
 	}
 	if ($type eq 'annual') { # TODO remove hardcoding
-		$products{$what}{price} = 99;
+		$products{$what}{price} = 90;
 	}
 	return template 'buy', {
 		%{ $products{$what} },
@@ -797,7 +797,7 @@ sub paypal_buy {
 			t3 => 'M',  # monthly
 		);
 		if ($type eq 'annual') { # TODO remove hardcoding
-			$usd = 99;
+			$usd = 90;
 			$params{a3} = $usd;
 			$params{t3} = 'Y';
 		}
