@@ -202,7 +202,18 @@ get '/sitemap.xml' => sub {
 	return $xml;
 };
 get '/atom' => sub {
-	my $pages = read_meta('feed') || [];
+	return atom('feed');
+};
+get '/tv/atom' => sub {
+	return atom('feed_interview');
+};
+
+sub atom {
+	my ($what, $subtitle) = @_;
+
+	$subtitle ||= '';
+
+	my $pages = read_meta($what) || [];
 	my $mymaven = mymaven;
 
 	my $ts = DateTime->now;
@@ -215,7 +226,7 @@ get '/atom' => sub {
 	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
 	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
 	$xml .= qq{<link href="$url/atom" rel="self" />\n};
-	$xml .= qq{<title>$title</title>\n};
+	$xml .= qq{<title>$title$subtitle</title>\n};
 	$xml .= qq{<id>$url/</id>\n};
 	$xml .= qq{<updated>${ts}Z</updated>\n};
 	foreach my $p (@$pages) {
@@ -240,7 +251,7 @@ get '/atom' => sub {
 
 	content_type 'application/atom+xml';
 	return $xml;
-};
+}
 
 post '/send-reset-pw-code' => sub {
 	my $email = param('email');

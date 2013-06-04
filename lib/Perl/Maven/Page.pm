@@ -1,12 +1,12 @@
 package Perl::Maven::Page;
-use Moose;
+use Moo;
 
 use 5.014;
 use Carp; # needed by DateTime::Tiny 1.04
 use DateTime::Tiny;
 
 
-has file => (is => 'ro', isa => 'Str', required => 1);
+has file => (is => 'ro', required => 1);
 
 sub read {
 	my ($self) = @_;

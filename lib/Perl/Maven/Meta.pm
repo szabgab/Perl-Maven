@@ -92,7 +92,7 @@ sub process {
 	my $pages = $self->get_pages(@sources);
 
 
-	my ($keywords, $index, $archive, $feed, $sitemap, $arch) = $self->process_files($pages, $lang);
+	my ($keywords, $index, $archive, $feed, $sitemap, $arch, $feeds) = $self->process_files($pages, $lang);
 	save('index',    $dest, $index);
 	save('archive',  $dest, $archive);
 	save('feed',     $dest, $feed);
@@ -104,6 +104,7 @@ sub process {
 	foreach my $tag (@tags) {
 		if ($arch->{$tag}) {
 			save("archive_$tag",  $dest, $arch->{$tag});
+			save("feed_$tag",  $dest, $feeds->{$tag});
 		}
 	}
 
@@ -121,7 +122,7 @@ sub process_files {
 	# might want to search for. Or the other way around.
 
 	my %keywords; # =indexes and =tags are united here
-	my (@index, @feed, @archive, @sitemap, %arch);
+	my (@index, @feed, @archive, @sitemap, %arch, %feeds);
 	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
 	foreach my $p (@$pages) {
@@ -174,13 +175,20 @@ sub process_files {
 			};
 		}
 		if ($p->{feed} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
-			push @feed, {
+			my $e = {
 				title => $p->{title},
 				timestamp => $p->{timestamp},
 				abstract  => $p->{abstract},
 				filename  => $filename,
 				author    => $p->{author},
 			};
+			push @feed, $e;
+
+			foreach my $tag (@tags) {
+				if (grep { $_ eq $tag } @{ $p->{indexes} || [] }) {
+					push @{ $feeds{$tag} }, $e;
+				}
+			}
 		}
 
 		push @sitemap, {
@@ -193,7 +201,7 @@ sub process_files {
 		$self->latest->{$lang} = $archive[0];
 	}
 
-	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%arch);
+	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%arch, \%feeds);
 }
 
 sub save {
