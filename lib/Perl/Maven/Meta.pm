@@ -149,10 +149,12 @@ sub process_files {
 			$self->stats->{pagecount}{$lang}++;
 			my ($date) = split /T/, $p->{timestamp};
 			my $e = {
-				title => $p->{title},
+				title     => $p->{title},
 				timestamp => $p->{timestamp},
 				date      => $date,
 				filename  => $filename,
+				abstract  => $p->{abstract},
+				author    => $p->{author},
 			};
 			push @archive, $e;
 			foreach my $tag (@tags) {
