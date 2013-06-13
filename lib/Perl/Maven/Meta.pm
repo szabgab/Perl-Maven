@@ -140,7 +140,7 @@ sub process_files {
 			};
 			push @archive, $e;
 			foreach my $tag (@tags) {
-				if (grep { $_ eq $tag } @{ $p->{indexes} || [] }) {
+				if (grep { $_ eq $tag } @{ $p->{tags} || [] }) {
 					push @{ $arch{$tag} }, $e;
 				}
 			}
