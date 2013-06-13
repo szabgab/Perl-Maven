@@ -35,7 +35,7 @@ sub process_domain {
 
 	foreach my $lang (keys  %$sites) {
 		my $lang_config = $lang eq 'en' ? $config : $self->mymaven->config("$lang.$domain");
-		$self->process($lang_config, $domain, $lang);
+		$self->process_site($lang_config, $domain, $lang);
 	}
 	my @meta_feed;
 	my $feed_cnt = 0;
@@ -60,7 +60,7 @@ sub process_domain {
 	save('stats',        "$config->{meta}", \%stats);
 }
 
-sub process {
+sub process_site {
 	my ($self, $config, $domain, $lang) = @_;
 
 	my $site = ($lang eq 'en' ? '' : "$lang.") . $domain;
