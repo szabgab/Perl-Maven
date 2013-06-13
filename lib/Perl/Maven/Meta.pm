@@ -4,7 +4,6 @@ use 5.010;
 
 has mymaven => (is => 'ro');
 has verbose => (is => 'ro');
-has meta_feed     => (is => 'ro', default => sub { [] } );
 has meta_archive  => (is => 'ro', default => sub { [] } );
 has translations  => (is => 'ro', default => sub { {} } );
 has stats         => (is => 'ro', default => sub { {} } );
@@ -18,9 +17,6 @@ use YAML           qw(LoadFile);
 
 use Perl::Maven::Page;
 
-my $MAX_INDEX   = 3;
-my $MAX_FEED    = 10;
-my $MAX_META_FEED = 20;
 
 my @tags = ('interview');
 
@@ -37,15 +33,8 @@ sub process_domain {
 		my $lang_config = $lang eq 'en' ? $config : $self->mymaven->config("$lang.$domain");
 		$self->process_site($lang_config, $domain, $lang);
 	}
-	my @meta_feed;
-	my $feed_cnt = 0;
-	for my $entry (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_feed }) {
-		$feed_cnt++;
-		push @meta_feed, $entry;
-		last if $feed_cnt >= $MAX_META_FEED;
-	}
+
 	my @meta_archive = reverse sort {$a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
-	save('feed',    "$config->{meta}/meta.$domain/meta", \@meta_feed);
 	save('archive', "$config->{meta}/meta.$domain/meta", \@meta_archive);
 	save('translations', "$config->{meta}", $self->translations);
 
@@ -92,18 +81,15 @@ sub process_site {
 	my $pages = $self->get_pages(@sources);
 
 
-	my ($keywords, $archive, $feed, $sitemap, $arch, $feeds) = $self->process_files($pages, $lang);
+	my ($keywords, $archive, $sitemap, $arch) = $self->process_files($pages, $lang);
 	save('archive',  $dest, $archive);
-	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
-	push @{ $self->meta_feed    }, map { $_->{url} = "http://$site"; $_ } @$feed;
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
 	foreach my $tag (@tags) {
 		if ($arch->{$tag}) {
 			save("archive_$tag",  $dest, $arch->{$tag});
-			save("feed_$tag",  $dest, $feeds->{$tag});
 		}
 	}
 
@@ -113,14 +99,12 @@ sub process_site {
 sub process_files {
 	my ($self, $pages, $lang) = @_;
 
-	my $count_feed  = 0;
-
 	# TODO:
 	# I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
 	# might want to search for. Or the other way around.
 
 	my %keywords; # =indexes and =tags are united here
-	my (@feed, @archive, @sitemap, %arch, %feeds);
+	my (@archive, @sitemap, %arch);
 	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
 	foreach my $p (@$pages) {
@@ -167,23 +151,6 @@ sub process_files {
 		#$p->{abstract} ||= $p->{title};
 		#$p->{abstract} ||= ' ';
 		
-		if ($p->{archive} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
-			my $e = {
-				title => $p->{title},
-				timestamp => $p->{timestamp},
-				abstract  => $p->{abstract},
-				filename  => $filename,
-				author    => $p->{author},
-			};
-			push @feed, $e;
-
-			foreach my $tag (@tags) {
-				if (grep { $_ eq $tag } @{ $p->{indexes} || [] }) {
-					push @{ $feeds{$tag} }, $e;
-				}
-			}
-		}
-
 		push @sitemap, {
 			title => $p->{title},
 			filename => ($filename eq 'index' ? '' : $filename),
@@ -194,7 +161,7 @@ sub process_files {
 		$self->latest->{$lang} = $archive[0];
 	}
 
-	return (\%keywords, \@archive, \@feed, \@sitemap, \%arch, \%feeds);
+	return (\%keywords, \@archive, \@sitemap, \%arch);
 }
 
 sub save {

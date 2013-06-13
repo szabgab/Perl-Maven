@@ -5,6 +5,8 @@ use Perl::Maven::DB;
 our $VERSION = '0.1';
 my $TIMEOUT = 60*60*24*365;
 my $MAX_INDEX   = 3;
+my $MAX_FEED    = 10;
+my $MAX_META_FEED = 20;
 
 use Business::PayPal;
 use Cwd qw(cwd abs_path);
@@ -168,8 +170,8 @@ get '/' => sub {
 	}
 
 	my $meta = read_meta('archive') || [];
-	my $limit = min($MAX_INDEX-1, scalar @$meta);
-	my @pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @$meta)[0 .. $limit];
+	my $limit = min($MAX_INDEX, scalar @$meta);
+	my @pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @$meta)[0 .. $limit-1];
 
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => \@pages });
 };
@@ -207,10 +209,10 @@ get '/sitemap.xml' => sub {
 	return $xml;
 };
 get '/atom' => sub {
-	return atom('feed');
+	return atom('archive');
 };
 get '/tv/atom' => sub {
-	return atom('feed_interview', ' - Interviews');
+	return atom('archive_interview', ' - Interviews');
 };
 
 post '/send-reset-pw-code' => sub {
@@ -987,7 +989,10 @@ sub atom {
 
 	$subtitle ||= '';
 
-	my $pages = read_meta($what) || [];
+	my $meta = read_meta($what) || [];
+	my $limit = min($MAX_FEED, scalar @$meta);
+	my @pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @$meta)[0 .. $limit-1];
+
 	my $mymaven = mymaven;
 
 	my $ts = DateTime->now;
@@ -1003,8 +1008,9 @@ sub atom {
 	$xml .= qq{<title>$title$subtitle</title>\n};
 	$xml .= qq{<id>$url/</id>\n};
 	$xml .= qq{<updated>${ts}Z</updated>\n};
-	foreach my $p (@$pages) {
+	foreach my $p (@pages) {
 		$xml .= qq{<entry>\n};
+		die Dumper $p if not defined $p->{title};
 		$xml .= qq{  <title>$p->{title}</title>\n};
 		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
 		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
