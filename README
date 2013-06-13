@@ -3,6 +3,12 @@ The source code of http://perl5maven.com/
 TODO
 
 
+Add some mark to the user account when the user has purchased the pro account.
+Send e-mail to the person when he bought one of the products
+Change the system to let the user set the password after subscribing.
+
+
+
 podfeed:
 Philip Durbin
 podcatcher http://en.wikipedia.org/wiki/List_of_podcatchers

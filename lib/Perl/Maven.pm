@@ -205,53 +205,8 @@ get '/atom' => sub {
 	return atom('feed');
 };
 get '/tv/atom' => sub {
-	return atom('feed_interview');
+	return atom('feed_interview', ' - Interviews');
 };
-
-sub atom {
-	my ($what, $subtitle) = @_;
-
-	$subtitle ||= '';
-
-	my $pages = read_meta($what) || [];
-	my $mymaven = mymaven;
-
-	my $ts = DateTime->now;
-
-	my $url = request->base;
-	$url =~ s{/$}{};
-	my $title = $mymaven->{title};
-
-	my $xml = '';
-	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
-	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
-	$xml .= qq{<link href="$url/atom" rel="self" />\n};
-	$xml .= qq{<title>$title$subtitle</title>\n};
-	$xml .= qq{<id>$url/</id>\n};
-	$xml .= qq{<updated>${ts}Z</updated>\n};
-	foreach my $p (@$pages) {
-		$xml .= qq{<entry>\n};
-		$xml .= qq{  <title>$p->{title}</title>\n};
-		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
-		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
-		$url = $p->{url} ? $p->{url} : $url;
-		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
-		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
-		$xml .= qq{  <id>$id</id>\n};
-		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
-		if ($p->{author}) {
-			$xml .= qq{    <author>\n};
-			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
-			#$xml .= qq{      <email></email>\n};
-			$xml .= qq{    </author>\n};
-		}
-		$xml .= qq{</entry>\n};
-	}
-	$xml .= qq{</feed>\n};
-
-	content_type 'application/atom+xml';
-	return $xml;
-}
 
 post '/send-reset-pw-code' => sub {
 	my $email = param('email');
@@ -1020,6 +975,111 @@ sub read_json {
 		return from_json $json, {utf8 => 1};
 	}
 	return;
+}
+
+sub atom {
+	my ($what, $subtitle) = @_;
+
+	$subtitle ||= '';
+
+	my $pages = read_meta($what) || [];
+	my $mymaven = mymaven;
+
+	my $ts = DateTime->now;
+
+	my $url = request->base;
+	$url =~ s{/$}{};
+	my $title = $mymaven->{title};
+
+	my $xml = '';
+	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
+	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
+	$xml .= qq{<link href="$url/atom" rel="self" />\n};
+	$xml .= qq{<title>$title$subtitle</title>\n};
+	$xml .= qq{<id>$url/</id>\n};
+	$xml .= qq{<updated>${ts}Z</updated>\n};
+	foreach my $p (@$pages) {
+		$xml .= qq{<entry>\n};
+		$xml .= qq{  <title>$p->{title}</title>\n};
+		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
+		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
+		$url = $p->{url} ? $p->{url} : $url;
+		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
+		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
+		$xml .= qq{  <id>$id</id>\n};
+		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
+		if ($p->{author}) {
+			$xml .= qq{    <author>\n};
+			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
+			#$xml .= qq{      <email></email>\n};
+			$xml .= qq{    </author>\n};
+		}
+		$xml .= qq{</entry>\n};
+	}
+	$xml .= qq{</feed>\n};
+
+	content_type 'application/atom+xml';
+	return $xml;
+}
+
+
+sub itunes {
+	my ($what, $subtitle) = @_;
+
+	$subtitle ||= '';
+
+	my $pages = read_meta($what) || [];
+	my $mymaven = mymaven;
+
+	my $ts = DateTime->now;
+
+	my $url = request->base;
+	$url =~ s{/$}{};
+	my $title = $mymaven->{title};
+
+	# based on http://perlcast.com/rss/current.xml
+	my $xml = '';
+	$xml .= qq{<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" };
+	$xml .= qq{xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" };
+	$xml .= qq{xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">\n};
+
+	$xml .= qq{<channel>\n};
+	$xml .= qq{  <title>$title</title>\n};
+	$xml .= qq{  <link>$url/</link>\n};
+	$xml .= qq{  <description>$url/</description>\n};
+	$xml .= qq{  <language>en-us</language>\n};
+	#$xml .= qq{  <copyright></copyright>\n};
+	$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
+	$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
+	$xml .= qq{  <category>Podcast</category>\n};
+	#$xml .= qq{  <docs>http://blogs.law.harvard.edu/tech/rss</docs>\n};
+	$xml .= qq{  <generator>vim</generator>\n};
+	$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
+	$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
+	$xml .= qq{  <ttl>1440</ttl>\n};
+	foreach my $p (@$pages) {
+		$xml .= qq{<entry>\n};
+		$xml .= qq{  <title>$p->{title}</title>\n};
+		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
+		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
+		$url = $p->{url} ? $p->{url} : $url;
+		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
+		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
+		$xml .= qq{  <id>$id</id>\n};
+		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
+		if ($p->{author}) {
+			$xml .= qq{    <author>\n};
+			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
+			#$xml .= qq{      <email></email>\n};
+			$xml .= qq{    </author>\n};
+		}
+		$xml .= qq{</entry>\n};
+	}
+	$xml .= qq{</channel>\n};
+	$xml .= qq{</rss>\n};
+
+	content_type 'application/rss+xml';
+	return $xml;
 }
 
 
