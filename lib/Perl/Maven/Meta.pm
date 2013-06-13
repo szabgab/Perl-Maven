@@ -92,8 +92,7 @@ sub process_site {
 	my $pages = $self->get_pages(@sources);
 
 
-	my ($keywords, $index, $archive, $feed, $sitemap, $arch, $feeds) = $self->process_files($pages, $lang);
-	save('index',    $dest, $index);
+	my ($keywords, $archive, $feed, $sitemap, $arch, $feeds) = $self->process_files($pages, $lang);
 	save('archive',  $dest, $archive);
 	save('feed',     $dest, $feed);
 	save('keywords', $dest, $keywords);
@@ -114,7 +113,6 @@ sub process_site {
 sub process_files {
 	my ($self, $pages, $lang) = @_;
 
-	my $count_index = 0;
 	my $count_feed  = 0;
 
 	# TODO:
@@ -122,7 +120,7 @@ sub process_files {
 	# might want to search for. Or the other way around.
 
 	my %keywords; # =indexes and =tags are united here
-	my (@index, @feed, @archive, @sitemap, %arch, %feeds);
+	my (@feed, @archive, @sitemap, %arch, %feeds);
 	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
 	foreach my $p (@$pages) {
@@ -168,14 +166,7 @@ sub process_files {
 		# let's put the title in the abstract for now.
 		#$p->{abstract} ||= $p->{title};
 		#$p->{abstract} ||= ' ';
-		if ($p->{archive} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
-			push @index, {
-				title => $p->{title},
-				timestamp => $p->{timestamp},
-				abstract  => $p->{abstract},
-				filename  => $filename,
-			};
-		}
+		
 		if ($p->{archive} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
 			my $e = {
 				title => $p->{title},
@@ -203,7 +194,7 @@ sub process_files {
 		$self->latest->{$lang} = $archive[0];
 	}
 
-	return (\%keywords, \@index, \@archive, \@feed, \@sitemap, \%arch, \%feeds);
+	return (\%keywords, \@archive, \@feed, \@sitemap, \%arch, \%feeds);
 }
 
 sub save {

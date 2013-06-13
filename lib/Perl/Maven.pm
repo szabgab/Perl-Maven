@@ -4,6 +4,7 @@ use Perl::Maven::DB;
 
 our $VERSION = '0.1';
 my $TIMEOUT = 60*60*24*365;
+my $MAX_INDEX   = 3;
 
 use Business::PayPal;
 use Cwd qw(cwd abs_path);
@@ -16,6 +17,7 @@ use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
 use Storable     qw(dclone);
+use List::Util   qw(min);
 
 use Perl::Maven::Page;
 use Perl::Maven::Config;
@@ -158,15 +160,18 @@ get '/search' => sub {
 };
 
 get '/' => sub {
-	if (request->host =~ /^meta\./) {
+		if (request->host =~ /^meta\./) {
 		return _show({ article => 'index',  template => 'page', layout => 'meta' }, {
 			authors => \%authors,
 			stats   => read_meta_meta('stats'),
-#			pages => (read_meta('index') || []),
 		});
 	}
 
-	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => (read_meta('index') || []) });
+	my $meta = read_meta('archive') || [];
+	my $limit = min($MAX_INDEX-1, scalar @$meta);
+	my @pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @$meta)[0 .. $limit];
+
+	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => \@pages });
 };
 
 get '/keywords' => sub {
