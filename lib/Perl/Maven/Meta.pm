@@ -166,7 +166,7 @@ sub process_files {
 		# let's put the title in the abstract for now.
 		#$p->{abstract} ||= $p->{title};
 		#$p->{abstract} ||= ' ';
-		if ($p->{index} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
+		if ($p->{archive} and $p->{abstract} and $count_index++ < $MAX_INDEX ) {
 			push @index, {
 				title => $p->{title},
 				timestamp => $p->{timestamp},
@@ -174,7 +174,7 @@ sub process_files {
 				filename  => $filename,
 			};
 		}
-		if ($p->{feed} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
+		if ($p->{archive} and $p->{abstract} and $count_feed++ < $MAX_FEED ) {
 			my $e = {
 				title => $p->{title},
 				timestamp => $p->{timestamp},
@@ -211,7 +211,10 @@ sub save {
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
-	print $fh to_json $data, { utf8 => 1, pretty => 1, canonical => 1 };
+	eval {
+		print $fh to_json $data, { utf8 => 1, pretty => 1, canonical => 1 };
+	};
+	die "$@ when creating '$path'\n" . Dumper $data if $@;
 	close $fh;
 	return;
 }

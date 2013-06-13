@@ -152,9 +152,7 @@ return <<"END_HEADER";
 =indexes $keywords
 =status show
 =author 0
-=index 0
 =archive 0
-=feed 0
 =comments 1
 =social 1
 

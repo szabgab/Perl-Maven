@@ -2,11 +2,43 @@ The source code of http://perl5maven.com/
 
 TODO
 
-
 Add some mark to the user account when the user has purchased the pro account.
 Send e-mail to the person when he bought one of the products
 Change the system to let the user set the password after subscribing.
 
+If I save all the meta information in one json file (or database), the following
+operations are needed:
+  list the most recent pages
+     filtered by one or more tags
+     filtered by a keyword
+     filtered based on show mode (archive, index, feed ...)
+     limited to N (or not limited), maybe paged
+     sometimes include abstract, sometime not
+
+Allow user to subscribe (by e-mail) to any combination of these:
+  *) free articles
+  *) interviews
+  *) Pro articles
+  Subscribe []
+  Everything []
+  Or select:
+    Free:
+    Pro:
+    TV:
+  In the database:
+  news_all
+  news_free
+  news_pro
+  news_tv
+
+
+Feeds of any combination of these
+  *) free articles
+  *) interviews
+  *) pro articles
+  /atom  = everything
+  /atom?free=1&pro=1&tv=1  = everything
+  /tv/atom should redirect to /atom?tv=1
 
 
 podfeed:
