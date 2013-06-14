@@ -68,7 +68,7 @@ hook before_template => sub {
 	my $original_language = mymaven->{domain}{site};
 	my $language = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
-	my $data = read_meta('keywords') || {};
+	my $data = read_meta_hash('keywords');
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
@@ -157,7 +157,7 @@ get '/search' => sub {
 	my ($keyword) = param('keyword');
 	push_header 'Access-Control-Allow-Origin' => '*';
 	return to_json({}) if not defined $keyword;
-	my $data = read_meta('keywords') || {};
+	my $data = read_meta_hash('keywords');
 	$data->{$keyword} ||= {};
 	return to_json($data->{$keyword});
 };
@@ -176,18 +176,19 @@ get '/' => sub {
 };
 
 get '/keywords' => sub {
-	my $kw = read_meta('keywords') || {};
+	my $kw = read_meta_hash('keywords');
 	delete $kw->{keys}; # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
 	#die Dumper $kw->{__WARN__};
 	_show({ article => 'keywords', template => 'page', layout => 'keywords' }, { kw  => $kw });
 };
 
 get '/archive' => sub {
-	_show({ article => 'archive', template => 'archive', layout => 'system' }, { pages => (read_meta('archive') || []) });
+	_show({ article => 'archive', template => 'archive', layout => 'system' },
+		{ pages => read_meta_array('archive') });
 };
 
 get '/sitemap.xml' => sub {
-	my $pages = read_meta('sitemap') || [];
+	my $pages = read_meta_array('sitemap');
 	my $url = request->base;
 	$url =~ s{/$}{};
 	content_type 'application/xml';
@@ -967,6 +968,14 @@ sub read_meta {
 	return read_json(path(mymaven->{meta} . "/$host/meta/$file.json"));
 }
 
+sub read_meta_hash {
+	my ($what) = @_;
+
+	my $meta = read_meta($what) || {};
+
+	return $meta;
+}
+ 
 sub read_meta_array {
 	my ($what, %p) = @_;
 
