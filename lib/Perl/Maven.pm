@@ -72,8 +72,8 @@ hook before_template => sub {
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
-    $t->{conf}                 = mymaven->{conf};
-    $t->{resources}            = read_resources();
+	$t->{conf}                 = mymaven->{conf};
+	$t->{resources}            = read_resources();
 	$t->{comments}           &&= mymaven->{conf}{enable_comments};
 
 	# linking to translations
@@ -163,7 +163,7 @@ get '/search' => sub {
 };
 
 get '/' => sub {
-		if (request->host =~ /^meta\./) {
+	if (request->host =~ /^meta\./) {
 		return _show({ article => 'index',  template => 'page', layout => 'meta' }, {
 			authors => \%authors,
 			stats   => read_meta_meta('stats'),
@@ -196,13 +196,13 @@ get '/sitemap.xml' => sub {
 	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
 		$xml .= qq{  <url>\n};
-      	$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
+		$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
 		if ($p->{timestamp}) {
-      		$xml .= sprintf qq{    <lastmod>%s</lastmod>\n}, substr($p->{timestamp}, 0, 10);
+			$xml .= sprintf qq{    <lastmod>%s</lastmod>\n}, substr($p->{timestamp}, 0, 10);
 		}
-      	#$xml .= qq{    <changefreq>monthly</changefreq>\n};
-      	#$xml .= qq{    <priority>0.8</priority>\n};
-   		$xml .= qq{  </url>\n};
+		#$xml .= qq{    <changefreq>monthly</changefreq>\n};
+		#$xml .= qq{    <priority>0.8</priority>\n};
+		$xml .= qq{  </url>\n};
 	}
 	$xml .= qq{</urlset>\n};
 	return $xml;
@@ -447,8 +447,8 @@ get '/pro' => sub {
 };
 
 get '/pro/:file' => sub {
-    my $product = 'perl_maven_pro';
-    my $dir = 'pro';
+	my $product = 'perl_maven_pro';
+	my $dir = 'pro';
 	my $file = param('file');
 
 	my $path = mymaven->{dirs}{$dir} . "/$file.tt";
@@ -925,7 +925,7 @@ sub read_sites {
 }
 
 sub read_resources {
-    my %resources;
+	my %resources;
 	open my $fh, '<encoding(UTF-8)', mymaven->{site} . "/resources.txt" or return \%resources;
 	while (my $line = <$fh>) {
 		chomp $line;
