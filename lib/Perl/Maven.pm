@@ -185,7 +185,7 @@ get '/keywords' => sub {
 get '/archive' => sub {
 	my $tag = param('tag');
 	my $pages = $tag
-		? read_meta_array('archive', filter => [$tag])
+		? read_meta_array('archive', filter => $tag)
 		: read_meta_array('archive');
 	_show({ article => 'archive', template => 'archive', layout => 'system' },
 		{ pages => $pages });
@@ -215,11 +215,11 @@ get '/sitemap.xml' => sub {
 get '/atom' => sub {
 	my $tag = param('tag');
 	return $tag
-		? atom('archive', [$tag], [])
-		: atom('archive', []);
+		? atom('archive', $tag)
+		: atom('archive');
 };
 get '/tv/atom' => sub {
-	return atom('archive', ['interview'], ' - Interviews');
+	return atom('archive', 'interview', ' - Interviews');
 };
 
 post '/send-reset-pw-code' => sub {
@@ -649,7 +649,7 @@ get '/mail/:article' => sub {
 
 get '/tv' => sub {
 	_show({ article => 'tv', template => 'archive', layout => 'system' },
-		{ pages => read_meta_array('archive', filter => ['interview'])  });
+		{ pages => read_meta_array('archive', filter => 'interview')  });
 };
 
 # TODO this should not be here!!
@@ -1003,8 +1003,8 @@ sub read_meta_array {
 	return $meta if not %p;
 
 	my @pages = @$meta;
-	if ($p{filter} and @{ $p{filter} }) {
-		@pages = grep { Perl::Maven::Tools::_intersect($p{filter}, $_->{tags}) } @pages;
+	if ($p{filter}) {
+		@pages = grep { Perl::Maven::Tools::_any($p{filter}, $_->{tags}) } @pages;
 	}
 	if ($p{limit}) {
 		my $limit = min($p{limit}, scalar @pages);
@@ -1034,11 +1034,11 @@ sub read_json {
 }
 
 sub atom {
-	my ($what, $tags, $subtitle) = @_;
+	my ($what, $tag, $subtitle) = @_;
 
 	$subtitle ||= '';
 
-	my $pages = read_meta_array($what, filter => $tags, limit => $MAX_FEED);
+	my $pages = read_meta_array($what, filter => $tag, limit => $MAX_FEED);
 
 	my $mymaven = mymaven;
 

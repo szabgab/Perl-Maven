@@ -13,6 +13,11 @@ sub _intersect {
 	return 0;
 }
 
+sub _any {
+	my ($val, $ref) = @_;
+	return any { $_ eq $val } @$ref;
+}
+
 
 1;
 
