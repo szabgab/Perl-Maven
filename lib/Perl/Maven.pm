@@ -170,11 +170,9 @@ get '/' => sub {
 		});
 	}
 
-	my $meta = read_meta('archive') || [];
-	my $limit = min($MAX_INDEX, scalar @$meta);
-	my @pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @$meta)[0 .. $limit-1];
+	my $pages = read_meta_array('archive', limit => $MAX_INDEX);
 
-	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => \@pages });
+	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => $pages });
 };
 
 get '/keywords' => sub {
@@ -629,8 +627,8 @@ get '/mail/:article' => sub {
 };
 
 get '/tv' => sub {
-	my $tag = 'interview';
-	_show({ article => 'tv', template => 'archive', layout => 'system' }, { pages => (read_meta("archive_$tag") || []) });
+	_show({ article => 'tv', template => 'archive', layout => 'system' },
+		{ pages => read_meta_array('archive', filter => ['interview'])  });
 };
 
 # TODO this should not be here!!
@@ -969,6 +967,27 @@ sub read_meta {
 	return read_json(path(mymaven->{meta} . "/$host/meta/$file.json"));
 }
 
+sub read_meta_array {
+	my ($what, %p) = @_;
+
+	my $meta = read_meta($what) || [];
+	return $meta if not %p;
+
+	my @pages = @$meta;
+	if ($p{filter} and @{ $p{filter} }) {
+		@pages = grep { Perl::Maven::Tools::_intersect($p{filter}, $_->{tags}) } @pages;
+	}
+	if ($p{limit}) {
+		my $limit = min($p{limit}, scalar @pages);
+		@pages = @pages[0 .. $limit-1];
+	}
+
+	@pages = reverse sort { $a->{timestamp} cmp $b->{timestamp} } @pages;
+
+	return \@pages;
+}
+
+
 sub read_meta_meta {
 	my ($file) = @_;
 
@@ -990,15 +1009,7 @@ sub atom {
 
 	$subtitle ||= '';
 
-	#my $pages = read_meta($what, filter => $tags, limit => $MAX_FEED) || [];
-
-	my $meta = read_meta($what) || [];
-	my @pages = @$meta;
-	if (@$tags) {
-		@pages = grep { Perl::Maven::Tools::_intersect($tags, $_->{tags}) } @pages;
-	}
-	my $limit = min($MAX_FEED, scalar @pages);
-	@pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @pages)[0 .. $limit-1];
+	my $pages = read_meta_array($what, filter => $tags, limit => $MAX_FEED);
 
 	my $mymaven = mymaven;
 
@@ -1015,7 +1026,7 @@ sub atom {
 	$xml .= qq{<title>$title$subtitle</title>\n};
 	$xml .= qq{<id>$url/</id>\n};
 	$xml .= qq{<updated>${ts}Z</updated>\n};
-	foreach my $p (@pages) {
+	foreach my $p (@$pages) {
 		$xml .= qq{<entry>\n};
 		die 'no title ' . Dumper $p if not defined $p->{title};
 		$xml .= qq{  <title>$p->{title}</title>\n};
