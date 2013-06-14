@@ -166,4 +166,11 @@ pre {
 	border: 0;
 }
 
+#promo {
+  background-color: #DDDDDD;
+  padding: 10px;
+          border-radius: 15px;
+     -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+}
 
