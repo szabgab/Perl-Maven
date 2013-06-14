@@ -426,6 +426,13 @@ get '/account' => sub {
 				linkname => $f->{file},
 			};
 		}
+		if ($code eq 'perl_maven_pro') {
+			push @owned_products, {
+				name     => 'Perl Maven Pro',
+				filename => "/archive?tag=pro",
+				linkname => 'List of pro articles',
+			};
+		}
 	}
 
 	template 'account', {
@@ -450,8 +457,14 @@ get '/download/:dir/:file' => sub {
 };
 
 get '/pro' => sub {
+	my $product = 'perl_maven_pro';
 	my $path = mymaven->{site} . "/pages/pro.tt";
-	_show_abstract({ path => $path });
+	return _show_abstract({ path => $path })
+		if not logged_in()
+		   or not $db->is_subscribed(session('email'), $product);
+
+	my $tt = read_tt( $path );
+	return template 'prolist', $tt, { layout => 'page' };
 };
 
 get '/pro/:file' => sub {
