@@ -18,7 +18,6 @@ use YAML           qw(LoadFile);
 use Perl::Maven::Page;
 
 
-my @tags = ('interview');
 my %ts; # mapping timestamp => filename to ensure uniqueness
 
 sub process_domain {
@@ -81,17 +80,11 @@ sub process_site {
 	my $pages = $self->get_pages(@sources);
 
 
-	my ($keywords, $archive, $sitemap, $arch) = $self->process_files($pages, $lang);
+	my ($keywords, $archive, $sitemap) = $self->process_files($pages, $lang);
 	save('archive',  $dest, $archive);
 	save('keywords', $dest, $keywords);
 	save('sitemap',  $dest, $sitemap);
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
-
-	foreach my $tag (@tags) {
-		if ($arch->{$tag}) {
-			save("archive_$tag",  $dest, $arch->{$tag});
-		}
-	}
 
 	return;
 }
@@ -105,7 +98,7 @@ sub process_files {
 	# =tags contain concepts that we will want to categorize on
 
 	my %keywords; # =indexes and =tags are united here
-	my (@archive, @sitemap, %arch);
+	my (@archive, @sitemap);
 	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
 	foreach my $p (@$pages) {
@@ -146,11 +139,6 @@ sub process_files {
 				tags      => ($p->{tags} || []),
 			};
 			push @archive, $e;
-			foreach my $tag (@tags) {
-				if (grep { $_ eq $tag } @{ $p->{tags} || [] }) {
-					push @{ $arch{$tag} }, $e;
-				}
-			}
 		}
 
 		# TODO what to do when there is no abstract might need some configuration
@@ -168,7 +156,7 @@ sub process_files {
 		$self->latest->{$lang} = $archive[0];
 	}
 
-	return (\%keywords, \@archive, \@sitemap, \%arch);
+	return (\%keywords, \@archive, \@sitemap);
 }
 
 sub save {
