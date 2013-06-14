@@ -995,7 +995,7 @@ sub read_meta_hash {
 
 	return $meta;
 }
- 
+
 sub read_meta_array {
 	my ($what, %p) = @_;
 
@@ -1004,7 +1004,11 @@ sub read_meta_array {
 
 	my @pages = @$meta;
 	if ($p{filter}) {
-		@pages = grep { Perl::Maven::Tools::_any($p{filter}, $_->{tags}) } @pages;
+		if ($p{filter} eq 'free') {
+			@pages = grep { Perl::Maven::Tools::_none('pro', $_->{tags}) } @pages;
+		} else {
+			@pages = grep { Perl::Maven::Tools::_any($p{filter}, $_->{tags}) } @pages;
+		}
 	}
 	if ($p{limit}) {
 		my $limit = min($p{limit}, scalar @pages);
