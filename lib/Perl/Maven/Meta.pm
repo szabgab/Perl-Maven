@@ -72,8 +72,9 @@ sub process_site {
 		my $path = $config->{dirs}{$dir};
 		push @sources,
 			{
-				path => $path,
-				uri  => "$dir/",
+				autotags => $dir,
+				path     => $path,
+				uri      => "$dir/",
 			};
 	}
 
@@ -138,6 +139,9 @@ sub process_files {
 				author    => $p->{author},
 				tags      => ($p->{tags} || []),
 			};
+			if ($p->{autotags}) {
+				push @{ $e->{tags} }, $p->{autotags};
+			}
 			push @archive, $e;
 		}
 
@@ -191,11 +195,15 @@ sub get_pages {
 			die "Invalid status $data->{status} in $file"
 				if $data->{status} !~ /^(show|hide|draft|ready)/;
 
-			push @pages, {
-					file  => $file,
-					url_path => $s->{uri} . $file,
-					%$data,
-			};
+			my %p = (
+				file     => $file,
+				url_path => $s->{uri} . $file,
+				%$data,
+			);
+			if ($s->{autotags}) {
+				$p{autotags} = $s->{autotags};
+			}
+			push @pages, \%p;
 		}
 	}
 

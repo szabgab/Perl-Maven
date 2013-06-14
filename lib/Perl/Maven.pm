@@ -183,8 +183,12 @@ get '/keywords' => sub {
 };
 
 get '/archive' => sub {
+	my $tag = param('tag');
+	my $pages = $tag
+		? read_meta_array('archive', filter => [$tag])
+		: read_meta_array('archive');
 	_show({ article => 'archive', template => 'archive', layout => 'system' },
-		{ pages => read_meta_array('archive') });
+		{ pages => $pages });
 };
 
 get '/sitemap.xml' => sub {
@@ -209,7 +213,10 @@ get '/sitemap.xml' => sub {
 	return $xml;
 };
 get '/atom' => sub {
-	return atom('archive', []);
+	my $tag = param('tag');
+	return $tag
+		? atom('archive', [$tag], [])
+		: atom('archive', []);
 };
 get '/tv/atom' => sub {
 	return atom('archive', ['interview'], ' - Interviews');

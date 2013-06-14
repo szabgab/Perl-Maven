@@ -2,6 +2,18 @@ The source code of http://perl5maven.com/
 
 TODO
 
+Add Free, Pro, Perldoc tags automatically to pages
+Add Audio, Video tags to pages where relevant
+
+Add some color mark to each entry in the archive and on the index page
+  showing the tags:
+      Interview, Pro, Free, Video, Audio, Perldoc
+Create separate listing (probably paged) listing all the enties or only
+one in a certain tag.
+
+
+
+
 Add some mark to the user account when the user has purchased the pro account.
 Send e-mail to the person when he bought one of the products
 Change the system to let the user set the password after subscribing.
@@ -14,6 +26,8 @@ operations are needed:
      filtered based on show mode (archive, index, feed ...)
      limited to N (or not limited), maybe paged
      sometimes include abstract, sometime not
+
+
 
 Allow user to subscribe (by e-mail) to any combination of these:
   *) free articles
