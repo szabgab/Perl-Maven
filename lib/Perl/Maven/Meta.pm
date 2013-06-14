@@ -19,6 +19,7 @@ use Perl::Maven::Page;
 
 
 my @tags = ('interview');
+my %ts; # mapping timestamp => filename to ensure uniqueness
 
 sub process_domain {
 	my ($self, $domain) = @_;
@@ -100,8 +101,9 @@ sub process_files {
 	my ($self, $pages, $lang) = @_;
 
 	# TODO:
-	# I think =indexes are supposed to be Perl keywords while =tags contain concepts that users
-	# might want to search for. Or the other way around.
+	# =indexes are supposed to be mostly Perl keywords and other concepts
+	#    people might search for
+	# =tags contain concepts that we will want to categorize on
 
 	my %keywords; # =indexes and =tags are united here
 	my (@archive, @sitemap, %arch);
@@ -115,6 +117,11 @@ sub process_files {
 		if ($p->{original}) {
 			$self->translations->{ $p->{original} }{ $lang } = $filename;
 		}
+
+		if ($ts{ $p->{timestamp} } and $filename !~ /perldoc/) {
+			die "Duplicate =timestamp '$p->{timestamp}' in $ts{ $p->{timestamp} } and in $lang/pages/$filename\n";
+		}
+		$ts{ $p->{timestamp} } = "$lang/pages/$filename";
 
 		foreach my $f (qw(indexes tags)) {
 			next if not $p->{$f};
