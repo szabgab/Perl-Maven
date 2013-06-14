@@ -188,7 +188,11 @@ get '/archive' => sub {
 		? read_meta_array('archive', filter => $tag)
 		: read_meta_array('archive');
 	_show({ article => 'archive', template => 'archive', layout => 'system' },
-		{ pages => $pages });
+		{
+			pages            => $pages,
+			abstract         => param('abstract'),
+			archive_selector => (Perl::Maven::Config::host(request->host) eq 'perlmaven.com' ? 1 : 0),
+		});
 };
 
 get '/sitemap.xml' => sub {
