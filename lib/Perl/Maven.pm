@@ -23,6 +23,7 @@ use List::Util   qw(min);
 
 use Perl::Maven::Page;
 use Perl::Maven::Config;
+use Perl::Maven::Tools;
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new(path(config->{appdir}, config->{mymaven}));
@@ -209,10 +210,10 @@ get '/sitemap.xml' => sub {
 	return $xml;
 };
 get '/atom' => sub {
-	return atom('archive');
+	return atom('archive', []);
 };
 get '/tv/atom' => sub {
-	return atom('archive_interview', ' - Interviews');
+	return atom('archive', ['interview'], ' - Interviews');
 };
 
 post '/send-reset-pw-code' => sub {
@@ -985,13 +986,19 @@ sub read_json {
 }
 
 sub atom {
-	my ($what, $subtitle) = @_;
+	my ($what, $tags, $subtitle) = @_;
 
 	$subtitle ||= '';
 
+	#my $pages = read_meta($what, filter => $tags, limit => $MAX_FEED) || [];
+
 	my $meta = read_meta($what) || [];
-	my $limit = min($MAX_FEED, scalar @$meta);
-	my @pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @$meta)[0 .. $limit-1];
+	my @pages = @$meta;
+	if (@$tags) {
+		@pages = grep { Perl::Maven::Tools::_intersect($tags, $_->{tags}) } @pages;
+	}
+	my $limit = min($MAX_FEED, scalar @pages);
+	@pages = (reverse sort { $a->{timestamp} cmp $b->{timestamp} } @pages)[0 .. $limit-1];
 
 	my $mymaven = mymaven;
 
@@ -1010,7 +1017,7 @@ sub atom {
 	$xml .= qq{<updated>${ts}Z</updated>\n};
 	foreach my $p (@pages) {
 		$xml .= qq{<entry>\n};
-		die Dumper $p if not defined $p->{title};
+		die 'no title ' . Dumper $p if not defined $p->{title};
 		$xml .= qq{  <title>$p->{title}</title>\n};
 		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
 		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};

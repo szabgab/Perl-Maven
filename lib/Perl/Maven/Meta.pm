@@ -69,7 +69,6 @@ sub process_site {
 				uri  => '',
 			},
 	);
-#print Dumper $config;
 	foreach my $dir ( @{ $config->{index} } ) {
 		my $path = $config->{dirs}{$dir};
 		push @sources,
@@ -144,6 +143,7 @@ sub process_files {
 				filename  => $filename,
 				abstract  => $p->{abstract},
 				author    => $p->{author},
+				tags      => ($p->{tags} || []),
 			};
 			push @archive, $e;
 			foreach my $tag (@tags) {
