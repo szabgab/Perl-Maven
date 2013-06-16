@@ -1066,7 +1066,13 @@ sub atom {
 	foreach my $p (@$pages) {
 		$xml .= qq{<entry>\n};
 		die 'no title ' . Dumper $p if not defined $p->{title};
-		$xml .= qq{  <title>$p->{title}</title>\n};
+		my $title =  $p->{title};
+
+		# TODO remove hard-coded pro check
+		if (grep {'pro' eq $_}  @{ $p->{tags} }) {
+			$title = "Pro: $title";
+		}
+		$xml .= qq{  <title>$title</title>\n};
 		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
 		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
 		$url = $p->{url} ? $p->{url} : $url;
