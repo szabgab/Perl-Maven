@@ -188,7 +188,10 @@ sub get_pages {
 		foreach my $file (File::Find::Rule->file()->name('*.tt')->relative()->in($s->{path})) {
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
-			my $data = Perl::Maven::Page->new(file => $path)->read;
+			my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+			if ($@) {
+				die "Could not read '$path' $@";
+			}
 			foreach my $field (qw(timestamp title status)) {
 				die "No $field in $path" if not $data->{$field};
 			}
