@@ -171,6 +171,11 @@ get '/' => sub {
 	}
 
 	my $pages = read_meta_array('archive', limit => $MAX_INDEX);
+	foreach my $p (@$pages) {
+		if ($p->{tags} and (grep {$_ eq 'pro'} @{ $p->{tags} })) {
+			$p->{title} = "Pro: $p->{title}";
+		}
+	}
 
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => $pages });
 };
