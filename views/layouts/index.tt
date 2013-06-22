@@ -4,7 +4,7 @@
 <h2><% resources.recent_articles %></h2>
 <% FOR p IN pages %>
   <div class="abstract">
-  <h2><a href="/<% p.filename %>"><% p.title %></a></h2>
+  <h2><% IF p.tags.pro %>Pro: <% END %><a href="/<% p.filename %>"><% p.title %></a></h2>
   <p>
   <% p.abstract %>
   <br>

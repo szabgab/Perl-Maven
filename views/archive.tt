@@ -13,13 +13,41 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 
 <% mycontent %>
 
+<style>
+#archive {
+  padding: 0;
+  margin: 0;
+}
+#archive ul {
+  list-style-type: none;
+  display: inline;
+}
+#archive > ul > li > ul > li {
+  float: left;
+}
+#archive > ul > li > ul > li:first-child {
+  width: 30px;
+}
+#archive > ul > li {
+  padding: 0;
+}
+</style>
+
+<div id="archive">
+
 <ul>
 <% FOR p IN pages %>
- <li><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a> <% p.date %>
+ <li>
+   <ul>
+     <li><% IF p.tags.pro %>Pro:<% ELSE %>&nbsp;<% END %></li>
+     <li><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a> <% p.date %></li>
+   </ul>
    <% IF abstract %>
      <% p.abstract %>
    <% END %>
  </li>
 <% END %>
 </ul>
+
+</div>
 
