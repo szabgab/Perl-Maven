@@ -15,15 +15,6 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 
 <style>
 #archive {
-  padding: 0;
-  margin: 0;
-}
-#archive ul {
-  list-style-type: none;
-  display: inline;
-}
-#archive > ul > li > ul > li {
-  float: left;
 }
 #archive .pro {
   width: 30px;
@@ -32,39 +23,35 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
   width: 65px;
 }
 #archive .screencast {
-  width: 75px;
+  width: 80px;
 }
 #archive .title {
 /*  width: 600px; */
 }
 
 #archive .date {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-#archive > ul > li {
-  padding: 0;
+  width: 80px;
 }
 </style>
 
 <div id="archive">
-
-<ul>
+<table>
 <% FOR p IN pages %>
- <li>
-   <ul>
-     <li class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></li>
-     <li class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></li>
-     <li class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></li>
-     <li class="date"><% p.date %></li>
-     <li class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></li>
-   </ul>
-   <% IF abstract %>
-     <% p.abstract %>
-   <% END %>
- </li>
+ <tr>
+     <td class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></td>
+     <td class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></td>
+     <td class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></td>
+     <td class="date"><% p.date %></td>
+     <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></td>
+ </tr>
+ <% IF abstract %>
+   <tr>
+     <td colspan="4"></td>
+     <td><% p.abstract %></td>
+   </tr>
+ <% END %>
 <% END %>
-</ul>
+</table>
 
 </div>
 
