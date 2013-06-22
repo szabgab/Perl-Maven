@@ -57,7 +57,7 @@ Unsubscribed from the Perl Maven newsletter.
 <% END %>
 
 <% IF subscribed %>
-Subscribed to the Perl Maven newsletter. Please visit your <a href="/account">account</a> to get a free copy of the Perl Maven Cookbook.
+Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/account">account</a>.
 <% END %>
 
 <% IF no_product_specified %>
