@@ -25,8 +25,22 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 #archive > ul > li > ul > li {
   float: left;
 }
-#archive > ul > li > ul > li:first-child {
+#archive .pro {
   width: 30px;
+}
+#archive .interview {
+  width: 65px;
+}
+#archive .screencast {
+  width: 75px;
+}
+#archive .title {
+/*  width: 600px; */
+}
+
+#archive .date {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 #archive > ul > li {
   padding: 0;
@@ -39,8 +53,11 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 <% FOR p IN pages %>
  <li>
    <ul>
-     <li><% IF p.tags.pro %>Pro:<% ELSE %>&nbsp;<% END %></li>
-     <li><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a> <% p.date %></li>
+     <li class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></li>
+     <li class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></li>
+     <li class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></li>
+     <li class="date"><% p.date %></li>
+     <li class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></li>
    </ul>
    <% IF abstract %>
      <% p.abstract %>
