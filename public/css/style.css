@@ -174,3 +174,30 @@ pre {
   -webkit-border-radius: 15px;
 }
 
+.perlweekly {
+ background-color: #004065;
+ color: #FFF;
+ -moz-border-radius: 5px 5px 5px 5px;
+ -webkit-border-radius: 5px;
+ padding: 5px;
+ text-align: center;
+ margin-top: 15px;
+ margin-bottom: 15px;
+}
+
+.perlweekly_title {
+ font-size: 28px;
+}
+.perlweekly_free {
+ font-size: 16px;
+}
+.perlweekly a {
+ color: #FFF;
+ font-size: 22px;
+ text-decoration: none;
+}
+.perlweekly:hover {
+ background-color: #003055;
+}
+
+

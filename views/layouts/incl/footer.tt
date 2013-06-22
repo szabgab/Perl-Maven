@@ -35,6 +35,15 @@
 		   <% END %>
         <% INCLUDE incl/social_share.tt %>
 
+
+        <div class="perlweekly">
+          <a href="http://perlweekly.com/">
+          <div class="perlweekly_title">Perl Weekly</div>
+          <div class="perlweekly_free">A FREE newsletter</div>
+          <div>Click here to sign-up</div>
+          </a>
+        </div>
+
 <!--
            <div class="sponsor">
 	        <a href="/linode">Linode</a> is our recommended web hosting company.
