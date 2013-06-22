@@ -33,8 +33,6 @@
                </form>
             </div>
 		   <% END %>
-        <% INCLUDE incl/social_share.tt %>
-
 
         <div class="perlweekly">
           <a href="http://perlweekly.com/">
@@ -44,6 +42,8 @@
           </a>
         </div>
 
+
+        <% INCLUDE incl/social_share.tt %>
 <!--
            <div class="sponsor">
 	        <a href="/linode">Linode</a> is our recommended web hosting company.
