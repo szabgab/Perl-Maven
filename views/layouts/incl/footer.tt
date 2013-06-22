@@ -26,21 +26,16 @@
           <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
                <h3>Do you want to improve your Perl?</h3>
-               Register to the FREE newsletter now, get updates.
+               Register to the FREE Perl Maven newsletter here.
                <form method="POST" action="/register" name="registration_form">
                  Email: <input name="email" />
                 <input type="submit" value="Register" />
                </form>
+               or to the Perl Weekly newletter
+              <a href="http://perlweekly.com/">over there</a>
             </div>
-		   <% END %>
 
-        <div class="perlweekly">
-          <a href="http://perlweekly.com/">
-          <div class="perlweekly_title">Perl Weekly</div>
-          <div class="perlweekly_free">A FREE newsletter</div>
-          <div>Click here to sign-up</div>
-          </a>
-        </div>
+		   <% END %>
 
 
         <% INCLUDE incl/social_share.tt %>

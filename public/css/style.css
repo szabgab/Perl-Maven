@@ -47,9 +47,9 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   margin: 20px;
   background-color: #DDEEFF;
   padding: 10px;
-  -moz-border-radius: 15px;
+          border-radius: 15px;
+     -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
-  border-radius: 15px;
 }
 
 #social-share {
@@ -177,18 +177,20 @@ pre {
 .perlweekly {
  background-color: #004065;
  color: #FFF;
- -moz-border-radius: 5px 5px 5px 5px;
- -webkit-border-radius: 5px;
- padding: 5px;
+         border-radius: 15px;
+    -moz-border-radius: 15px;
+ -webkit-border-radius: 15px;
+ padding: 10px;
  text-align: center;
- margin-top: 15px;
- margin-bottom: 15px;
+ margin: 20px;
 }
 
 .perlweekly_title {
  font-size: 28px;
+ padding: 5px;
 }
 .perlweekly_free {
+ padding: 5px;
  font-size: 16px;
 }
 .perlweekly a {
