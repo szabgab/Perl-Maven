@@ -149,7 +149,7 @@ sub process_files {
 		# let's put the title in the abstract for now.
 		#$p->{abstract} ||= $p->{title};
 		#$p->{abstract} ||= ' ';
-		
+
 		push @sitemap, {
 			title => $p->{title},
 			filename => ($filename eq 'index' ? '' : $filename),
@@ -214,7 +214,7 @@ sub get_pages {
 		if ($p->{status} eq 'show') {
 			push @selected, $p;
 		} else {
-			warn "No show $p->{file}";
+			warn "No =status show $p->{file}\n";
 		}
 	}
 
