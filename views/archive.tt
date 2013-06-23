@@ -13,13 +13,45 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 
 <% mycontent %>
 
-<ul>
+<style>
+#archive {
+}
+#archive .pro {
+  width: 30px;
+}
+#archive .interview {
+  width: 65px;
+}
+#archive .screencast {
+  width: 80px;
+}
+#archive .title {
+/*  width: 600px; */
+}
+
+#archive .date {
+  width: 80px;
+}
+</style>
+
+<div id="archive">
+<table>
 <% FOR p IN pages %>
- <li><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a> <% p.date %>
-   <% IF abstract %>
-     <% p.abstract %>
-   <% END %>
- </li>
+ <tr>
+     <td class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></td>
+     <td class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></td>
+     <td class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></td>
+     <td class="date"><% p.date %></td>
+     <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></td>
+ </tr>
+ <% IF abstract %>
+   <tr>
+     <td colspan="4"></td>
+     <td><% p.abstract %></td>
+   </tr>
+ <% END %>
 <% END %>
-</ul>
+</table>
+
+</div>
 

@@ -171,9 +171,21 @@ get '/' => sub {
 	}
 
 	my $pages = read_meta_array('archive', limit => $MAX_INDEX);
+	_replace_tags($pages);
 
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => $pages });
 };
+
+sub _replace_tags {
+	my ($pages) = @_;
+
+	foreach my $p (@$pages) {
+		$p->{tags} ||= [];
+		$p->{tags} = { map { $_ => 1 } @{ $p->{tags} } };
+	}
+	return;
+}
+
 
 get '/keywords' => sub {
 	my $kw = read_meta_hash('keywords');
@@ -187,6 +199,8 @@ get '/archive' => sub {
 	my $pages = $tag
 		? read_meta_array('archive', filter => $tag)
 		: read_meta_array('archive');
+	_replace_tags($pages);
+
 	_show({ article => 'archive', template => 'archive', layout => 'system' },
 		{
 			pages            => $pages,

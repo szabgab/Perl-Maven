@@ -26,16 +26,19 @@
           <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
                <h3>Do you want to improve your Perl?</h3>
-               Register to the FREE newsletter now, get updates and a copy
-               of the Perl Maven Cookbook.
+               Register to the FREE Perl Maven newsletter here.
                <form method="POST" action="/register" name="registration_form">
                  Email: <input name="email" />
                 <input type="submit" value="Register" />
                </form>
+               or to the Perl Weekly newletter
+              <a href="http://perlweekly.com/">over there</a>
             </div>
-		   <% END %>
-        <% INCLUDE incl/social_share.tt %>
 
+		   <% END %>
+
+
+        <% INCLUDE incl/social_share.tt %>
 <!--
            <div class="sponsor">
 	        <a href="/linode">Linode</a> is our recommended web hosting company.

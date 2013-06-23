@@ -2,7 +2,6 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="/perl-tutorial">Perl Tutorial</a></li>
-<!--              <li><a href="/perl-maven-cookbook">Newsletter and Cookbook</a></li>-->
               <li><a href="/products">Products</a></li>
               <li><a href="/tv">TV</a></li>
               <% IF username %>
