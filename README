@@ -2,6 +2,13 @@ The source code of http://perl5maven.com/
 
 TODO
 
+Change the password reminder (and the other administrative messagee)
+to either be just in plain text
+or include both HTML and plain text version.
+
+
+
+
 Add Free, Pro, Perldoc tags automatically to pages
 Add Audio, Video tags to pages where relevant
 
