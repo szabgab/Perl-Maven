@@ -35,7 +35,6 @@ sub mymaven {
 my $sandbox = 0;
 
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-my %products;
 
 ## configure relative pathes
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
@@ -52,7 +51,7 @@ hook before => sub {
 
 	read_authors();
 	my $p = $db->get_products;
-	%products = %$p;
+	set products => $p;
 };
 
 hook before_template => sub {
@@ -441,7 +440,7 @@ get '/account' => sub {
 		foreach my $f (@files) {
 			#debug "$code -  $f->{file}";
 			push @owned_products, {
-				name     => "$products{$code}{name} $f->{title}",
+				name     => (setting('products')->{$code}{name} . " $f->{title}"),
 				filename => "/download/$code/$f->{file}",
 				linkname => $f->{file},
 			};
@@ -468,7 +467,7 @@ get '/download/:dir/:file' => sub {
 	# TODO better error reporting or handling when not logged in
 	return redirect '/'
 		if not logged_in();
-	return redirect '/' if not $products{$dir}; # no such product
+	return redirect '/' if not setting('products')->{$dir}; # no such product
 
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
@@ -566,19 +565,20 @@ get '/buy' => sub {
 		return template 'error', {please_log_in => 1};
 		# TODO redirect back the user once logged in!!!
 	}
+	my $products = setting('products');
 	my $what = param('product');
 	my $type = param('type') || 'standard';
 	if (not $what) {
 		return template 'error', {'no_product_specified' => 1};
 	}
-	if (not $products{$what}) {
+	if (not $products->{$what}) {
 		return template 'error', {'invalid_product_specified' => 1};
 	}
 	if ($type eq 'annual') { # TODO remove hardcoding
-		$products{$what}{price} = 90;
+		$products->{$what}{price} = 90;
 	}
 	return template 'buy', {
-		%{ $products{$what} },
+		%{ $products->{$what} },
 		button => paypal_buy($what, $type, 1),
 	};
 };
@@ -796,7 +796,8 @@ sub pw_form {
 sub paypal_buy {
 	my ($what, $type, $quantity) = @_;
 
-	my $usd  = $products{$what}{price};
+	my $products = setting('products');
+	my $usd  = $products->{$what}{price};
 
 	# TODO remove special case for recurring payment
 	my %params;
@@ -827,7 +828,7 @@ sub paypal_buy {
 	my $paypal = paypal();
 	my $button = $paypal->button(
 		business       => mymaven->{paypal}{email},
-		item_name      => $products{$what}{name},
+		item_name      => $products->{$what}{name},
 		quantity       => $quantity,
 		return         => "$return_url",
 		cancel_return  => "$cancel_url",
