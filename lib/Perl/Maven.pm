@@ -25,6 +25,8 @@ use Perl::Maven::Page;
 use Perl::Maven::Config;
 use Perl::Maven::Tools;
 
+eval "use Perl::Maven::Admin";
+
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new(path(config->{appdir}, config->{mymaven}));
 	return $mymaven->config(request->host);
@@ -1172,4 +1174,5 @@ sub itunes {
 true;
 
 # vim:noexpandtab
+# vim:ts=4
 

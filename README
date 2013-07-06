@@ -87,3 +87,22 @@ You could make a feed for all of us to subscribe to the audio at http://huffduff
 
 Index a module
 
+
+
+Registration and purchase process
+=================================
+
+Register:
+  - user types in e-mail
+  - system send e-mail with confirmation code
+  - when user clicks on link the account is verified,
+    the user is marked as logged in and prompted for a password
+      (but the system also sais the password can be set later.
+
+  - If a user has not been verified yet, send an e-mail and ask
+    if I can help (or shall I just delete the old but unverified
+    accounts?
+  - If a user does not yet have a password, send an e-mail   
+    explaining the new story
+
+
