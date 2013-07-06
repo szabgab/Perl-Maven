@@ -144,6 +144,11 @@ END_TXT
 	return $txt;
 };
 
+#get qr{/style.css} => sub {
+#	my $path = path(config->{appdir}, (splat)[0]);
+#	send_file($path);
+#};
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
