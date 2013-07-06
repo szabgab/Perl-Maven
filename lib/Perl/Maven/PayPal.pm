@@ -40,19 +40,20 @@ get '/buy' => sub {
 		return template 'error', {please_log_in => 1};
 		# TODO redirect back the user once logged in!!!
 	}
+	my $products = setting('products');
 	my $what = param('product');
 	my $type = param('type') || 'standard';
 	if (not $what) {
 		return template 'error', {'no_product_specified' => 1};
 	}
-	if (not $products{$what}) {
+	if (not $products->{$what}) {
 		return template 'error', {'invalid_product_specified' => 1};
 	}
 	if ($type eq 'annual') { # TODO remove hardcoding
-		$products{$what}{price} = 90;
+		$products->{$what}{price} = 90;
 	}
 	return template 'buy', {
-		%{ $products{$what} },
+		%{ $products->{$what} },
 		button => paypal_buy($what, $type, 1),
 	};
 };
@@ -112,7 +113,8 @@ sub paypal {
 sub paypal_buy {
 	my ($what, $type, $quantity) = @_;
 
-	my $usd  = $products{$what}{price};
+	my $products = setting('products');
+	my $usd  = $products->{$what}{price};
 
 	# TODO remove special case for recurring payment
 	my %params;
@@ -143,7 +145,7 @@ sub paypal_buy {
 	my $paypal = paypal();
 	my $button = $paypal->button(
 		business       => mymaven->{paypal}{email},
-		item_name      => $products{$what}{name},
+		item_name      => $products->{$what}{name},
 		quantity       => $quantity,
 		return         => "$return_url",
 		cancel_return  => "$cancel_url",

@@ -32,8 +32,6 @@ sub mymaven {
 	return $mymaven->config(request->host);
 };
 
-my %products;
-
 ## configure relative pathes
 my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
 my %authors;
@@ -49,7 +47,7 @@ hook before => sub {
 
 	read_authors();
 	my $p = $db->get_products;
-	%products = %$p;
+	set products => $p;
 };
 
 hook before_template => sub {
@@ -438,7 +436,7 @@ get '/account' => sub {
 		foreach my $f (@files) {
 			#debug "$code -  $f->{file}";
 			push @owned_products, {
-				name     => "$products{$code}{name} $f->{title}",
+				name     => (setting('products')->{$code}{name} . " $f->{title}"),
 				filename => "/download/$code/$f->{file}",
 				linkname => $f->{file},
 			};
@@ -465,7 +463,7 @@ get '/download/:dir/:file' => sub {
 	# TODO better error reporting or handling when not logged in
 	return redirect '/'
 		if not logged_in();
-	return redirect '/' if not $products{$dir}; # no such product
+	return redirect '/' if not setting('products')->{$dir}; # no such product
 
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed(session('email'), $dir);
