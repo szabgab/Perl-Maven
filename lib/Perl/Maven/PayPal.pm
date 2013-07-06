@@ -3,6 +3,9 @@ use Dancer ':syntax';
 use Perl::Maven::DB;
 use Perl::Maven::Config;
 
+use POSIX;
+use Data::Dumper qw(Dumper);
+
 my $sandbox = 0;
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
@@ -36,7 +39,7 @@ sub mymaven {
 
 
 get '/buy' => sub {
-	if (not logged_in()) {
+	if (not Perl::Maven::logged_in()) {
 		return template 'error', {please_log_in => 1};
 		# TODO redirect back the user once logged in!!!
 	}
@@ -157,7 +160,7 @@ sub paypal_buy {
 
 	my $paypal_data = session('paypal') || {};
 
-	my $email = logged_in() ? session('email') : '';
+	my $email = Perl::Maven::logged_in() ? session('email') : '';
 	my %data = (what => $what, quantity => $quantity, usd => $usd, email => $email );
 	$paypal_data->{$id} = \%data;
 	session paypal => $paypal_data;

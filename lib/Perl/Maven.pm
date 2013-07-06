@@ -25,7 +25,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Tools;
 
 eval "use Perl::Maven::Admin";
-use Perl::Maven::PayPal;
+eval "use Perl::Maven::PayPal";
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new(path(config->{appdir}, config->{mymaven}));
