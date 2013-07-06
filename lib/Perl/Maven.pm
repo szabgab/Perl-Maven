@@ -33,11 +33,14 @@ sub mymaven {
 };
 
 ## configure relative pathes
-my $db = Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
+my $db;
 my %authors;
 
 hook before => sub {
 	my $appdir = abs_path config->{appdir};
+
+	$db ||= Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
+	set db => $db;
 
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
 	# and thus we cannot change the include path before rendering

@@ -81,7 +81,7 @@ any '/paypal'  => sub {
 		return 'ipn-transaction-failed';
 	}
 
-	my $paypal_data = from_yaml $db->get_transaction($id);
+	my $paypal_data = from_yaml setting('db')->get_transaction($id);
 	if (not $paypal_data) {
 		log_paypal('IPN-unrecognized-id', \%query);
 		return 'ipn-transaction-invalid';
@@ -90,7 +90,7 @@ any '/paypal'  => sub {
 	if ($payment_status eq 'Completed' or $payment_status eq 'Pending') {
 		my $email = $paypal_data->{email};
 		#debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
-		$db->subscribe_to($email, $paypal_data->{what});
+		setting('db')->subscribe_to($email, $paypal_data->{what});
 		log_paypal('IPN-ok', \%query);
 		return 'ipn-ok';
 	}
@@ -161,7 +161,7 @@ sub paypal_buy {
 	my %data = (what => $what, quantity => $quantity, usd => $usd, email => $email );
 	$paypal_data->{$id} = \%data;
 	session paypal => $paypal_data;
-	$db->save_transaction($id, to_yaml \%data);
+	setting('db')->save_transaction($id, to_yaml \%data);
 
 	log_paypal('buy_button', {id => $id, %data});
 
