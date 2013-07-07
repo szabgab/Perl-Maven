@@ -1,4 +1,4 @@
-use Test::More tests => 17;
+use Test::More tests => 19;
 use strict;
 use warnings;
 
@@ -23,7 +23,7 @@ my $admin = "$^X -Ilib bin/admin.pl";
 
 {
     my ($stdout, $stderr, @result) = capture {
-        system "$admin --products";
+        system "$admin --products --dump";
     };
     is_deeply re_dump($stdout), [
            [
@@ -36,11 +36,22 @@ my $admin = "$^X -Ilib bin/admin.pl";
              3,
              'perl_maven_cookbook',
              'Perl Maven Cookbook',
-             undef
+             39
            ]
-         ], '--products';
+         ], '--products --dump';
     is $stderr, '', 'stderr is empty';
 }
+{
+    my ($stdout, $stderr, @result) = capture {
+        system "$admin --products";
+    };
+    is $stdout, 
+q{ 2 beginner_perl_maven_ebook           Beginner Perl Maven e-book        0.01
+ 3 perl_maven_cookbook                 Perl Maven Cookbook                39
+} , '--products';
+    is $stderr, '', 'stderr is empty';
+}
+
 
 {
     my ($stdout, $stderr, @result) = capture {

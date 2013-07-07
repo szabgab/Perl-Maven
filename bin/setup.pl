@@ -29,6 +29,6 @@ CREATE TRIGGER user_cleanup
   END;
 });
 
-$dbh->do('INSERT INTO product (code, name) VALUES (?, ?)',
-	undef, 'perl_maven_cookbook', 'Perl Maven Cookbook');
+$dbh->do('INSERT INTO product (code, name, price) VALUES (?, ?, ?)',
+	undef, 'perl_maven_cookbook', 'Perl Maven Cookbook', 39);
 

@@ -28,6 +28,7 @@ GetOptions(\%opt,
 	'email=s',
 
 	'unsub=s',
+	'dump'
 ) or usage();
 
 if ($opt{products}) {
@@ -35,7 +36,13 @@ if ($opt{products}) {
 	   SELECT *
 	   FROM product
 	});
-	print Dumper $products;
+	if ($opt{dump}) {
+		print Dumper $products;
+	} else {
+		foreach my $p (sort {$a->[1] cmp $b->[1]} @$products) {
+			printf "%2s %-35s %-33s %3s\n", @$p;
+		}
+	}
 } elsif ($opt{stats}) {
 	my $products = $dbh->selectall_hashref(q{
 	   SELECT *
