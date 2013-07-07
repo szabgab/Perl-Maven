@@ -51,6 +51,7 @@ if ($opt{products}) {
 	#print Dumper $products;
 	my $subs = $dbh->selectall_hashref(q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid');
 	my $format = "%-35s %5s\n";
+	printf $format, 'Product code', 'Number of subscribers';
 	foreach my $pid (sort keys %$products) {
 		printf $format, $products->{$pid}{code}, ($subs->{$pid}{cnt} || 0);
 	}
@@ -59,6 +60,16 @@ if ($opt{products}) {
 	say '-' x 45;
 	printf $format, "Total 'purchases':", $all_subs;
 	printf $format, "Distinct # of clients:", $distinct_subs;
+	print "\n";
+	my $all_users = $dbh->selectrow_array(q{SELECT COUNT(*) FROM user});
+	my $not_verified = $dbh->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NULL});
+	my $no_password = $dbh->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL});
+	printf $format, 'All the users', $all_users;
+	printf $format, 'Verified', ($all_users - $not_verified);
+	printf $format, 'NOT Verified', $not_verified;
+	printf $format, 'Verified but NO password', $no_password;
+	
+	
 } elsif ($opt{show} and $opt{email}) {
 	show_people($opt{email});
 } elsif ($opt{replace} and $opt{email}) {
