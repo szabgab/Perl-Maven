@@ -31,6 +31,10 @@ GetOptions(\%opt,
 	'dump'
 ) or usage();
 
+if ($opt{email}) {
+	$opt{email} = lc $opt{email};
+}
+
 if ($opt{products}) {
 	my $products = $dbh->selectall_arrayref(q{
 	   SELECT *
