@@ -23,7 +23,7 @@ my $URL = "$url/";
 #diag($url);
 #sleep 30;
 #plan( tests => 42 );
-plan( tests => 26 );
+plan( tests => 27 );
 
 my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
 my $cookbook_text = basename $cookbook_url;
@@ -153,6 +153,21 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	$w->get_ok("$url/logged-in");
 	is($w->content, 0);
 }
+
+# ask the system to send a password reminder, use the link to set the password
+# log out and then login again
+subtest('ask for password reset' => sub {
+	plan( tests => 3 );
+	$w->get_ok('/account');
+	$w->content_like(qr{Login});
+	$w->content_like(qr{Forgot your password or don't have one yet});
+});
+
+# now change password while logged in,
+# log out and check if we fail to log in with
+# the old password but we can log in with the new.
+#{
+#}
 
 
 # when a user sets his password consider that user to have been verified (after all he got the code)
