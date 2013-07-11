@@ -297,8 +297,8 @@ get '/set-password/:id/:code' => sub {
 post '/change-password' => sub {
 	return redirect '/login' if not logged_in();
 
-	my $password = param('password');
-	my $password2 = param('password2');
+	my $password  = param('password')  || '';
+	my $password2 = param('password2') || '';
 
 	return template 'error', {
 		no_password => 1,
