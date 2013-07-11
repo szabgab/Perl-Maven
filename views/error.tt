@@ -40,6 +40,15 @@ The code you you've received to set your password has timed out. Please ask for 
 E-mail sent with code to reset password.
 <% END %>
 
+<% IF no_password %>
+No password was given.
+<% END %>
+
+<% IF passwords_dont_match %>
+Passwords don't match.
+<% END %>
+
+
 <% IF bad_password %>
 No or bad password was given.
 <% END %>

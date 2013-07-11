@@ -294,6 +294,31 @@ get '/set-password/:id/:code' => sub {
 	};
 };
 
+post '/change-password' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $password = param('password');
+	my $password2 = param('password2');
+
+	return template 'error', {
+		no_password => 1,
+	} if not $password;
+
+	return template 'error', {
+		passwords_dont_match => 1,
+	} if $password ne $password2;
+
+	return template 'error', {
+		bad_password => 1,
+	} if length($password) < 6;
+
+	my $email = session('email');
+	my $user = $db->get_user_by_email($email);
+	$db->set_password($user->{id}, Digest::SHA::sha1_base64($password));
+
+	template 'error', { password_set => 1 };
+};
+
 post '/set-password' => sub {
 	my $error = pw_form();
 	return $error if $error;

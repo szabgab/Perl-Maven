@@ -17,7 +17,17 @@ you to download the latest edition of the Perl Maven Cookbook.
 </p>
 <% END %>
 
+<p>
 
+
+<h2>Change Password</h2>
+<form method="POST" action="/change-password" name="change_password">
+Passoword: <input name="password" type="password"><br>
+Retype it: <input name="passwords" type="password"><br>
+<input type="submit" value="Change Password" />
+</form>
+
+<h2>Logout:</h2>
 <p>
 <a href="/logout">logout</a>
 </p>

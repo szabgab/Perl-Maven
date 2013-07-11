@@ -20,10 +20,14 @@ plan( skip_all => 'Unsupported OS' ) if not $run;
 my $url = "http://perlmaven.com.local:$ENV{PERL_MAVEN_PORT}";
 my $URL = "$url/";
 my $EMAIL = 'gabor@perlmaven.com';
+my @PASSWORD = (
+	'123456',
+	'abcdef',
+);
 
 #diag($url);
 #sleep 30;
-plan( tests => 2 );
+plan( tests => 3 );
 
 my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
 my $cookbook_text = basename $cookbook_url;
@@ -147,7 +151,7 @@ subtest('ask for password reset, then login' => sub {
 	$w->submit_form_ok({
 		form_name => 'set_password',
 		fields => {
-			password => '123456',
+			password => $PASSWORD[0],
 		},
 	}, 'set password');
 
@@ -166,22 +170,77 @@ subtest('ask for password reset, then login' => sub {
 		form_name => 'login',
 		fields => {
 			email => $EMAIL,
-			password => '123456',
+			password => $PASSWORD[0],
 		},
 	}, 'login');
 	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
 	#diag($w->content);
 
 	$w->get_ok("$url/logged-in");
-	is($w->content, 1);
+	$w->content_is(1);
 });
-
 
 # now change password while logged in,
 # log out and check if we fail to log in with
 # the old password but we can log in with the new.
-#{
-#}
+subtest( 'change password while logged in' => sub {
+	plan( tests => 18 );
+
+	$w->get_ok('/account');
+
+	#diag('different passwords');
+	$w->submit_form_ok({
+		form_name => 'change_password',
+		fields => {
+			password =>  $PASSWORD[1],
+			password2 => "$PASSWORD[1]x",
+		},
+	}, 'different password');
+	$w->content_like(qr{Passwords don't match}, "passwords don't match");
+	$w->back;
+
+	$w->submit_form_ok({
+		form_name => 'change_password',
+		fields => {
+			password =>  $PASSWORD[1],
+			password2 => $PASSWORD[1],
+		},
+	}, 'change password');
+
+	#diag($w->content);
+	$w->content_like(qr{The password was set successfully}, 'password was reset');
+	$w->get_ok("$url/logout");
+	$w->get_ok("$url/logged-in");
+	$w->content_is(0);
+
+	$w->get_ok("$url/login");
+	$w->submit_form_ok({
+		form_name => 'login',
+		fields => {
+			email => $EMAIL,
+			password => $PASSWORD[0],
+		},
+	}, 'login');
+	$w->content_like(qr{Invalid });
+	$w->get_ok("$url/logged-in");
+	$w->content_is(0);
+
+
+	$w->back;
+	$w->get_ok("$url/login");
+	$w->submit_form_ok({
+		form_name => 'login',
+		fields => {
+			email => $EMAIL,
+			password => $PASSWORD[1],
+		},
+	}, 'login');
+	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
+
+	$w->get_ok("$url/logged-in");
+	$w->content_is(1);
+	#diag($w->content);
+});
 
 
 # when a user sets his password consider that user to have been verified (after all he got the code)
