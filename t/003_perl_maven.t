@@ -23,7 +23,7 @@ my $URL = "$url/";
 #diag($url);
 #sleep 30;
 #plan( tests => 42 );
-plan( tests => 27 );
+plan( tests => 2 );
 
 my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
 my $cookbook_text = basename $cookbook_url;
@@ -85,7 +85,8 @@ my $w = Test::WWW::Mechanize->new;
 diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
-{
+subtest('subscribe' => sub {
+	plan( tests => 26 );
 	$w->get_ok($URL);
 	$w->content_like(qr/Perl Maven/);
 	$w->submit_form_ok( {
@@ -152,7 +153,7 @@ diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 	$w->content_unlike(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
 	$w->get_ok("$url/logged-in");
 	is($w->content, 0);
-}
+});
 
 # ask the system to send a password reminder, use the link to set the password
 # log out and then login again
