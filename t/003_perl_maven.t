@@ -19,68 +19,16 @@ plan( skip_all => 'Unsupported OS' ) if not $run;
 
 my $url = "http://perlmaven.com.local:$ENV{PERL_MAVEN_PORT}";
 my $URL = "$url/";
+my $EMAIL = 'gabor@perlmaven.com';
 
 #diag($url);
 #sleep 30;
-#plan( tests => 42 );
 plan( tests => 2 );
 
 my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
 my $cookbook_text = basename $cookbook_url;
 
 my $w = Test::WWW::Mechanize->new;
-
-=pod
-
-{
-	$w->get_ok("$url/login");
-	$w->content_like(qr/Login/);
-	$w->submit_form_ok( {
-		form_name => 'send_reset_pw',
-		fields => {
-			email => 'szabgab@gmail.com', # from t/data.yml
-		},
-	}, 'ask to reset password');
-
-	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
-	unlink $ENV{PERL_MAVEN_MAIL};
-	#diag $mail;
-	my $mail_regex = qr{<a href="($url/set-password/1/(\w+))">set new password</a>};
-	my ($set_url) = $mail =~ $mail_regex;
-	ok($set_url, 'mail with set url address');
-	diag($set_url);
-	$w->get_ok($set_url);
-	$w->submit_form_ok({
-		form_name => 'set_password',
-		fields => {
-			password => '123456',
-		},
-	}, 'set password');
-	#diag($w->content);
-	$w->get_ok("$url/logged-in");
-	is($w->content, 1);
-
-	# logout
-	$w->get_ok("$url/logout");
-	$w->get_ok("$url/logged-in");
-	is($w->content, 0);
-
-	# login now that we have a password
-	$w->get_ok("$url/login");
-	$w->submit_form_ok({
-		form_name => 'login',
-		fields => {
-			email => 'szabgab@gmail.com',
-			password => '123456',
-		},
-	}, 'login');
-	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
-
-	$w->get_ok("$url/logged-in");
-	is($w->content, 1);
-}
-
-=cut
 
 diag('subscribe to free Perl Maven newsletter, let them download the cookbook');
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
@@ -92,7 +40,7 @@ subtest('subscribe' => sub {
 	$w->submit_form_ok( {
 		form_name => 'registration_form',
 		fields => {
-			email => 'gabor@szabgab.com',
+			email => $EMAIL,
 		},
 	}, 'has registeration form');
 	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
@@ -114,7 +62,7 @@ subtest('subscribe' => sub {
 	$w->get_ok($set_url);
 	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
 	$w->get_ok("$url/logged-in");
-	is($w->content, 1);
+	$w->content_is(1);
 
 	# check e-mails
 	my $mail2 = read_file($ENV{PERL_MAVEN_MAIL});
@@ -122,7 +70,7 @@ subtest('subscribe' => sub {
 	#diag($mail2);
 
 	like($mail2, qr{Thank you for registering}, 'thank you mail');
-	like($mail2, qr{gabor\@szabgab.com has registered}, 'self reporting');
+	like($mail2, qr{$EMAIL has registered}, 'self reporting');
 
 	# hit it again
 	$w->get_ok($set_url);
@@ -138,7 +86,7 @@ subtest('subscribe' => sub {
 	#diag(length $w->content);
 	SKIP: {
 		skip('PDF is not the same size on Windows?', 1) if $^O eq 'MSWin32';
-		ok($w->content eq $src_pdf, 'pdf downloaded');
+		$w->content_is($src_pdf, 'pdf downloaded');
 	}
 
 	#open my $t, '>', 'a.pdf' or die;
@@ -155,14 +103,79 @@ subtest('subscribe' => sub {
 	is($w->content, 0);
 });
 
+
+
+
 # ask the system to send a password reminder, use the link to set the password
 # log out and then login again
-subtest('ask for password reset' => sub {
-	plan( tests => 3 );
+subtest('ask for password reset, then login' => sub {
+
+	plan( tests => 20 );
 	$w->get_ok('/account');
 	$w->content_like(qr{Login});
 	$w->content_like(qr{Forgot your password or don't have one yet});
+
+	#diag('try invalid e-mail address, see error message');
+	$w->submit_form_ok( {
+		form_name => 'send_reset_pw',
+		fields => {
+			email => 'gabor@nosuch.com', # from t/data.yml
+		},
+	}, 'ask to reset password for bad e-mail address');
+	$w->content_like(qr{Could not find this e-mail address in our database});
+	$w->back;
+
+	#diag('try the correct e-mail address');
+	$w->submit_form_ok( {
+		form_name => 'send_reset_pw',
+		fields => {
+			email => $EMAIL,
+		},
+	}, 'ask to reset password');
+	$w->content_like(qr{E-mail sent with code to reset password});
+
+	my $mail = read_file($ENV{PERL_MAVEN_MAIL});
+	unlink $ENV{PERL_MAVEN_MAIL};
+	#diag $mail;
+	my $mail_regex = qr{<a href="($url/set-password/1/(\w+))">set new password</a>};
+	my ($set_url) = $mail =~ $mail_regex;
+	ok($set_url, 'mail with set url address');
+	diag($set_url);
+
+	#diag('click on the link received in the e-mail');
+	$w->get_ok($set_url);
+	$w->submit_form_ok({
+		form_name => 'set_password',
+		fields => {
+			password => '123456',
+		},
+	}, 'set password');
+
+	#diag($w->content);
+	$w->get_ok("$url/logged-in");
+	$w->content_is(1);
+
+	#diag('now logout');
+	$w->get_ok("$url/logout");
+	$w->get_ok("$url/logged-in");
+	$w->content_is(0);
+
+	#diag('login now that we have a password');
+	$w->get_ok("$url/login");
+	$w->submit_form_ok({
+		form_name => 'login',
+		fields => {
+			email => $EMAIL,
+			password => '123456',
+		},
+	}, 'login');
+	$w->content_like(qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link');
+	#diag($w->content);
+
+	$w->get_ok("$url/logged-in");
+	is($w->content, 1);
 });
+
 
 # now change password while logged in,
 # log out and check if we fail to log in with
