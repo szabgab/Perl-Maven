@@ -27,7 +27,7 @@ Name: <input name="name" value="<% name %>" /><br>
 
 <h2>Change Password</h2>
 <form method="POST" action="/change-password" name="change_password">
-Passoword: <input name="password" type="password" /><br>
+Password: <input name="password" type="password" /><br>
 Retype it: <input name="password2" type="password" /><br>
 <input type="submit" value="Change Password" />
 </form>
