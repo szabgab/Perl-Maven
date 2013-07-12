@@ -11,6 +11,7 @@ use File::Basename qw(basename);
 use File::Spec;
 use File::Temp qw(tempdir);
 use File::Copy qw(copy move);
+use DBIx::RunSQL;
 
 my $backup;
 my $process;
@@ -22,6 +23,12 @@ sub setup {
 		move 'pm.db', $backup;
 	}
 	system "$^X bin/setup.pl" and die;
+	my $dsn = "dbi:SQLite:dbname=pm.db";
+	DBIx::RunSQL->create(
+		verbose => 0,
+		dsn     => $dsn,
+		sql     => 't/test.sql',
+	);
 }
 
 sub start {
