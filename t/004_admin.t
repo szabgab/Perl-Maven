@@ -27,27 +27,27 @@ my $admin = "$^X -Ilib bin/admin.pl";
     };
     is_deeply re_dump($stdout), [
            [
+             1,
+             'perl_maven_cookbook',
+             'Perl Maven Cookbook',
+             0
+           ],
+           [
              2,
              'beginner_perl_maven_ebook',
              'Beginner Perl Maven e-book',
              '0.01'
            ],
-           [
-             3,
-             'perl_maven_cookbook',
-             'Perl Maven Cookbook',
-             39
-           ]
-         ], '--products --dump';
+        ], '--products --dump';
     is $stderr, '', 'stderr is empty';
 }
 {
     my ($stdout, $stderr, @result) = capture {
         system "$admin --products";
     };
-    is $stdout, 
+    is $stdout,
 q{ 2 beginner_perl_maven_ebook           Beginner Perl Maven e-book        0.01
- 3 perl_maven_cookbook                 Perl Maven Cookbook                39
+ 1 perl_maven_cookbook                 Perl Maven Cookbook                 0
 } , '--products';
     is $stderr, '', 'stderr is empty';
 }
