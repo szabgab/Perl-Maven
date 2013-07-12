@@ -123,7 +123,7 @@ subtest('ask for password reset, then login' => sub {
 	$w->submit_form_ok( {
 		form_name => 'send_reset_pw',
 		fields => {
-			email => 'gabor@nosuch.com', # from t/data.yml
+			email => 'gabor@nosuch.com',
 		},
 	}, 'ask to reset password for bad e-mail address');
 	$w->content_like(qr{Could not find this e-mail address in our database});
