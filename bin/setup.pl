@@ -20,15 +20,3 @@ my $dbh = DBI->connect($dsn, "", "", {
 	AutoCommit => 1,
 });
 
-# DBIx::RunSQL cannot handle this:
-$dbh->do(q{
-CREATE TRIGGER user_cleanup
-  BEFORE DELETE ON user FOR EACH ROW
-  BEGIN
-   DELETE FROM subscription WHERE uid=OLD.id;
-  END;
-});
-
-$dbh->do('INSERT INTO product (code, name, price) VALUES (?, ?, ?)',
-	undef, 'perl_maven_cookbook', 'Perl Maven Cookbook', 39);
-
