@@ -40,11 +40,4 @@ CREATE TRIGGER user_cleanup
 --- schema 4
 
 ALTER TABLE user ADD COLUMN name VARCHAR(255);
-ALTER TABLE user ADD COLUMN interest BLOB;
-
-CREATE TABLE interests (
-  uid    INTEGER NOT NULL,
-  name   VARCHAR(20),
-  FOREIGN KEY (uid) REFERENCES user(id)
-);
 
