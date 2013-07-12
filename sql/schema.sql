@@ -12,7 +12,8 @@ CREATE TABLE user (
 CREATE TABLE product (
   id              INTEGER PRIMARY KEY,
   code            VARCHAR(255) UNIQUE NOT NULL,
-  name            VARCHAR(255) UNIQUE NOT NULL
+  name            VARCHAR(255) UNIQUE NOT NULL,
+  price           NUMERIC
 );
 
 CREATE TABLE subscription (
@@ -29,14 +30,13 @@ CREATE TABLE transactions (
   ts     VARCHAR(10) NOT NULL,
   data   BLOB
 );
-ALTER TABLE product ADD COLUMN price NUMERIC;
-UPDATE product SET price = 0 WHERE id = 1;
-INSERT INTO product (id, code, name, price) VALUES (2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', 0.01);
 
 CREATE TRIGGER user_cleanup
   BEFORE DELETE ON user FOR EACH ROW
   BEGIN
    DELETE FROM subscription WHERE uid=OLD.id;
   END;
+
+INSERT INTO product (id, code, name, price) VALUES (2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', 0.01);
 INSERT INTO product (code, name, price) VALUES ('perl_maven_cookbook', 'Perl Maven Cookbook', 39);
 
