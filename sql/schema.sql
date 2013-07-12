@@ -37,3 +37,14 @@ CREATE TRIGGER user_cleanup
    DELETE FROM subscription WHERE uid=OLD.id;
   END;
 
+--- schema 4
+
+ALTER TABLE user ADD COLUMN name VARCHAR(255);
+ALTER TABLE user ADD COLUMN interest BLOB;
+
+CREATE TABLE interests (
+  uid    INTEGER NOT NULL,
+  name   VARCHAR(20),
+  FOREIGN KEY (uid) REFERENCES user(id)
+);
+

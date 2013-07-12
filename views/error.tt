@@ -57,6 +57,10 @@ No or bad password was given.
 Invalid password
 <% END %>
 
+<% IF user_updated %>
+Updated. <a href="/account">account</a>
+<% END %>
+
 <% IF password_set %>
 The password was set successfully. <a href="/account">account</a>
 <% END %>

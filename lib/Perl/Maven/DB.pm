@@ -37,6 +37,13 @@ sub add_registration {
 	return $id;
 }
 
+sub update_user {
+	my ($self, $id, %fields) = @_;
+
+	$self->{dbh}->do('UPDATE user SET name=? WHERE id=?',
+		undef, $fields{name}, $id);
+}
+
 sub get_user_by_email {
 	my ($self, $email) = @_;
 

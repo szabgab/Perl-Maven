@@ -24,10 +24,13 @@ my @PASSWORD = (
 	'123456',
 	'abcdef',
 );
+my @NAMES = (
+	'Foo Bar',
+);
 
 #diag($url);
 #sleep 30;
-plan( tests => 3 );
+plan( tests => 4 );
 
 my $cookbook_url = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
 my $cookbook_text = basename $cookbook_url;
@@ -240,6 +243,26 @@ subtest( 'change password while logged in' => sub {
 	$w->get_ok("$url/logged-in");
 	$w->content_is(1);
 	#diag($w->content);
+});
+
+subtest('name' => sub {
+	plan( tests => 5 );
+
+	$w->get_ok('/account');
+	my $form1 = $w->form_name('user');
+	#diag($form1->value('name'));
+	$w->submit_form_ok({
+		form_name => 'user',
+		fields => {
+			name     => $NAMES[0],
+		},
+	}, 'user form');
+	$w->content_like(qr{Updated});
+	$w->get_ok('/account');
+	my $form2 = $w->form_name('user');
+	#diag($form2->value('name'));
+	is($form2->value('name'), $NAMES[0], 'name displayed');
+	#diag(explain($form));
 });
 
 

@@ -340,6 +340,18 @@ post '/set-password' => sub {
 	template 'error', { password_set => 1 };
 };
 
+post '/update-user' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $name  = param('name')  || '';
+
+	my $email = session('email');
+	my $user = $db->get_user_by_email($email);
+	$db->update_user($user->{id}, name => $name);
+
+	template 'error', { user_updated => 1 };
+};
+
 get '/login' => sub {
 	template 'login';
 };
@@ -483,9 +495,12 @@ get '/account' => sub {
 		}
 	}
 
+	my $user = $db->get_user_by_email($email);
+
 	template 'account', {
 		subscriptions => \@owned_products,
 		subscribed => $db->is_subscribed($email, 'perl_maven_cookbook'),
+		name         => $user->{name},
 	};
 };
 
