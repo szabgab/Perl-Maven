@@ -199,6 +199,28 @@ get '/keywords' => sub {
 	_show({ article => 'keywords', template => 'page', layout => 'keywords' }, { kw  => $kw });
 };
 
+get '/about' => sub {
+	my $pages = read_meta_array('archive');
+	my %cont;
+	foreach my $p (@$pages) {
+		if ($p->{translator}) {
+			$cont{ $p->{translator} }++;
+		}
+		if ($p->{author} ne 'szabgab') { # TODO remove hardcoding
+			$cont{ $p->{author} }++;
+		}
+	}
+	my %contributors;
+	foreach my $name (keys %cont) {
+		$contributors{$name} = $authors{$name};
+	}
+
+	_show({ article => 'about', template => 'about', layout => 'system' },
+		{
+			contributors     => \%contributors,
+		});
+};
+
 get '/archive' => sub {
 	my $tag = param('tag');
 	my $pages = $tag

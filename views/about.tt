@@ -1,0 +1,21 @@
+<div role="main" id="main">
+<% mycontent %>
+</div>
+
+<h2>Contributors</h2>
+<div id="translators">
+<ul>
+<% FOR a IN contributors.keys %>
+  <li><img src="/img/<% contributors.$a.author_img %>" alt="<% contributors.$a.author_name %>" /><br>
+  <% IF contributors.$a.author_google_plus_profile %>
+    <a href="<% contributors.$a.author_google_plus_profile %>"><% contributors.$a.author_name %></a>
+  <% ELSE %>
+    <% contributors.$a.author_name %>
+  <% END %>
+  </li>
+<% END %>
+</ul>
+</div>
+
+
+
