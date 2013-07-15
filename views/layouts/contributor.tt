@@ -1,0 +1,29 @@
+<% INCLUDE layouts/incl/header.tt %>
+
+<div id="translators">
+<img src="/img/<% author.author_img %>" alt="<% author.author_name %>" /><br>
+<% IF author.author_google_plus_profile %>
+  <a href="<% author.author_google_plus_profile %>"><% author.author_name %></a>
+<% ELSE %>
+  <% author.author_name %>
+<% END %>
+</div>
+
+<h2>Contributions</h2>
+
+<style>
+td {
+   padding-right: 20px;
+}
+</style>
+<div id="translations">
+<ul>
+<% FOR a IN articles %>
+  <li><a href="<% a.url %>/<% a.filename %>"><% a.title %></a></li>
+<% END %>
+</ul>
+</div>
+
+<% INCLUDE layouts/incl/footer.tt %>
+
+

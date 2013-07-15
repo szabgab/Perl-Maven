@@ -149,6 +149,31 @@ END_TXT
 #	send_file($path);
 #};
 
+get '/contributor/:name' => sub {
+	my $name = param('name');
+	if (request->host !~ /^meta\./) {
+		my $host = Perl::Maven::Config::host(request->host);
+		if ($host ne 'perlmaven.com') {  #TODO remove hardcoding
+			$host =~ s/^\w+\.//;
+		}
+		return redirect "http://meta.$host/contributor/$name";
+	}
+
+	return "$name could not be found" if not $authors{$name};
+	my $data = read_meta('archive');
+	my @articles = grep {
+			$_->{author} eq $name or
+			($_->{translator} and $_->{translator} eq $name)
+		}	@$data;
+
+
+	return _show({ article => 'contributor',  template => 'page', layout => 'contributor' }, {
+		author => $authors{$name},
+		articles => \@articles,
+	});
+};
+
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
