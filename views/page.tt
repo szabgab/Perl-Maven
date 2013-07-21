@@ -3,7 +3,7 @@
 </div>
 
 <% INCLUDE incl/credits.tt %>
+<!--
 <% INCLUDE incl/copyright.tt %>
-
-
+-->
 
