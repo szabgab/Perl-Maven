@@ -1,0 +1,13 @@
+<div id="copyright">
+  <% IF pro %>
+     (C) Copyright Gabor Szabo. All rights reserved.
+  <% ELSE %>
+    <% IF author %>
+     (C) Copyright <% author_name %>
+       <% IF translator %>
+         , <% translator_name %>
+       <% END %>
+    . The source code in this article is free software. It can be distributed under the "Perl 5 license" (Artistic 1 or GPL 2).
+    <% END %>
+  <% END %>
+</div>
