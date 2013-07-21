@@ -145,6 +145,9 @@ sub process_files {
 			if ($p->{autotags}) {
 				push @{ $e->{tags} }, $p->{autotags};
 			}
+			if ($p->{mp3}) {
+				$e->{mp3} = $p->{mp3};
+			}
 			push @archive, $e;
 		}
 

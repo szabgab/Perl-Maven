@@ -19,7 +19,7 @@ sub read {
 	# The onese with a ? mark at the end are optional
 	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
 	#    require it but also have a mark if we want to show it or not?)
-	my @header = qw(title timestamp description? indexes? tags? status original? books? showright? newsletter? published? author
+	my @header = qw(title timestamp description? indexes? tags? mp3? status original? books? showright? newsletter? published? author
         translator? archive comments social);
 
 
@@ -38,7 +38,7 @@ sub read {
 			if (my ($f, $v) = $line =~ /=([\w-]+)\s+(.*?)\s*$/) {
 
 				# TODO make it configurable, which fields to split?
-				if ($f eq 'indexes' or $f eq 'tags') {
+				if ($f =~ /^(indexes|tags|mp3)$/) {
 					$data{$f} = [ map {s/^\s+|\s+$//g; $_} split /,/, $v ];
 				} else {
 					$data{$f} = $v;

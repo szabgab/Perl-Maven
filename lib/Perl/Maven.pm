@@ -282,6 +282,12 @@ get '/sitemap.xml' => sub {
 	$xml .= qq{</urlset>\n};
 	return $xml;
 };
+get '/rss' => sub {
+	my $tag = param('tag');
+	return $tag
+		? rss('archive', $tag)
+		: rss('archive');
+};
 get '/atom' => sub {
 	my $tag = param('tag');
 	return $tag
@@ -1039,13 +1045,13 @@ sub atom {
 	return $xml;
 }
 
-
-sub itunes {
-	my ($what, $subtitle) = @_;
+sub rss {
+	my ($what, $tag, $subtitle) = @_;
 
 	$subtitle ||= '';
 
-	my $pages = read_meta($what) || [];
+	my $pages = read_meta_array($what, filter => $tag, limit => $MAX_FEED);
+
 	my $mymaven = mymaven;
 
 	my $ts = DateTime->now;
@@ -1054,43 +1060,67 @@ sub itunes {
 	$url =~ s{/$}{};
 	my $title = $mymaven->{title};
 
-	# based on http://perlcast.com/rss/current.xml
+    # itunes specs: http://www.apple.com/itunes/podcasts/specs.html
 	my $xml = '';
-	$xml .= qq{<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" };
-	$xml .= qq{xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" };
-	$xml .= qq{xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">\n};
+	$xml .= qq{<?xml version="1.0" encoding="UTF-8"?>};
+	$xml .= qq{<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">\n};
 
 	$xml .= qq{<channel>\n};
 	$xml .= qq{  <title>$title</title>\n};
 	$xml .= qq{  <link>$url/</link>\n};
-	$xml .= qq{  <description>$url/</description>\n};
 	$xml .= qq{  <language>en-us</language>\n};
-	#$xml .= qq{  <copyright></copyright>\n};
-	$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
-	$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
-	$xml .= qq{  <category>Podcast</category>\n};
+	$xml .= qq{  <copyright>2013 Gabor Szabo</copyright>\n};
+
+	my $description = "The Perl Maven show is about the Perl programming language and about the people using it.";
+	$xml .= qq{  <description>$description</description>\n};
+
+	$xml .= qq{  <itunes:subtitle>A show about Perl and Perl users</itunes:subtitle>\n};
+	$xml .= qq{  <itunes:author>Gabor Szabo</itunes:author>\n};
+	$xml .= qq{  <itunes:summary>$description</itunes:summary>\n};
+	$xml .= qq{  <itunes:owner>\n};
+	$xml .= qq{    <itunes:name>Gabor Szabo</itunes:name>\n};
+	$xml .= qq{    <itunes:email>szabgab\@gmail.com</itunes:email>\n};
+	$xml .= qq{  </itunes:owner>\n};
+#	$xml .= qq{  <itunes:image href="http://example.com/podcasts/everything/AllAboutEverything.jpg" />};
+	$xml .= qq{  <itunes:category text="Technology" />\n};
+
+	#$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
+	#$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
+	#$xml .= qq{  <category>Podcast</category>\n};
 	#$xml .= qq{  <docs>http://blogs.law.harvard.edu/tech/rss</docs>\n};
-	$xml .= qq{  <generator>vim</generator>\n};
-	$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
-	$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
-	$xml .= qq{  <ttl>1440</ttl>\n};
+	#$xml .= qq{  <generator>vim</generator>\n};
+	#$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
+	#$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
+	#$xml .= qq{  <ttl>1440</ttl>\n};
 	foreach my $p (@$pages) {
-		$xml .= qq{<entry>\n};
-		$xml .= qq{  <title>$p->{title}</title>\n};
-		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
-		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
-		$url = $p->{url} ? $p->{url} : $url;
-		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
-		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
-		$xml .= qq{  <id>$id</id>\n};
-		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
-		if ($p->{author}) {
-			$xml .= qq{    <author>\n};
-			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
-			#$xml .= qq{      <email></email>\n};
-			$xml .= qq{    </author>\n};
+		my $host = $p->{url} ? $p->{url} : $url;
+
+		$xml .= qq{  <item>\n};
+		$xml .= qq{    <title>$p->{title}</title>\n};
+		if ($p->{mp3}) {
+			$xml .= qq{    <itunes:author>Gabor Szabo</itunes:author>};
+#			$xml .= qq{    <itunes:subtitle></itunes:subtitle>\n};
+			$xml .= qq{    <itunes:summary><![CDATA[$p->{abstract}]]></itunes:summary>\n};
+#			$xml .= qq{    <itunes:image href="http://example.com/podcasts/everything/AllAboutEverything/Episode1.jpg" />\n};
+			$xml .= qq{    <enclosure url="$host$p->{mp3}[0]" length="$p->{mp3}[1]" type="audio/x-mp3" />};
+			$xml .= qq{    <pubDate>$p->{timestamp} GMT</pubDate>\n};
+			$xml .= qq{    <itunes:duration>$p->{mp3}[2]</itunes:duration>\n};
 		}
-		$xml .= qq{</entry>\n};
+
+		$xml .= qq{  <description type="html"><![CDATA[$p->{abstract}]]></description>\n};
+#		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
+		$xml .= qq{  <guid>$host/$p->{filename}?utm_campaign=rss</guid>\n};
+		$xml .= qq{  <link rel="alternate" type="text/html" href="$host/$p->{filename}?utm_campaign=rss" />};
+#		my $id = $p->{id} ? $p->{id} : "$host/$p->{filename}";
+#		$xml .= qq{  <id>$id</id>\n};
+#		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
+#		if ($p->{author}) {
+#			$xml .= qq{    <author>\n};
+#			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
+#			#$xml .= qq{      <email></email>\n};
+#			$xml .= qq{    </author>\n};
+#		}
+		$xml .= qq{  </item>\n};
 	}
 	$xml .= qq{</channel>\n};
 	$xml .= qq{</rss>\n};
