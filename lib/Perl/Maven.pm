@@ -284,6 +284,8 @@ get '/sitemap.xml' => sub {
 };
 get '/rss' => sub {
 	my $tag = param('tag');
+	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
+
 	return $tag
 		? rss('archive', $tag)
 		: rss('archive');
