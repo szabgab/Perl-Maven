@@ -90,7 +90,9 @@ sub read {
 					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
 				} else {
 					# Without linenumst IE10 does not respect newlines and smashes everything together
-					$cont .= qq{<pre class="prettyprint linenums">\n};
+					# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
+					# in IE10 and in general some pages.
+					$cont .= qq{<pre class="linenums">\n};
 				}
 				next;
 			}
