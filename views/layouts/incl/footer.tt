@@ -39,6 +39,7 @@
 
 
         <% INCLUDE incl/social_share.tt %>
+        <% INCLUDE incl/search.tt %>
 <!--
            <div class="sponsor">
 	        <a href="/linode">Linode</a> is our recommended web hosting company.
