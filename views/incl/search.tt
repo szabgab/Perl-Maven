@@ -1,4 +1,4 @@
-<% IF right_search %>
+<% IF conf.right_search %>
 <div id="search-on-right">
 <form>
   <input type="text" id="st-search-input" class="st-search-input" />
