@@ -86,5 +86,6 @@ perlmaven.com:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
         show_newsletter_form: 1
+        right_search: 1
 
 
