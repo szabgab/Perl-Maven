@@ -12,6 +12,7 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
+		'Acme::MetaSyntactic'  => 0,  # or even Task::MetaSyntactic
         'Business::PayPal'     => 0,
         'Dancer'               => 1.3095,
         'DateTime::Tiny'       => 1.04,
