@@ -1,0 +1,22 @@
+
+Based on <a href="https://metacpan.org/module/Acme::MetaSyntactic">Acme::MetaSyntactic</a> and its
+friends. For an article explaining how to to use the module <a href=""></a>.
+
+<form>
+Theme
+<select name="theme">
+ <% FOR t IN themes %>
+   <option value="<% t %>"><% t %></option>
+ <% END %>
+</select><br>
+<input type="submit" value="Take me beyond Foo and Bar!" />
+</form>
+
+<% IF name_count %>
+<ul>
+  <% FOR n IN names %>
+   <li><% n %></li>
+  <% END %>
+</ul>
+<% END %>
+

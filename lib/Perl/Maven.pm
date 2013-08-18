@@ -144,6 +144,25 @@ END_TXT
 	return $txt;
 };
 
+get '/foobar' => sub {
+	require Acme::MetaSyntactic;
+	my $ams = Acme::MetaSyntactic->new;
+
+	my $theme = param('theme');
+	my @names;
+	if ($theme and $ams->has_theme($theme)) {
+		@names = sort $ams->name($theme, 0);
+	}
+	
+	_show({ article => 'foobar', template => 'foobar', layout => 'system' },
+		{
+			themes => [ $ams->themes ],
+			name_count => scalar @names,
+			names  => \@names,
+			archive_selector => (Perl::Maven::Config::host(request->host) eq 'perlmaven.com' ? 1 : 0),
+		});
+};
+
 #get qr{/style.css} => sub {
 #	my $path = path(config->{appdir}, (splat)[0]);
 #	send_file($path);
