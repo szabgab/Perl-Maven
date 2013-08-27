@@ -40,11 +40,9 @@
 
         <% INCLUDE incl/social_share.tt %>
         <% INCLUDE incl/search.tt %>
-<!--
            <div class="sponsor">
-	        <a href="/linode">Linode</a> is our recommended web hosting company.
+	        <a href="/linode"><img src="/img/linode_a.jpg" alt "Linode is our recommended web hosting company." /></a> 
            </div>
--->
 <!--
            <div class="sponsor">
 	       Recommended web hosting company:  <a href="/linode"><img src="http://www.linode.com/images/pr/LinodeLogoUnder.png" /></a>
