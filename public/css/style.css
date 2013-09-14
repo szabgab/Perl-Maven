@@ -5,13 +5,14 @@ body {
   padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
   font-size: 16px;
 }
+
 pre {
   font-size: 16px;
 }
+
 p {
   line-height: 1.4;
   margin: 1.4;
-  display: block;
   -webkit-margin-before: 1em;
   -webkit-margin-after: 1em;
   -webkit-margin-start: 0px;
@@ -217,4 +218,11 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
  background-color: #003055;
 }
 
+.about {
+  height:  140px;
+}
+.about img {
+  margin: 10px;
+  float: right;
+}
 
