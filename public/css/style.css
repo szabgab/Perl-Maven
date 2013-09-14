@@ -1,3 +1,24 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto:400,700,400italic|Roboto+Slab:700);
+
+body {
+  font-family: 'Roboto',sans-serif;
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+  font-size: 16px;
+}
+pre {
+  font-size: 16px;
+}
+p {
+  line-height: 1.4;
+  margin: 1.4;
+  display: block;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
+
+
 .main-content {
   margin: 20px;
   background-color: #DDEEFF;
@@ -65,7 +86,6 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   /* background: rgba(0, 0, 0, 0.05); */
   background-color: rgba(255, 255, 204 , 0.45);
   box-shadow: 0 1px 0 #ffffff,0 1px 0px rgba(0, 0, 0, 0.08) inset;
-  /* font-size: smaller; */
   padding: 3px 6px;
   border-radius: 2px;
   direction: ltr;
@@ -146,14 +166,6 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 #indexes ul li button {
     margin-bottom: 2px;
 }
-body {
-  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-  font-size: 15px;
-}
-pre {
-  font-size: 15px;
-}
-
 #keyword-list li {
    margin-bottom: 10px;
 }
