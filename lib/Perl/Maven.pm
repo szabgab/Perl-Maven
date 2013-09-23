@@ -805,6 +805,17 @@ sub _show {
 
 	$tt->{$_} = $data->{$_} for keys %$data;
 
+	# TODO we should be able to configure which page should show related
+	# articles and which should not
+	if ($tt->{related}) {
+		if (not @{ $tt->{related} }) {
+			delete $tt->{related};
+		}
+		if ($path =~ m{/index.tt$}) {
+			delete $tt->{related};
+		}
+	}
+
 	return template $params->{template}, $tt, { layout => $params->{layout} };
 };
 

@@ -231,6 +231,7 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 }
 #related li {
 	list-style-type: none;
+    margin-top: 5px;
 }
 
 

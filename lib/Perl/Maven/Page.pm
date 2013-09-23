@@ -116,6 +116,16 @@ sub read {
 	}
 	$data{mycontent} = $cont;
 	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
+
+	# TODO: this should not be read into memory for every page!
+	my $site = Perl::Maven::read_meta_array('sitemap');
+	my %sitemap = map { '/' . $_->{filename}  => $_->{title} } @$site;
+	foreach my $url (keys %links) {
+		if ($sitemap{ $url }) {
+			$links{$url} = $sitemap{ $url };
+		}
+	}
+
 	$data{related} = [ map { { url => $_, text => $links{$_} } }
 			grep { $_ =~ m{^/} } 
 			sort keys %links ];
