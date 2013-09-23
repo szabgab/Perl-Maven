@@ -226,3 +226,11 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   float: right;
 }
 
+#related ul {
+	margin-left: 0px;
+}
+#related li {
+	list-style-type: none;
+}
+
+

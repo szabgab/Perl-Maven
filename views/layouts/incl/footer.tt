@@ -59,6 +59,15 @@
 -->
 
         <% INCLUDE incl/sponsors.tt %>
+
+           <div id="related">
+             <b>Related articles</b>
+             <ul>
+               <% FOR l IN related %>
+                 <li><a href="<% l.url %>"><% l.text %></a></li>
+               <% END %>
+             </ul>
+           </div>
          <% END %>
       </div>
     </div>

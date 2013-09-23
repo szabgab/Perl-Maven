@@ -4,6 +4,7 @@ use Moo;
 use 5.014;
 use Carp; # needed by DateTime::Tiny 1.04
 use DateTime::Tiny;
+use Data::Dumper qw(Dumper);
 
 
 has file => (is => 'ro', required => 1);
@@ -114,6 +115,11 @@ sub read {
 		}
 	}
 	$data{mycontent} = $cont;
+	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
+	$data{related} = [ map { { url => $_, text => $links{$_} } }
+			grep { $_ =~ m{^/} } 
+			sort keys %links ];
+
 	if (length $data{abstract} > 900) {
 		die sprintf("Abstract of %s is too long. It has %s character", $self->file, length $data{abstract});
 	}
