@@ -118,11 +118,13 @@ sub read {
 	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
 
 	# TODO: this should not be read into memory for every page!
-	my $site = Perl::Maven::read_meta_array('sitemap');
-	my %sitemap = map { '/' . $_->{filename}  => $_->{title} } @$site;
-	foreach my $url (keys %links) {
-		if ($sitemap{ $url }) {
-			$links{$url} = $sitemap{ $url };
+	if (not $ENV{METAMETA}) {
+		my $site = Perl::Maven::read_meta_array('sitemap');
+		my %sitemap = map { '/' . $_->{filename}  => $_->{title} } @$site;
+		foreach my $url (keys %links) {
+			if ($sitemap{ $url }) {
+				$links{$url} = $sitemap{ $url };
+			}
 		}
 	}
 

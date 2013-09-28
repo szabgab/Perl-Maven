@@ -24,6 +24,7 @@ GetOptions(
 	'verbose'  => \my $verbose,
 	'all'      => \my $all,
 );
+$ENV{METAMETA} = 1;
 
 if ($all) {
 	for my $domain_name (keys %{ $mymaven->{config} }) {
