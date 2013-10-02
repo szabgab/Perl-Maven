@@ -30,7 +30,7 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   events:
-    - link: '<a href="http://telaviv.pm.org/">Tel Aviv Perl Mongers</a> -  Wednesday, 23 October 2013, Shenkar College, room 247',
+    - link: '<a href="http://telaviv.pm.org/">Tel Aviv Perl Mongers</a> -  Wednesday, 23 October 2013, Shenkar College, room 247'
       countries:
         - 'IL'
     - link: '<a href="http://act.osdc.fr/osdc2013fr/">OSDC.fr</a> - October 4-5, 2013, Paris, France'
