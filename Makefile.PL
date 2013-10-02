@@ -21,6 +21,7 @@ WriteMakefile(
         'DBIx::RunSQL'         => 0,
         'Email::Valid'         => 0,
         'Hash::Merge::Simple'  => 0,
+        'Geo::IP'              => 0,
         'MIME::Lite'           => 0,
         'Moo'                  => 1,
         'Storable'             => 0,
