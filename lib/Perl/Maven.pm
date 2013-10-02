@@ -125,10 +125,16 @@ hook before_template => sub {
 		}
 	}
 
+use Geo::IP;
+	my $gi = Geo::IP->new(GEOIP_MEMORY_CACHE);
+	my $address= request->remote_address;
+	my $country = $gi->country_code_by_addr($address) || '';
+
 	#my $host = Perl::Maven::Config::host(request->host);
 	#$t->{uri_base}  = request->uri_base;
 	my $i = int rand scalar @{ mymaven->{ads} };
     $t->{event} = mymaven->{ads}->[$i];
+	$t->{event} .= "<!-- $address $country  -->";
 	return;
 };
 
