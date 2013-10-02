@@ -3,26 +3,12 @@
     <div class="span3">
       <div id="right-side">
         <% IF showright %>
-<!--
           <div id="top-poster">
-           <%
-            USE Math;
-            c = Math.rand(2);
-            choice = Math.int(c)
-            %>
-            <% IF choice %>
-               I run a <a href="http://szabgab.com/yapc-na-2013-training-classes.html">Test Automation using Perl</a> course
-               on June 1-2, in Austin, Texas. Just before <a href="http://www.yapcna.org/">YAPC::NA</a>.
-               <br>
-               <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
-            <% ELSE %>
-               I run a <a href="http://szabgab.com/yapc-na-2013-training-classes.html">Mobile web development and Perl</a> course
-               on June 6-7, in Austin, Texas.  Just before <a href="http://www.yapcna.org/">YAPC::NA</a>.
-               <br>
-               <a href="http://www.yapcna.org/yn2013/purchase">Join me!</a>
-            <% END %>
+            Meet Perl programmers at<br>
+            <% event %>
+            <br>and other <a href="/events">Perl events</a>.
           </div>
--->
+
           <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
                <h3>Do you want to improve your Perl?</h3>

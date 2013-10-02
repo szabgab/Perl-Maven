@@ -29,6 +29,17 @@ perlmaven.com:
 #    'videos/getting-started-with-perl-dancer': 'getting-started-with-perl-dancer'
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
+  ads:
+    - '<a href="http://act.osdc.fr/osdc2013fr/">OSDC.fr</a> - October 4-5, 2013, Paris, France'
+    - '<a href="http://pghpw.org/">The Pittsburgh Perl Workshop</a> - October 4-6, 2013, Pittsburgh, PA, USA'
+    - '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 9-10,  2013, Lisbon, Portugal'
+    - '<a href="http://osdc.org.nz/">OSDC NZ</a> - October 21-23, 2013, Auckland, New Zealand'
+    - '<a href="http://reneeb-perlblog.blogspot.hu/2013/09/frankfurter-perl-community-workshop-2013.html">Perl-Community Workshop 2013 in Frankfurt</a> - October 26-27, 2013, Frankfurt, Germany'
+    - '<a href="http://act.useperl.at/apw2013/">Austrian Perl Workshop</a> - November 2-3, 2013, Salzburg, Austria'
+    - '<a href="http://2013.yapcbrasil.org.br/">YAPC::Brazil 2013</a> - November 15-16, 2013, Curitiba, PR, Brazil'
+    - '<a href="http://act.yapc.eu/npw2013/">Nordic Perl Workshop 2013</a> - November 23, 2013, Copenhagen, Denmark'
+    - '<a href="http://act.yapc.eu/lpw2013/">London Perl Workshop (LPW 2013)</a> - Saturday 30th November 2013 at Westminster University'
+    - '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
   dirs:
     img: '/home/gabor/work/perlmaven.com/sites/en/img'
   conf:

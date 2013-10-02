@@ -127,8 +127,8 @@ hook before_template => sub {
 
 	#my $host = Perl::Maven::Config::host(request->host);
 	#$t->{uri_base}  = request->uri_base;
-
-
+	my $i = int rand scalar @{ mymaven->{ads} };
+    $t->{event} = mymaven->{ads}->[$i];
 	return;
 };
 
