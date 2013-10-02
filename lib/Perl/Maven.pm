@@ -132,9 +132,26 @@ use Geo::IP;
 
 	#my $host = Perl::Maven::Config::host(request->host);
 	#$t->{uri_base}  = request->uri_base;
-	my $i = int rand scalar @{ mymaven->{ads} };
-    $t->{event} = mymaven->{ads}->[$i];
-	$t->{event} .= "<!-- $address $country  -->";
+	my %events_in;
+	my @events;
+	foreach my $e (@{ mymaven->{events} }) {
+		foreach my $c (@{ $e->{countries} }) {
+			push @{ $events_in{$c} }, $e->{link};
+		}
+		push @events, $e->{link};
+	}
+	if ($country and $events_in{$country}) {
+		@events = @{ $events_in{$country} };
+	} else {
+		$country = '';
+	}
+
+	my $i = int rand scalar @events;
+    $t->{event} = $events[$i];
+	if ($country) {
+		$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$country.png" />};
+	}
+	#$t->{event} .= "<!-- $address $country  -->";
 	return;
 };
 
