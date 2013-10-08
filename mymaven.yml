@@ -30,22 +30,16 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   events:
-    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a> - Wednesday, 23 October 2013, Shenkar College, Ramat Gan'
-      countries:
-        - 'IL'
-    - link: '<a href="http://act.osdc.fr/osdc2013fr/">OSDC.fr</a> - October 4-5, 2013, Paris, France'
-      counties:
-        - 'FR'
-    - link: '<a href="http://pghpw.org/">The Pittsburgh Perl Workshop</a> - October 4-6, 2013, Pittsburgh, PA, USA'
-      countries:
-        - 'USA'
-    - link: '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 9-10,  2013, Lisbon, Portugal'
-      countries:
-        - 'PT'
     - link: '<a href="http://osdc.org.nz/">OSDC NZ</a> - October 21-23, 2013, Auckland, New Zealand'
       countries:
         - 'NZ'
         - 'AU'
+    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a> - Wednesday, 23 October 2013, Shenkar College, Ramat Gan'
+      countries:
+        - 'IL'
+    - link: '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 24-25,  2013, Lisbon, Portugal'
+      countries:
+        - 'PT'
     - link: '<a href="http://reneeb-perlblog.blogspot.hu/2013/09/frankfurter-perl-community-workshop-2013.html">Perl-Community Workshop 2013 in Frankfurt</a> - October 26-27, 2013, Frankfurt, Germany'
       countries:
         - 'DE' 
