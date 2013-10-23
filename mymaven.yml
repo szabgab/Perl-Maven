@@ -30,13 +30,9 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   events:
-    - link: '<a href="http://osdc.org.nz/">OSDC NZ</a> - October 21-23, 2013, Auckland, New Zealand'
+    - link: '<a href="http://cluj.pm/events/2013/10/clujpm-community-members-get-together-again.html">Cluj.pm meeting</a> November 7,2013'
       countries:
-        - 'NZ'
-        - 'AU'
-    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a> - Wednesday, 23 October 2013, Shenkar College, Ramat Gan'
-      countries:
-        - 'IL'
+        - 'RO'
     - link: '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 24-25,  2013, Lisbon, Portugal'
       countries:
         - 'PT'
@@ -64,6 +60,9 @@ perlmaven.com:
       countries:
         - 'DE'
         - 'AT'
+    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
+      countries:
+        - 'IL'
   dirs:
     img: '/home/gabor/work/perlmaven.com/sites/en/img'
   conf:
