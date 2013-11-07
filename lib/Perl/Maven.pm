@@ -797,8 +797,10 @@ sub _show {
 	}
 
 	my $tt = read_tt($path);
-	return template 'error', {'no_such_article' => 1}
-		if not $tt->{status} or ($tt->{status} ne 'show' and $tt->{status} ne 'draft');
+	if (not $tt->{status} or ($tt->{status} ne 'show' and $tt->{status} ne 'draft')) {
+		status 'not_found';
+		return template 'error', {'no_such_article' => 1};
+	}
 	($tt->{date}) = split /T/, $tt->{timestamp};
 
 	my $nick = $tt->{author};
