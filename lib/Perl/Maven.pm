@@ -791,7 +791,10 @@ sub _show {
 	$data ||= {};
 
 	my $path = (delete $params->{path} || (mymaven->{site} . "/pages" )) . "/$params->{article}.tt";
-	return template 'error', {'no_such_article' => 1} if not -e $path;
+	if (not -e $path) {
+		status 'not_found';
+		return template 'error', {'no_such_article' => 1};
+	}
 
 	my $tt = read_tt($path);
 	return template 'error', {'no_such_article' => 1}
