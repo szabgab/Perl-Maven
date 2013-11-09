@@ -11,9 +11,11 @@
 <script src="/google-code-prettify/prettify.js"></script>
 
 
-<link rel="alternate" hreflang="x-default" href="<% localized_versions.en.url %>" />
-<% FOR lang IN localized_versions.keys %>
-   <link rel="alternate" hreflang="<% lang %>" href="<% localized_versions.$lang.url %>" />
+<%  IF localized_versions.size > 1 %>
+  <link rel="alternate" hreflang="x-default" href="<% localized_versions.en.url %>" />
+  <% FOR lang IN localized_versions.keys %>
+     <link rel="alternate" hreflang="<% lang %>" href="<% localized_versions.$lang.url %>" />
+  <% END %>
 <% END %>
 
 <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
