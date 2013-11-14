@@ -30,20 +30,20 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   events:
-    - link: '<a href="http://cluj.pm/events/2013/10/clujpm-community-members-get-together-again.html">Cluj.pm meeting</a> November 7,2013'
-      countries:
-        - 'RO'
-    - link: '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 24-25,  2013, Lisbon, Portugal'
-      countries:
-        - 'PT'
-    - link: '<a href="http://reneeb-perlblog.blogspot.hu/2013/09/frankfurter-perl-community-workshop-2013.html">Perl-Community Workshop 2013 in Frankfurt</a> - October 26-27, 2013, Frankfurt, Germany'
-      countries:
-        - 'DE' 
-        - 'AT'
-    - link: '<a href="http://act.useperl.at/apw2013/">Austrian Perl Workshop</a> - November 2-3, 2013, Salzburg, Austria'
-      countries:
-        - 'AT'
-        - 'DE'
+#    - link: '<a href="http://cluj.pm/events/2013/10/clujpm-community-members-get-together-again.html">Cluj.pm meeting</a> November 7,2013'
+#      countries:
+#        - 'RO'
+#    - link: '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 24-25,  2013, Lisbon, Portugal'
+#      countries:
+#        - 'PT'
+#    - link: '<a href="http://reneeb-perlblog.blogspot.hu/2013/09/frankfurter-perl-community-workshop-2013.html">Perl-Community Workshop 2013 in Frankfurt</a> - October 26-27, 2013, Frankfurt, Germany'
+#      countries:
+#        - 'DE' 
+#        - 'AT'
+#    - link: '<a href="http://act.useperl.at/apw2013/">Austrian Perl Workshop</a> - November 2-3, 2013, Salzburg, Austria'
+#      countries:
+#        - 'AT'
+#        - 'DE'
     - link: '<a href="http://2013.yapcbrasil.org.br/">YAPC::Brazil 2013</a> - November 15-16, 2013, Curitiba, PR, Brazil'
       countries:
         - 'BR'
