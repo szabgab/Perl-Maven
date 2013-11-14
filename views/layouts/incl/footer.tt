@@ -6,7 +6,7 @@
           <div id="top-poster">
             Meet Perl programmers at<br>
             <% event %>
-            <br>and other <a href="/events">Perl events</a>.
+            <br>and other <a href="http://perlmaven.com/events">Perl events</a>.
           </div>
 
           <% IF conf.show_newsletter_form %>
