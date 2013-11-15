@@ -62,7 +62,7 @@ $(document).ready(function() {
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );
 	    show_archive(e.target.value, $('#abstract').attr('checked'));
-		return false;
+		e.preventDefault();
 	});
 //	$('#abstract').attr('checked', );
 
@@ -78,5 +78,18 @@ $(document).ready(function() {
 	        mysearch(keyword, true);
 	    }
 	});
+
+	$('a[href^="/pro\\/"]').each(function(i, e) {
+		//console.log(this);
+		//console.log( $(this).attr('href') );
+		//console.log( $(this).html());
+		$(this).html( $(this).html() + ' (pro)' );
+	});
+//	$("a").click(function (e) {
+//		e.preventDefault();
+//		console.log('click' + e);
+//		console.log(this);
+//		console.log($(this).attr('href'));
+//	});
 });
 
