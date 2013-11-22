@@ -8,7 +8,14 @@
             <% event %>
             <br>and other <a href="http://perlmaven.com/events">Perl events</a>.
           </div>
-          <div id="top-poster">
+<style>
+#stratopan {
+   margin-top: 10px;
+   background-color: #EEEEEE;
+   padding: 10px;
+}
+ </style>
+          <div id="stratopan">
     Private CPAN hosting in the cloud.  Build your apps with
     the right Perl modules, every time.  <a href="https://stratopan.com/?ref=0">Stratopan.com</a>
           </div>
