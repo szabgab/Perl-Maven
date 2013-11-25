@@ -35,6 +35,7 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 </style>
 
 <div id="archive">
+Total: <% pages.size %>
 <table>
 <% FOR p IN pages %>
  <tr>
