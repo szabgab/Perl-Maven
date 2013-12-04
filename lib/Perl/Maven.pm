@@ -151,6 +151,12 @@ use Geo::IP;
 	if ($country) {
 		$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$country.png" />};
 	}
+
+    if ($t->{no_such_article}) {
+		$t->{conf}{clicky} = 0;
+		$t->{conf}{google_analytics} = 0;
+	}
+
 	#$t->{event} .= "<!-- $address $country  -->";
 	return;
 };
