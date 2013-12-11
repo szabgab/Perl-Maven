@@ -6,6 +6,17 @@ found on http://www.iconarchive.com/show/flag-icons-by-gosquared.2.html
 
 
 
+Adding a new language (site)
+-----------------------------
+* Get the language code from wikimedia
+* Create the sites/CC/ from skeleton
+* Add the language to sites.yml
+* Maybe update the mymaven.yml
+* Add site to ../gabor/config/s7/app.psgi and retart starman on the server
+
+
+
+
 TODO
 
 Change the password reminder (and the other administrative messagee)
