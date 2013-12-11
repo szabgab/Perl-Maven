@@ -132,7 +132,7 @@ sub show_people {
 			FROM product, subscription
 			WHERE product.id=subscription.pid
 			AND subscription.uid=?}, undef, $p->[0]);
-		printf "%4s %30s  %s\n", @$p;
+		printf "%4s %30s  verify_time='%s'\n", @$p;
 		foreach my $s (@$subs) {
 			printf "     %s\n", @$s;
 		}
