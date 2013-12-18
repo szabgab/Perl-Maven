@@ -54,6 +54,16 @@
       </div>
     </div>
   </div>
+  <style>
+  #footer-menu {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  </style>
+  <div id="footer-menu">
+    For previous articles check out the <a href="/archive">Archive</a>,
+    or type in a keyword at the top of the site.
+  </div>
 </div>
 
 <script src="/bootstrap/js/jquery.js"></script>
