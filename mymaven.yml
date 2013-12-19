@@ -47,6 +47,10 @@ perlmaven.com:
     - link: '<a href="http://www.perloasis.info/tbpw2014/">Perl Oasis West</a> - January 24th – 26th, 2014, Tampa, FL, USA'
       countries:
         - 'US'
+    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
+      countries:
+        - 'US'
+        - 'CA'
     - link: '<a href="http://2013.yapcbrasil.org.br/">YAPC::Brazil 2013</a> - November 15-16, 2013, Curitiba, PR, Brazil'
       countries:
         - 'BR'
