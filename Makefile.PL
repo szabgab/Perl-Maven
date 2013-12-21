@@ -14,6 +14,7 @@ WriteMakefile(
     PREREQ_PM => {
 		'Acme::MetaSyntactic'  => 0,  # or even Task::MetaSyntactic
         'Business::PayPal'     => 0,
+        'Code::Explain'        => 0.02,
         'Dancer'               => 1.3095,
         'DateTime::Tiny'       => 1.04,
         'DBD::SQLite'          => 0,
