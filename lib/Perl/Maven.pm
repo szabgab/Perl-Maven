@@ -797,19 +797,21 @@ post '/explain' => sub {
 		if (length $code > $CODE_EXPLAIN_LIMIT) {
 			$data{too_long} = length $code;
 		} else {
-			my $time = time;
-			my $log_file = path( config->{appdir}, 'logs', 'code_' .  POSIX::strftime("%Y%m", gmtime($time)));
-			if ( open my $fh, '>>', $log_file ) {
-				print $fh scalar(gmtime $time) . "\n";
-				print $fh "$code\n\n";
-				close $fh;
-			}
 			require Code::Explain;
 			my $ce = Code::Explain->new( code => $code );
 			$data{explanation} = $ce->explain();
 			$data{ppi_dump}    = [ map { _escape($_) } $ce->ppi_dump ];
 			$data{ppi_explain} = [ map { $_->{code} = _escape($_->{code}); $_ } $ce->ppi_explain ];
 		} 
+
+		my $time = time;
+		my $log_file = path( config->{appdir}, 'logs', 'code_' .  POSIX::strftime("%Y%m", gmtime($time)));
+		if ( open my $fh, '>>', $log_file ) {
+			print $fh '-' x 20, "\n";
+			print $fh scalar(gmtime $time) . "\n";
+			print $fh "$code\n\n";
+			close $fh;
+		}
 	}
 	return to_json \%data;
 };
