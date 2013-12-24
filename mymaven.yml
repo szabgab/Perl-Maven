@@ -44,32 +44,39 @@ perlmaven.com:
 #      countries:
 #        - 'AT'
 #        - 'DE'
+#    - link: '<a href="http://2013.yapcbrasil.org.br/">YAPC::Brazil 2013</a> - November 15-16, 2013, Curitiba, PR, Brazil'
+#      countries:
+#        - 'BR'
+#    - link: '<a href="http://act.yapc.eu/npw2013/">Nordic Perl Workshop 2013</a> - November 23, 2013, Copenhagen, Denmark'
+#      countries:
+#        - 'DK'
+#        - 'NO'
+#        - 'SE'
+#        - 'FI'
+#    - link: '<a href="http://act.yapc.eu/lpw2013/">London Perl Workshop (LPW 2013)</a> - Saturday 30th November 2013 at Westminster University'
+#      countries:
+#        - 'GB'
+#    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
+#      countries:
+#        - 'IL'
     - link: '<a href="http://www.perloasis.info/tbpw2014/">Perl Oasis West</a> - January 25th, 2014, Tampa, FL, USA'
       countries:
         - 'US'
-    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
-      countries:
-        - 'US'
-        - 'CA'
-    - link: '<a href="http://2013.yapcbrasil.org.br/">YAPC::Brazil 2013</a> - November 15-16, 2013, Curitiba, PR, Brazil'
-      countries:
-        - 'BR'
-    - link: '<a href="http://act.yapc.eu/npw2013/">Nordic Perl Workshop 2013</a> - November 23, 2013, Copenhagen, Denmark'
-      countries:
-        - 'DK'
-        - 'NO'
-        - 'SE'
-        - 'FI'
-    - link: '<a href="http://act.yapc.eu/lpw2013/">London Perl Workshop (LPW 2013)</a> - Saturday 30th November 2013 at Westminster University'
-      countries:
-        - 'GB'
     - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
       countries:
         - 'DE'
         - 'AT'
-#    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
-#      countries:
-#        - 'IL'
+    - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
+      countries:
+        - 'PL'
+    - link: '<a href="http://event.yapcrussia.org/yr2014/">YAPC::Russia 2014</a> - 14 June, 2014, Kiev, Ukraine'
+      countries:
+        - 'RU'
+        - 'UA'
+    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
+      countries:
+        - 'US'
+        - 'CA'
   dirs:
     img: '/home/gabor/work/perlmaven.com/sites/en/img'
   conf:
