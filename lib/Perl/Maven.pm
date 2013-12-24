@@ -137,9 +137,9 @@ use Geo::IP;
 	my @events;
 	foreach my $e (@{ mymaven->{events} }) {
 		foreach my $c (@{ $e->{countries} }) {
-			push @{ $events_in{$c} }, $e->{link};
+			push @{ $events_in{$c} }, $e;
 		}
-		push @events, $e->{link};
+		push @events, $e;
 	}
 	if ($country and $events_in{$country}) {
 		@events = @{ $events_in{$country} };
@@ -148,9 +148,13 @@ use Geo::IP;
 	}
 
 	my $i = int rand scalar @events;
-    $t->{event} = $events[$i];
-	if ($country) {
-		$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$country.png" />};
+	my $event = $events[$i];
+    $t->{event} = $event->{link};
+	#if ($country) {
+	#	$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$country.png" />};
+	#}
+	if ($event->{flag}) {
+		$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$event->{flag}.png" />};
 	}
 
     if ($t->{no_such_article}) {
