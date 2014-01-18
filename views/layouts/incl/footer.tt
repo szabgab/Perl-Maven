@@ -8,6 +8,8 @@
             <% event %>
             <br>and other <a href="http://perlmaven.com/events">Perl events</a>.
           </div>
+
+<!--
 <style>
 #stratopan {
    margin-top: 10px;
@@ -15,10 +17,11 @@
    padding: 10px;
 }
  </style>
-          <div id="stratopan">
+<div id="stratopan">
     Private CPAN hosting in the cloud.  Build your apps with
     the right Perl modules, every time.  <a href="https://stratopan.com/?ref=0">Stratopan.com</a>
-          </div>
+</div>
+-->
 
           <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
