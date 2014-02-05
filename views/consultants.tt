@@ -1,0 +1,40 @@
+<style>
+
+.person {
+   /* border-style: solid; */
+}
+</style>
+
+<% FOR p IN people %>
+<div class="person">
+<ul>
+ <hr>
+  <% IF p.img %>
+  <img src="/img/<% p.img %>" alt="<% p.name %>" />
+  <% END %>
+  <% IF p.twitter %>
+   <a href="http://twitter.com/<% p.twitter %>">@<% p.twitter %></a>
+  <% END %>
+  <% IF p.gplus %>
+   <a href="https://plus.google.com/<% p.gplus %>">G+</a>
+  <% END %>
+  <% IF p.linkedin %>
+    <a href="<% p.linkedin %>">LinkedIN</a>
+  <% END %>
+  <% IF p.pause %>
+    <a href="http://metacpan.org/author/<% p.pause %>"><% p.pause %></a>
+  <% END %>
+  <% IF p.country %>
+   Country of residence: <% p.country %>
+  <% END %>
+  <% IF p.languages %>
+     Languages: <%p .languages %>
+  <% END %>
+  <% IF p.specialities %>
+    Specialities: <% p.specialities %>
+  <% END %>
+  <li><a href="<% p.url %>"><% p.name %></a></li>
+  <% p.html %> 
+</ul>
+</div>
+<% END %>

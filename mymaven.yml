@@ -132,6 +132,7 @@ perlmaven.com:
         download: '/home/gabor/work/articles/download'
         media: '/home/gabor/work/media.perlmaven.com'
         pro: '/home/gabor/work/articles/pro'
+        articles: '/home/gabor/work/articles'
       index:
         - perldoc
         - pro
