@@ -315,9 +315,13 @@ get '/archive' => sub {
 };
 
 get '/consultants' => sub {
-	_show({ article => 'consultants', template => 'consultants', layout => 'system' },
+	return redirect '/perl-training-consulting';
+};
+
+get '/perl-training-consulting' => sub {
+	_show({ article => 'perl-training-consulting', template => 'consultants', layout => 'system' },
 		{
-			people           => read_meta_meta('consultants'),
+			people  => read_meta_meta('consultants'),
 		});
 };
 
