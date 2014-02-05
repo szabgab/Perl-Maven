@@ -315,40 +315,9 @@ get '/archive' => sub {
 };
 
 get '/consultants' => sub {
-	my $list_path = mymaven->{dirs}{articles} . '/consulting.txt';
-	my @people;
-	if (open my $fh, '<', $list_path) {
-		<$fh>; #header
-		while (my $line = <$fh>) {
-			my %p;
-			chomp $line;
-			next if $line =~ m/^\s*$/;
-			next if $line =~ m/^#/;
-			my ($file, $from) = split m/;/, $line;
-			my $path = mymaven->{root} . "/consulting/$file";
-			if (open my $in, '<', $path) {
-				while (my $row = <$in>) {
-					chomp $row;
-					next if $row =~ m/^\s*$/;
-					my ($key, $value) = split /\s*:\s*/, $row, 2;
-					$p{$key} = $value;
-					last if $key eq 'html';
-				}
-				local $/ = undef;
-				$p{html} = <$in>;
-				#die Dumper \%p;
-			} else {
-				warn "Could not open $path";
-			}
-			push @people, \%p;
-		}
-	} else {
-		warn "Could not opn $list_path";
-	}
-
 	_show({ article => 'consultants', template => 'consultants', layout => 'system' },
 		{
-			people           => \@people,
+			people           => read_meta_meta('consultants'),
 		});
 };
 

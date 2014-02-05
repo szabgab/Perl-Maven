@@ -47,6 +47,8 @@ sub process_domain {
 		push @{ $stats{sites} }, $sites->{$lang};
 	}
 	save('stats',        "$config->{meta}", \%stats);
+
+	$self->consultants($domain, $config);
 }
 
 sub process_site {
@@ -228,6 +230,41 @@ sub get_pages {
 	}
 
 	return [ sort { $b->{timestamp} cmp $a->{timestamp} } @selected ];
+}
+
+sub consultants {
+	my ($self, $domain, $config) = @_;
+
+	#die Dumper $config;
+	my $list_path = $config->{dirs}{articles} . '/consultants.txt';
+	say "Consultants $list_path";
+	
+	my @people;
+	open my $fh, '<encoding(UTF-8)', $list_path or die "Could not open $list_path";
+	<$fh>; #header
+	while (my $line = <$fh>) {
+		my %p;
+		chomp $line;
+		next if $line =~ m/^\s*$/;
+		next if $line =~ m/^#/;
+		my ($file, $from) = split m/;/, $line;
+		my $path = $config->{root} . "/consultants/$file";
+		open my $in, '<encoding(UTF-8)', $path or die "Could not open $path";
+
+		while (my $row = <$in>) {
+			chomp $row;
+			next if $row =~ m/^\s*$/;
+			my ($key, $value) = split /\s*:\s*/, $row, 2;
+			$p{$key} = $value;
+			last if $key eq 'html';
+		}
+		local $/ = undef;
+		$p{html} = <$in>;
+		#die Dumper \%p;
+
+		push @people, \%p;
+	}
+	save('consultants', $config->{meta}, \@people);
 }
 
 
