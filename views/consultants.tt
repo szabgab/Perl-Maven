@@ -16,12 +16,16 @@
    /* background-color: red; */
    float: left;
    text-align: left;
- /*  width: 700px; */
+}
+
+.details ul {
+   margin: 0;
+   list-style-type: none;
 }
 
 .details li {
-   list-style: none;
    margin-top: 3px;
+   margin-left: 10px;
 }
 
 .text {
