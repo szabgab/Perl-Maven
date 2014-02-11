@@ -1125,7 +1125,7 @@ sub read_json {
 	return;
 }
 
-sub atom {
+sub _feed {
 	my ($what, $tag, $subtitle) = @_;
 
 	$subtitle ||= '';
@@ -1144,6 +1144,8 @@ sub atom {
 	foreach my $p (@$pages) {
 		my %e;
 
+		my $host = $p->{url} ? $p->{url} : $url;
+
 		die 'no title ' . Dumper $p if not defined $p->{title};
 		my $title =  $p->{title};
 
@@ -1155,6 +1157,15 @@ sub atom {
 		$e{title} = $title;
 		$e{summary} = qq{<![CDATA[$p->{abstract}]]>};
 		$e{updated} = $p->{timestamp};
+
+		if ($p->{mp3}) {     # itunes(rss)
+			$e{itunes}{author}    = 'Gabor Szabo';
+			$e{itunes}{summary}   = $e{summary};
+			$e{enclosure}{url}    = "$host$p->{mp3}[0]";
+			$e{enclosure}{length} = $p->{mp3}[1];
+			$e{enclosure}{type}   = 'audio/x-mp3';
+			$e{itunes}{duration}  = $p->{mp3}[2];
+		}
 
 		$url = $p->{url} ? $p->{url} : $url;
 		$e{link} = qq{$url/$p->{filename}?utm_campaign=rss};
@@ -1169,56 +1180,39 @@ sub atom {
 
 	use Perl::Maven::Feed;
 	my $pmf = Perl::Maven::Feed->new(
-		url     => $url,
-		path    => 'atom',
-		title   => "$title$subtitle",
-		updated => $ts,
-		entries => \@entries,
-	);
+		url         => $url,                  # atom, rss
+		path        => 'atom',                # atom
+		title       => "$title$subtitle",     # atom, rss
+		updated     => $ts,                   # atom,
+		entries     => \@entries,             # atom,
+		language    => 'en-us',               #       rss
+		copyright   => '2014 Gabor Szabo',    #       rss
+		description => "The Perl Maven show is about the Perl programming language and about the people using it.", # rss, itunes(rss)
 
+		subtitle    => 'A show about Perl and Perl users',  # itunes(rss)
+		author      => 'Gabor Szabo',                       # itunes(rss)
+	);
+	$pmf->{summary}      = $pmf->{description};  # itunes(rss)
+	$pmf->{itunes_name}  = 'Gabor Szabo';
+	$pmf->{itunes_email} = 'szabgab@gmail.com';
+
+	return $pmf;
+}
+
+sub atom {
+	my ($what, $tag, $subtitle) = @_;
+
+	my $pmf = _feed($what, $tag, $subtitle);
 
 	content_type 'application/atom+xml';
 	return $pmf->atom;
 }
 
+
 sub rss {
 	my ($what, $tag, $subtitle) = @_;
 
-	$subtitle ||= '';
-
-	my $pages = read_meta_array($what, filter => $tag, limit => $MAX_FEED);
-
-	my $mymaven = mymaven;
-
-	my $ts = DateTime->now;
-
-	my $url = request->base;
-	$url =~ s{/$}{};
-	my $title = $mymaven->{title};
-
-    # itunes specs: http://www.apple.com/itunes/podcasts/specs.html
-	my $xml = '';
-	$xml .= qq{<?xml version="1.0" encoding="UTF-8"?>};
-	$xml .= qq{<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">\n};
-
-	$xml .= qq{<channel>\n};
-	$xml .= qq{  <title>$title</title>\n};
-	$xml .= qq{  <link>$url/</link>\n};
-	$xml .= qq{  <language>en-us</language>\n};
-	$xml .= qq{  <copyright>2013 Gabor Szabo</copyright>\n};
-
-	my $description = "The Perl Maven show is about the Perl programming language and about the people using it.";
-	$xml .= qq{  <description>$description</description>\n};
-
-	$xml .= qq{  <itunes:subtitle>A show about Perl and Perl users</itunes:subtitle>\n};
-	$xml .= qq{  <itunes:author>Gabor Szabo</itunes:author>\n};
-	$xml .= qq{  <itunes:summary>$description</itunes:summary>\n};
-	$xml .= qq{  <itunes:owner>\n};
-	$xml .= qq{    <itunes:name>Gabor Szabo</itunes:name>\n};
-	$xml .= qq{    <itunes:email>szabgab\@gmail.com</itunes:email>\n};
-	$xml .= qq{  </itunes:owner>\n};
-#	$xml .= qq{  <itunes:image href="http://example.com/podcasts/everything/AllAboutEverything.jpg" />};
-	$xml .= qq{  <itunes:category text="Technology" />\n};
+	my $pmf = _feed($what, $tag, $subtitle);
 
 	#$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
 	#$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
@@ -1228,41 +1222,9 @@ sub rss {
 	#$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
 	#$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
 	#$xml .= qq{  <ttl>1440</ttl>\n};
-	foreach my $p (@$pages) {
-		my $host = $p->{url} ? $p->{url} : $url;
-
-		$xml .= qq{  <item>\n};
-		$xml .= qq{    <title>$p->{title}</title>\n};
-		if ($p->{mp3}) {
-			$xml .= qq{    <itunes:author>Gabor Szabo</itunes:author>};
-#			$xml .= qq{    <itunes:subtitle></itunes:subtitle>\n};
-			$xml .= qq{    <itunes:summary><![CDATA[$p->{abstract}]]></itunes:summary>\n};
-#			$xml .= qq{    <itunes:image href="http://example.com/podcasts/everything/AllAboutEverything/Episode1.jpg" />\n};
-			$xml .= qq{    <enclosure url="$host$p->{mp3}[0]" length="$p->{mp3}[1]" type="audio/x-mp3" />};
-			$xml .= qq{    <pubDate>$p->{timestamp} GMT</pubDate>\n};
-			$xml .= qq{    <itunes:duration>$p->{mp3}[2]</itunes:duration>\n};
-		}
-
-		$xml .= qq{  <description type="html"><![CDATA[$p->{abstract}]]></description>\n};
-#		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
-		$xml .= qq{  <guid>$host/$p->{filename}?utm_campaign=rss</guid>\n};
-		$xml .= qq{  <link rel="alternate" type="text/html" href="$host/$p->{filename}?utm_campaign=rss" />};
-#		my $id = $p->{id} ? $p->{id} : "$host/$p->{filename}";
-#		$xml .= qq{  <id>$id</id>\n};
-#		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
-#		if ($p->{author}) {
-#			$xml .= qq{    <author>\n};
-#			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
-#			#$xml .= qq{      <email></email>\n};
-#			$xml .= qq{    </author>\n};
-#		}
-		$xml .= qq{  </item>\n};
-	}
-	$xml .= qq{</channel>\n};
-	$xml .= qq{</rss>\n};
 
 	content_type 'application/rss+xml';
-	return $xml;
+	return $pmf->rss;
 }
 
 
