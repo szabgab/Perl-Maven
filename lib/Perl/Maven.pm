@@ -1140,15 +1140,10 @@ sub atom {
 	$url =~ s{/$}{};
 	my $title = $mymaven->{title};
 
-	my $xml = '';
-	$xml .= qq{<?xml version="1.0" encoding="utf-8"?>\n};
-	$xml .= qq{<feed xmlns="http://www.w3.org/2005/Atom">\n};
-	$xml .= qq{<link href="$url/atom" rel="self" />\n};
-	$xml .= qq{<title>$title$subtitle</title>\n};
-	$xml .= qq{<id>$url/</id>\n};
-	$xml .= qq{<updated>${ts}Z</updated>\n};
+	my @entries;
 	foreach my $p (@$pages) {
-		$xml .= qq{<entry>\n};
+		my %e;
+
 		die 'no title ' . Dumper $p if not defined $p->{title};
 		my $title =  $p->{title};
 
@@ -1156,26 +1151,34 @@ sub atom {
 		if (grep {'pro' eq $_}  @{ $p->{tags} }) {
 			$title = "Pro: $title";
 		}
-		$xml .= qq{  <title>$title</title>\n};
-		$xml .= qq{  <summary type="html"><![CDATA[$p->{abstract}]]></summary>\n};
-		$xml .= qq{  <updated>$p->{timestamp}Z</updated>\n};
+
+		$e{title} = $title;
+		$e{summary} = qq{<![CDATA[$p->{abstract}]]>};
+		$e{updated} = $p->{timestamp};
+
 		$url = $p->{url} ? $p->{url} : $url;
-		$xml .= qq{  <link rel="alternate" type="text/html" href="$url/$p->{filename}?utm_campaign=rss" />};
-		my $id = $p->{id} ? $p->{id} : "$url/$p->{filename}";
-		$xml .= qq{  <id>$id</id>\n};
-		$xml .= qq{  <content type="html"><![CDATA[$p->{abstract}]]></content>\n};
+		$e{link} = qq{$url/$p->{filename}?utm_campaign=rss};
+
+		$e{id} = $p->{id} ? $p->{id} : "$url/$p->{filename}";
+		$e{content} = qq{<![CDATA[$p->{abstract}]]>};
 		if ($p->{author}) {
-			$xml .= qq{    <author>\n};
-			$xml .= qq{      <name>$authors{$p->{author}}{author_name}</name>\n};
-			#$xml .= qq{      <email></email>\n};
-			$xml .= qq{    </author>\n};
+			$e{author}{name} = $authors{$p->{author}}{author_name};
 		}
-		$xml .= qq{</entry>\n};
+		push @entries, \%e; 
 	}
-	$xml .= qq{</feed>\n};
+
+	use Perl::Maven::Feed;
+	my $pmf = Perl::Maven::Feed->new(
+		url     => $url,
+		path    => 'atom',
+		title   => "$title$subtitle",
+		updated => $ts,
+		entries => \@entries,
+	);
+
 
 	content_type 'application/atom+xml';
-	return $xml;
+	return $pmf->atom;
 }
 
 sub rss {
