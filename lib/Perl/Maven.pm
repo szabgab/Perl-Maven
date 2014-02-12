@@ -21,6 +21,8 @@ use POSIX ();
 use Storable     qw(dclone);
 use List::Util   qw(min);
 
+use Web::Feed;
+
 use Perl::Maven::Page;
 use Perl::Maven::Config;
 use Perl::Maven::Tools;
@@ -1178,8 +1180,7 @@ sub _feed {
 		push @entries, \%e; 
 	}
 
-	use Perl::Maven::Feed;
-	my $pmf = Perl::Maven::Feed->new(
+	my $pmf = Web::Feed->new(
 		url         => $url,                  # atom, rss
 		path        => 'atom',                # atom
 		title       => "$title$subtitle",     # atom, rss

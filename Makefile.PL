@@ -2,6 +2,8 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+use Web::Feed;  # from Github!
+
 WriteMakefile(
     NAME                => 'Perl::Maven',
     AUTHOR              => q{Gabor Szabo <szabgab@cpan.org>},
