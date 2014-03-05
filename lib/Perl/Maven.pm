@@ -773,8 +773,18 @@ get '/svg.xml' => sub {
 
 get qr{/media/(.+)} => sub {
 	my ($article) = splat;
+
+	if ($article =~ m{^pro/}) {
+		my $product = 'perl_maven_pro';
+		return 'error' if not logged_in();
+		return 'error' if not $db->is_subscribed(session('email'), $product);
+	}
+
 	if ($article =~ /\.(mp4|webm|avi|ogv)$/) {
 		my $ext = $1;
+		if ($ext eq 'ogv') {
+			$ext = 'ogg';
+		}
 		send_file(
 			mymaven->{dirs}{media} . "/$article",
 			content_type => "video/$ext",
