@@ -773,7 +773,7 @@ get '/svg.xml' => sub {
 
 get qr{/media/(.+)} => sub {
 	my ($article) = splat;
-	if ($article =~ /\.(mp4|webm)$/) {
+	if ($article =~ /\.(mp4|webm|avi|ogv)$/) {
 		my $ext = $1;
 		send_file(
 			mymaven->{dirs}{media} . "/$article",
