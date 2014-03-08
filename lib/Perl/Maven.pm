@@ -144,7 +144,11 @@ use Geo::IP;
 		push @events, $e;
 	}
 	if ($country and $events_in{$country}) {
-		@events = @{ $events_in{$country} };
+		# if there are country specific ads, then 50% of the time pick from those
+		# and in the other 50% pick from all the events.
+		if (rand > 0.5) {
+			@events = @{ $events_in{$country} };
+		}
 	} else {
 		$country = '';
 	}
