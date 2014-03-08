@@ -30,39 +30,9 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   events:
-#    - link: '<a href="http://cluj.pm/events/2013/10/clujpm-community-members-get-together-again.html">Cluj.pm meeting</a> November 7,2013'
-#      countries:
-#        - 'RO'
-#    - link: '<a href="http://workshop.perl.pt/ptpw2013/">Portuguese Perl Workshop</a> - October 24-25,  2013, Lisbon, Portugal'
-#      countries:
-#        - 'PT'
-#    - link: '<a href="http://reneeb-perlblog.blogspot.hu/2013/09/frankfurter-perl-community-workshop-2013.html">Perl-Community Workshop 2013 in Frankfurt</a> - October 26-27, 2013, Frankfurt, Germany'
-#      countries:
-#        - 'DE' 
-#        - 'AT'
-#    - link: '<a href="http://act.useperl.at/apw2013/">Austrian Perl Workshop</a> - November 2-3, 2013, Salzburg, Austria'
-#      countries:
-#        - 'AT'
-#        - 'DE'
-#    - link: '<a href="http://2013.yapcbrasil.org.br/">YAPC::Brazil 2013</a> - November 15-16, 2013, Curitiba, PR, Brazil'
-#      countries:
-#        - 'BR'
-#    - link: '<a href="http://act.yapc.eu/npw2013/">Nordic Perl Workshop 2013</a> - November 23, 2013, Copenhagen, Denmark'
-#      countries:
-#        - 'DK'
-#        - 'NO'
-#        - 'SE'
-#        - 'FI'
-#    - link: '<a href="http://act.yapc.eu/lpw2013/">London Perl Workshop (LPW 2013)</a> - Saturday 30th November 2013 at Westminster University'
-#      countries:
-#        - 'GB'
-#    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
-#      countries:
-#        - 'IL'
-    - link: '<a href="http://www.perloasis.info/tbpw2014/">Perl Oasis West</a> - January 25th, 2014, Tampa, FL, USA'
-      flag: 'US'
+    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
       countries:
-        - 'US'
+        - 'IL'
     - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
       flag: 'DE'
       countries:
@@ -72,16 +42,11 @@ perlmaven.com:
       flag: 'PL'
       countries:
         - 'PL'
-    - link: '<a href="http://event.yapcrussia.org/yr2014/">YAPC::Russia 2014</a> - 14 June, 2014, Kiev, Ukraine'
-      flag: 'UA'
-      countries:
-        - 'RU'
-        - 'UA'
-    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
-      flag: 'US'
-      countries:
-        - 'US'
-        - 'CA'
+#    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
+#      flag: 'US'
+#      countries:
+#        - 'US'
+#        - 'CA'
   dirs:
     img: '/home/gabor/work/perlmaven.com/sites/en/img'
   conf:
