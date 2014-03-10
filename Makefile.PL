@@ -32,6 +32,13 @@ WriteMakefile(
         'Test::WWW::Mechanize' => 0,
         'Test::More'           => 0,
         'YAML'                 => 0,
+		'Email::Sender::Simple' => 0,
+		'Email/MIME/Creator' => 0,
+
+		'JSON'
+		'Starman'              => 0,
+		'Daemon::Control'      => 0,
+		'Web::Feed' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Perl-Maven-*' },

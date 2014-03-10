@@ -11,7 +11,6 @@ use Email::Sender::Transport::SMTP qw();
 use Email::MIME::Creator;
 #use Email::Sender;
 use Cwd qw(abs_path cwd);
-use File::Slurp    qw(read_file);
 use WWW::Mechanize;
 use DBI;
 use YAML qw();
