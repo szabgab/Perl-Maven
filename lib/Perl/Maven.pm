@@ -656,12 +656,13 @@ get '/pro' => sub {
 	return template 'prolist', $tt, { layout => 'page' };
 };
 
-get '/pro/:file' => sub {
+get qr{/pro/(.+)} => sub {
+	my ($article) = splat;
+	error if $article =~ /\.\./;
 	my $product = 'perl_maven_pro';
 	my $dir = 'pro';
-	my $file = param('file');
 
-	my $path = mymaven->{dirs}{$dir} . "/$file.tt";
+	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
 	pass if not -e $path; # will show invalid page
 	pass if logged_in()
 		and $db->is_subscribed(session('email'), $product);
@@ -777,30 +778,27 @@ get '/svg.xml' => sub {
 
 get qr{/media/(.+)} => sub {
 	my ($article) = splat;
+	error if $article =~ /\.\./;
 
 	if ($article =~ m{^pro/}) {
 		my $product = 'perl_maven_pro';
-		return 'error' if not logged_in();
-		return 'error' if not $db->is_subscribed(session('email'), $product);
+		return 'error: not logged in' if not logged_in();
+		return 'error: not a Pro subscriber' if not $db->is_subscribed(session('email'), $product);
 	}
+
+	push_header 'X-Accel-Redirect' => "/send/$article";
 
 	if ($article =~ /\.(mp4|webm|avi|ogv)$/) {
 		my $ext = $1;
 		if ($ext eq 'ogv') {
 			$ext = 'ogg';
 		}
-		send_file(
-			mymaven->{dirs}{media} . "/$article",
-			content_type => "video/$ext",
-			system_path => 1,
-		);
+		push_header 'Content-type' => "video/$ext";
+		return;
 	} elsif ($article =~ /\.(mp3)$/) {
 		my $ext = $1;
-		send_file(
-			mymaven->{dirs}{media} . "/$article",
-			content_type => "audio/mpeg",
-			system_path => 1,
-		);
+		push_header 'Content-type' => "audio/mpeg";
+		return;
 	}
 
 	return 'media error';
