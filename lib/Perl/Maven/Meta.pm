@@ -194,6 +194,10 @@ sub get_pages {
 		die Dumper $s if not $s->{path};
 		say $s->{path};
 		foreach my $file (File::Find::Rule->file()->name('*.tt')->relative()->in($s->{path})) {
+
+			# for now skip the video files
+			next if $file =~ m{beginner-perl/};
+
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
 			my $data = eval { Perl::Maven::Page->new(file => $path)->read };
