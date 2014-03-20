@@ -14,10 +14,6 @@
 
 <% content %>
 
-<p>
-This web site is about the Perl Programming language. It is for people who want to write really good Perl programs.
-</p>
-
 <% IF conf.show_newsletter_form %>
   <% IF newsletter %>
     <% INCLUDE "layouts/incl/newsletter.tt" %>
