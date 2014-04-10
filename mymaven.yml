@@ -30,15 +30,15 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   events:
-    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
-      flag: 'IL'
-      countries:
-        - 'IL'
-    - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
-      flag: 'DE'
-      countries:
-        - 'DE'
-        - 'AT'
+#    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
+#      flag: 'IL'
+#      countries:
+#        - 'IL'
+#    - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
+#      flag: 'DE'
+#      countries:
+#        - 'DE'
+#        - 'AT'
     - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
       flag: 'PL'
       countries:
