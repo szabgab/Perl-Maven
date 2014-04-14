@@ -14,7 +14,7 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
-		'Acme::MetaSyntactic'  => 0,  # or even Task::MetaSyntactic
+        'Acme::MetaSyntactic'  => 0,  # or even Task::MetaSyntactic
         'Business::PayPal'     => 0,
         'Code::Explain'        => 0.02,
         'Dancer'               => 1.3095,
@@ -32,13 +32,13 @@ WriteMakefile(
         'Test::WWW::Mechanize' => 0,
         'Test::More'           => 0,
         'YAML'                 => 0,
-		'Email::Sender::Simple' => 0,
-		'Email/MIME/Creator' => 0,
+        'Email::Sender::Simple' => 0,
+        'Email/MIME/Creator' => 0,
 
-		'JSON'
-		'Starman'              => 0,
-		'Daemon::Control'      => 0,
-		'Web::Feed' => 0,
+        'JSON'                 => 0,
+        'Starman'              => 0,
+        'Daemon::Control'      => 0,
+        'Web::Feed' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Perl-Maven-*' },
