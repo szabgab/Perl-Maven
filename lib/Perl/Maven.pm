@@ -10,8 +10,8 @@ my $MAX_META_FEED = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
 my %FREE = map { $_ => 1 } qw(
 	/pro/beginner-perl/process-command-line-using-getopt-long-screencast
-	/media/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.ogv
-	/media/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.avi
+	/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.ogv
+	/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.avi
 );
 
 use Business::PayPal;
