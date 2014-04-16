@@ -780,25 +780,27 @@ get '/svg.xml' => sub {
 };
 
 get qr{/media/(.+)} => sub {
-	my ($article) = splat;
-	error if $article =~ /\.\./;
+	my ($item) = splat;
+	error if $item =~ /\.\./;
 
-	if ($article =~ m{^pro/} and not $FREE{"/$article"}) {
+	my $article = $item;
+	$article =~ s/\.\w+$//;
+	if ($item =~ m{^pro/} and not $FREE{"/$article"}) {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber' if not $db->is_subscribed(session('email'), $product);
 	}
 
-	push_header 'X-Accel-Redirect' => "/send/$article";
+	push_header 'X-Accel-Redirect' => "/send/$item";
 
-	if ($article =~ /\.(mp4|webm|avi|ogv)$/) {
+	if ($item =~ /\.(mp4|webm|avi|ogv)$/) {
 		my $ext = $1;
 		if ($ext eq 'ogv') {
 			$ext = 'ogg';
 		}
 		push_header 'Content-type' => "video/$ext";
 		return;
-	} elsif ($article =~ /\.(mp3)$/) {
+	} elsif ($item =~ /\.(mp3)$/) {
 		my $ext = $1;
 		push_header 'Content-type' => "audio/mpeg";
 		return;
