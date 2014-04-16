@@ -8,6 +8,7 @@ my $MAX_INDEX   = 3;
 my $MAX_FEED    = 10;
 my $MAX_META_FEED = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
+my %FREE = map { $_ => 1 } qw(/pro/beginner-perl/process-command-line-using-getopt-long-screencast);
 
 use Business::PayPal;
 use Cwd qw(cwd abs_path);
@@ -665,8 +666,7 @@ get qr{/pro/(.+)} => sub {
 	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
 	pass if not -e $path; # will show invalid page
 
-    my %FREE = map { $_ => 1 } qw(beginner-perl/process-command-line-using-getopt-long-screencast);
-    pass if $FREE{$article};
+    pass if $FREE{"/pro/$article"};
 	pass if logged_in()
 		and $db->is_subscribed(session('email'), $product);
 
@@ -783,7 +783,7 @@ get qr{/media/(.+)} => sub {
 	my ($article) = splat;
 	error if $article =~ /\.\./;
 
-	if ($article =~ m{^pro/}) {
+	if ($article =~ m{^pro/} and not $FREE{"/$article"}) {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber' if not $db->is_subscribed(session('email'), $product);
