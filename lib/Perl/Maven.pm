@@ -664,6 +664,9 @@ get qr{/pro/(.+)} => sub {
 
 	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
 	pass if not -e $path; # will show invalid page
+
+    my %FREE = map { $_ => 1 } qw(beginner-perl/process-command-line-using-getopt-long-screencast);
+    pass if $FREE{$article};
 	pass if logged_in()
 		and $db->is_subscribed(session('email'), $product);
 
