@@ -36,7 +36,8 @@ sub read {
 				die "Header ended and '$field' was not supplied for file $file\n";
 			}
 
-			if (my ($f, $v) = $line =~ /=([\w-]+)(?:\s+(.*?)\s*)?$/) {
+			#if (my ($f, $v) = $line =~ /=([\w-]+)(?:\s+(.*?)\s*)?$/) {
+			if (my ($f, $v) = $line =~ /=([\w-]+)\s+(.*?)\s*$/) {
                 $v //= '';
 
 				# TODO make it configurable, which fields to split?

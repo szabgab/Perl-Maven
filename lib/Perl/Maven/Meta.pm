@@ -195,8 +195,6 @@ sub get_pages {
 		say $s->{path};
 		foreach my $file (File::Find::Rule->file()->name('*.tt')->relative()->in($s->{path})) {
 
-			# for now skip the video files
-			next if $file =~ m{beginner-perl/};
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
@@ -218,6 +216,12 @@ sub get_pages {
 			if ($s->{autotags}) {
 				$p{autotags} = $s->{autotags};
 			}
+			# for now skip the video files
+			# but we put it in the list of pages in order to verify the timestamp etc.
+			if ($file =~ m{beginner-perl/}) {
+				$p{skip} = 1;
+			}
+
 			push @pages, \%p;
 		}
 	}
@@ -226,6 +230,7 @@ sub get_pages {
 	#die  Dumper [ keys %{$pages[0]} ];
 	my @selected;
 	foreach my $p (@pages) {
+		next if $p->{skip};
 		if ($p->{status} eq 'show') {
 			push @selected, $p;
 		} else {
