@@ -8,7 +8,11 @@ my $MAX_INDEX   = 3;
 my $MAX_FEED    = 10;
 my $MAX_META_FEED = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
-my %FREE = map { $_ => 1 } qw(/pro/beginner-perl/process-command-line-using-getopt-long-screencast);
+my %FREE = map { $_ => 1 } qw(
+	/pro/beginner-perl/process-command-line-using-getopt-long-screencast
+	/media/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.ogv
+	/media/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.avi
+);
 
 use Business::PayPal;
 use Cwd qw(cwd abs_path);
@@ -783,9 +787,7 @@ get qr{/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
-	my $article = $item;
-	$article =~ s/\.\w+$//;
-	if ($item =~ m{^pro/} and not $FREE{"/$article"}) {
+	if ($item =~ m{^pro/} and not $FREE{$item}) {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber' if not $db->is_subscribed(session('email'), $product);
