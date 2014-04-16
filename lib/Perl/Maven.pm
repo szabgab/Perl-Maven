@@ -12,6 +12,10 @@ my %FREE = map { $_ => 1 } qw(
 	/pro/beginner-perl/process-command-line-using-getopt-long-screencast
 	/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.ogv
 	/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.avi
+
+	/pro/beginner-perl/the-year-of-19100
+	/pro/videos/beginner-perl/advanced-arrays/the-year-of-19100.ogv
+	/pro/videos/beginner-perl/advanced-arrays/the-year-of-19100.avi
 );
 
 use Business::PayPal;
@@ -160,7 +164,7 @@ use Geo::IP;
 
 	my $i = int rand scalar @events;
 	my $event = $events[$i];
-    $t->{event} = $event->{link};
+	$t->{event} = $event->{link};
 	#if ($country) {
 	#	$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$country.png" />};
 	#}
@@ -168,7 +172,7 @@ use Geo::IP;
 		$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$event->{flag}.png" />};
 	}
 
-    if ($t->{no_such_article}) {
+	if ($t->{no_such_article}) {
 		$t->{conf}{clicky} = 0;
 		$t->{conf}{google_analytics} = 0;
 	}
@@ -670,7 +674,7 @@ get qr{/pro/(.+)} => sub {
 	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
 	pass if not -e $path; # will show invalid page
 
-    pass if $FREE{"/pro/$article"};
+	pass if $FREE{"/pro/$article"};
 	pass if logged_in()
 		and $db->is_subscribed(session('email'), $product);
 
@@ -787,7 +791,7 @@ get qr{/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
-	if ($item =~ m{^pro/} and not $FREE{$item}) {
+	if ($item =~ m{^pro/} and not $FREE{"/$item"}) {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber' if not $db->is_subscribed(session('email'), $product);
