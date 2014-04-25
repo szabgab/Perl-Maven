@@ -1,0 +1,11 @@
+
+
+<input type="hidden" name="id" />
+<span><title>Title</title><input id="job-title" size="80" /></span>
+<span><button id="save">Save</button>
+
+<div id="job-post"></div>
+
+
+<script src="/javascripts/jobs-editor.js"></script>
+

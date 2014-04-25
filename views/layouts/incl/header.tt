@@ -33,6 +33,7 @@
 </head>
 <body onload="prettyPrint()" >
 
+<% IF social %>
 <!-- start facebook SDK ?? -->
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -44,6 +45,7 @@
 }(document, 'script', 'facebook-jssdk'));
 </script>
 <!-- end facebook -->
+<% END %>
 
 <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
