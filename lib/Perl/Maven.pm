@@ -177,6 +177,15 @@ use Geo::IP;
 		$t->{conf}{google_analytics} = 0;
 	}
 
+	my $host = request->host;
+	#die $host;
+	if ($host =~ /local(:\d+)?$/) {
+		$t->{social} = 0;
+		$t->{comments} = 0;
+		$t->{conf}{clicky} = 0;
+		$t->{conf}{google_analytics} = 0;
+	}
+
 	#$t->{event} .= "<!-- $address $country  -->";
 	return;
 };
@@ -864,6 +873,11 @@ sub _escape {
 	return $txt;
 }
 
+get '/jobs-employer' => sub {
+	template 'jobs_employer', {
+       a => 1,
+    };
+};
 
 
 
