@@ -1,13 +1,13 @@
 
 function show_job() {
     var html = '';
-    var title = document.getElementById('job_title').value;
+    var title = $('#job_title').val();
     if (title) {
         html = '<h2>' + title + '</h2>';
     }
     
     console.log(html);
-    document.getElementById('job-post').innerHTML = html;
+    $('#job-post').html( html );
 }
 
 function show_error(txt) {
@@ -16,7 +16,7 @@ function show_error(txt) {
 
 function save_job() {
     console.log('save job');
-    var title = document.getElementById('job_title').value;
+    var title = $('#job_title').val();
 	if (! title ) {
         show_error('Title is missing');
         return;
