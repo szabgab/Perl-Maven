@@ -1,8 +1,21 @@
 
 <input type="hidden" name="id" />
-<span><title>Title</title><input id="job_title" size="80" /></span>
-<span><button id="save">Save</button>
-<div id="job-post"></div>
+<span><title>Title (80 char) </title><input id="job_title" size="80" /></span>
+<textarea id="job_description" rows="20" cols="80">
+</textarea>
+<span>check if on-site: <input type="checkbox" id="job_on_site"></span>
+<div id="location>
+ <span>City: <input id="job_city" /></span>
+ <span>State: <input id="job_state" /></span>
+ <span>Country: <input id="job_country" /></span>
+</div>
+
+<span>Company name: <input id="job_company_name" /></span>
+<span>Company url: <input id="job_company_url" /></span>
+<span>Job url: <input id="job_url" /></span>
+
+<span><button id="job_save">Save</button>
+<div id="job_post"></div>
 
 
 <script src="/javascripts/jquery-1.11.0.min.js"></script>
