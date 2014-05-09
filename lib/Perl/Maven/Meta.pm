@@ -205,10 +205,11 @@ sub get_pages {
 			foreach my $field (qw(timestamp title status)) {
 				die "No $field in $path" if not $data->{$field};
 			}
-			die "Invalid status $data->{status} in $file"
+			die "Invalid status $data->{status} in $path"
 				if $data->{status} !~ /^(show|hide|draft|ready)/;
 
 			my %p = (
+				path     => $path,
 				file     => $file,
 				url_path => $s->{uri} . $file,
 				%$data,
@@ -234,7 +235,7 @@ sub get_pages {
 		if ($p->{status} eq 'show') {
 			push @selected, $p;
 		} else {
-			warn "No =status show $p->{file}\n";
+			warn "No =status show $p->{path}\n";
 		}
 	}
 
