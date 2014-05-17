@@ -1,0 +1,16 @@
+<% IF conf.show_sponsors %>
+
+<div class="sponsor">
+<%
+ USE Math;
+ c = Math.rand(2);
+ choice = Math.int(c)
+ %>
+ <% IF choice %>
+   <a href="/linode"><img src="/img/linode_a.jpg" alt="We recommend Linode for hosting." /></a> 
+ <% ELSE %>
+   <a href="/digitalocean"><img src="/img/ssd-virtual-servers-250x250.jpg" alt="We recommend Digital Ocean for hosting." /></a> 
+ <% END %>
+</div>
+
+<% END %>
