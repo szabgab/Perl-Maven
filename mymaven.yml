@@ -39,10 +39,10 @@ perlmaven.com:
 #      countries:
 #        - 'DE'
 #        - 'AT'
-    - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
-      flag: 'PL'
-      countries:
-        - 'PL'
+#    - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
+#      flag: 'PL'
+#      countries:
+#        - 'PL'
 #    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
 #      flag: 'US'
 #      countries:
