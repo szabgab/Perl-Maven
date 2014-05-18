@@ -1,7 +1,7 @@
 <% IF conf.show_sponsors %>
 
 <div class="sponsor">
- <a href="/linode"><img src="/img/linode_a.jpg" alt="We recommend Linode for hosting." /></a> 
+ <a href="/digitalocean"><img src="/img/ssd-virtual-servers-250x250.jpg" alt="We recommend Digital Ocean for hosting." /></a> 
 </div>
 
 <% END %>
