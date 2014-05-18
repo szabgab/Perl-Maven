@@ -7,7 +7,7 @@
 <div class="sponsors">
 <%
  USE Math;
- c = Math.rand(2);
+ c = Math.rand(3);
  choice = Math.int(c)
  %>
  <% SWITCH choice %>
@@ -17,6 +17,11 @@
  <% CASE 1 %>
     <!-- Programming Perl (large image) -->
 <a href="http://www.amazon.com/gp/product/0596004923/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0596004923&linkCode=as2&tag=szabgab-20&linkId=67UFZPJNNUVJDCAK"><img border="0" src="http://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=0596004923&Format=_SL250_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=szabgab-20" ></a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=szabgab-20&l=as2&o=1&a=0596004923" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
+ <% CASE 2 %>
+   <!-- Mastering Perl -->
+<a href="http://www.amazon.com/gp/product/144939311X/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=144939311X&linkCode=as2&tag=szabgab-20&linkId=BI7RQU5LNS5YSGPP"><img border="0" src="http://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=144939311X&Format=_SL250_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=szabgab-20" ></a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=szabgab-20&l=as2&o=1&a=144939311X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
  <% END %>
 
 </div>
