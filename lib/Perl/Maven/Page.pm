@@ -134,8 +134,9 @@ sub read {
 			grep { $_ =~ m{^/} } 
 			sort keys %links ];
 
-	if (length $data{abstract} > 900) {
-		die sprintf("Abstract of %s is too long. It has %s character", $self->file, length $data{abstract});
+	my $MAX_ABSTRACT = 1000;
+	if (length $data{abstract} > $MAX_ABSTRACT) {
+		die sprintf("Abstract of %s is too long. It has %s characters. (allowed %s)", $self->file, length $data{abstract}, $MAX_ABSTRACT);
 	}
 
 	return \%data;
