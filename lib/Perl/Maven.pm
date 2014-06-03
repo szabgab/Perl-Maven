@@ -663,15 +663,17 @@ get '/download/:dir/:file' => sub {
 	send_file(path(mymaven->{dirs}{download}, $dir, $file), system_path => 1);
 };
 
-get '/pro' => sub {
+get qr{^/pro/?$} => sub {
 	my $product = 'perl_maven_pro';
 	my $path = mymaven->{site} . "/pages/pro.tt";
-	return _show_abstract({ path => $path })
-		if not logged_in()
-		   or not $db->is_subscribed(session('email'), $product);
+	my $promo = 1;
+	if (logged_in() and $db->is_subscribed(session('email'), $product)) {
+		$promo = 0;
+	}
+	return _show_abstract({ path => $path, promo => $promo });
 
-	my $tt = read_tt( $path );
-	return template 'prolist', $tt, { layout => 'page' };
+	#my $tt = read_tt( $path );
+	#return template 'prolist', $tt, { layout => 'page' };
 };
 
 get qr{/pro/(.+)} => sub {
@@ -891,6 +893,7 @@ get qr{/(.+)} => sub {
 sub _show_abstract {
 	my ($params) = @_;
 	my $tt = read_tt( $params->{path} );
+	$tt->{promo} = $params->{promo} // 1;
 #		if not logged_in(), tell the user to subscribe or log in
 #
 #		if logged in but not subscribed, tell the user to subscribe

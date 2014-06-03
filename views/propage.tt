@@ -2,6 +2,7 @@
 <% abstract %>
 </div>
 
+<% IF promo %>
 <div id="promo">
 While many of the Perl Maven articles are <a href="/archive?tag=free">free</a>, this article is only available for Perl Maven Pro subscribers.
 
@@ -40,4 +41,4 @@ or
 If you already have <b>Perl Maven Pro subscription</b>, you will need to <a href="/login">login</a> to access the articles.
 </p>
 </div>
-
+<% END %>
