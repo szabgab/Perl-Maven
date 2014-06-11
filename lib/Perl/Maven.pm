@@ -62,6 +62,7 @@ hook before => sub {
 
 	read_authors();
 	my $p = $db->get_products;
+	
 	set products => $p;
 };
 
@@ -439,7 +440,10 @@ get '/set-password/:id/:code' => sub {
 };
 
 post '/change-password' => sub {
-	return redirect '/login' if not logged_in();
+	if (not logged_in()) {
+		session url => request->path;
+		return redirect '/login' 
+	}
 
 	my $password  = param('password')  || '';
 	my $password2 = param('password2') || '';
@@ -485,7 +489,10 @@ post '/set-password' => sub {
 };
 
 post '/update-user' => sub {
-	return redirect '/login' if not logged_in();
+	if (not logged_in()) {
+		session url => request->path;
+		return redirect '/login';
+	}
 
 	my $name  = param('name')  || '';
 
@@ -497,6 +504,7 @@ post '/update-user' => sub {
 };
 
 get '/login' => sub {
+	#session referer => request->referer;
 	template 'login';
 };
 
@@ -520,7 +528,12 @@ post '/login' => sub {
 	session logged_in => 1;
 	session last_seen => time;
 
-	redirect '/account';
+	#my $url = session('referer') // '/account';
+	#session referer => undef;
+	my $url = session('url') // '/account';
+	session url => undef;
+
+	redirect $url;
 };
 
 get '/unsubscribe' => sub {
@@ -688,6 +701,8 @@ get qr{/pro/(.+)} => sub {
 	pass if $FREE{"/pro/$article"};
 	pass if logged_in()
 		and $db->is_subscribed(session('email'), $product);
+
+	session url => request->path;
 
 	_show_abstract({ path => $path });
 };
