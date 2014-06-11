@@ -23,6 +23,7 @@ WriteMakefile(
         'DBI'                  => 0,
         'DBIx::RunSQL'         => 0,
         'Email::Valid'         => 0,
+        'File::Find::Rule'     => 0,
         'Hash::Merge::Simple'  => 0,
         'Geo::IP'              => 0,
         'MIME::Lite'           => 0,
