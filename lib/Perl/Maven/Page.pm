@@ -78,12 +78,12 @@ sub read {
 			if ($line =~ m{^\s*<screencast\s+file="(.*)"\s+/>\s*$}) {
 				my $file = $1;
 				$line = <<"SCREENCAST";
-<link href="//vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
-<script src="//vjs.zencdn.net/4.4/video.js"></script>
+<link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.6/video.js"></script>
 
-<video id="example_video_1" class="video-js vjs-default-skin"
+<video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
-  data-setup='{"example_option":true}'>
+  data-setup='{"controls":true}'>
  <source src="$file" type='video/mp4' />
 </video>
 
