@@ -82,7 +82,7 @@ sub read {
 <script src="//vjs.zencdn.net/4.4/video.js"></script>
 
 <video id="example_video_1" class="video-js vjs-default-skin"
-  controls preload="auto" width="860" height="480"
+  controls preload="auto"
   data-setup='{"example_option":true}'>
  <source src="$file" type='video/mp4' />
 </video>
