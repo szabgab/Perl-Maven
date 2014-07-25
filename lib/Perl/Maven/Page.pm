@@ -75,6 +75,25 @@ sub read {
 		}
 
 		while (my $line = <$fh>) {
+			if ($line =~ m{^\s*<screencast\s+file="(.*)"\s+/>\s*$}) {
+				my $file = $1;
+				$line = <<"SCREENCAST";
+<link href="//vjs.zencdn.net/4.4/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.4/video.js"></script>
+
+<video id="example_video_1" class="video-js vjs-default-skin"
+  controls preload="auto" width="860" height="480"
+  data-setup='{"example_option":true}'>
+ <source src="$file" type='video/mp4' />
+</video>
+
+<div>
+Download:
+<a href="$file">mp4</a>
+</div>
+SCREENCAST
+			}
+
 			$line =~ s{<hl>}{<span class="inline_code">}g;
 			$line =~ s{</hl>}{</span>}g;
 			#$line =~ s{<hl>}{<b>}g;
