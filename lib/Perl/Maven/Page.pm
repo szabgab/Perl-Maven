@@ -87,10 +87,12 @@ sub read {
  <source src="$file" type='video/mp4' />
 </video>
 
-<div>
+<div id="download">
 Download:
 <a href="$file">mp4</a>
 </div>
+
+
 SCREENCAST
 			}
 
