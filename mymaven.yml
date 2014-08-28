@@ -53,7 +53,7 @@ perlmaven.com:
   conf:
     #clicky: 66509177
     google_analytics: UA-12199211-9
-    show_sponsors: 1
+    show_sponsors: 0
     show_newsletter_form: 0
     show_indexes: 1
     enable_comments: 0
