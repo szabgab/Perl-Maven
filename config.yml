@@ -14,20 +14,11 @@ layout: "system"
 # about unicode within your app when this setting is set (recommended).
 charset: "UTF-8"
 
-# template engine
-# simple: default and very basic template engine
-# template_toolkit: TT
-
-# template: "simple"
-
 mymaven: "mymaven.yml"
 
 template: "template_toolkit"
 engines:
   template_toolkit:
-#    INCLUDE_PATH: '/home/gabor/work/Perl-Maven/views'
     encoding:  'utf8'
-#     start_tag: '[%'
-#     end_tag:   '%]'
 
 session: "YAML"
