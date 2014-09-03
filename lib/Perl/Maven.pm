@@ -29,6 +29,7 @@ use File::Basename qw(fileparse);
 use POSIX ();
 use Storable     qw(dclone);
 use List::Util   qw(min);
+use Geo::IP;
 
 use Web::Feed;
 
@@ -138,10 +139,17 @@ hook before_template => sub {
 		}
 	}
 
-use Geo::IP;
-	my $gi = Geo::IP->new(GEOIP_MEMORY_CACHE);
 	my $address= request->remote_address;
-	my $country = $gi->country_code_by_addr($address) || '';
+	my $country = '';
+
+	# avoid 'Error Opening file'  error/warning/or just plain print?
+	if (-e '/usr/local/var/GeoIP/GeoIP.dat') {
+		my $gi = Geo::IP->new(GEOIP_MEMORY_CACHE);
+		my $c = $gi && $gi->country_code_by_addr($address);
+		if ($c) {
+			$country = $c;
+		}
+	}
 
 	#my $host = Perl::Maven::Config::host(request->host);
 	#$t->{uri_base}  = request->uri_base;
