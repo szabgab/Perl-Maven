@@ -11,3 +11,8 @@ Makefile$
 ^cover_db
 ^.*\.log
 ^.*\.swp$
+sessions/
+.*\.db$
+logs/
+MYMETA.*
+mymaven.yml
