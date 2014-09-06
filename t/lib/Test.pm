@@ -4,7 +4,7 @@ use warnings;
 
 use base 'Exporter';
 
-our @EXPORT_OK = qw(start stop read_file);
+our @EXPORT_OK = qw(start read_file);
 
 use Cwd qw(cwd);
 use File::Basename qw(basename);
