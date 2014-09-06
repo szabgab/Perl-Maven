@@ -2,6 +2,23 @@ package Perl::Maven::Config;
 use strict;
 use warnings;
 
+=head1 NAME
+
+Perl::Maven::Config - read the mymaven.yml configuration file
+
+=head1 DESCRPTION
+
+  my $mymaven = Perl::Maven::Config->new('/path/to/mymaven.yml'); 
+  my $cfg = $mymaven->config('hostname.org');
+  $cfg->{site}
+
+
+See sample configuration file: C<t/files/mymaven.yml>.
+
+See also L<Perl::Maven>.
+
+=cut
+
 use Data::Dumper qw(Dumper);
 use Hash::Merge::Simple qw(merge);
 use YAML         qw(LoadFile);
@@ -63,6 +80,7 @@ sub realhost {
 	$host =~ s/:.*//; # remove port
 	return $host;
 }
+
 sub host {
 	my ($host) = @_;
 	$host =~ s/:.*//; # remove port

@@ -1,0 +1,87 @@
+perlmaven.com:
+  domain:
+    site: en
+    redirect: 0
+  www:
+    redirect: http://perlmaven.com/
+  root: '/home/foobar/perlmaven.com'
+  meta: '/home/foobar/perlmaven-meta'
+  title: 'Perl Maven'
+  from: 'Perl Maven <test@perlmaven.com>'
+  listid: 'Perl Maven newsletter <demo.perlmaven.com>'
+  prefix: '[Perl Maven]'
+  redirect:
+    'szg': 'http://szabgab.com/?r=12345'
+    'abc': 'def'
+  events:
+    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
+      flag: 'IL'
+      countries:
+        - 'IL'
+    - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
+      flag: 'DE'
+      countries:
+        - 'DE'
+        - 'AT'
+    - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
+      flag: 'PL'
+      countries:
+        - 'PL'
+    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
+      flag: 'US'
+      countries:
+        - 'US'
+        - 'CA'
+  dirs:
+    img: '/home/foobar/perlmaven.com/sites/en/img'
+  conf:
+    clicky: 12345678
+    google_analytics: UA-11111112-3
+    show_sponsors: 0
+    show_newsletter_form: 0
+    show_indexes: 1
+    enable_comments: 0
+  admin:
+    email: 'Foo Bar <foobar@perlmaven.com>'
+  paypal:
+    email: 'paybar@perlmaven.com'
+  sites:
+    br.perlmaven.com:
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'br-test-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+        'old-article': 'new-article'
+        'abc': 'other-page'
+    cn.perlmaven.com:
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    he.perlmaven.com:
+      conf:
+        rtl: 1
+        enable_comments: 'disqus'
+        disqus: 'he-test--perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    perlmaven.com:
+      dirs:
+        mail: '/home/foobar/articles/mail'
+        perldoc: '/home/foobar/articles/perldoc'
+        download: '/home/foobar/articles/download'
+        media: '/home/foobar/media.perlmaven.com'
+        pro: '/home/foobar/articles/pro'
+        articles: '/home/foobar/articles'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+      index:
+        - perldoc
+        - pro
+#        videos: '/home/foobar/perlmaven.com/sites/en/pages/videos'
+      conf:
+        enable_comments: 'disqus'
+        disqus: 'perl5maven'
+        show_newsletter_form: 1
+        right_search: 0
+
+
