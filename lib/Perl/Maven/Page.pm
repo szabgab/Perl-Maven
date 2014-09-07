@@ -6,8 +6,8 @@ use Carp; # needed by DateTime::Tiny 1.04
 use DateTime::Tiny;
 use Data::Dumper qw(Dumper);
 
-
 has file => (is => 'ro', required => 1);
+has tools => (is => 'ro', required => 0);
 
 sub read {
 	my ($self) = @_;
@@ -142,7 +142,7 @@ SCREENCAST
 
 	# TODO: this should not be read into memory for every page!
 	if (not $ENV{METAMETA}) {
-		my $site = Perl::Maven::read_meta_array('sitemap');
+		my $site =  $self->tools->read_meta_array('sitemap');
 		my %sitemap = map { '/' . $_->{filename}  => $_->{title} } @$site;
 		foreach my $url (keys %links) {
 			if ($sitemap{ $url }) {

@@ -28,7 +28,6 @@ use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
 use Storable     qw(dclone);
-use List::Util   qw(min);
 use Geo::IP;
 
 use Web::Feed;
@@ -65,6 +64,8 @@ hook before => sub {
 	my $p = $db->get_products;
 	
 	set products => $p;
+
+	set tools => Perl::Maven::Tools->new( host => request->host, meta => mymaven->{meta} );
 };
 
 hook before_template => sub {
@@ -82,7 +83,7 @@ hook before_template => sub {
 	my $original_language = mymaven->{domain}{site};
 	my $language = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
-	my $data = read_meta_hash('keywords');
+	my $data = setting('tools')->read_meta_hash('keywords');
 	$t->{keywords} = to_json([sort keys %$data]);
 	#$t->{keyword_mapper} = to_json($data) || '{}';
 
@@ -92,7 +93,7 @@ hook before_template => sub {
 
 	# linking to translations
 	my $sites = read_sites();
-	my $translations = read_meta_meta('translations');
+	my $translations = setting('tools')->read_meta_meta('translations');
 	my $path = request->path;
 	my %links;
 
@@ -246,7 +247,7 @@ get '/contributor/:name' => sub {
 	}
 
 	return "$name could not be found" if not $authors{$name};
-	my $data = read_meta('archive');
+	my $data = setting('tools')->read_meta('archive');
 	my @articles = grep {
 			$_->{author} eq $name or
 			($_->{translator} and $_->{translator} eq $name)
@@ -273,7 +274,7 @@ get '/search' => sub {
 	my ($keyword) = param('keyword');
 	push_header 'Access-Control-Allow-Origin' => '*';
 	return to_json({}) if not defined $keyword;
-	my $data = read_meta_hash('keywords');
+	my $data = setting('tools')->read_meta_hash('keywords');
 	$data->{$keyword} ||= {};
 	return to_json($data->{$keyword});
 };
@@ -282,11 +283,11 @@ get '/' => sub {
 	if (request->host =~ /^meta\./) {
 		return _show({ article => 'index',  template => 'page', layout => 'meta' }, {
 			authors => \%authors,
-			stats   => read_meta_meta('stats'),
+			stats   => setting('tools')->read_meta_meta('stats'),
 		});
 	}
 
-	my $pages = read_meta_array('archive', limit => $MAX_INDEX);
+	my $pages = setting('tools')->read_meta_array('archive', limit => $MAX_INDEX);
 	_replace_tags($pages);
 
 	_show({ article => 'index', template => 'page', layout => 'index' }, { pages => $pages });
@@ -304,14 +305,14 @@ sub _replace_tags {
 
 
 get '/keywords' => sub {
-	my $kw = read_meta_hash('keywords');
+	my $kw = setting('tools')->read_meta_hash('keywords');
 	delete $kw->{keys}; # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
 	#die Dumper $kw->{__WARN__};
 	_show({ article => 'keywords', template => 'page', layout => 'keywords' }, { kw  => $kw });
 };
 
 get '/about' => sub {
-	my $pages = read_meta_array('archive');
+	my $pages = setting('tools')->read_meta_array('archive');
 	my %cont;
 	foreach my $p (@$pages) {
 		if ($p->{translator} and $p->{translator}) {
@@ -335,8 +336,8 @@ get '/about' => sub {
 get '/archive' => sub {
 	my $tag = param('tag');
 	my $pages = $tag
-		? read_meta_array('archive', filter => $tag)
-		: read_meta_array('archive');
+		? setting('tools')->read_meta_array('archive', filter => $tag)
+		: setting('tools')->read_meta_array('archive');
 	_replace_tags($pages);
 
 	_show({ article => 'archive', template => 'archive', layout => 'system' },
@@ -354,13 +355,13 @@ get '/consultants' => sub {
 get '/perl-training-consulting' => sub {
 	_show({ article => 'perl-training-consulting', template => 'consultants', layout => 'system' },
 		{
-			people  => read_meta_meta('consultants'),
+			people  => setting('tools')->read_meta_meta('consultants'),
 		});
 };
 
 
 get '/sitemap.xml' => sub {
-	my $pages = read_meta_array('sitemap');
+	my $pages = setting('tools')->read_meta_array('sitemap');
 	my $url = request->base;
 	$url =~ s{/$}{};
 	content_type 'application/xml';
@@ -803,7 +804,7 @@ get '/mail/:article' => sub {
 
 get '/tv' => sub {
 	_show({ article => 'tv', template => 'archive', layout => 'system' },
-		{ pages => read_meta_array('archive', filter => 'interview')  });
+		{ pages => setting('tools')->read_meta_array('archive', filter => 'interview')  });
 };
 
 # TODO this should not be here!!
@@ -1008,7 +1009,7 @@ sub pw_form {
 
 sub read_tt {
 	my $file = shift;
-	my $tt = eval { Perl::Maven::Page->new(file => $file)->read };
+	my $tt = eval { Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read };
 	if ($@) {
 		return {}; # hmm, this should have been caught when the meta files were generated...
 	} else {
@@ -1133,69 +1134,12 @@ sub read_authors {
 	return;
 }
 
-sub read_meta {
-	my ($file) = @_;
-
-	my $host = Perl::Maven::Config::host(request->host);
-	return read_json(path(mymaven->{meta} . "/$host/meta/$file.json"));
-}
-
-sub read_meta_hash {
-	my ($what) = @_;
-
-	my $meta = read_meta($what) || {};
-
-	return $meta;
-}
-
-sub read_meta_array {
-	my ($what, %p) = @_;
-
-	my $meta = read_meta($what) || [];
-	return $meta if not %p;
-
-	my @pages = @$meta;
-	if ($p{filter}) {
-		if ($p{filter} eq 'free') {
-			@pages = grep { Perl::Maven::Tools::_none('pro', $_->{tags}) } @pages;
-		} else {
-			@pages = grep { Perl::Maven::Tools::_any($p{filter}, $_->{tags}) } @pages;
-		}
-	}
-	if ($p{limit}) {
-		my $limit = min($p{limit}, scalar @pages);
-		@pages = @pages[0 .. $limit-1];
-	}
-
-	@pages = reverse sort { $a->{timestamp} cmp $b->{timestamp} } @pages;
-
-	return \@pages;
-}
-
-
-sub read_meta_meta {
-	my ($file) = @_;
-
-	return read_json(path(mymaven->{meta} . "/$file.json"));
-}
-
-sub read_json {
-	my ($file) = @_;
-
-	if (open my $fh, '<encoding(UTF-8)', $file) {
-		local $/ = undef;
-		my $json = <$fh>;
-		return from_json $json, {utf8 => 1};
-	}
-	return;
-}
-
 sub _feed {
 	my ($what, $tag, $subtitle) = @_;
 
 	$subtitle ||= '';
 
-	my $pages = read_meta_array($what, filter => $tag, limit => $MAX_FEED);
+	my $pages = setting('tools')->read_meta_array($what, filter => $tag, limit => $MAX_FEED);
 
 	my $mymaven = mymaven;
 
