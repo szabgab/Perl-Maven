@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 6;
+plan tests => 7;
 
 use Perl::Maven::Page;
 
@@ -99,6 +99,14 @@ subtest invalid_field_before_optional => sub {
 	my $path = 't/files/invalid_field_before_optional.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
 	is $@, qq{Invalid entry in header expected 'author', received 'darklord' in line '=darklord Anakin Skywalker' file t/files/invalid_field_before_optional.tt\n};
+};
+
+subtest no_timestamp => sub {
+	plan tests => 1;
+
+	my $path = 't/files/no_timestamp.tt';
+	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+	is $@, qq{Invalid entry in header expected 'timestamp', received 'indexes' in line '=indexes files' file t/files/no_timestamp.tt\n};
 };
 
 
