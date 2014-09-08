@@ -22,8 +22,29 @@ sub read {
 	#    require it but also have a mark if we want to show it or not?)
 	my @header = qw(title timestamp description? indexes? tags? mp3? status original? books? showright? newsletter? published? author
         translator? archive comments social);
-	my %fields = map { $_ => 1 } map { /\?$/ ? substr($_, 0, -1) : $_ } @header;
-	%fields = (%fields, %data);
+	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
+	my %opts = (
+		'?' => 'optional',
+		'@' => 'multivalue',
+	);
+	my %fields;
+	foreach my $f (@header) {
+		my $c = $f; # copy
+		my %h;
+		while ($c) {
+			my $last = substr $c, -1;
+			if ($opts{$last}) {
+				chop $c;
+				$h{$opts{$last}} = 1;
+			} else {
+				last;
+			}
+		}
+		$fields{$c} = \%h;
+	}
+	foreach my $k (keys %data) {
+		$fields{$k} = {};
+	}
 
 	my $file = $self->file;
 
@@ -31,7 +52,6 @@ sub read {
 		while (my $line = <$fh>) {
 			chomp $line;
 			last if $line =~ /^\s*$/;
-			#if (my ($f, $v) = $line =~ /=([\w-]+)(?:\s+(.*?)\s*)?$/) {
 			if (my ($f, $v) = $line =~ /=([\w-]+)\s+(.*?)\s*$/) {
                 $v //= '';
 
@@ -46,8 +66,8 @@ sub read {
 			}
 		}
 
-		for my $field (@header) {
-			if (substr($field, -1) ne '?' and not defined $data{$field}) {
+		for my $field (keys %fields) {
+			if (not $fields{$field}{optional} and not defined $data{$field}) {
 				die "Header ended and '$field' was not supplied for file $file\n";
 			}
 		}
@@ -87,8 +107,6 @@ SCREENCAST
 
 			$line =~ s{<hl>}{<span class="inline_code">}g;
 			$line =~ s{</hl>}{</span>}g;
-			#$line =~ s{<hl>}{<b>}g;
-			#$line =~ s{</hl>}{</b>}g;
 			if ($line =~ /^=abstract start/ .. $line =~ /^=abstract end/) {
 				next if $line =~ /^=abstract/;
 				$data{abstract} .= $line;
