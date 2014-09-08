@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 4;
+plan tests => 5;
 
 use Perl::Maven::Page;
 
@@ -83,6 +83,14 @@ subtest missing_title => sub {
 	my $path = 't/files/missing_title.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
 	is $@, qq{Invalid entry in header expected 'title', received 'timestamp' in line '=timestamp 2014-01-15T07:30:01' file t/files/missing_title.tt\n};
+};
+
+subtest invalid_field => sub {
+	plan tests => 1;
+
+	my $path = 't/files/invalid_field.tt';
+	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+	is $@, qq{Invalid entry in header expected 'author', received 'darklord' in line '=darklord Darth Vader' file t/files/invalid_field.tt\n};
 };
 
 
