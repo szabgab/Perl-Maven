@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 3;
+plan tests => 4;
 
 use Perl::Maven::Page;
 
@@ -75,6 +75,14 @@ subtest indexes => sub {
   'timestamp' => '2014-01-15T07:30:01',
   'title' => 'Test 3'
 }
+};
+
+subtest missing_title => sub {
+	plan tests => 1;
+
+	my $path = 't/files/missing_title.tt';
+	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+	is $@, qq{Invalid entry in header expected 'title', received 'timestamp' in line '=timestamp 2014-01-15T07:30:01' file t/files/missing_title.tt\n};
 };
 
 
