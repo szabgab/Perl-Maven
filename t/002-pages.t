@@ -82,7 +82,7 @@ subtest missing_title => sub {
 
 	my $path = 't/files/missing_title.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid entry in header expected 'title', received 'timestamp' in line '=timestamp 2014-01-15T07:30:01' file t/files/missing_title.tt\n};
+	is $@, qq{Header ended and 'title' was not supplied for file t/files/missing_title.tt\n};
 };
 
 subtest invalid_field => sub {
@@ -90,7 +90,7 @@ subtest invalid_field => sub {
 
 	my $path = 't/files/invalid_field.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid entry in header expected 'author', received 'darklord' in line '=darklord Darth Vader' file t/files/invalid_field.tt\n};
+	is $@, qq{Invalid entry in header 'darklord' file t/files/invalid_field.tt\n};
 };
 
 subtest invalid_field_before_optional => sub {
@@ -98,7 +98,7 @@ subtest invalid_field_before_optional => sub {
 
 	my $path = 't/files/invalid_field_before_optional.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid entry in header expected 'author', received 'darklord' in line '=darklord Anakin Skywalker' file t/files/invalid_field_before_optional.tt\n};
+	is $@, qq{Invalid entry in header 'darklord' file t/files/invalid_field_before_optional.tt\n};
 };
 
 subtest no_timestamp => sub {
@@ -106,7 +106,7 @@ subtest no_timestamp => sub {
 
 	my $path = 't/files/no_timestamp.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid entry in header expected 'timestamp', received 'indexes' in line '=indexes files' file t/files/no_timestamp.tt\n};
+	is $@, qq{Header ended and 'timestamp' was not supplied for file t/files/no_timestamp.tt\n};
 };
 
 
