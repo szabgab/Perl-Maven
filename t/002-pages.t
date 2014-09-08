@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 2;
+plan tests => 3;
 
 use Perl::Maven::Page;
 
@@ -46,4 +46,35 @@ subtest invalid_timestamp => sub {
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
 	is $@, qq{Invalid =timestamp '2014-01-151T07:30:01' in file t/files/2.tt\n};
 };
+
+subtest indexes => sub {
+	plan tests => 2;
+
+	my $path = 't/files/3.tt';
+	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+	ok !$@, "load $path" or diag $@;
+	
+	cmp_deeply $data, {
+  'abstract' => '',
+  'archive' => '1',
+  'author' => 'szabgab',
+  'comments' => '1',
+  'content' => '',
+  'indexes' => [
+    'files',
+    'and',
+    'other::values'
+  ],
+  'mycontent' => re('<p>\s*Some text here\.\s*<p>'),
+  'newsletter' => 1,
+  'published' => 1,
+  'related' => [],
+  'showright' => 1,
+  'social' => '0',
+  'status' => 'draft',
+  'timestamp' => '2014-01-15T07:30:01',
+  'title' => 'Test 3'
+}
+};
+
 
