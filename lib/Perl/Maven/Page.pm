@@ -2,8 +2,7 @@ package Perl::Maven::Page;
 use Moo;
 
 use 5.014;
-use Carp; # needed by DateTime::Tiny 1.04
-use DateTime::Tiny;
+use DateTime;
 use Data::Dumper qw(Dumper);
 
 has file => (is => 'ro', required => 1);
@@ -77,8 +76,8 @@ sub read {
 			}
 		}
 		die "=timestamp missing in file $file\n" if not $data{timestamp};
-		die "Invalid =timestamp '$data{timestamp}' in file $file\n" if $data{timestamp} !~ /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$/;
-		eval {DateTime::Tiny->from_string($data{timestamp})}; # just check if it is valid
+		die "Invalid =timestamp '$data{timestamp}' in file $file\n" if $data{timestamp} !~ /^(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$/;
+		eval {DateTime->new(year => $1, month => $2, day => $3, hour => $4, minute => $5, second => $6)}; # just check if it is valid
 		if ($@) {
 			die "$@  in file $file\n";
 		}

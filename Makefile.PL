@@ -16,7 +16,7 @@ WriteMakefile(
         'Business::PayPal'      => 0.13,
         'Code::Explain'         => 0.02,
         'Dancer'                => 1.3095,
-        'DateTime::Tiny'        => 1.04,
+        'DateTime'              => 1.12,
         'DBD::SQLite'           => 1.42,
         'DBI'                   => 1.631,
         'DBIx::RunSQL'          => 0.12,
@@ -29,7 +29,8 @@ WriteMakefile(
         'Template'              => 2.25,
         'YAML'                  => 1.09,
         'JSON'                  => 2.90,
-        'Web::Feed'             => '0.02',
+        'Web::Feed'             => 0.02,
+		'Digest::SHA'           => 5.92,
 
         'MIME::Lite'            => 0,
         'Email::Sender::Simple' => 1.300012,

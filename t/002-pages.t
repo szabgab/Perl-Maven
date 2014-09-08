@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 7;
+plan tests => 8;
 
 use Perl::Maven::Page;
 
@@ -107,6 +107,14 @@ subtest no_timestamp => sub {
 	my $path = 't/files/no_timestamp.tt';
 	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
 	is $@, qq{Header ended and 'timestamp' was not supplied for file t/files/no_timestamp.tt\n};
+};
+
+subtest bad_timestamp => sub {
+	plan tests => 1;
+
+	my $path = 't/files/bad_timestamp.tt';
+	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+	like $@, qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback};
 };
 
 
