@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 8;
+plan tests => 4;
 
 use Perl::Maven::Page;
 
@@ -39,14 +39,6 @@ subtest one => sub {
 	};
 };
 
-subtest invalid_timestamp => sub {
-	plan tests => 1;
-
-	my $path = 't/files/2.tt';
-	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid =timestamp '2014-01-151T07:30:01' in file t/files/2.tt\n};
-};
-
 subtest indexes => sub {
 	plan tests => 2;
 
@@ -77,36 +69,23 @@ subtest indexes => sub {
 }
 };
 
-subtest missing_title => sub {
-	plan tests => 1;
+my %cases = (
+	missing_title     => qq{Header ended and 'title' was not supplied for file t/files/missing_title.tt\n},
+	invalid_field     => qq{Invalid entry in header 'darklord' file t/files/invalid_field.tt\n},
+	invalid_timestamp => qq{Invalid =timestamp '2014-01-151T07:30:01' in file t/files/invalid_timestamp.tt\n},
+	invalid_field_before_optional => qq{Invalid entry in header 'darklord' file t/files/invalid_field_before_optional.tt\n},
+	no_timestamp => qq{Header ended and 'timestamp' was not supplied for file t/files/no_timestamp.tt\n},
+);
 
-	my $path = 't/files/missing_title.tt';
-	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Header ended and 'title' was not supplied for file t/files/missing_title.tt\n};
-};
 
-subtest invalid_field => sub {
-	plan tests => 1;
+subtest errors => sub {
+	plan tests => scalar keys %cases;
 
-	my $path = 't/files/invalid_field.tt';
-	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid entry in header 'darklord' file t/files/invalid_field.tt\n};
-};
-
-subtest invalid_field_before_optional => sub {
-	plan tests => 1;
-
-	my $path = 't/files/invalid_field_before_optional.tt';
-	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Invalid entry in header 'darklord' file t/files/invalid_field_before_optional.tt\n};
-};
-
-subtest no_timestamp => sub {
-	plan tests => 1;
-
-	my $path = 't/files/no_timestamp.tt';
-	my $data = eval { Perl::Maven::Page->new(file => $path)->read };
-	is $@, qq{Header ended and 'timestamp' was not supplied for file t/files/no_timestamp.tt\n};
+	foreach my $name (sort keys %cases) {
+		my $path = "t/files/$name.tt";
+		my $data = eval { Perl::Maven::Page->new(file => $path)->read };
+		is $@, $cases{$name}, $name;
+	}
 };
 
 subtest bad_timestamp => sub {
