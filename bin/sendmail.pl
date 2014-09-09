@@ -18,7 +18,8 @@ use DBI;
 use YAML qw();
 use Try::Tiny;
 
-binmode( STDOUT, ':utf8' );
+binmode( STDOUT, ":encoding(UTF-8)" );
+binmode( STDERR, ":encoding(UTF-8)" );
 
 use lib 'lib';
 use Perl::Maven::Config;

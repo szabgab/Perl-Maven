@@ -13,8 +13,10 @@ my $run = start();
 
 my $articles = '../articles';
 
+## no critic
 eval "use Test::More";
 eval "use Test::Deep";
+## use critic
 require Test::WWW::Mechanize;
 plan( skip_all => 'Unsupported OS' ) if not $run;
 
@@ -34,7 +36,8 @@ my $cookbook_text = basename $cookbook_url;
 
 my $w = Test::WWW::Mechanize->new;
 
-diag('subscribe to free Perl Maven newsletter, let them download the cookbook'
+diag(
+	'subscribe to free Perl Maven newsletter, let them download the cookbook'
 );
 
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).

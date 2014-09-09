@@ -103,6 +103,7 @@ sub re_dump {
 	$str =~ s/\$VAR1 =//;
 
 	#$str =~ s/^#//gm;
+    ## no critic
 	my $data = eval $str;
 	return $data;
 }

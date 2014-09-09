@@ -11,8 +11,10 @@ my $run = start();
 
 my $articles = '../articles';
 
+## no critic
 eval "use Test::More";
 eval "use Test::Deep";
+## use critic
 require Test::WWW::Mechanize;
 plan( skip_all => 'Unsupported OS' ) if not $run;
 
