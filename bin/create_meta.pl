@@ -4,20 +4,20 @@ use warnings;
 use v5.10;
 
 use File::Basename qw(basename dirname);
-use Getopt::Long   qw(GetOptions);
-use YAML           qw(LoadFile);
+use Getopt::Long qw(GetOptions);
+use YAML qw(LoadFile);
 
 use lib 'lib';
 use Perl::Maven::Config;
 use Perl::Maven::Meta;
 
-binmode(STDOUT, ":utf8");
-binmode(STDERR, ":utf8");
+binmode( STDOUT, ":utf8" );
+binmode( STDERR, ":utf8" );
 
 # Run with any value on the command line to get debugging info
 
-my $cfg = LoadFile('config.yml');
-my $mymaven = Perl::Maven::Config->new($cfg->{mymaven});
+my $cfg     = LoadFile('config.yml');
+my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven} );
 
 GetOptions(
 	'domain=s' => \my $domain_name,
@@ -27,23 +27,24 @@ GetOptions(
 $ENV{METAMETA} = 1;
 
 if ($all) {
-	for my $domain_name (keys %{ $mymaven->{config} }) {
+	for my $domain_name ( keys %{ $mymaven->{config} } ) {
 		my $meta = Perl::Maven::Meta->new(
 			verbose => $verbose,
 			mymaven => $mymaven,
 		);
 		$meta->process_domain($domain_name);
 	}
-} else {
+}
+else {
 	usage('Missing domain') if not $domain_name;
-	usage("Invalid site '$domain_name'") if not $mymaven->{config}{$domain_name};
+	usage("Invalid site '$domain_name'")
+		if not $mymaven->{config}{$domain_name};
 	my $meta = Perl::Maven::Meta->new(
 		verbose => $verbose,
 		mymaven => $mymaven,
 	);
 	$meta->process_domain($domain_name);
 }
-
 
 exit;
 ###############################################################################
@@ -56,7 +57,7 @@ sub usage {
 	print "         --all             all the domains\n";
 	print "         --verbose\n";
 	print "The domains:\n";
-	foreach my $domain (keys %{ $mymaven->{config} }) {
+	foreach my $domain ( keys %{ $mymaven->{config} } ) {
 		print "  $domain\n";
 	}
 	exit;

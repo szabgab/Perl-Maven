@@ -8,6 +8,7 @@ use Data::Dumper qw(Dumper);
 
 sub circle {
 	my ($data) = @_;
+
 	#die Dumper $data;
 
 	my $svg = SVG->new(
@@ -16,7 +17,7 @@ sub circle {
 	);
 
 	my $grp = $svg->group(
-		id => 'group_y',
+		id    => 'group_y',
 		style => {
 			stroke => $data->{stroke},
 			fill   => $data->{fill},

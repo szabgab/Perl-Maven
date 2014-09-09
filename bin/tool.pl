@@ -12,26 +12,19 @@ my %opt = (
 	cpan => 'http://cpan.pair.com/',
 );
 usage() if not @ARGV;
-GetOptions(\%opt,
-	'help',
-	'root=s',
-	'cpan=s',
-	'update=s',
-	'dist=s',
-) or usage();
+GetOptions( \%opt, 'help', 'root=s', 'cpan=s', 'update=s', 'dist=s', )
+	or usage();
 usage() if $opt{help};
 
-
-my $tool = Perl::Maven::Tool->new( %opt );
-if ($opt{update}) {
-	$tool->get_distro($opt{update});
+my $tool = Perl::Maven::Tool->new(%opt);
+if ( $opt{update} ) {
+	$tool->get_distro( $opt{update} );
 	exit;
 }
-if ($opt{dist}) {
-	$tool->show_distro_status($opt{dist});
+if ( $opt{dist} ) {
+	$tool->show_distro_status( $opt{dist} );
 	exit;
 }
-
 
 sub usage {
 	die <<"END_USAGE";
