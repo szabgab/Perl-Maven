@@ -167,7 +167,7 @@ sub paypal_buy {
 		what     => $what,
 		quantity => $quantity,
 		usd      => $usd,
-		email    => $email
+		email    => $email,
 	);
 	$paypal_data->{$id} = \%data;
 	session paypal => $paypal_data;
@@ -185,11 +185,11 @@ sub log_paypal {
 	my $logfile
 		= config->{appdir}
 		. '/logs/paypal_'
-		. POSIX::strftime( "%Y%m%d", gmtime($ts) );
+		. POSIX::strftime( '%Y%m%d', gmtime($ts) );
 
 	#debug $logfile;
 	if ( open my $out, '>>', $logfile ) {
-		print $out POSIX::strftime( "%Y-%m-%d", gmtime($ts) ), " - $action\n";
+		print $out POSIX::strftime( '%Y-%m-%d', gmtime($ts) ), " - $action\n";
 		print $out Dumper $data;
 		close $out;
 	}

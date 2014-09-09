@@ -7,9 +7,9 @@ use DBI;
 
 my ($email) = @ARGV;
 
-my $dsn = "dbi:SQLite:dbname=pm.db";
+my $dsn = 'dbi:SQLite:dbname=pm.db';
 my $dbh = DBI->connect(
-	$dsn, "", "",
+	$dsn, '', '',
 	{
 		RaiseError => 1,
 		PrintError => 0,
@@ -20,7 +20,7 @@ my $dbh = DBI->connect(
 my $sql = 'SELECT * FROM user';
 my @params;
 if ($email) {
-	$sql .= " WHERE email like ?";
+	$sql .= ' WHERE email like ?';
 	push @params, '%' . $email . '%';
 }
 

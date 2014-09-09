@@ -16,7 +16,7 @@ sub read {
 		abstract   => '',
 		showright  => 1,
 		newsletter => 1,
-		published  => 1
+		published  => 1,
 	);
 	my $cont = '';
 	my $in_code;
@@ -196,7 +196,7 @@ SCREENCAST
 	my $MAX_ABSTRACT = 1100;
 	if ( length $data{abstract} > $MAX_ABSTRACT ) {
 		die sprintf(
-			"Abstract of %s is too long. It has %s characters. (allowed %s)",
+			'Abstract of %s is too long. It has %s characters. (allowed %s)',
 			$self->file, length $data{abstract},
 			$MAX_ABSTRACT
 		);

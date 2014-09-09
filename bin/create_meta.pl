@@ -11,8 +11,8 @@ use lib 'lib';
 use Perl::Maven::Config;
 use Perl::Maven::Meta;
 
-binmode( STDOUT, ":encoding(UTF-8)" );
-binmode( STDERR, ":encoding(UTF-8)" );
+binmode( STDOUT, ':encoding(UTF-8)' );
+binmode( STDERR, ':encoding(UTF-8)' );
 
 # Run with any value on the command line to get debugging info
 

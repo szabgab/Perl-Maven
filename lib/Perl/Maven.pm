@@ -53,7 +53,7 @@ my %authors;
 hook before => sub {
 	my $appdir = abs_path config->{appdir};
 
-	$db ||= Perl::Maven::DB->new( config->{appdir} . "/pm.db" );
+	$db ||= Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
 	set db => $db;
 
 # Create a new Template::Toolkit object for every call because we cannot access the existing object
@@ -720,7 +720,7 @@ get '/account' => sub {
 			push @owned_products,
 				{
 				name     => 'Perl Maven Pro',
-				filename => "/archive?tag=pro",
+				filename => '/archive?tag=pro',
 				linkname => 'List of pro articles',
 				};
 		}
@@ -754,7 +754,7 @@ get '/download/:dir/:file' => sub {
 
 get qr{^/pro/?$} => sub {
 	my $product = 'perl_maven_pro';
-	my $path    = mymaven->{site} . "/pages/pro.tt";
+	my $path    = mymaven->{site} . '/pages/pro.tt';
 	my $promo   = 1;
 	if ( logged_in() and $db->is_subscribed( session('email'), $product ) ) {
 		$promo = 0;
@@ -934,7 +934,7 @@ get qr{/media/(.+)} => sub {
 	}
 	elsif ( $item =~ /\.(mp3)$/ ) {
 		my $ext = $1;
-		push_header 'Content-type' => "audio/mpeg";
+		push_header 'Content-type' => 'audio/mpeg';
 		return;
 	}
 
@@ -976,7 +976,7 @@ post '/explain' => sub {
 
 		my $time     = time;
 		my $log_file = path( config->{appdir}, 'logs',
-			'code_' . POSIX::strftime( "%Y%m", gmtime($time) ) );
+			'code_' . POSIX::strftime( '%Y%m', gmtime($time) ) );
 		if ( open my $fh, '>>', $log_file ) {
 			print $fh '-' x 20, "\n";
 			print $fh scalar( gmtime $time ) . "\n";
@@ -1022,7 +1022,7 @@ sub _show {
 	my ( $params, $data ) = @_;
 	$data ||= {};
 
-	my $path = ( delete $params->{path} || ( mymaven->{site} . "/pages" ) )
+	my $path = ( delete $params->{path} || ( mymaven->{site} . '/pages' ) )
 		. "/$params->{article}.tt";
 	if ( not -e $path ) {
 		status 'not_found';
@@ -1210,7 +1210,7 @@ sub get_download_files {
 }
 
 sub read_sites {
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/sites.yml"
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . '/sites.yml'
 		or return {};
 	my $yaml = do { local $/ = undef; <$fh> };
 	return from_yaml $yaml;
@@ -1218,7 +1218,7 @@ sub read_sites {
 
 sub read_resources {
 	my %resources;
-	open my $fh, '<encoding(UTF-8)', mymaven->{site} . "/resources.txt"
+	open my $fh, '<encoding(UTF-8)', mymaven->{site} . '/resources.txt'
 		or return \%resources;
 	while ( my $line = <$fh> ) {
 		chomp $line;
@@ -1231,7 +1231,7 @@ sub read_resources {
 sub read_authors {
 	return if %authors;
 
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . "/authors.txt"
+	open my $fh, '<encoding(UTF-8)', mymaven->{root} . '/authors.txt'
 		or return;
 	while ( my $line = <$fh> ) {
 		chomp $line;
@@ -1308,7 +1308,7 @@ sub _feed {
 		language  => 'en-us',               #       rss
 		copyright => '2014 Gabor Szabo',    #       rss
 		description =>
-			"The Perl Maven show is about the Perl programming language and about the people using it."
+			'The Perl Maven show is about the Perl programming language and about the people using it.'
 		,                                   # rss, itunes(rss)
 
 		subtitle => 'A show about Perl and Perl users',    # itunes(rss)

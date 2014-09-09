@@ -18,16 +18,16 @@ use DBI;
 use YAML qw();
 use Try::Tiny;
 
-binmode( STDOUT, ":encoding(UTF-8)" );
-binmode( STDERR, ":encoding(UTF-8)" );
+binmode( STDOUT, ':encoding(UTF-8)' );
+binmode( STDERR, ':encoding(UTF-8)' );
 
 use lib 'lib';
 use Perl::Maven::Config;
 
-my $dsn = "dbi:SQLite:dbname=pm.db";
+my $dsn = 'dbi:SQLite:dbname=pm.db';
 
 my $dbh = DBI->connect(
-	$dsn, "", "",
+	$dsn, '', '',
 	{
 		RaiseError => 1,
 		PrintError => 0,

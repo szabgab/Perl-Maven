@@ -20,14 +20,14 @@ equivalent_modules = Moo Dancer
 #[-RegularExpressions::RequireLineBoundaryMatching]
 #[-Variables::ProhibitPunctuationVars]
 #
-#[CodeLayout::RequireTrailingCommas]
-#severity = 5
-#
+[CodeLayout::RequireTrailingCommas]
+severity = 5
+
 #[ValuesAndExpressions::ProhibitEmptyQuotes]
 #severity = 5
-#
-#[ValuesAndExpressions::ProhibitInterpolationOfLiterals]
-#severity = 5
-#
+
+[ValuesAndExpressions::ProhibitInterpolationOfLiterals]
+severity = 5
+
 #[ValuesAndExpressions::ProhibitNoisyQuotes]
 #severity = 5

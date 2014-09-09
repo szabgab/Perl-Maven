@@ -6,7 +6,7 @@ use DBI;
 
 die 'has pm.db' if -e 'pm.db';
 
-my $dsn = "dbi:SQLite:dbname=pm.db";
+my $dsn = 'dbi:SQLite:dbname=pm.db';
 DBIx::RunSQL->create(
 	verbose => 0,
 	dsn     => $dsn,
@@ -14,7 +14,7 @@ DBIx::RunSQL->create(
 );
 
 my $dbh = DBI->connect(
-	$dsn, "", "",
+	$dsn, '', '',
 	{
 		RaiseError => 1,
 		PrintError => 0,

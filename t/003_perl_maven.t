@@ -14,8 +14,8 @@ my $run = start();
 my $articles = '../articles';
 
 ## no critic
-eval "use Test::More";
-eval "use Test::Deep";
+eval 'use Test::More';
+eval 'use Test::Deep';
 ## use critic
 require Test::WWW::Mechanize;
 plan( skip_all => 'Unsupported OS' ) if not $run;
@@ -239,7 +239,7 @@ subtest(
 			'different password'
 		);
 		$w->content_like( qr{Passwords don't match},
-			"passwords don't match" );
+			q{passwords don't match} );
 		$w->back;
 
 		$w->submit_form_ok(

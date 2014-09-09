@@ -7,9 +7,9 @@ use Data::Dumper qw(Dumper);
 use DBI;
 use Getopt::Long qw(GetOptions);
 
-my $dsn = "dbi:SQLite:dbname=pm.db";
+my $dsn = 'dbi:SQLite:dbname=pm.db';
 my $dbh = DBI->connect(
-	$dsn, "", "",
+	$dsn, '', '',
 	{
 		RaiseError => 1,
 		PrintError => 0,
@@ -74,8 +74,8 @@ elsif ( $opt{stats} ) {
 	my $distinct_subs = $dbh->selectrow_array(
 		q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
 	say '-' x 45;
-	printf $format, "Total 'purchases':",     $all_subs;
-	printf $format, "Distinct # of clients:", $distinct_subs;
+	printf $format, q{Total 'purchases':},     $all_subs;
+	printf $format, q{Distinct # of clients:}, $distinct_subs;
 	print "\n";
 	my $all_users    = $dbh->selectrow_array(q{SELECT COUNT(*) FROM user});
 	my $not_verified = $dbh->selectrow_array(
@@ -114,8 +114,8 @@ elsif ( $opt{unsub} and $opt{email} ) {
 	my $uid = $dbh->selectrow_array( q{SELECT id FROM user WHERE email = ?},
 		undef, $opt{email} );
 	print "PID: $pid  UID: $uid\n";
-	die "Could not find product" if not $pid;
-	die "Could not find User"    if not $uid;
+	die 'Could not find product' if not $pid;
+	die 'Could not find User'    if not $uid;
 	$dbh->do( q{DELETE FROM subscription WHERE uid=? AND pid=?},
 		undef, $uid, $pid );
 	show_people( $opt{email} );

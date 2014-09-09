@@ -19,7 +19,7 @@ has cpan => ( is => 'ro', );
 sub get_root {
 	my ($self) = @_;
 
-	die sprintf( "root '%s' does not exist", $self->root )
+	die sprintf( q{root '%s' does not exist}, $self->root )
 		if not -e $self->root;
 	return $self->root;
 }

@@ -142,9 +142,9 @@ sub perlfunc {
 
 		print $out $tt;
 
-		print $out qq{<div style="font-size: 10px">};
+		print $out q{<div style="font-size: 10px">};
 		print $out
-			qq{(The content of this page was taken from the standard Perl documentation.)};
+			q{(The content of this page was taken from the standard Perl documentation.)};
 		print $out qq{</div>\n\n};
 
 		close $out;

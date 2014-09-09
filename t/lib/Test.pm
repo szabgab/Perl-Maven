@@ -23,7 +23,7 @@ sub setup {
 		move 'pm.db', $backup;
 	}
 	system "$^X bin/setup.pl" and die;
-	my $dsn = "dbi:SQLite:dbname=pm.db";
+	my $dsn = 'dbi:SQLite:dbname=pm.db';
 	DBIx::RunSQL->create(
 		verbose => 0,
 		dsn     => $dsn,
@@ -51,7 +51,7 @@ sub start {
 
 		Win32::Process::Create( $process, $^X,
 			"perl -Ilib -It\\lib $root\\bin\\app.pl",
-			0, Win32::Process::NORMAL_PRIORITY_CLASS(), "." )
+			0, Win32::Process::NORMAL_PRIORITY_CLASS(), '.' )
 			|| die ErrorReport();
 	}
 	else {

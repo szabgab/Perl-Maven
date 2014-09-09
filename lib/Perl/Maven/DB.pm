@@ -13,7 +13,7 @@ sub new {
 
 	my $dsn = "dbi:SQLite:dbname=$dbfile";
 	my $dbh = DBI->connect(
-		$dsn, "", "",
+		$dsn, '', '',
 		{
 			RaiseError => 1,
 			PrintError => 0,

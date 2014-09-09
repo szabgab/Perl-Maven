@@ -44,7 +44,7 @@ USAGE
 	exit;
 }
 
-my $file = dirname( dirname abs_path $0) . "/cpan.json";
+my $file = dirname( dirname abs_path $0) . '/cpan.json';
 
 my $data = {};
 if ( $opt{setup} ) {
@@ -53,7 +53,7 @@ if ( $opt{setup} ) {
 	exit;
 }
 
-usage("Need to call --setup") if not -e $file;
+usage('Need to call --setup') if not -e $file;
 
 exit if not $opt{run};
 
@@ -83,7 +83,7 @@ sub _log {
 }
 
 sub update_subscriptions {
-	_log("Update subscriptions");
+	_log('Update subscriptions');
 	foreach my $uid ( sort keys %{ $data->{subscribers} } ) {
 		_log("Subscriber $uid");
 		my $msg = '';
