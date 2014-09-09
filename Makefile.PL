@@ -25,6 +25,7 @@ WriteMakefile(
         'Hash::Merge::Simple'   => 0.051,
         'Geo::IP'               => 1.43,
         'Moo'                   => 1.006000,
+		'Plack'                 => 1.0031,
         'Storable'              => 2.51,   # dclone is used
         'Template'              => 2.25,
         'YAML'                  => 1.09,

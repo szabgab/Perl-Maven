@@ -4,7 +4,7 @@ use warnings;
 
 use base 'Exporter';
 
-our @EXPORT_OK = qw(start read_file);
+our @EXPORT_OK = qw(start read_file psgi_start);
 
 use Cwd qw(cwd);
 use File::Basename qw(basename);
@@ -29,6 +29,18 @@ sub setup {
 		dsn     => $dsn,
 		sql     => 't/test.sql',
 	);
+}
+
+sub psgi_start {
+	my $dir = tempdir( CLEANUP => 1 );
+
+	# print STDERR "# $dir\n";
+	my ($cnt) = split /_/, basename $0;
+
+	$ENV{PERL_MAVEN_TEST} = 1;
+	$ENV{PERL_MAVEN_MAIL} = File::Spec->catfile( $dir, 'mail.txt' );
+
+	setup();
 }
 
 sub start {
