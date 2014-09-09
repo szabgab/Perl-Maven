@@ -13,17 +13,24 @@ use File::Temp qw(tempdir);
 use File::Copy qw(copy move);
 use DBIx::RunSQL;
 
+my $dbfile;
 my $backup;
 my $process;
 
 sub setup {
+	my ($dir) = @_;
+
+	$dir //= '.';
+
+	$dbfile = "$dir/pm.db";
+
 	my $t = time;
-	if ( -e 'pm.db' ) {
-		$backup = "pm.db.$t";
-		move 'pm.db', $backup;
+	if ( -e $dbfile ) {
+		$backup = "$dbfile.$t";
+		move $dbfile, $backup;
 	}
-	system "$^X bin/setup.pl" and die;
-	my $dsn = 'dbi:SQLite:dbname=pm.db';
+	system "$^X bin/setup.pl $dbfile" and die;
+	my $dsn = "dbi:SQLite:dbname=$dbfile";
 	DBIx::RunSQL->create(
 		verbose => 0,
 		dsn     => $dsn,
@@ -40,7 +47,7 @@ sub psgi_start {
 	$ENV{PERL_MAVEN_TEST} = 1;
 	$ENV{PERL_MAVEN_MAIL} = File::Spec->catfile( $dir, 'mail.txt' );
 
-	setup();
+	setup($dir);
 }
 
 sub start {
@@ -96,7 +103,7 @@ sub stop {
 END {
 	stop();
 	if ($backup) {
-		move $backup, 'pm.db';
+		move $backup, $dbfile;
 	}
 }
 

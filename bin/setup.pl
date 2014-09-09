@@ -1,12 +1,15 @@
 use strict;
 use warnings;
+use 5.010;
 
 use DBIx::RunSQL;
 use DBI;
 
-die 'has pm.db' if -e 'pm.db';
+my $dbfile = shift // 'pm.db';
 
-my $dsn = 'dbi:SQLite:dbname=pm.db';
+die 'has pm.db' if -e $dbfile;
+
+my $dsn = "dbi:SQLite:dbname=$dbfile";
 DBIx::RunSQL->create(
 	verbose => 0,
 	dsn     => $dsn,
