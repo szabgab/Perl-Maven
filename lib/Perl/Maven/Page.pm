@@ -65,7 +65,11 @@ sub read {
 
 				# TODO make it configurable, which fields to split?
 				if ( $f =~ /^(indexes|tags|mp3)$/ ) {
-					$data{$f} = [ map { s/^\s+|\s+$//g; $_ } split /,/, $v ];
+					$data{$f} = [
+						map { my $z = $_; $z =~ s/^\s+|\s+$//g; $z }
+							split /,/,
+						$v
+					];
 				}
 				else {
 					$data{$f} = $v;

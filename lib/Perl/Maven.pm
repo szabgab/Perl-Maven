@@ -36,8 +36,9 @@ use Perl::Maven::Page;
 use Perl::Maven::Config;
 use Perl::Maven::Tools;
 
-eval "use Perl::Maven::Admin";
-eval "use Perl::Maven::PayPal";
+# delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
+require Perl::Maven::Admin;
+require Perl::Maven::PayPal;
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new(
@@ -1191,7 +1192,7 @@ sub get_download_files {
 
 	#debug $manifest;
 	my @files;
-	if ( open my $fh, $manifest ) {
+	if ( open my $fh, '<', $manifest ) {
 		while ( my $line = <$fh> ) {
 			chomp $line;
 			my ( $file, $title ) = split /;/, $line;

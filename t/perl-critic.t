@@ -12,14 +12,6 @@ use Test::Perl::Critic;
 # Eventually these should all be removed (once the files are cleaned up).
 my %skip = map { ( $_ => 1 ) } qw(
 	lib/Perl/Maven.pm
-	lib/Perl/Maven/Admin.pm
-	lib/Perl/Maven/DB.pm
-	lib/Perl/Maven/Meta.pm
-	lib/Perl/Maven/Page.pm
-	lib/Perl/Maven/PayPal.pm
-	lib/Perl/Maven/SVG.pm
-	lib/Perl/Maven/Tool.pm
-	lib/Perl/Maven/Tools.pm
 
 	bin/admin.pl
 	bin/app.pl
@@ -46,10 +38,10 @@ my %skip = map { ( $_ => 1 ) } qw(
 );
 
 my @files = grep { !$skip{$_} }
-    ( Perl::Critic::Utils::all_perl_files(qw( bin lib t )) );
+	( Perl::Critic::Utils::all_perl_files(qw( bin lib t )) );
 
 foreach my $file (@files) {
-    critic_ok( $file, $file );
+	critic_ok( $file, $file );
 }
 
 done_testing();

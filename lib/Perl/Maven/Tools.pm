@@ -1,6 +1,4 @@
 package Perl::Maven::Tools;
-use strict;
-use warnings;
 use Moo;
 use List::MoreUtils qw(any none);
 use JSON qw(from_json);
