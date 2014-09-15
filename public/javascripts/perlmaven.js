@@ -101,7 +101,7 @@ $(document).ready(function() {
 
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );
-	    show_archive(e.target.value, $('#abstract').attr('checked'));
+	    show_archive(e.target.value, $('#abstract').is(':checked'));
 		e.preventDefault();
 	});
 //	$('#abstract').attr('checked', );
