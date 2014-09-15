@@ -120,12 +120,14 @@ sub read {
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
   data-setup='{"controls":true}'>
- <source src="$file" type='video/mp4' />
+ <source src="$file.mp4" type='video/mp4' />
+ <source src="$file.webm" type='video/webm' />
 </video>
 
 <div id="download">
 Download:
-<a href="$file">mp4</a>
+<a href="$file.mp4">mp4</a>
+<a href="$file.webm">webm</a>
 </div>
 
 
