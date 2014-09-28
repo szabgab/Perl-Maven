@@ -24,7 +24,6 @@ WriteMakefile(
         'Email::Valid'          => 1.193,
         'File::Find::Rule'      => 0.33,
         'Hash::Merge::Simple'   => 0.051,
-        'Geo::IP'               => 1.43,
         'Moo'                   => 1.006000,
 		'Plack'                 => 1.0031,
         'Storable'              => 2.51,   # dclone is used
