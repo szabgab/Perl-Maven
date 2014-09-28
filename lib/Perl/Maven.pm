@@ -28,7 +28,6 @@ use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
 use Storable qw(dclone);
-use Geo::IP;
 
 use Web::Feed;
 
@@ -161,52 +160,6 @@ hook before_template => sub {
 		}
 	}
 
-	my $address = request->remote_address;
-	my $country = '';
-
-	# avoid 'Error Opening file'  error/warning/or just plain print?
-	if ( -e '/usr/local/var/GeoIP/GeoIP.dat' ) {
-		my $gi = Geo::IP->new(GEOIP_MEMORY_CACHE);
-		my $c = $gi && $gi->country_code_by_addr($address);
-		if ($c) {
-			$country = $c;
-		}
-	}
-
-	#my $host = Perl::Maven::Config::host(request->host);
-	#$t->{uri_base}  = request->uri_base;
-	my %events_in;
-	my @events;
-	foreach my $e ( @{ mymaven->{events} } ) {
-		foreach my $c ( @{ $e->{countries} } ) {
-			push @{ $events_in{$c} }, $e;
-		}
-		push @events, $e;
-	}
-	if ( $country and $events_in{$country} ) {
-
-	 # if there are country specific ads, then 50% of the time pick from those
-	 # and in the other 50% pick from all the events.
-		if ( rand > 0.5 ) {
-			@events = @{ $events_in{$country} };
-		}
-	}
-	else {
-		$country = '';
-	}
-
-	my $i     = int rand scalar @events;
-	my $event = $events[$i];
-	$t->{event} = $event->{link};
-
-	#if ($country) {
-	#	$t->{event} .= qq{ <img src="/img/flags-iso/shiny/32/$country.png" />};
-	#}
-	if ( $event->{flag} ) {
-		$t->{event}
-			.= qq{ <img src="/img/flags-iso/shiny/32/$event->{flag}.png" />};
-	}
-
 	if ( $t->{no_such_article} ) {
 		$t->{conf}{clicky}           = 0;
 		$t->{conf}{google_analytics} = 0;
@@ -214,7 +167,6 @@ hook before_template => sub {
 
 	my $host = request->host;
 
-	#die $host;
 	if ( $host =~ /local(:\d+)?$/ ) {
 		$t->{social}                 = 0;
 		$t->{comments}               = 0;
@@ -222,7 +174,6 @@ hook before_template => sub {
 		$t->{conf}{google_analytics} = 0;
 	}
 
-	#$t->{event} .= "<!-- $address $country  -->";
 	return;
 };
 
