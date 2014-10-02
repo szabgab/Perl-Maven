@@ -18,9 +18,16 @@
 		   <% END %>
 
 
-        <% INCLUDE incl/social_share.tt %>
-        <% INCLUDE incl/search.tt %>
-        <% INCLUDE incl/sponsors.tt %>
+           <% INCLUDE incl/social_share.tt %>
+           <% INCLUDE incl/search.tt %>
+           <% INCLUDE incl/sponsors.tt %>
+
+           <div id="newsletter-right-form">
+               <h3>Do you want to become a Pro?</h3>
+               Check out the
+               <a href="/pro">Perl Maven Pro</a>.
+           </div>
+
 
            <% IF related %>
              <div id="related">
