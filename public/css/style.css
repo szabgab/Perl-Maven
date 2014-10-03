@@ -241,6 +241,7 @@ video {
 #video_1 {
   width: 100%    !important;
   height: auto   !important;
+  margin-top:  50px;
 }
 #download {
   margin-top: 700px;
