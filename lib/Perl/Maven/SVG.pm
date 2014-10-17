@@ -6,6 +6,8 @@ use SVG;
 
 use Data::Dumper qw(Dumper);
 
+our $VERSION = '0.11';
+
 sub circle {
 	my ($data) = @_;
 

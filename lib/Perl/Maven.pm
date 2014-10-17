@@ -2,7 +2,7 @@ package Perl::Maven;
 use Dancer ':syntax';
 use Perl::Maven::DB;
 
-our $VERSION = '0.1';
+our $VERSION = '0.11';
 my $TIMEOUT            = 60 * 60 * 24 * 365;
 my $MAX_INDEX          = 3;
 my $MAX_FEED           = 10;

@@ -19,6 +19,8 @@ See also L<Perl::Maven>.
 
 =cut
 
+our $VERSION = '0.11';
+
 use Data::Dumper qw(Dumper);
 use Hash::Merge::Simple qw(merge);
 use YAML qw(LoadFile);

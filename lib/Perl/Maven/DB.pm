@@ -4,6 +4,8 @@ use warnings;
 
 use DBI;
 
+our $VERSION = '0.11';
+
 my $instance;
 
 sub new {

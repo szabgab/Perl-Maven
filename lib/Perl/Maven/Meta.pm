@@ -2,6 +2,8 @@ package Perl::Maven::Meta;
 use Moo;
 use 5.010;
 
+our $VERSION = '0.11';
+
 has mymaven      => ( is => 'ro' );
 has verbose      => ( is => 'ro' );
 has meta_archive => ( is => 'ro', default => sub { [] } );

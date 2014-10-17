@@ -6,6 +6,8 @@ use Perl::Maven::Config;
 use POSIX;
 use Data::Dumper qw(Dumper);
 
+our $VERSION = '0.11';
+
 my $sandbox     = 0;
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 

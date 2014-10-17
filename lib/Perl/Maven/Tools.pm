@@ -4,6 +4,8 @@ use List::MoreUtils qw(any none);
 use JSON qw(from_json);
 use List::Util qw(min);
 
+our $VERSION = '0.11';
+
 has host => (
 	is       => 'ro',
 	required => 1,

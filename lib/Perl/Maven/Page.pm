@@ -5,6 +5,8 @@ use 5.014;
 use DateTime;
 use Data::Dumper qw(Dumper);
 
+our $VERSION = '0.11';
+
 has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
 
