@@ -86,6 +86,10 @@ $('#typeahead').typeahead( { 'source' : <% keywords %>, items : 15  });
   _gaq.push(['_setDomainName', 'perlmaven.com']);
   _gaq.push(['_trackPageview']);
 
+  <% IF conf.google_analytics_code %>
+    _gaq.push(['_setPageGroup', <% conf.google_analytics_code %>, '<% conf.google_analytics_name %>']);
+  <% END %>
+
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';

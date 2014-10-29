@@ -51,6 +51,8 @@ perlmaven.com:
         'products': 'http://perlmaven.com/products'
         'como-substituir-uma-string-em-um-arquivo-com-perl': 'como-substituir-uma-string-em-um-arquivo-usando-perl'
     cn.perlmaven.com:
+      google_analytics_code: 1
+      google_analytics_name: 'cn.perlmanve.com'
       redirect:
         'products': 'http://perlmaven.com/products'
     he.perlmaven.com:
