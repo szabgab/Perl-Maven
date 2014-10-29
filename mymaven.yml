@@ -47,13 +47,15 @@ perlmaven.com:
       conf:
         enable_comments: 'disqus'
         disqus: 'br-perlmaven'
+        google_analytics_code: 2
+        google_analytics_name: 'br.perlmaven.com'
       redirect:
         'products': 'http://perlmaven.com/products'
         'como-substituir-uma-string-em-um-arquivo-com-perl': 'como-substituir-uma-string-em-um-arquivo-usando-perl'
     cn.perlmaven.com:
       conf:
         google_analytics_code: 1
-        google_analytics_name: 'cn.perlmanve.com'
+        google_analytics_name: 'cn.perlmaven.com'
       redirect:
         'products': 'http://perlmaven.com/products'
     he.perlmaven.com:
@@ -65,6 +67,8 @@ perlmaven.com:
         'products': 'http://perlmaven.com/products'
     ko.perlmaven.com:
       conf:
+        google_analytics_code: 3
+        google_analytics_name: 'ko.perlmaven.com'
         enable_comments: 'disqus'
         disqus: 'ko-perlmaven'
       redirect:
@@ -75,6 +79,18 @@ perlmaven.com:
         disqus: 'te-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
+    fr.perlmaven.com:
+      conf:
+        google_analytics_code: 6
+        google_analytics_name: 'fr.perlmaven.com'
+    it.perlmaven.com:
+      conf:
+        google_analytics_code: 5
+        google_analytics_name: 'it.perlmaven.com'
+    ru.perlmaven.com:
+      conf:
+        google_analytics_code: 4
+        google_analytics_name: 'ru.perlmaven.com'
     perlmaven.com:
       dirs:
         mail: '/home/gabor/work/articles/mail'
