@@ -2,11 +2,36 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="/perl-tutorial">Perl Tutorial</a></li>
-              <li><a href="/pro">Pro</a></li>
 <!--
+              <li><a href="/pro">Pro</a></li>
               <li><a href="/products">Products</a></li>
               <li><a href="/tv">TV</a></li>
 -->
+
+<li class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+    Pro 
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">What is this?</a></li>
+    <li role="presentation" class="divider"></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/testing">Test Automation</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
+    <li role="presentation" class="dropdown-header">Modern Web</li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/mojolicious">Mojolicious</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/dancer">Dancer</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/psgi">PSGI/Plack</a></li>
+    <li role="presentation" class="dropdown-header">Object Oreinted Perl</li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/moo">Moo</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/moose">Moose</a></li>
+    <li role="presentation" class="dropdown-header">Other</li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/net-server">Net::Server</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/mongodb">MongoDB</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent</a></li>
+  </ul>
+</li>
+
               <% IF username %>
                  <li><a href="/account">hi <% username %></a></li>
               <% ELSE %>
