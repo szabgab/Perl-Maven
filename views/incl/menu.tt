@@ -14,9 +14,7 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">Pro</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/products">Products</a></li>
-    <li role="presentation" class="divider"></li>
+    <li role="presentation" class="dropdown-header">New</li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/testing">Test Automation</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
     <li role="presentation" class="dropdown-header">Modern Web</li>
@@ -30,6 +28,9 @@
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/net-server">Net::Server</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mongodb">MongoDB</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent, asynchronous programming</a></li>
+    <li role="presentation" class="divider"></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">Pro</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/products">Products</a></li>
   </ul>
 </li>
 
