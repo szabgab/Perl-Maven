@@ -2,19 +2,20 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="/perl-tutorial">Perl Tutorial</a></li>
-<!--
               <li><a href="/pro">Pro</a></li>
+<!--
               <li><a href="/products">Products</a></li>
               <li><a href="/tv">TV</a></li>
 -->
 
 <li class="dropdown">
   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-    Pro 
+    Articles
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">What is this?</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">Pro</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/products">Products</a></li>
     <li role="presentation" class="divider"></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/testing">Test Automation</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
@@ -28,7 +29,7 @@
     <li role="presentation" class="dropdown-header">Other</li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/net-server">Net::Server</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mongodb">MongoDB</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent, asynchronous programming</a></li>
   </ul>
 </li>
 
@@ -39,6 +40,24 @@
               <% END %>
             </ul>
             <ul class="nav pull-right">
+
+<!--
+<% IF languages.keys.size %>
+<li class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+    Languages
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <% FOR lang IN languages.keys %>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
+    <% END %>
+    <li role="presentation" class="divider"></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="http://perlmaven.com/about#translations">About the translations</a></li>
+  </ul>
+</li>
+<% END %>
+-->
               <li><a href="/keywords">Type keyword:</a></li>
               <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" ></li>
               <li><a href="/archive">Archive</a></li>
