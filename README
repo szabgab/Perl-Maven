@@ -1,4 +1,5 @@
 The source code of http://perlmaven.com/
+VERSION 0.11
 
 Theoretically this code should be usable to run other sites
 as well, but there are two main issues:
