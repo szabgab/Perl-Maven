@@ -3,8 +3,8 @@
     <div class="span3">
       <div id="right-side">
         <% IF showright %>
-         <% IF status == 'draft' %>
-          <span class="label label-warning">Draft</span>
+         <% IF status != 'show' %>
+          <span class="label label-warning"><% status %></span>
          <% END %>
           <% IF conf.show_newsletter_form %>
             <div id="newsletter-right-form">
