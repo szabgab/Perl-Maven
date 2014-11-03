@@ -14,10 +14,9 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <li role="presentation" class="dropdown-header">New</li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/testing">Test Automation</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
     <li role="presentation" class="dropdown-header">Modern Web</li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mojolicious">Mojolicious</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/dancer">Dancer</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/psgi">PSGI/Plack</a></li>
@@ -25,6 +24,7 @@
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/moo">Moo</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/moose">Moose</a></li>
     <li role="presentation" class="dropdown-header">Other</li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/metacpan">MetaCPAN</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/net-server">Net::Server</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mongodb">MongoDB</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent, asynchronous programming</a></li>
