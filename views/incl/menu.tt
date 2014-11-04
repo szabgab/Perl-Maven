@@ -20,7 +20,7 @@
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mojolicious">Mojolicious</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/dancer">Dancer</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/psgi">PSGI/Plack</a></li>
-    <li role="presentation" class="dropdown-header">Object Oreinted Perl</li>
+    <li role="presentation" class="dropdown-header">Object Oriented Perl</li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/moo">Moo</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/moose">Moose</a></li>
     <li role="presentation" class="dropdown-header">Other</li>
