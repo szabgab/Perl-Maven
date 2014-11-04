@@ -1026,7 +1026,7 @@ sub _show {
 	# TODO we should be able to configure which page should show related
 	# articles and which should not
 	my %UNRELATED = map { $_ => 1 }
-		qw(/ /perl-tutorial /psgi /catalyst /dancer /metacpan /search-cpan-org);
+		qw(/ /perl-tutorial /psgi /catalyst /dancer /metacpan /search-cpan-org /testing /mojolicious /moo /moose /net-server /mongodb /anyevent);
 	if ( $tt->{related} ) {
 		if ( not @{ $tt->{related} } ) {
 			delete $tt->{related};
