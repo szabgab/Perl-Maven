@@ -23,7 +23,6 @@ perlmaven.com:
   redirect:
     'linode': 'http://www.linode.com/?r=cccf1376edd5c6f0b8eccb97e0741a1f24584e43'
     'digitalocean': 'https://www.digitalocean.com/?refcode=0d4cc75b3a74'
-    'atlantic' : 'https://www.atlantic.net/'
     'newsletter': 'perl-maven-newsletter'
 #    'videos/jeffrey-thalhammer-perl-critic-and-pinto': 'jeffrey-thalhammer-perl-critic-and-pinto'
 #    'videos/michael-schwern-on-test-automation-and-git': 'michael-schwern-on-test-automation-and-git'
@@ -35,7 +34,7 @@ perlmaven.com:
   conf:
     #clicky: 66509177
     google_analytics: UA-12199211-9
-    show_sponsors: 0
+    show_sponsors: 1
     show_newsletter_form: 0
     show_indexes: 1
     enable_comments: 0
