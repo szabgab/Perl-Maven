@@ -223,7 +223,7 @@ sub get_pages {
 				die "No $field in $path" if not $data->{$field};
 			}
 			die "Invalid status $data->{status} in $path"
-				if $data->{status} !~ /^(show|hide|draft|ready)/;
+				if $data->{status} !~ /^(show|hide|draft|done)/;
 
 			my %p = (
 				path     => $path,
@@ -254,7 +254,7 @@ sub get_pages {
 			push @selected, $p;
 		}
 		else {
-			warn "No =status show $p->{path}\n";
+			warn "=status is $p->{status} for $p->{path}\n";
 		}
 	}
 
