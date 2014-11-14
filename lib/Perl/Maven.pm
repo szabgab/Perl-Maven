@@ -982,7 +982,7 @@ sub _show {
 
 	my $tt = read_tt($path);
 	if ( not $tt->{status}
-		or ( $tt->{status} ne 'show' and $tt->{status} ne 'draft' ) )
+		or ( $tt->{status} !~ /^(show|draft|done)$/ ) )
 	{
 		status 'not_found';
 		return template 'error', { 'no_such_article' => 1 };
