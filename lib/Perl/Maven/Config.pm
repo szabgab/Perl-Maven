@@ -77,9 +77,11 @@ sub config {
 	#	$mymaven = merge( $mymaven, $real_host_config );
 	#}
 	delete $mymaven->{sites};
-	$mymaven->{root} = "$self->{root}/$mymaven->{root}";
-	$mymaven->{meta} = "$self->{root}/$mymaven->{meta}";
-	$mymaven->{dirs}{$_} = "$self->{root}/$mymaven->{dirs}{$_}" for keys %{$mymaven->{dirs}};
+	$mymaven->{root}     = "$self->{root}/$mymaven->{root}";
+	$mymaven->{meta}     = "$self->{root}/$mymaven->{meta}";
+	$mymaven->{dirs}{$_} = "$self->{root}/$mymaven->{dirs}{$_}"
+		for keys %{ $mymaven->{dirs} };
+
 	#die Dumper $mymaven;
 
 	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};

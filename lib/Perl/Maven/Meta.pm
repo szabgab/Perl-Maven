@@ -271,9 +271,10 @@ sub consultants {
 	my @people;
 	open my $fh, '<encoding(UTF-8)', $list_path
 		or do {
-			#warn "Could not open $list_path";
-			return;
-	};
+
+		#warn "Could not open $list_path";
+		return;
+		};
 	<$fh>;    #header
 	while ( my $line = <$fh> ) {
 		my %p;
