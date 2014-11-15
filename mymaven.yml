@@ -14,8 +14,8 @@ perlmaven.com:
     redirect: 0
   www:
     redirect: http://perlmaven.com/
-  root: '/home/gabor/work/perlmaven.com'
-  meta: '/home/gabor/work/articles/perlmaven.com'
+  root: '../perlmaven.com'
+  meta: '../articles/perlmaven.com'
   title: 'Perl Maven'
   from: 'Perl Maven <gabor@perlmaven.com>'
   listid: 'Perl Maven newsletter <newsletter.perlmaven.com>'
@@ -31,7 +31,7 @@ perlmaven.com:
 #    'videos/modern-web-with-perl': 'modern-web-with-perl'
 #    'videos/oop-with-moo': 'oop-with-moo'
   dirs:
-    img: '/home/gabor/work/perlmaven.com/sites/en/img'
+    img: '../perlmaven.com/sites/en/img'
   conf:
     #clicky: 66509177
     google_analytics: UA-12199211-9
@@ -95,16 +95,16 @@ perlmaven.com:
         google_analytics_name: 'ru.perlmaven.com'
     perlmaven.com:
       dirs:
-        mail: '/home/gabor/work/articles/mail'
-        perldoc: '/home/gabor/work/articles/perldoc'
-        download: '/home/gabor/work/articles/download'
-        media: '/home/gabor/work/media.perlmaven.com'
-        pro: '/home/gabor/work/articles/pro'
-        articles: '/home/gabor/work/articles'
+        mail: '../articles/mail'
+        perldoc: '../articles/perldoc'
+        download: '../articles/download'
+        media: '../media.perlmaven.com'
+        pro: '../articles/pro'
+        articles: '../articles'
       index:
         - perldoc
         - pro
-#        videos: '/home/gabor/work/perlmaven.com/sites/en/pages/videos'
+#        videos: '../perlmaven.com/sites/en/pages/videos'
       conf:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
