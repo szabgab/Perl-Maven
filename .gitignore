@@ -10,3 +10,4 @@ cpan.json
 logs
 pm_to_blib
 sessions
+/meta

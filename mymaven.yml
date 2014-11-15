@@ -15,7 +15,7 @@ perlmaven.com:
   www:
     redirect: http://perlmaven.com/
   root: '../perlmaven.com'
-  meta: '../articles/perlmaven.com'
+  meta: 'meta/perlmaven.com'
   title: 'Perl Maven'
   from: 'Perl Maven <gabor@perlmaven.com>'
   listid: 'Perl Maven newsletter <newsletter.perlmaven.com>'
