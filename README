@@ -27,8 +27,6 @@ Video player:
 https://github.com/videojs/video.js/blob/stable/docs/guides/setup.md
 
 
-
-
 Multilingual site
 -----------------
 The http://perlmaven.com/ site provides multi-lingual capabilities.
@@ -42,8 +40,8 @@ Adding a new language (site)
 * Get the language code from wikimedia
 * Create the sites/CC/ from skeleton
 * Add the language to sites.yml
-* Maybe update the mymaven.yml
 * Add site to the  app.psgi and restart Starman on the server
+* Updating the mymaven.yml configuration file is optional
 
 
 
@@ -51,11 +49,11 @@ TODO
 -------
 Clean up and move the TODO list to the GitHub issue system?
 
-Change the password reminder (and the other administrative messagee)
+Change the password reminder (and the other administrative messages)
 to either be just in plain text or include both HTML and plain text version.
 
 Add Free, Pro, Perldoc tags automatically to pages
-Add Audio, Video tags to pages where relevant
+Add Audio, Video tags to pages where relevant.
 
 Add some color mark to each entry in the archive and on the index page
   showing the tags:
