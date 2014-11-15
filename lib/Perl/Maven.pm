@@ -8,15 +8,6 @@ my $MAX_INDEX          = 3;
 my $MAX_FEED           = 10;
 my $MAX_META_FEED      = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
-my %FREE               = map { $_ => 1 } qw(
-	/pro/beginner-perl/process-command-line-using-getopt-long-screencast
-	/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.ogv
-	/pro/videos/beginner-perl/lists-and-arrays/process-command-line-using-getopt-long-run.avi
-
-	/pro/beginner-perl/the-year-of-19100
-	/pro/videos/beginner-perl/advanced-arrays/the-year-of-19100.ogv
-	/pro/videos/beginner-perl/advanced-arrays/the-year-of-19100.avi
-);
 
 use Business::PayPal;
 use Cwd qw(cwd abs_path);
@@ -725,7 +716,7 @@ get qr{/pro/(.+)} => sub {
 	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
 	pass if not -e $path;    # will show invalid page
 
-	pass if $FREE{"/pro/$article"};
+	pass if is_free("/pro/$article");
 	pass
 		if logged_in()
 		and $db->is_subscribed( session('email'), $product );
@@ -864,7 +855,7 @@ get qr{/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
-	if ( $item =~ m{^pro/} and not $FREE{"/$item"} ) {
+	if ( $item =~ m{^pro/} and not is_free("/$item") ) {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber'
@@ -1297,6 +1288,11 @@ sub rss {
 
 	content_type 'application/rss+xml';
 	return $pmf->rss;
+}
+
+sub is_free {
+	my ($path) = @_;
+	return not Perl::Maven::Tools::_any( $path, mymaven->{free} );
 }
 
 true;
