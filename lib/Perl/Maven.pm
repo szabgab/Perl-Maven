@@ -1292,7 +1292,7 @@ sub rss {
 
 sub is_free {
 	my ($path) = @_;
-	return not Perl::Maven::Tools::_any( $path, mymaven->{free} );
+	return Perl::Maven::Tools::_any( $path, mymaven->{free} );
 }
 
 true;
