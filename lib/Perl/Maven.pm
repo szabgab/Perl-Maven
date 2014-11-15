@@ -784,8 +784,6 @@ get '/verify/:id/:code' => sub {
 			},
 			{ layout => 'email', }
 		),
-
-		#		attachments => ['/home/gabor/save/perl_maven_cookbook_v0.01.pdf'],
 	);
 
 	sendmail(
