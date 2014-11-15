@@ -96,13 +96,11 @@ perlmaven.com:
     perlmaven.com:
       dirs:
         mail: '../articles/mail'
-        perldoc: '../articles/perldoc'
         download: '../articles/download'
         media: '../media.perlmaven.com'
         pro: '../articles/pro'
         articles: '../articles'
       index:
-        - perldoc
         - pro
 #        videos: '../perlmaven.com/sites/en/pages/videos'
       conf:
