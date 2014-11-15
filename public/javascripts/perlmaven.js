@@ -41,6 +41,17 @@ function display_search_result(data, status, jqXHR) {
     }
 }
 
+function show_intro() {
+	var n = localStorage.getItem('popup_1_counter');
+	if (n === null) {
+		n = 1;
+		localStorage.setItem("popup_1_counter", n);
+		var html = "<h2>Welcome Perl Maven</h2>If this article does not answer your question, you can always look for a keyword in the search-box in the menu-bar.";
+		$('.modal-body').html(html);
+		$('#myModal').modal('show')
+	}
+}
+
 function show_archive(tag, show_abstract) {
     //console.log(window.location);
     var url = window.location.origin + window.location.pathname + '?';
@@ -98,6 +109,8 @@ function code_explain() {
 
 $(document).ready(function() {
     $('#explain').click(code_explain);
+
+    setTimeout(show_intro, 1000);
 
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );
