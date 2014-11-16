@@ -3,10 +3,6 @@
             <ul class="nav">
               <li><a href="/perl-tutorial">Perl Tutorial</a></li>
               <li><a href="/pro">Pro</a></li>
-<!--
-              <li><a href="/products">Products</a></li>
-              <li><a href="/tv">TV</a></li>
--->
 
 <li class="dropdown">
   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -19,7 +15,9 @@
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mojolicious">Mojolicious</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/dancer">Dancer</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/catalyst">Catalyst</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/psgi">PSGI/Plack</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/cgi">CGI</a></li>
     <li role="presentation" class="dropdown-header">Object Oriented Perl</li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/moo">Moo</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/moose">Moose</a></li>
@@ -28,6 +26,7 @@
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/net-server">Net::Server</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/mongodb">MongoDB</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent, asynchronous programming</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="/tv">Interviews with Perl developers</a></li>
     <li role="presentation" class="divider"></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">Pro</a></li>
     <li role="presentation"><a role="menuitem" tabindex="-1" href="/products">Products</a></li>
