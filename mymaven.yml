@@ -109,7 +109,6 @@ perlmaven.com:
         articles: '../articles'
       index:
         - pro
-#        videos: '../perlmaven.com/sites/en/pages/videos'
       conf:
         enable_comments: 'disqus'
         disqus: 'perl5maven'
