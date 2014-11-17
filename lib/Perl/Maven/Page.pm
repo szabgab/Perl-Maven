@@ -197,7 +197,7 @@ SCREENCAST
 		sort keys %links
 	];
 
-	my $MAX_ABSTRACT = 1100;
+	my $MAX_ABSTRACT = 1400;
 	if ( length $data{abstract} > $MAX_ABSTRACT ) {
 		die sprintf(
 			'Abstract of %s is too long. It has %s characters. (allowed %s)',
