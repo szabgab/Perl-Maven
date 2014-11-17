@@ -16,7 +16,6 @@ psgi_start();
 my $articles = '../articles';
 
 my $url = 'http://test-perl-maven.com';
-my $URL = "$url/";
 
 plan( tests => 4 );
 

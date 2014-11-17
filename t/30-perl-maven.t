@@ -14,13 +14,10 @@ use Test::WWW::Mechanize::PSGI;
 psgi_start();
 
 my $url      = 'http://test-perl-maven.com';
-my $URL      = "$url/";
 my $EMAIL    = 'gabor@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', );
 my @NAMES    = ( 'Foo Bar', );
 
-#diag($url);
-#sleep 30;
 plan( tests => 4 );
 
 my $cookbook_url
@@ -45,7 +42,7 @@ diag(
 subtest(
 	'subscribe' => sub {
 		plan( tests => 26 );
-		$w->get_ok($URL);
+		$w->get_ok($url);
 		$w->content_like(qr/Perl Maven/);
 
 		#		diag $w->content;
