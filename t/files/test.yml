@@ -17,4 +17,4 @@ test-perl-maven.com:
         right_search: 0
       dirs:
         download: 'download'
-
+        pro: 'pro'

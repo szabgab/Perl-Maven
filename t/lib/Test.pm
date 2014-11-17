@@ -23,6 +23,7 @@ sub setup {
 
 	$dbfile = "$dir/pm.db";
 
+	unlink glob 'sessions/*';
 	my $t = time;
 	if ( -e $dbfile ) {
 		$backup = "$dbfile.$t";

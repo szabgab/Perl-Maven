@@ -48,7 +48,8 @@ subtest testmaven => sub {
 			'show_newsletter_form' => '1'
 		},
 		'dirs' => {
-			'download' => 't/files/download'
+			'download' => 't/files/download',
+			'pro'      => 't/files/pro',
 		},
 		'domain' => {
 			'redirect' => '0',

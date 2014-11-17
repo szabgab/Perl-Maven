@@ -18,7 +18,7 @@ my $EMAIL    = 'gabor@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', );
 my @NAMES    = ( 'Foo Bar', );
 
-plan( tests => 4 );
+plan( tests => 5 );
 
 my $cookbook_url
 	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
@@ -33,9 +33,30 @@ my $app = Dancer::Handler->psgi_app;
 
 my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 
+my $visitor = Test::WWW::Mechanize::PSGI->new( app => $app );
+
 diag(
 	'subscribe to free Perl Maven newsletter, let them download the cookbook'
 );
+
+subtest pages => sub {
+
+	#	plan tests => 6;
+
+	$visitor->get_ok($url);
+	$visitor->content_like(qr/Some text comes here/);
+
+	$visitor->get("$url/abc");
+	is $visitor->status, 404, 'status is 404';
+	$visitor->content_like(qr{No such article});
+
+	$visitor->get_ok("$url/pro/paid");
+	$visitor->content_like(qr{This is the abstract of a paid pro page.});
+	$visitor->content_unlike(qr{This it the content of a paid pro page});
+
+	#	#diag $visitor->content;
+	#
+};
 
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
@@ -209,7 +230,7 @@ subtest(
 		$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
 			'download link' );
 
-		#diag($w->content);
+		#diag $w->content;
 
 		$w->get_ok("$url/logged-in");
 		$w->content_is(1);
