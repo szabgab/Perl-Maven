@@ -1,0 +1,8 @@
+en:
+  url: http://test-perl-maven.com/
+  english: English
+  name: English
+br:
+  url: http://br.test-perl-maven.com/
+  english: (Brazilian) Portuguese
+  name: Português

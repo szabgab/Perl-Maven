@@ -7,13 +7,13 @@ plan tests => 2;
 
 use Perl::Maven::Config;
 
-subtest mymaven  => sub {
+subtest mymaven => sub {
 	plan tests => 6,
 
-	my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
-	my $main    = $mymaven->config('perlmaven.com');
-	my $br      = $mymaven->config('br.perlmaven.com');
-	
+		my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
+	my $main = $mymaven->config('perlmaven.com');
+	my $br   = $mymaven->config('br.perlmaven.com');
+
 	is $main->{site}, 't/files/../sites/perlmaven.com/sites/en';
 	is $main->{meta}, '/home/foobar/perlmaven-meta';
 	is $main->{dirs}{mail}, 't/files/../articles/mail';
@@ -24,12 +24,12 @@ subtest mymaven  => sub {
 		'szg'      => 'http://szabgab.com/?r=12345',
 		'products' => 'http://perlmaven.com/products',
 		};
-	
+
 	is_deeply $br->{redirect}, {
 		'products'    => 'http://perlmaven.com/products',
 		'old-article' => 'new-article',
 		'abc'         => 'other-page',
-	
+
 		'szg' => 'http://szabgab.com/?r=12345',
 	};
 };
@@ -39,23 +39,24 @@ subtest testmaven => sub {
 
 	my $mymaven = Perl::Maven::Config->new('t/files/test.yml');
 	my $main    = $mymaven->config('test-perl-maven.com');
+
 	#diag explain $main;
 	is_deeply $main,
-     {
-       'dirs' => {},
-       'domain' => {
-         'redirect' => '0',
-         'site' => 'en'
-       },
-       'lang' => 'en',
-       'meta' => 't/files/',
-       'root' => 't/files/test',
-       'site' => 't/files/test/sites/en',
-       'www' => {
-         'redirect' => 'http://test-perl-maven.com/'
-       }
-     };
+		{
+		'dirs'   => {},
+		'domain' => {
+			'redirect' => '0',
+			'site'     => 'en'
+		},
+		'lang' => 'en',
+		'meta' => 't/files/',
+		'root' => 't/files/test',
+		'meta' => 't/files/meta',
+		'site' => 't/files/test/sites/en',
+		'www'  => {
+			'redirect' => 'http://test-perl-maven.com/'
+		}
+		};
 
 };
-
 

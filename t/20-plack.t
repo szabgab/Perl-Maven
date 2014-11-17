@@ -12,12 +12,12 @@ psgi_start();
 
 use Dancer qw(:tests);
 
-#set log => 'warning';
+#set log => 'debug';
 #set startup_info => 0;
 Dancer::set( appdir => getcwd() );
 
 is Dancer::config->{'appdir'}, getcwd(), 'appdir';
-is Dancer::config->{'mymaven'}, 'mymaven.yml', 'mymaven';
+is Dancer::config->{'mymaven_yml'}, 'mymaven.yml', 'mymaven';
 
 use Perl::Maven;
 
@@ -25,9 +25,11 @@ my $app = Dancer::Handler->psgi_app;
 is( ref $app, 'CODE', 'Got app' );
 
 test_psgi $app, sub {
-	my $cb = shift;
+	my $cb  = shift;
+	my $res = $cb->( GET 'http://test-perl-maven.com/' );
+	is $res->code, 200;
 	like(
-		$cb->( GET 'http://perlmaven.com/' )->content,
+		$res->content,
 		qr{<title>Perl Maven - for people who want to get the most out of programming in Perl</title>},
 		'main page'
 	);

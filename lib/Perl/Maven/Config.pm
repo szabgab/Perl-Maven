@@ -30,9 +30,10 @@ use Storable qw(dclone);
 sub new {
 	my ( $class, $path ) = @_;
 
+	$path = $ENV{MYMAVEN_YML} || $path;
+
 	return bless {
-		path   => $path,
-		root   => dirname($path),
+		root => ( dirname($path) || '.' ),
 		config => scalar LoadFile($path),
 	}, $class;
 }

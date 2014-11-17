@@ -43,6 +43,7 @@ sub psgi_start {
 	# print STDERR "# $dir\n";
 	my ($cnt) = split /_/, basename $0;
 
+	$ENV{MYMAVEN_YML}     = 't/files/test.yml';
 	$ENV{PERL_MAVEN_TEST} = 1;
 	$ENV{PERL_MAVEN_MAIL} = File::Spec->catfile( $dir, 'mail.txt' );
 
