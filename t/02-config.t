@@ -43,17 +43,25 @@ subtest testmaven => sub {
 	#diag explain $main;
 	is_deeply $main,
 		{
-		'dirs'   => {},
+		'conf' => {
+			'right_search'         => '0',
+			'show_newsletter_form' => '1'
+		},
+		'dirs' => {
+			'download' => 't/files/download'
+		},
 		'domain' => {
 			'redirect' => '0',
 			'site'     => 'en'
 		},
-		'lang' => 'en',
-		'meta' => 't/files/',
-		'root' => 't/files/test',
-		'meta' => 't/files/meta',
-		'site' => 't/files/test/sites/en',
-		'www'  => {
+		'from'  => '<test@perlmaven.com>',
+		'lang'  => 'en',
+		'meta'  => 't/files/',
+		'root'  => 't/files/test',
+		'meta'  => 't/files/meta',
+		'title' => 'Test Maven',
+		'site'  => 't/files/test/sites/en',
+		'www'   => {
 			'redirect' => 'http://test-perl-maven.com/'
 		}
 		};
