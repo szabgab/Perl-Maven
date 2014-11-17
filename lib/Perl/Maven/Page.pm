@@ -138,6 +138,10 @@ SCREENCAST
 
 			$line =~ s{<hl>}{<span class="inline_code">}g;
 			$line =~ s{</hl>}{</span>}g;
+			if ( $line =~ /^=abstract (start|end)/ ) {
+				$data{"abstract_$1"}++;
+			}
+
 			if ( $line =~ /^=abstract start/ .. $line =~ /^=abstract end/ ) {
 				next if $line =~ /^=abstract/;
 				$data{abstract} .= $line;
@@ -191,12 +195,21 @@ SCREENCAST
 		}
 	}
 
+	if ( $data{abstract_start} ) {
+		die "Too many times =abstract start: $data{abstract_start}"
+			if $data{abstract_start} > 1;
+		die '=abstract started but not ended' if not $data{abstract_end};
+		die "Too many times =abstract edn: $data{abstract_end}"
+			if $data{abstract_end} > 1;
+	}
+
 	$data{related} = [
 		map { { url => $_, text => $links{$_} } }
 		grep { $_ =~ m{^/} }
 		sort keys %links
 	];
 
+	# die if not $data{abstract} ???
 	my $MAX_ABSTRACT = 1400;
 	if ( length $data{abstract} > $MAX_ABSTRACT ) {
 		die sprintf(

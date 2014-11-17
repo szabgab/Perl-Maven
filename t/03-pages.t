@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 4;
+plan tests => 5;
 
 use Perl::Maven::Page;
 
@@ -99,4 +99,13 @@ subtest bad_timestamp => sub {
 	like $@,
 		qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback};
 };
+
+subtest abstract_not_ending => sub {
+	plan tests => 1;
+
+	my $path = 't/files/abstract_not_ending.tt';
+	my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+	like $@, qr{=abstract started but not ended};
+
+	}
 
