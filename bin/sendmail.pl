@@ -35,7 +35,7 @@ my $dbh = DBI->connect(
 );
 
 my $cfg     = YAML::LoadFile('config.yml');
-my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven} );
+my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 my $config  = $mymaven->config('perlmaven.com');
 $mymaven = $config;
 my $from = $mymaven->{from};

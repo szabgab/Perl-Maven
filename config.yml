@@ -14,7 +14,7 @@ layout: "system"
 # about unicode within your app when this setting is set (recommended).
 charset: "UTF-8"
 
-mymaven: "mymaven.yml"
+mymaven_yml: "mymaven.yml"
 
 template: "template_toolkit"
 engines:

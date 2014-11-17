@@ -32,7 +32,7 @@ require Perl::Maven::PayPal;
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new(
-		path( config->{appdir}, config->{mymaven} ) );
+		path( config->{appdir}, config->{mymaven_yml} ) );
 	return $mymaven->config( request->host );
 }
 

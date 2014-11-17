@@ -17,7 +17,7 @@ binmode( STDERR, ':encoding(UTF-8)' );
 # Run with any value on the command line to get debugging info
 
 my $cfg     = LoadFile('config.yml');
-my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven} );
+my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 
 GetOptions(
 	'domain=s' => \my $domain_name,

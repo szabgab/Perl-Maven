@@ -13,7 +13,7 @@ my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new(
-		path( config->{appdir}, config->{mymaven} ) );
+		path( config->{appdir}, config->{mymaven_yml} ) );
 	return $mymaven->config( request->host );
 }
 
