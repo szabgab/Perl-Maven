@@ -24,6 +24,9 @@ my $cookbook_url
 	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
 my $cookbook_text = basename $cookbook_url;
 
+my $prod1_download_url = '/download/product_a/file_0.2.txt';
+my $prod1_text         = basename $prod1_download_url;
+
 use Dancer qw(:tests);
 
 Dancer::set( appdir => getcwd() );
@@ -37,6 +40,15 @@ my $visitor = Test::WWW::Mechanize::PSGI->new( app => $app );
 
 diag
 	'subscribe to free Perl Maven newsletter, let them download the cookbook';
+
+# There can be products downloadable by any visitor
+#                                    by registered user
+#                                    by user subscribed to mailing list (a free product)
+#                                    by owner of a product
+# There can be individual pages viewable
+#                                    by
+#                                    by registered user
+#                                    by owner of a product
 
 subtest pages => sub {
 
@@ -60,11 +72,10 @@ subtest pages => sub {
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 subtest 'subscribe' => sub {
-	plan tests => 26;
+	plan tests => 29;
 	$w->get_ok($url);
 	$w->content_like(qr/Perl Maven/);
 
-	#		diag $w->content;
 	$w->submit_form_ok(
 		{
 			form_name => 'registration_form',
@@ -77,8 +88,6 @@ subtest 'subscribe' => sub {
 	my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
 	unlink $ENV{PERL_MAVEN_MAIL};
 
-	#diag $mail;
-
 	my $mail_regex = qr{<a href="($url/verify/1/\w+)">verify</a>};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
@@ -90,8 +99,6 @@ subtest 'subscribe' => sub {
 	$w->get_ok("$url/verify/1/1234567");
 	$w->content_like( qr{Invalid or missing code}, 'incorrect code' );
 
-	#diag $w->content;
-
 	$w->get_ok($set_url);
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
 		'download link' );
@@ -102,16 +109,13 @@ subtest 'subscribe' => sub {
 	my $mail2 = read_file( $ENV{PERL_MAVEN_MAIL} );
 	unlink $ENV{PERL_MAVEN_MAIL};
 
-	#diag $mail2;
-
 	like $mail2, qr{Thank you for registering}, 'thank you mail';
 	like $mail2, qr{$EMAIL has registered},     'self reporting';
 
 	# hit it again
 	$w->get_ok($set_url);
 
-	#diag $w->content;
-	ok !-e $ENV{PERL_MAVEN_MAIL}, 'no mails were sent';
+	ok !-e $ENV{PERL_MAVEN_MAIL}, 'no additional mail was sent';
 
 	$w->follow_link_ok(
 		{
@@ -120,18 +124,13 @@ subtest 'subscribe' => sub {
 		'download_pdf'
 	);
 	my $src_pdf = read_file("t/files/$cookbook_url");
+	$w->content_is( $src_pdf,
+		'content of the file we downloaded is the same that is on the disk' );
 
-	#diag length $src_pdf;
-	#diag length $w->content;
-SKIP: {
-		skip( 'PDF is not the same size on Windows?', 1 )
-			if $^O eq 'MSWin32';
-		$w->content_is( $src_pdf, 'pdf downloaded' );
-	}
-
-	#open my $t, '>', 'a.pdf' or die;
-	#print $out $w->content;
-	#diag $w->content;
+	# go to main page
+	$w->get_ok($url);
+	$w->get_ok($cookbook_url);
+	$w->content_is( $src_pdf, 'direct download works' );
 
 	$w->get_ok('/account');
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
