@@ -47,7 +47,7 @@ sub psgi_start {
 	$ENV{PERL_MAVEN_TEST} = 1;
 	$ENV{PERL_MAVEN_MAIL} = File::Spec->catfile( $dir, 'mail.txt' );
 
-	setup($dir);
+	setup();
 }
 
 sub start {
