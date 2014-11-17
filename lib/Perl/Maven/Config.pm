@@ -77,28 +77,41 @@ sub config {
 	#	$mymaven = merge( $mymaven, $real_host_config );
 	#}
 	delete $mymaven->{sites};
-	$mymaven->{root}     = "$self->{root}/$mymaven->{root}";
-	$mymaven->{meta}     = "$self->{root}/$mymaven->{meta}";
-	$mymaven->{dirs}{$_} = "$self->{root}/$mymaven->{dirs}{$_}"
+	$mymaven->{root}     = $self->_update_root( $mymaven->{root} );
+	$mymaven->{meta}     = $self->_update_root( $mymaven->{meta} );
+	$mymaven->{dirs}{$_} = $self->_update_root( $mymaven->{dirs}{$_} )
 		for keys %{ $mymaven->{dirs} };
 
 	#die Dumper $mymaven;
 
-	$mymaven->{site} = $mymaven->{root} . '/sites/' . $mymaven->{lang};
+	$mymaven->{site}
+		= _slash( $mymaven->{root} . '/sites/' . $mymaven->{lang} );
 
 	#die Dumper $mymaven;
 	return $mymaven;
 }
 
+sub _slash {
+	my ($path) = @_;
+	$path =~ s{//+}{/}g;
+	return $path;
+}
+
+sub _update_root {
+	my ( $self, $path ) = @_;
+	return $path if $path =~ m{^/};    # absolute path should not be changed
+	return _slash("$self->{root}/$path");
+}
+
 sub realhost {
 	my ($host) = @_;
-	$host =~ s/:.*//;    # remove port
+	$host =~ s/:.*//;                  # remove port
 	return $host;
 }
 
 sub host {
 	my ($host) = @_;
-	$host =~ s/:.*//;    # remove port
+	$host =~ s/:.*//;                  # remove port
 	$host =~ s/\.(local|linux|win32)$//g
 		; # development environemts domain.com.linux or domain.com.win32 or domain.com.local
 	return $host;

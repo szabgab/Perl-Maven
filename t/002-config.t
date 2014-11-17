@@ -3,14 +3,17 @@ use warnings;
 
 use Test::More;
 
-plan tests => 3;
+plan tests => 6;
 
 use Perl::Maven::Config;
 my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
 my $main    = $mymaven->config('perlmaven.com');
 my $br      = $mymaven->config('br.perlmaven.com');
 
-is $main->{site}, '/home/foobar/perlmaven.com/sites/en';
+is $main->{site}, 't/files/../sites/perlmaven.com/sites/en';
+is $main->{meta}, '/home/foobar/perlmaven-meta';
+is $main->{dirs}{mail}, 't/files/../articles/mail';
+is $main->{dirs}{pro},  '/home/foobar/articles/pro';
 is_deeply $main->{redirect},
 	{
 	'abc'      => 'def',

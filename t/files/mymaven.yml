@@ -4,7 +4,7 @@ perlmaven.com:
     redirect: 0
   www:
     redirect: http://perlmaven.com/
-  root: '/home/foobar/perlmaven.com'
+  root: '../sites/perlmaven.com/'
   meta: '/home/foobar/perlmaven-meta'
   title: 'Perl Maven'
   from: 'Perl Maven <test@perlmaven.com>'
@@ -66,8 +66,7 @@ perlmaven.com:
         'products': 'http://perlmaven.com/products'
     perlmaven.com:
       dirs:
-        mail: '/home/foobar/articles/mail'
-        perldoc: '/home/foobar/articles/perldoc'
+        mail: '../articles/mail'
         download: '/home/foobar/articles/download'
         media: '/home/foobar/media.perlmaven.com'
         pro: '/home/foobar/articles/pro'
