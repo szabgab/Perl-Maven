@@ -1,26 +1,24 @@
 use strict;
 use warnings;
 
-use t::lib::Test qw(start read_file);
+use t::lib::Test qw(psgi_start read_file);
 
-use Cwd qw(abs_path);
+use Cwd qw(abs_path getcwd);
 use File::Basename qw(basename);
 use Data::Dumper qw(Dumper);
 
 #use JSON qw(from_json);
 
-my $run = start();
+my $run = psgi_start();
 
 my $articles = '../articles';
 
-## no critic
-eval 'use Test::More';
-eval 'use Test::Deep';
-## use critic
-require Test::WWW::Mechanize;
+use Test::More;
+use Test::Deep;
+use Test::WWW::Mechanize::PSGI;
 plan( skip_all => 'Unsupported OS' ) if not $run;
 
-my $url      = "http://perlmaven.com.local:$ENV{PERL_MAVEN_PORT}";
+my $url      = "http://perlmaven.com.local";
 my $URL      = "$url/";
 my $EMAIL    = 'gabor@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', );
@@ -34,7 +32,14 @@ my $cookbook_url
 	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
 my $cookbook_text = basename $cookbook_url;
 
-my $w = Test::WWW::Mechanize->new;
+use Dancer qw(:tests);
+
+Dancer::set( appdir => getcwd() );
+use Perl::Maven;
+
+my $app = Dancer::Handler->psgi_app;
+
+my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 
 diag(
 	'subscribe to free Perl Maven newsletter, let them download the cookbook'

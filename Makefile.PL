@@ -39,6 +39,7 @@ WriteMakefile(
 
 # For testing
         'Test::WWW::Mechanize'  => 1.44,
+        'Test::WWW::Mechanize::PSGI'  => 0.35,
         'Test::More'            => 1,
 
 # For deployment
