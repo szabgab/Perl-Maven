@@ -14,7 +14,10 @@ use JSON qw(from_json to_json);
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
 use File::Slurp qw(read_file write_file);
-use MIME::Lite;
+use Email::Sender::Simple qw(sendmail);
+use Email::Sender::Transport::SMTP qw();
+use Email::MIME::Creator;
+
 use Getopt::Long qw(GetOptions);
 
 my %opt;
@@ -200,14 +203,42 @@ sub send_messages {
 
 		#        say "Subscriber $uid";
 		if ( $data->{subscribers}{$uid}{msg} ) {
-			my $msg = MIME::Lite->new(
-				From    => 'Perl Maven <gabor@perlmaven.com>',
-				To      => $data->{subscribers}{$uid}{email},
-				Subject => 'Perl Maven CPAN update',
-				Data    => $data->{subscribers}{$uid}{msg},
+			my $part = Email::MIME->create(
+				attributes => {
+					content_type => 'text/plain',
+					disposition  => 'attachment',
+					encoding     => 'quoted-printable',
+					charset      => 'UTF-8',
+					body_str     => $data->{subscribers}{$uid}{msg},
+				}
 			);
+			$part->charset_set('UTF-8');
+			my $msg = Email::MIME->create(
+				header_str => [
+					'From'    => 'Perl Maven <gabor@perlmaven.com>',
+					'To'      => $data->{subscribers}{$uid}{email},
+					'Type'    => 'multipart/alternative',
+					'Subject' => 'Perl Maven CPAN update',
+					'Charset' => 'UTF-8',
+				],
+				parts => [$part],
+			);
+			$msg->charset_set('UTF-8');
 			if ( @ARGV and $ARGV[0] eq 'send' ) {
-				$msg->send;
+				sendmail(
+					$msg,
+					{
+						from      => 'gabor@perlmaven.com',
+						transport => Email::Sender::Transport::SMTP->new(
+							{
+								host => 'localhost',
+
+								#port => $SMTP_PORT,
+							}
+						)
+					}
+				);
+
 			}
 			else {
 				print "The message\n";

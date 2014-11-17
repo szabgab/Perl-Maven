@@ -6,7 +6,6 @@ use v5.12;
 use Data::Dumper qw(Dumper);
 use Getopt::Long qw(GetOptions);
 
-#use MIME::Lite;
 use Email::Sender::Simple qw(sendmail);
 use Email::Sender::Transport::SMTP qw();
 use Email::MIME::Creator;
