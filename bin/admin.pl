@@ -7,6 +7,11 @@ use Data::Dumper qw(Dumper);
 use DBI;
 use Getopt::Long qw(GetOptions);
 
+use lib 'lib';
+
+use Perl::Maven::DB;
+my $db = Perl::Maven::DB->new('pm.db');
+
 my $dsn = 'dbi:SQLite:dbname=pm.db';
 my $dbh = DBI->connect(
 	$dsn, '', '',
@@ -38,18 +43,17 @@ if ( $opt{email} ) {
 }
 
 if ( $opt{products} ) {
-	my $products = $dbh->selectall_arrayref(
-		q{
-	   SELECT *
-	   FROM product
-	}
-	);
+	my $products = $db->get_products;
+
 	if ( $opt{dump} ) {
+
+		#die Dumper $products;
 		print Dumper $products;
 	}
 	else {
-		foreach my $p ( sort { $a->[1] cmp $b->[1] } @$products ) {
-			printf "%2s %-35s %-33s %3s\n", @$p;
+		foreach my $p ( sort keys %$products ) {
+			my %h = %{ $products->{$p} };
+			printf "%2s %-35s %-33s %3s\n", @h{qw(id code name price)};
 		}
 	}
 }

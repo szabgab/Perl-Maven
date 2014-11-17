@@ -30,13 +30,21 @@ subtest dump_products => sub {
 		system "$admin --products --dump";
 	};
 	is_deeply re_dump($stdout),
-		[
-		[ 1, 'perl_maven_cookbook', 'Perl Maven Cookbook', 0 ],
-		[
-			2,                            'beginner_perl_maven_ebook',
-			'Beginner Perl Maven e-book', '0.01'
-		],
-		],
+		{
+		'perl_maven_cookbook' => {
+			'name'  => 'Perl Maven Cookbook',
+			'code'  => 'perl_maven_cookbook',
+			'id'    => 1,
+			'price' => 0
+		},
+		'beginner_perl_maven_ebook' => {
+			'id'    => 2,
+			'name'  => 'Beginner Perl Maven e-book',
+			'code'  => 'beginner_perl_maven_ebook',
+			'price' => '0.01'
+		}
+		},
+
 		'--products --dump';
 	is $stderr, '', 'stderr is empty';
 };
