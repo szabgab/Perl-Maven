@@ -1,9 +1,11 @@
 use strict;
 use warnings;
-
 use Test::More;
-use Perl::Critic;
-use Test::Perl::Critic;
+
+## no critic
+#use Perl::Critic;
+eval 'use Test::Perl::Critic 1.02';
+plan skip_all => 'Test::Perl::Critic 1.02 required' if $@;
 
 # NOTE: New files will be tested automatically.
 
