@@ -51,11 +51,16 @@ diag
 #                                    by owner of a product
 
 subtest pages => sub {
-
-	#	plan tests => 6;
+	plan tests => 17;
 
 	$visitor->get_ok($url);
 	$visitor->content_like(qr/Some text comes here/);
+
+	$visitor->get_ok("$url/testing");
+	$visitor->content_like(
+		qr/A series of articles about testing, and test automation using Perl./
+	);
+	$visitor->content_like(qr{A bunch of links.});
 
 	$visitor->get("$url/abc");
 	is $visitor->status, 404, 'status is 404';
@@ -64,15 +69,24 @@ subtest pages => sub {
 	$visitor->get_ok("$url/pro/paid");
 	$visitor->content_like(qr{This is the abstract of a paid pro page.});
 	$visitor->content_unlike(qr{This it the content of a paid pro page});
+	is $visitor->base, "$url/pro/paid", 'stayed on the page';
 
-	#	#diag $visitor->content;
-	#
+	$visitor->get_ok($cookbook_url);
+	is $visitor->base, "$url/", 'redirected to root';
+
+	$visitor->get_ok($prod1_download_url);
+	is $visitor->base, "$url/", 'redirected to root';
+
+	$visitor->get_ok('/account');
+	is $visitor->base, "$url/login", 'redirected to login page';
+
+	#diag $visitor->content;
 };
 
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 subtest 'subscribe' => sub {
-	plan tests => 29;
+	plan tests => 31;
 	$w->get_ok($url);
 	$w->content_like(qr/Perl Maven/);
 
@@ -131,6 +145,10 @@ subtest 'subscribe' => sub {
 	$w->get_ok($url);
 	$w->get_ok($cookbook_url);
 	$w->content_is( $src_pdf, 'direct download works' );
+
+	# registered users cannot download a product they don't own.
+	$w->get_ok($prod1_download_url);
+	is $w->base, "$url/", 'redirected to root';
 
 	$w->get_ok('/account');
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},

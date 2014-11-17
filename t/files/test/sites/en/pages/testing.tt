@@ -1,0 +1,21 @@
+=title Testing with Perl
+=timestamp 2014-07-25T12:13:11
+=indexes testing
+=status show
+=author szabgab
+=archive 1
+=comments 1
+=social 1
+
+=abstract start
+
+A series of articles about testing, and test automation using Perl.
+
+=abstract end
+
+
+A bunch of links.
+
+
+<a href="/some-other-page">Internal link</a>
+
