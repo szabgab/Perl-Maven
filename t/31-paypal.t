@@ -4,20 +4,18 @@ use warnings;
 use t::lib::Test qw(psgi_start read_file);
 
 use Cwd qw(abs_path getcwd);
-
-#use File::Basename qw(basename);
+use File::Basename qw(basename);
 use Data::Dumper qw(Dumper);
-
-my $run = psgi_start();
-
-my $articles = '../articles';
 
 use Test::More;
 use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
-plan( skip_all => 'Unsupported OS' ) if not $run;
 
-my $url = 'http://perlmaven.com';
+psgi_start();
+
+my $articles = '../articles';
+
+my $url = 'http://test-perl-maven.com';
 my $URL = "$url/";
 
 plan( tests => 4 );

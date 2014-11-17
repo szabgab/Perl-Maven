@@ -7,14 +7,11 @@ use Cwd qw(abs_path getcwd);
 use File::Basename qw(basename);
 use Data::Dumper qw(Dumper);
 
-#use JSON qw(from_json);
-
-my $run = psgi_start();
-
 use Test::More;
 use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
-plan( skip_all => 'Unsupported OS' ) if not $run;
+
+psgi_start();
 
 my $url      = 'http://test-perl-maven.com';
 my $URL      = "$url/";
