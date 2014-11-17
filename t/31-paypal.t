@@ -17,7 +17,7 @@ use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
 plan( skip_all => 'Unsupported OS' ) if not $run;
 
-my $url = 'http://perlmaven.com.local';
+my $url = 'http://perlmaven.com';
 my $URL = "$url/";
 
 plan( tests => 4 );
