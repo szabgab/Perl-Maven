@@ -6,4 +6,15 @@ test-perl-maven.com:
     redirect: http://test-perl-maven.com/
   root: 'test'
   meta: 'meta'
+  conf:
+    show_newsletter_form: 0
+  title: 'Test Maven'
+  from: '<test@perlmaven.com>'
+  sites:
+    test-perl-maven.com:
+      conf:
+        show_newsletter_form: 1
+        right_search: 0
+      dirs:
+        download: 'download'
 

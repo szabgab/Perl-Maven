@@ -11,14 +11,12 @@ use Data::Dumper qw(Dumper);
 
 my $run = psgi_start();
 
-my $articles = '../articles';
-
 use Test::More;
 use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
 plan( skip_all => 'Unsupported OS' ) if not $run;
 
-my $url      = 'http://perlmaven.com';
+my $url      = 'http://test-perl-maven.com';
 my $URL      = "$url/";
 my $EMAIL    = 'gabor@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', );
@@ -29,7 +27,7 @@ my @NAMES    = ( 'Foo Bar', );
 plan( tests => 4 );
 
 my $cookbook_url
-	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.pdf';
+	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
 my $cookbook_text = basename $cookbook_url;
 
 use Dancer qw(:tests);
@@ -52,6 +50,8 @@ subtest(
 		plan( tests => 26 );
 		$w->get_ok($URL);
 		$w->content_like(qr/Perl Maven/);
+
+		#		diag $w->content;
 		$w->submit_form_ok(
 			{
 				form_name => 'registration_form',
@@ -106,8 +106,7 @@ subtest(
 			},
 			'download_pdf'
 		);
-
-		my $src_pdf = read_file("$articles/$cookbook_url");
+		my $src_pdf = read_file("t/files/$cookbook_url");
 
 		#diag(length $src_pdf);
 		#diag(length $w->content);

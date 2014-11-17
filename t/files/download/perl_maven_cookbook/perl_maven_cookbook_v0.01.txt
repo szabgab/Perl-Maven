@@ -1,0 +1,1 @@
+perl maven cookbook v0.01
