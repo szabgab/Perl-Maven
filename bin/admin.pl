@@ -159,15 +159,12 @@ Usage: $0
 Products:
 END_USAGE
 
-	my $products = $dbh->selectall_arrayref(
-		q{
-	   SELECT code, name
-	   FROM product
-       ORDER BY name
-	}
-	);
-	foreach my $p (@$products) {
-		say "   $p->[0]";
+	my $products = $db->get_products;
+	foreach
+		my $code ( sort { $products->{$a}{name} cmp $products->{$b}{name} }
+		keys %$products )
+	{
+		say "   $code";
 	}
 
 	exit;
