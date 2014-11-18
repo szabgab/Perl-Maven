@@ -128,6 +128,21 @@ sub get_subscriptions {
 	return @products;
 }
 
+sub get_subscribers {
+	my ( $self, $code ) = @_;
+
+	return $self->{dbh}->selectall_arrayref(
+		q{
+	   SELECT email
+	   FROM user, subscription, product
+	   WHERE user.id=subscription.uid
+	     AND user.verify_time is not null
+	     AND product.id=subscription.pid
+	     AND product.code=?
+	}, undef, $code
+	);
+}
+
 sub is_subscribed {
 	my ( $self, $email, $code ) = @_;
 

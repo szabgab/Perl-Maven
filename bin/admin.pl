@@ -107,16 +107,8 @@ elsif ( $opt{unsub} and $opt{email} ) {
 	show_people( $opt{email} );
 }
 elsif ( $opt{list} ) {
-	my $emails = $dbh->selectall_arrayref(
-		q{
-	   SELECT email
-	   FROM user, subscription, product
-	   WHERE user.id=subscription.uid
-	     AND user.verify_time is not null
-	     AND product.id=subscription.pid
-	     AND product.code=?
-	}, undef, $opt{list}
-	);
+	my $emails = $db->get_subscribers( $opt{list} );
+
 	foreach my $e ( sort { $a->[0] cmp $b->[0] } @$emails ) {
 		say "$e->[0]";
 	}
