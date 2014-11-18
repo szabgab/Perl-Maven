@@ -203,6 +203,15 @@ sub get_products {
 		'code' );
 }
 
+sub add_product {
+	my ( $self, $code, $name, $price ) = @_;
+
+	die "Invlaid code '$code'" if $code !~ /^[a-z0-9_]+$/;
+	$self->{dbh}
+		->do( 'INSERT INTO product (code, name, price) VALUES (?, ?, ?)',
+		undef, $code, $name, $price );
+}
+
 1;
 
 # vim:noexpandtab
