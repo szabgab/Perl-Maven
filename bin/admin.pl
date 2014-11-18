@@ -85,15 +85,14 @@ elsif ( $opt{replace} and $opt{email} ) {
 	replace_email( $opt{email}, $opt{replace} );
 }
 elsif ( $opt{addsub} and $opt{email} ) {
-	my $pid = $dbh->selectrow_array( q{SELECT id FROM product WHERE code = ?},
-		undef, $opt{addsub} );
-	my $uid = $dbh->selectrow_array( q{SELECT id FROM user WHERE email = ?},
-		undef, $opt{email} );
-	usage("Could not find product '$opt{addsub}'") if not $pid;
-	usage("Could not find user '$opt{email}'")     if not $uid;
-	print "PID: $pid  UID: $uid\n";
-	$dbh->do( q{INSERT INTO subscription (uid, pid) VALUES (?, ?)},
-		undef, $uid, $pid );
+	my $res = $db->subscribe_to( $opt{email}, $opt{addsub} );
+	if ($res) {
+		usage("Could not find product '$opt{addsub}'")
+			if $res eq 'no_such_code';
+		usage("Could not find user '$opt{email}'") if $res eq 'no_such_email';
+	}
+
+	#print "PID: $pid  UID: $uid\n";
 	show_people( $opt{email} );
 }
 elsif ( $opt{unsub} and $opt{email} ) {
