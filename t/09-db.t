@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Deep qw(cmp_deeply re);
 
 use File::Copy qw(move);
@@ -87,5 +87,31 @@ subtest products => sub {
 
 	$prod = $db->get_products;
 	is_deeply $prod, \%products, '3rd product added';
+};
+
+subtest subscriptions => sub {
+	plan tests => 5;
+
+	my @subs = $db->get_subscriptions('foo@bar.com');
+	is_deeply \@subs, [];
+	$db->subscribe_to( 'foo@bar.com', 'beginner_perl_maven_ebook' );
+
+	@subs = $db->get_subscriptions('foo@bar.com');
+	is_deeply \@subs, [ 'beginner_perl_maven_ebook' ], 'subscribed';
+
+	$db->subscribe_to( 'foo@bar.com', 'mars_landing_handbook' );
+	@subs = $db->get_subscriptions('foo@bar.com');
+	is_deeply \@subs,
+		[ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ],
+		'subscribed';
+
+	$db->unsubscribe_from( 'foo@bar.com', 'mars_landing_handbook' );
+	@subs = $db->get_subscriptions('foo@bar.com');
+	is_deeply \@subs, [ 'beginner_perl_maven_ebook' ], 'subscribed';
+
+	$db->unsubscribe_from( 'foo@bar.com', 'beginner_perl_maven_ebook' );
+	@subs = $db->get_subscriptions('foo@bar.com');
+	is_deeply \@subs, [];
+
 };
 

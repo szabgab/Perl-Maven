@@ -173,14 +173,18 @@ sub unsubscribe_from {
 		= $self->{dbh}
 		->selectrow_array( q{SELECT product.id FROM product WHERE code=?},
 		undef, $code );
+	return 'no_such_code' if not $pid;
+
 	my ($uid)
 		= $self->{dbh}
 		->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
 		undef, $email );
-	return if not $uid or not $pid;
+	return 'no_such_email' if not $uid;
 
 	$self->{dbh}->do( 'DELETE FROM subscription WHERE uid=? AND pid=?',
 		undef, $uid, $pid );
+
+	return;
 }
 
 sub save_transaction {

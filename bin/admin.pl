@@ -96,15 +96,14 @@ elsif ( $opt{addsub} and $opt{email} ) {
 	show_people( $opt{email} );
 }
 elsif ( $opt{unsub} and $opt{email} ) {
-	my $pid = $dbh->selectrow_array( q{SELECT id FROM product WHERE code = ?},
-		undef, $opt{unsub} );
-	my $uid = $dbh->selectrow_array( q{SELECT id FROM user WHERE email = ?},
-		undef, $opt{email} );
-	print "PID: $pid  UID: $uid\n";
-	die 'Could not find product' if not $pid;
-	die 'Could not find User'    if not $uid;
-	$dbh->do( q{DELETE FROM subscription WHERE uid=? AND pid=?},
-		undef, $uid, $pid );
+	my $res = $db->unsubscribe_from( $opt{email}, $opt{unsub} );
+
+	#print "PID: $pid  UID: $uid\n";
+	if ($res) {
+		usage("Could not find product '$opt{addsub}'")
+			if $res eq 'no_such_code';
+		usage("Could not find user '$opt{email}'") if $res eq 'no_such_email';
+	}
 	show_people( $opt{email} );
 }
 elsif ( $opt{list} ) {
