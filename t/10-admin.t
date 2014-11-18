@@ -11,6 +11,9 @@ BEGIN {
 	t::lib::Test::setup();
 }
 
+use Perl::Maven::DB;
+my $db = Perl::Maven::DB->new('pm.db');
+
 my $admin = "$^X -Ilib bin/admin.pl";
 
 subtest usage => sub {
@@ -24,13 +27,9 @@ subtest usage => sub {
 };
 
 subtest dump_products => sub {
-	plan tests => 2;
+	plan tests => 3;
 
-	my ( $stdout, $stderr, @result ) = capture {
-		system "$admin --products --dump";
-	};
-	is_deeply re_dump($stdout),
-		{
+	my $existing_products = {
 		'perl_maven_cookbook' => {
 			'name'  => 'Perl Maven Cookbook',
 			'code'  => 'perl_maven_cookbook',
@@ -43,9 +42,15 @@ subtest dump_products => sub {
 			'code'  => 'beginner_perl_maven_ebook',
 			'price' => '0.01'
 		}
-		},
+	};
 
-		'--products --dump';
+	my $products = $db->get_products;
+	is_deeply $products, $existing_products, 'get_products';
+
+	my ( $stdout, $stderr, @result ) = capture {
+		system "$admin --products --dump";
+	};
+	is_deeply re_dump($stdout), $existing_products, '--products --dump';
 	is $stderr, '', 'stderr is empty';
 };
 
@@ -63,7 +68,12 @@ subtest list_products => sub {
 };
 
 subtest list_emails => sub {
-	plan tests => 1;
+	plan tests => 2;
+
+	my $people = $db->get_people('@');
+	is_deeply $people, [], 'no people';
+
+	#	my @subs = $db->get_subscriptions('email@address');
 
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --email \@";

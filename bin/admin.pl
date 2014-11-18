@@ -156,23 +156,13 @@ sub replace_email {
 sub show_people {
 	my ($email) = @_;
 
-	my $people = $dbh->selectall_arrayref(
-		q{
-	   SELECT id, email, verify_time
-	   FROM user WHERE email LIKE ?
-	}, undef, '%' . $email . '%'
-	);
+	my $people = $db->get_people($email);
 	foreach my $p (@$people) {
 		$p->[2] //= '-';
-		my $subs = $dbh->selectall_arrayref(
-			q{SELECT product.code
-			FROM product, subscription
-			WHERE product.id=subscription.pid
-			AND subscription.uid=?}, undef, $p->[0]
-		);
+		my @subs = $db->get_subscriptions( $p->[1] );
 		printf "%4s %30s  verify_time='%s'\n", @$p;
-		foreach my $s (@$subs) {
-			printf "     %s\n", @$s;
+		foreach my $s (@subs) {
+			printf "     %s\n", $s;
 		}
 	}
 	return;

@@ -59,6 +59,17 @@ sub get_user_by_email {
 	return $hr;
 }
 
+sub get_people {
+	my ( $self, $email ) = @_;
+
+	return $self->{dbh}->selectall_arrayref(
+		q{
+	   SELECT id, email, verify_time
+	   FROM user WHERE email LIKE ?
+	}, undef, '%' . $email . '%'
+	);
+}
+
 sub get_user_by_id {
 	my ( $self, $id ) = @_;
 
