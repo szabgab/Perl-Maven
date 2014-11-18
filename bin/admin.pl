@@ -12,16 +12,6 @@ use lib 'lib';
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new('pm.db');
 
-my $dsn = 'dbi:SQLite:dbname=pm.db';
-my $dbh = DBI->connect(
-	$dsn, '', '',
-	{
-		RaiseError => 1,
-		PrintError => 0,
-		AutoCommit => 1,
-	}
-);
-
 my %opt;
 GetOptions(
 	\%opt,
@@ -160,9 +150,10 @@ Products:
 END_USAGE
 
 	my $products = $db->get_products;
-	foreach
-		my $code ( sort { $products->{$a}{name} cmp $products->{$b}{name} }
-		keys %$products )
+	foreach my $code (
+		sort { $products->{$a}{name} cmp $products->{$b}{name} }
+		keys %$products
+		)
 	{
 		say "   $code";
 	}
