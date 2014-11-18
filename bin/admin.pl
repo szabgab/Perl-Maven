@@ -67,25 +67,15 @@ elsif ( $opt{stats} ) {
 			$stats->{products}{$code}{cnt},
 			;
 	}
-	my $all_subs = $dbh->selectrow_array(
-		q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
-	my $distinct_subs = $dbh->selectrow_array(
-		q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
 	say '-' x 45;
-	printf $format, q{Total 'purchases':},     $all_subs;
-	printf $format, q{Distinct # of clients:}, $distinct_subs;
+	printf $format, q{Total 'purchases':},     $stats->{all_subs};
+	printf $format, q{Distinct # of clients:}, $stats->{distinct_subs};
 	print "\n";
-	my $all_users    = $dbh->selectrow_array(q{SELECT COUNT(*) FROM user});
-	my $not_verified = $dbh->selectrow_array(
-		q{SELECT COUNT(*) FROM user WHERE verify_time is NULL});
-	my $no_password
-		= $dbh->selectrow_array(
-		q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL}
-		);
-	printf $format, 'All the users', $all_users;
-	printf $format, 'Verified', ( $all_users - $not_verified );
-	printf $format, 'NOT Verified',             $not_verified;
-	printf $format, 'Verified but NO password', $no_password;
+	printf $format, 'All the users', $stats->{all_users};
+	printf $format, 'Verified',
+		( $stats->{all_users} - $stats->{not_verified} );
+	printf $format, 'NOT Verified',             $stats->{not_verified};
+	printf $format, 'Verified but NO password', $stats->{no_password};
 
 }
 elsif ( $opt{show} and $opt{email} ) {

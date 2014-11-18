@@ -224,6 +224,19 @@ sub stats {
 	}
 
 	my %stats = ( products => $products );
+	$stats{all_subs} = $self->{dbh}->selectrow_array(
+		q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
+	$stats{distinct_subs} = $self->{dbh}->selectrow_array(
+		q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
+
+	$stats{all_users}
+		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user});
+	$stats{not_verified} = $self->{dbh}->selectrow_array(
+		q{SELECT COUNT(*) FROM user WHERE verify_time is NULL});
+	$stats{no_password}
+		= $self->{dbh}->selectrow_array(
+		q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL}
+		);
 
 	return \%stats;
 }
