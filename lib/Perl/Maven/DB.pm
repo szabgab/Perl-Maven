@@ -270,6 +270,12 @@ sub replace_email {
 		undef, $new, $old );
 }
 
+sub delete_user {
+	my ( $self, $email ) = @_;
+	return $self->{dbh}
+		->do( 'DELETE FROM user WHERE email=?', undef, $email );
+}
+
 1;
 
 # vim:noexpandtab

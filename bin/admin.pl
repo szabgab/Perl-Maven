@@ -24,6 +24,8 @@ GetOptions(
 	'addsub=s',
 	'email=s',
 
+	'deluser=s',
+
 	'unsub=s',
 	'dump'
 ) or usage();
@@ -105,6 +107,30 @@ elsif ( $opt{list} ) {
 		say "$e->[0]";
 	}
 }
+elsif ( $opt{deluser} ) {
+	my $email = lc $opt{deluser};
+	my $user  = $db->get_user_by_email($email);
+
+	die "Could not find user with email '$email'\n" if not $user;
+
+#die "There are more than one user with this email '$email'\n" . Dumper $users
+#	if @$users > 1; # nah, this really should not happen, should this
+
+	#print 'Found user: ' . Dumper $user;
+	print 'Do you want to remove it? (Y/N) ?';
+	my $answer = lc <STDIN>;
+	chomp $answer;
+	die "Aborting\n" if $answer ne 'y';
+
+	my $res = $db->delete_user($email);
+	if ($res) {
+		say 'Done';
+	}
+	else {
+		say 'Failed???';
+	}
+
+}
 else {
 	usage();
 }
@@ -145,6 +171,9 @@ Usage: $0
 
     --addsub product --email email\@address  add the specific product to the specific user
     --unsub  product --email email\@address  remove the perl_maven_cookbook from the specific user
+
+
+    --deluser EMAIL                          delete this user
 
 Products:
 END_USAGE
