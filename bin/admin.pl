@@ -58,20 +58,14 @@ if ( $opt{products} ) {
 	}
 }
 elsif ( $opt{stats} ) {
-	my $products = $dbh->selectall_hashref(
-		q{
-	   SELECT *
-	   FROM product
-	}, 'id'
-	);
-
-	#print Dumper $products;
-	my $subs = $dbh->selectall_hashref(
+	my $products = $db->get_products;
+	my $subs     = $dbh->selectall_hashref(
 		q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
 	my $format = "%-35s %5s\n";
 	printf $format, 'Product code', 'Number of subscribers';
-	foreach my $pid ( sort keys %$products ) {
-		printf $format, $products->{$pid}{code}, ( $subs->{$pid}{cnt} || 0 );
+	foreach my $code ( sort keys %$products ) {
+		my $pid = $products->{$code}{id};
+		printf $format, $products->{$code}{code}, ( $subs->{$pid}{cnt} || 0 );
 	}
 	my $all_subs = $dbh->selectrow_array(
 		q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
