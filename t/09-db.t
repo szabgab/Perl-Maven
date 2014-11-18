@@ -85,7 +85,7 @@ subtest products => sub {
 		id    => 3,
 	};
 
-	my $prod = $db->get_products;
+	$prod = $db->get_products;
 	is_deeply $prod, \%products, '3rd product added';
 };
 
