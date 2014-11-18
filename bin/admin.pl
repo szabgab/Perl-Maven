@@ -82,7 +82,9 @@ elsif ( $opt{show} and $opt{email} ) {
 	show_people( $opt{email} );
 }
 elsif ( $opt{replace} and $opt{email} ) {
-	replace_email( $opt{email}, $opt{replace} );
+	show_people( $opt{email} );
+	$db->replace_email( $opt{email}, $opt{replace} );
+	show_people( $opt{replace} );
 }
 elsif ( $opt{addsub} and $opt{email} ) {
 	my $res = $db->subscribe_to( $opt{email}, $opt{addsub} );
@@ -118,14 +120,6 @@ else {
 }
 exit;
 #######################################################################################################
-
-sub replace_email {
-	my ( $old, $new ) = @_;
-	show_people($old);
-	$dbh->do( q{UPDATE user SET email = ? WHERE email = ?},
-		undef, $new, $old );
-	show_people($new);
-}
 
 sub show_people {
 	my ($email) = @_;

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Test::Deep qw(cmp_deeply re);
 
 use File::Copy qw(move);
@@ -23,7 +23,7 @@ subtest users => sub {
 	$people = $db->get_people('');
 	is_deeply $people, [ [ 1, 'foo@bar.com', undef ] ], 'first person';
 
-	$db->add_registration( 'buzz@nasa.com', '123' );
+	$db->add_registration( 'buzz@nasa.com', '456' );
 	$people = $db->get_people('');
 
 	#diag explain $people;
@@ -51,6 +51,46 @@ subtest users => sub {
 		'verify_code'            => '123',
 		'verify_time'            => undef
 		};
+};
+
+subtest replace_email => sub {
+	plan tests => 3;
+
+	my $before = $db->get_user_by_email('buzz@nasa.com');
+
+	cmp_deeply $before,
+		{
+		'email'                  => 'buzz@nasa.com',
+		'id'                     => 2,
+		'name'                   => undef,
+		'password'               => undef,
+		'password_reset_code'    => undef,
+		'password_reset_timeout' => undef,
+		'register_time'          => re('\d+'),
+		'verify_code'            => '456',
+		'verify_time'            => undef
+		};
+
+	$db->replace_email( 'buzz@nasa.com', 'buzz@buzzaldrin.com' );
+
+	my $after_old = $db->get_user_by_email('buzz@nasa.com');
+	is $after_old, undef;
+
+	my $after = $db->get_user_by_email('buzz@buzzaldrin.com');
+
+	cmp_deeply $after,
+		{
+		'email'                  => 'buzz@buzzaldrin.com',
+		'id'                     => 2,
+		'name'                   => undef,
+		'password'               => undef,
+		'password_reset_code'    => undef,
+		'password_reset_timeout' => undef,
+		'register_time'          => re('\d+'),
+		'verify_code'            => '456',
+		'verify_time'            => undef
+		};
+
 };
 
 subtest products => sub {
@@ -97,7 +137,7 @@ subtest subscriptions => sub {
 	$db->subscribe_to( 'foo@bar.com', 'beginner_perl_maven_ebook' );
 
 	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, [ 'beginner_perl_maven_ebook' ], 'subscribed';
+	is_deeply \@subs, ['beginner_perl_maven_ebook'], 'subscribed';
 
 	$db->subscribe_to( 'foo@bar.com', 'mars_landing_handbook' );
 	@subs = $db->get_subscriptions('foo@bar.com');
@@ -107,7 +147,7 @@ subtest subscriptions => sub {
 
 	$db->unsubscribe_from( 'foo@bar.com', 'mars_landing_handbook' );
 	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, [ 'beginner_perl_maven_ebook' ], 'subscribed';
+	is_deeply \@subs, ['beginner_perl_maven_ebook'], 'subscribed';
 
 	$db->unsubscribe_from( 'foo@bar.com', 'beginner_perl_maven_ebook' );
 	@subs = $db->get_subscriptions('foo@bar.com');

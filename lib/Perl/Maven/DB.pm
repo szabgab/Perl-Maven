@@ -264,6 +264,12 @@ sub stats {
 	return \%stats;
 }
 
+sub replace_email {
+	my ( $self, $old, $new ) = @_;
+	$self->{dbh}->do( q{UPDATE user SET email = ? WHERE email = ?},
+		undef, $new, $old );
+}
+
 1;
 
 # vim:noexpandtab
