@@ -13,6 +13,8 @@ use File::Temp qw(tempdir);
 use File::Copy qw(copy move);
 use DBIx::RunSQL;
 
+use Perl::Maven::DB;
+
 my $dbfile;
 my $backup;
 
@@ -30,12 +32,11 @@ sub setup {
 		move $dbfile, $backup;
 	}
 	system "$^X bin/setup.pl $dbfile" and die;
-	my $dsn = "dbi:SQLite:dbname=$dbfile";
-	DBIx::RunSQL->create(
-		verbose => 0,
-		dsn     => $dsn,
-		sql     => 't/test.sql',
-	);
+	my $db = Perl::Maven::DB->new($dbfile);
+
+	$db->add_product( 'perl_maven_cookbook', 'Perl Maven Cookbook', 0 );
+	$db->add_product( 'beginner_perl_maven_ebook',
+		'Beginner Perl Maven e-book', 0.01 );
 }
 
 sub psgi_start {
