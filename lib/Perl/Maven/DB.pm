@@ -309,6 +309,19 @@ sub dump {
 	}
 }
 
+sub setup {
+	my ( $class, $dbfile ) = @_;
+
+	die 'has pm.db' if -e $dbfile;
+	require DBIx::RunSQL;
+	my $dsn = "dbi:SQLite:dbname=$dbfile";
+	DBIx::RunSQL->create(
+		verbose => 0,
+		dsn     => $dsn,
+		sql     => 'sql/schema.sql',
+	);
+}
+
 1;
 
 # vim:noexpandtab
