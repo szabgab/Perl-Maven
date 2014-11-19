@@ -276,6 +276,39 @@ sub delete_user {
 		->do( 'DELETE FROM user WHERE email=?', undef, $email );
 }
 
+sub dump {
+	my ( $self, $email ) = @_;
+
+	my $sql = 'SELECT * FROM user';
+	my @params;
+	if ($email) {
+		$sql .= ' WHERE email like ?';
+		push @params, '%' . $email . '%';
+	}
+
+	my $sth_subscriptions = $self->{dbh}->prepare(
+		q{
+	SELECT product.code
+	FROM subscription, product
+	WHERE
+	  subscription.pid=product.id
+	  AND subscription.uid=?}
+	);
+
+	my $sth = $self->{dbh}->prepare($sql);
+	$sth->execute(@params);
+	while ( my $user = $sth->fetchrow_hashref ) {
+		foreach my $k ( sort keys %$user ) {
+			print "$k: ", ( $user->{$k} || '-' ), "\n";
+		}
+		print "\n";
+		$sth_subscriptions->execute( $user->{id} );
+		while ( my ($name) = $sth_subscriptions->fetchrow_array() ) {
+			print "     $name\n";
+		}
+	}
+}
+
 1;
 
 # vim:noexpandtab
