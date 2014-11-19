@@ -12,7 +12,6 @@ use Email::MIME::Creator;
 
 use Cwd qw(abs_path cwd);
 use WWW::Mechanize;
-use DBI;
 use YAML qw();
 use Try::Tiny;
 
