@@ -13,12 +13,13 @@ use Test::WWW::Mechanize::PSGI;
 
 psgi_start();
 
-my $url      = 'http://test-perl-maven.com';
-my $EMAIL    = 'gabor@perlmaven.com';
-my @PASSWORD = ( '123456', 'abcdef', );
-my @NAMES    = ( 'Foo Bar', );
+my $url            = 'http://test-perl-maven.com';
+my $EMAIL          = 'gabor@perlmaven.com';
+my @PASSWORD       = ( '123456', 'abcdef', );
+my $sha1_of_abcdef = 'H4rBDyPFtbwRZ72oS4M+XAV6d9I';
+my @NAMES          = ( 'Foo Bar', );
 
-plan tests => 5;
+plan tests => 6;
 
 my $cookbook_url
 	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
@@ -31,6 +32,8 @@ use Dancer qw(:tests);
 
 Dancer::set( appdir => getcwd() );
 use Perl::Maven;
+use Perl::Maven::DB;
+my $db = Perl::Maven::DB->new('pm.db');
 
 my $app = Dancer::Handler->psgi_app;
 
@@ -166,7 +169,7 @@ subtest 'subscribe' => sub {
 # log out and then login again
 subtest 'ask for password reset, then login' => sub {
 
-	plan tests => 20;
+	plan tests => 21;
 	$w->get_ok('/account');
 	$w->content_like(qr{Login});
 	$w->content_like(qr{Forgot your password or don't have one yet});
@@ -222,6 +225,10 @@ subtest 'ask for password reset, then login' => sub {
 	$w->get_ok("$url/logged-in");
 	$w->content_is(1);
 
+	# white-box:
+	my $user = $db->get_user_by_email($EMAIL);
+	is substr( $user->{password}, 0, 7 ), '{CRYPT}';
+
 	#diag('now logout');
 	$w->get_ok("$url/logout");
 	$w->get_ok("$url/logged-in");
@@ -252,7 +259,7 @@ subtest 'ask for password reset, then login' => sub {
 # log out and check if we fail to log in with
 # the old password but we can log in with the new.
 subtest 'change password while logged in' => sub {
-	plan tests => 18;
+	plan tests => 19;
 
 	$w->get_ok('/account');
 
@@ -269,6 +276,10 @@ subtest 'change password while logged in' => sub {
 	);
 	$w->content_like( qr{Passwords don't match}, q{passwords don't match} );
 	$w->back;
+
+	# white-box:
+	my $user = $db->get_user_by_email($EMAIL);
+	is substr( $user->{password}, 0, 7 ), '{CRYPT}';
 
 	$w->submit_form_ok(
 		{
@@ -348,6 +359,39 @@ subtest 'name' => sub {
 	is( $form2->value('name'), $NAMES[0], 'name displayed' );
 
 	#diag(explain($form));
+};
+
+# we inject an old-style password and check if after the first login it is upgraded
+subtest 'upgrade_pw' => sub {
+	plan tests => 7;
+
+	$w->get_ok('/logout');
+	$w->get_ok('/account');
+	is $w->base, "$url/login", 'redirected to login page';
+
+	# white-box:
+	my $user_before = $db->get_user_by_email($EMAIL);
+	$db->set_password( $user_before->{id}, $sha1_of_abcdef );
+	my $user_midi = $db->get_user_by_email($EMAIL);
+	is $user_midi->{password}, $sha1_of_abcdef,
+		'just making sure we set the old pw';
+
+	$w->submit_form_ok(
+		{
+			form_name => 'login',
+			fields    => {
+				email    => $EMAIL,
+				password => $PASSWORD[1],
+			},
+		},
+		'login'
+	);
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
+		'download link' );
+
+	# white-box:
+	my $user_after = $db->get_user_by_email($EMAIL);
+	is substr( $user_after->{password}, 0, 7 ), '{CRYPT}';
 };
 
 # when a user sets his password consider that user to have been verified (after all he got the code)
