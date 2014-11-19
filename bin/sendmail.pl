@@ -10,7 +10,6 @@ use Email::Sender::Simple qw(sendmail);
 use Email::Sender::Transport::SMTP qw();
 use Email::MIME::Creator;
 
-#use Email::Sender;
 use Cwd qw(abs_path cwd);
 use WWW::Mechanize;
 use DBI;
@@ -22,6 +21,9 @@ binmode( STDERR, ':encoding(UTF-8)' );
 
 use lib 'lib';
 use Perl::Maven::Config;
+use Perl::Maven::DB;
+
+my $db = Perl::Maven::DB->new('pm.db');
 
 my $dsn = 'dbi:SQLite:dbname=pm.db';
 
@@ -204,15 +206,13 @@ Usage: $0 --url http://url
 
 END_USAGE
 
-	my $products = $dbh->selectall_arrayref(
-		q{
-		SELECT code, name
-		FROM product
-		ORDER BY name
-	}
-	);
-	foreach my $p (@$products) {
-		say "    --to $p->[0]";
+	my $products = $db->get_products;
+	foreach my $code (
+		sort
+		keys %$products
+		)
+	{
+		say "    --to $code";
 	}
 	exit;
 }
