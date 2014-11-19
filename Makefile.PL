@@ -17,6 +17,7 @@ WriteMakefile(
 		'Carp::Always'          => 0,
         'Code::Explain'         => 0.02,
         'Dancer'                => 1.3095,
+		'Dancer::Plugin::Passphrase' => '2.0.1',
         'DateTime'              => 1.12,
         'DBD::SQLite'           => 1.42,
         'DBI'                   => 1.631,

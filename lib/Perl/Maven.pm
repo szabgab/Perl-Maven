@@ -1,5 +1,6 @@
 package Perl::Maven;
 use Dancer ':syntax';
+use Dancer::Plugin::Passphrase;
 use Perl::Maven::DB;
 
 our $VERSION = '0.11';
@@ -472,7 +473,7 @@ post '/change-password' => sub {
 
 	my $email = session('email');
 	my $user  = $db->get_user_by_email($email);
-	$db->set_password( $user->{id}, Digest::SHA::sha1_base64($password) );
+	$db->set_password( $user->{id}, passphrase($password)->generate );
 
 	template 'error', { password_set => 1 };
 };
@@ -493,7 +494,7 @@ post '/set-password' => sub {
 	session logged_in => 1;
 	session last_seen => time;
 
-	$db->set_password( $id, Digest::SHA::sha1_base64($password) );
+	$db->set_password( $id, passphrase($password)->generate );
 
 	template 'error', { password_set => 1 };
 };
@@ -531,8 +532,17 @@ post '/login' => sub {
 		return template 'login', { no_password => 1 };
 	}
 
-	return template 'error', { invalid_pw => 1 }
-		if $user->{password} ne Digest::SHA::sha1_base64($password);
+	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
+		return template 'error', { invalid_pw => 1 }
+			if not passphrase($password)->matches( $user->{password} );
+	}
+	else {
+		return template 'error', { invalid_pw => 1 }
+			if $user->{password} ne Digest::SHA::sha1_base64($password);
+
+		# password is good, we need to update it
+		$db->set_password( $user->{id}, passphrase($password)->generate );
+	}
 
 	session email     => $user->{email};
 	session logged_in => 1;
