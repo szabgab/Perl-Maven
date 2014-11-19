@@ -48,9 +48,9 @@ subtest dump_products => sub {
 	is_deeply $products, $existing_products, 'get_products';
 
 	my ( $stdout, $stderr, @result ) = capture {
-		system "$admin --products --dump";
+		system "$admin --products --perl";
 	};
-	is_deeply re_dump($stdout), $existing_products, '--products --dump';
+	is_deeply re_dump($stdout), $existing_products, '--products --perl';
 	is $stderr, '', 'stderr is empty';
 };
 

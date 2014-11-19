@@ -26,7 +26,7 @@ GetOptions(
 	'deluser=s',
 
 	'unsub=s',
-	'dump'
+	'perl'
 ) or usage();
 
 if ( $opt{email} ) {
@@ -36,7 +36,7 @@ if ( $opt{email} ) {
 if ( $opt{products} ) {
 	my $products = $db->get_products;
 
-	if ( $opt{dump} ) {
+	if ( $opt{perl} ) {
 
 		#die Dumper $products;
 		print Dumper $products;
