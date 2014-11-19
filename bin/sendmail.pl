@@ -25,17 +25,6 @@ use Perl::Maven::DB;
 
 my $db = Perl::Maven::DB->new('pm.db');
 
-my $dsn = 'dbi:SQLite:dbname=pm.db';
-
-my $dbh = DBI->connect(
-	$dsn, '', '',
-	{
-		RaiseError => 1,
-		PrintError => 0,
-		AutoCommit => 1,
-	}
-);
-
 my $cfg     = YAML::LoadFile('config.yml');
 my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 my $config  = $mymaven->config('perlmaven.com');
@@ -78,16 +67,7 @@ sub send_messages {
 			$sent{$to} = 1;
 		}
 		else {
-			my $emails = $dbh->selectall_arrayref(
-				q{
-		        SELECT email
-		        FROM user, subscription, product
-		        WHERE user.id=subscription.uid
-		          AND user.verify_time is not null
-		          AND product.id=subscription.pid
-		          AND product.code=?
-		    }, undef, $to
-			);
+			my $emails = $db->get_subscribers($to);
 
 			#'perl_maven_cookbook'
 			#die Dumper $emails;
