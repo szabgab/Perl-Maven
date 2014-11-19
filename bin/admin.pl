@@ -26,7 +26,9 @@ GetOptions(
 	'deluser=s',
 
 	'unsub=s',
-	'perl'
+	'perl',
+
+	'dump:s',
 ) or usage();
 
 if ( $opt{email} ) {
@@ -130,6 +132,9 @@ elsif ( $opt{deluser} ) {
 	}
 
 }
+elsif ( defined $opt{dump} ) {
+	$db->dump( $opt{dump} );
+}
 else {
 	usage();
 }
@@ -173,6 +178,8 @@ Usage: $0
 
 
     --deluser EMAIL                          delete this user
+ 
+    --dump  [EMAIL]                          dump dataof all the user or a specific user
 
 Products:
 END_USAGE
