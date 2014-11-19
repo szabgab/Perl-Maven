@@ -4,7 +4,6 @@ use warnings;
 use v5.12;
 
 use Data::Dumper qw(Dumper);
-use DBI;
 use Getopt::Long qw(GetOptions);
 
 use lib 'lib';
