@@ -42,14 +42,35 @@ function display_search_result(data, status, jqXHR) {
 }
 
 function show_intro() {
+	var this_host = window.location.hostname;
+	//console.log(this_host);
+
+	var referrer_host = document.referrer;
+	if (referrer_host.length > 0) {
+		var match = /https?:\/\/([^:\/]*)/.exec(referrer_host);
+		if (match) {
+			referrer_host = match[1];
+		}
+	}
+	//console.log(referrer_host);
+	//if (! referrer_host) {
+	//	return;
+	//}
+	if (this_host == referrer_host) {
+		return;
+	}
+
 	var n = localStorage.getItem('popup_1_counter');
 	if (n === null) {
-		n = 1;
-		localStorage.setItem("popup_1_counter", n);
-		var html = "<h2>Welcome Perl Maven</h2>If this article does not answer your question, you can always look for a keyword in the search-box in the menu-bar.";
-		$('.modal-body').html(html);
-		$('#myModal').modal('show')
+		n = 0;
 	}
+	n++;
+	localStorage.setItem("popup_1_counter", n);
+	var html = '<h2>Do you want to improve your Perl?</h2>';
+	html += '<p>Register to the FREE Perl Maven newsletter here.</p>';
+	html += '<form method="POST" action="/register" name="registration_form">Email: <input name="email" /><input type="submit" value="Register" /></form>';
+	$('.modal-body').html(html);
+	$('#myModal').modal('show')
 }
 
 function show_archive(tag, show_abstract) {
