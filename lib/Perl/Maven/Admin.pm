@@ -13,7 +13,7 @@ get '/admin' => sub {
 	}
 
 	if ( not is_admin() ) {
-		return 'You dont have admin rights';
+		return template 'error', { no_admin_rights => 1 };
 	}
 
 	return 'Admin';

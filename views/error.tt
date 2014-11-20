@@ -90,3 +90,7 @@ so we can associate your purchase with your account.
 We are sorry that you canceled your purchase.
 <% END %>
 
+<% IF no_admin_rights %>
+You dont have admin rights.
+<% END %>
+
