@@ -32,6 +32,19 @@ Retype it: <input name="password2" type="password" /><br>
 <input type="submit" value="Change Password" />
 </form>
 
+
+<h2>Change E-mail</h2>
+
+Your current e-mail address is <b><% email %></b><br>
+Type in the new e-mail. We'll send you a code to the new e-mail address with a link. Once you click on that link
+we will finalize the change of e-mail adress:
+
+<form method="POST" action="/change-email" name="change_email">
+Email: <input name="email" /><br>
+<input type="submit" value="Change Email" />
+</form>
+
+
 <h2>Logout:</h2>
 <p>
 <a href="/logout">logout</a>

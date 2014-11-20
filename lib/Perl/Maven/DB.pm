@@ -2,6 +2,7 @@ package Perl::Maven::DB;
 use strict;
 use warnings;
 
+use Data::Dumper qw(Dumper);
 use DBI;
 
 our $VERSION = '0.11';
@@ -266,7 +267,7 @@ sub stats {
 
 sub replace_email {
 	my ( $self, $old, $new ) = @_;
-	$self->{dbh}->do( q{UPDATE user SET email = ? WHERE email = ?},
+	return $self->{dbh}->do( q{UPDATE user SET email = ? WHERE email = ?},
 		undef, $new, $old );
 }
 
@@ -320,6 +321,29 @@ sub setup {
 		dsn     => $dsn,
 		sql     => 'sql/schema.sql',
 	);
+}
+
+sub save_verification {
+	my ( $self, %params ) = @_;
+	return $self->{dbh}->do(
+		'INSERT INTO verification (code, timestamp, action, uid, details) VALUES (?, ?, ?, ?, ?)',
+		undef, @params{qw(code timestamp action uid details)}
+	);
+}
+
+sub get_verification {
+	my ( $self, $code ) = @_;
+	my $hr
+		= $self->{dbh}
+		->selectall_hashref( 'SELECT * FROM verification WHERE code=?',
+		'code', undef, $code );
+	return $hr->{$code};
+}
+
+sub delete_verification_code {
+	my ( $self, $code ) = @_;
+	return $self->{dbh}
+		->do( 'DELETE FROM verification WHERE code=?', undef, $code );
 }
 
 1;

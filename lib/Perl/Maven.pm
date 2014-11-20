@@ -629,24 +629,85 @@ post '/register' => sub {
 		$id = $db->add_registration( $email, $code );
 	}
 
-	# save  email and code (and date)
-	my $html = template 'verification_mail',
+	my $mymaven = mymaven;
+	send_verification_mail(
+		'first_verification_mail',
+		$email,
+		"Please finish the $mymaven->{title} registration",
 		{
-		url  => uri_for('/verify'),
-		id   => $id,
-		code => $code,
+			url  => uri_for('/verify'),
+			id   => $id,
+			code => $code,
 		},
-		{ layout => 'email', };
+	);
+
+	my $html_from = $mymaven->{from};
+	$html_from =~ s/</&lt;/g;
+	return template 'response', { from => $html_from };
+};
+
+sub send_verification_mail {
+	my ( $template, $email, $subject, $params ) = @_;
+
+	my $html = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
 	sendmail(
 		From    => $mymaven->{from},
 		To      => $email,
-		Subject => "Please finish the $mymaven->{title} registration",
+		Subject => $subject,
 		html    => $html,
 	);
-	my $html_from = $mymaven->{from};
-	$html_from =~ s/</&lt;/g;
-	return template 'response', { from => $html_from };
+}
+
+post '/change-email' => sub {
+	if ( not logged_in() ) {
+		return redirect '/login';
+	}
+	my $email = param('email') || '';
+	if ( not $email ) {
+		return template 'error', { no_email => 1, };
+	}
+	if ( not Email::Valid->address($email) ) {
+		return template 'error', { broken_email => 1, };
+	}
+
+	# check for uniqueness after lc
+	$email = lc $email;
+	my $other_user = $db->get_user_by_email($email);
+	if ($other_user) {
+		return template 'error', { email_exists => 1 };
+	}
+
+	my $user = $db->get_user_by_email( session('email') );
+
+	my $code = _generate_code();
+	$db->save_verification(
+		code      => $code,
+		action    => 'change_email',
+		timestamp => time,
+		uid       => $user->{id},
+		details   => to_json {
+			new_email => $email,
+		},
+	);
+
+	my $mymaven = mymaven;
+	send_verification_mail(
+		'verification_mail',
+		$email,
+		"Please verify your new e-mail address for $mymaven->{title}",
+		{
+			url  => uri_for('/verify2'),
+			code => $code,
+		},
+	);
+
+	return template 'error', { verification_email_sent => 1 }
+
+		#my $html_from = $mymaven->{from};
+		#$html_from =~ s/</&lt;/g;
+		#return template 'response', { from => $html_from };
+
 };
 
 get '/logout' => sub {
@@ -690,6 +751,7 @@ get '/account' => sub {
 		subscriptions => \@owned_products,
 		subscribed    => $db->is_subscribed( $email, 'perl_maven_cookbook' ),
 		name          => $user->{name},
+		email         => $email,
 		};
 };
 
@@ -739,6 +801,30 @@ get qr{/pro/(.+)} => sub {
 	session url => request->path;
 
 	_show_abstract( { path => $path } );
+};
+
+get '/verify2/:code' => sub {
+	my $code = param('code');
+
+	return template 'error', { missing_verification_code => 1 } if not $code;
+
+# TODO Shall we expect here the same user to be logged in already? Can we expect that?
+
+	my $verification = $db->get_verification($code);
+	return template 'error', { invalid_verification_code => 1 }
+		if not $verification;
+
+	if ( $verification->{action} eq 'change_email' ) {
+		my $details = eval { from_json $verification->{details} };
+		my $user = $db->get_user_by_id( $verification->{uid} );
+		$db->replace_email( $user->{email}, $details->{new_email} );
+
+		$db->delete_verification_code($code);
+
+		return template 'error', { email_updated_successfully => 1 };
+	}
+
+	return template 'error', { internal_verification_error => 1 };
 };
 
 get '/verify/:id/:code' => sub {
@@ -1120,7 +1206,8 @@ sub sendmail {
 		return;
 	}
 
-	$mail->send;
+	#$mail->send( 'smtp', 'mail.hostlocal.com' );
+	$mail->send();
 	return;
 }
 

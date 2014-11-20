@@ -7,6 +7,7 @@ CREATE TABLE user (
   register_time   VARCHAR(11),
   verify_code     VARCHAR(20),
   verify_time     VARCHAR(11),
+  name            VARCHAR(255),
   admin           INTEGER
 );
 
@@ -32,13 +33,19 @@ CREATE TABLE transactions (
   data   BLOB
 );
 
+CREATE TABLE verification (
+  code        VARCHAR(100) PRIMARY KEY,
+  timestamp   VARCHAR(100) NOT NULL,
+  action      VARCHAR(100) NOT NULL,
+  uid         INTEGER NOT NULL,
+  details     BLOB
+);
+
 CREATE TRIGGER user_cleanup
   BEFORE DELETE ON user FOR EACH ROW
   BEGIN
    DELETE FROM subscription WHERE uid=OLD.id;
   END;
 
---- schema 4
 
-ALTER TABLE user ADD COLUMN name VARCHAR(255);
 

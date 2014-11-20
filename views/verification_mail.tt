@@ -1,11 +1,11 @@
 
 Hi,
 <p>
-In order to verify your e-mail address and to finish registration, please
+In order to verify your new e-mail address, please
 click on the following link:
 </p>
 <p>
-<a href="<% url %>/<% id %>/<% code %>">verify</a>.
+<a href="<% url %>/<% code %>">verify</a>.
 </p>
 <p>
 Thank you
