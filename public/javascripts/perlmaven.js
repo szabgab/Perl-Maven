@@ -66,11 +66,7 @@ function show_intro() {
 	}
 	n++;
 	localStorage.setItem("popup_1_counter", n);
-	var html = '<h2>Do you want to improve your Perl?</h2>';
-	html += '<p>Register to the FREE Perl Maven newsletter here.</p>';
-	html += '<form method="POST" action="/register" name="registration_form">Email: <input name="email" /><input type="submit" value="Register" /></form>';
-	$('.modal-body').html(html);
-	$('#myModal').modal('show')
+	$('#popup_1').modal('show')
 }
 
 function show_archive(tag, show_abstract) {

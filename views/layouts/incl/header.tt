@@ -33,6 +33,7 @@
 </head>
 <body onload="prettyPrint()" >
 
+
 <% IF social %>
 <!-- start facebook SDK ?? -->
 <div id="fb-root"></div>
@@ -64,10 +65,33 @@
   <div class="span1">
 
 <!-- Modal start -->
+<div class="modal fade" id="popup_1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Perl Maven</h4>
+      </div>
+
+      <div class="modal-body">
+	      <h2>Do you want to improve your Perl?</h2>
+	      <p>Register to the FREE Perl Maven newsletter here.</p>
+          <p>Type in your e-mail address:</p>
+	      <form method="POST" action="/register" name="registration_form">
+            <input name="email" />
+            <input type="submit" value="Register" />
+          </form>
+         <small>If you are already registered, then please log in and you won't see this pop-up any more.</small>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <!-- used for the result set when there are more than one results -->
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
   </div>
   <div class="modal-body">
   </div>
