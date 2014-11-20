@@ -19,3 +19,21 @@ Admin page. For authorized users only.
 <tr><td>Verified but NO password</td><td><% stats.no_password %>
 </table>
 
+
+<hr>
+<h2>Show user details</h2>
+<form role="form">
+  <div class="form-group">
+    <label for="email">Email address</label>
+    <input type="email" class="form-control" id="email" placeholder="Enter email">
+  </div>
+ <button type="submit" id="admin-show-details" class="btn btn-default">Show</button>
+</form>
+
+<div class="alert alert-warning" id="need-email" style="display:none">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>Warning!</strong> Need an e-mail address.
+</div>
+
+<div id="details">
+</div>

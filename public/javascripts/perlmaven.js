@@ -152,6 +152,24 @@ function user_info(data, status, jqXHR) {
    	setTimeout(show_intro, 1000);
 }
 
+function admin_show_user_details(data, status, jqXHR) {
+	//console.log(data);
+	var html = '<table>';
+	html += '<tr><td>email</td><td>timestamp</td><td>products</td></tr>';
+	for (var i = 0; i < data['people'].length; i++) { 
+		html += '<tr>';
+        html += '<td>' + data['people'][i][1] + '</td>';
+        html += '<td>' + new Date(data['people'][i][2] * 1000) + '</td>';
+		html += '<td>';
+			for (var j=0; j < data['people'][i][3].length; j++) {
+				html += data['people'][i][3][j] + '<br>';
+			}
+		html += '</td>'
+		html += '</tr>';
+	}
+	$("#details").html(html);
+
+}
 
 $(document).ready(function() {
     $('#explain').click(code_explain);
@@ -181,6 +199,28 @@ $(document).ready(function() {
 
 	        mysearch(keyword, true);
 	    }
+	});
+
+	$('#email').keypress(function(e) {
+		$("#need-email").hide();
+	});
+
+	$('#admin-show-details').on('click', function(e) {
+		var email = $('#email').val();
+		console.log(email);
+		if (! email) {
+			//console.log('alert');
+			$("#need-email").show();
+			return false;
+		}
+    	$.ajax({
+        	url: '/admin/user_info',
+        	data: { "email" : email },
+        	dataType: "json",
+        	success: admin_show_user_details,
+    	});
+
+		return false;
 	});
 
 	$('a[href^="/pro\\/"]').each(function(i, e) {
