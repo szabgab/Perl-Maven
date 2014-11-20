@@ -1,13 +1,11 @@
 package Perl::Maven;
 use Dancer ':syntax';
 use Dancer::Plugin::Passphrase;
-use Perl::Maven::DB;
 
 our $VERSION = '0.11';
 my $PM_VERSION = 1;  # Version number to force JavaScript and CSS files reload
-my $TIMEOUT            = 60 * 60 * 24 * 365;
-my $MAX_INDEX          = 3;
-my $MAX_FEED           = 10;
+my $MAX_INDEX  = 3;
+my $MAX_FEED   = 10;
 my $MAX_META_FEED      = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
 
@@ -24,9 +22,11 @@ use Storable qw(dclone);
 
 use Web::Feed;
 
-use Perl::Maven::Page;
+use Perl::Maven::DB;
 use Perl::Maven::Config;
+use Perl::Maven::Page;
 use Perl::Maven::Tools;
+use Perl::Maven::WebTools qw(logged_in);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
 require Perl::Maven::Admin;
@@ -1121,17 +1121,6 @@ sub sendmail {
 	}
 
 	$mail->send;
-	return;
-}
-
-sub logged_in {
-	if (    session('logged_in')
-		and session('email')
-		and session('last_seen') > time - $TIMEOUT )
-	{
-		session last_seen => time;
-		return 1;
-	}
 	return;
 }
 
