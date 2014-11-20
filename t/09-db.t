@@ -49,7 +49,8 @@ subtest users => sub {
 		'password_reset_timeout' => undef,
 		'register_time'          => re('\d+'),
 		'verify_code'            => '123',
-		'verify_time'            => undef
+		'verify_time'            => undef,
+		'admin'                  => undef,
 		};
 };
 
@@ -68,7 +69,8 @@ subtest replace_email => sub {
 		'password_reset_timeout' => undef,
 		'register_time'          => re('\d+'),
 		'verify_code'            => '456',
-		'verify_time'            => undef
+		'verify_time'            => undef,
+		'admin'                  => undef,
 		};
 
 	$db->replace_email( 'buzz@nasa.com', 'buzz@buzzaldrin.com' );
@@ -88,7 +90,8 @@ subtest replace_email => sub {
 		'password_reset_timeout' => undef,
 		'register_time'          => re('\d+'),
 		'verify_code'            => '456',
-		'verify_time'            => undef
+		'verify_time'            => undef,
+		'admin'                  => undef,
 		};
 
 };

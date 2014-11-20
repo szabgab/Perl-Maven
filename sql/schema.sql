@@ -6,7 +6,8 @@ CREATE TABLE user (
   password_reset_timeout VARCHAR(11),
   register_time   VARCHAR(11),
   verify_code     VARCHAR(20),
-  verify_time     VARCHAR(11)
+  verify_time     VARCHAR(11),
+  admin           INTEGER
 );
 
 CREATE TABLE product (
