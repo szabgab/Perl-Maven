@@ -90,13 +90,7 @@ Adding a new language (site)
 
 TODO
 -------
-Clean up and move the TODO list to the GitHub issue system?
-
-Change the password reminder (and the other administrative messages)
-to either be just in plain text or include both HTML and plain text version.
-
-Add Free, Pro, Perldoc tags automatically to pages
-Add Audio, Video tags to pages where relevant.
+Clean up and move the TODO list to the GitHub issue system.
 
 Add some color mark to each entry in the archive and on the index page
   showing the tags:
@@ -106,7 +100,6 @@ one in a certain tag.
 
 Add some mark to the user account when the user has purchased the pro account.
 Send e-mail to the person when they bought one of the products
-Change the system to let the user set the password after subscribing.
 
 If I save all the meta information in one json file (or database), the following
 operations are needed:
