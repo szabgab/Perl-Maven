@@ -1,5 +1,6 @@
 
 var show_automatically = false;
+var logged_in = false;
 
 function mysearch(keyword, auto) {
     var url = '/search';
@@ -42,9 +43,12 @@ function display_search_result(data, status, jqXHR) {
 }
 
 function show_intro() {
+	if (logged_in) {
+		return;
+	}
+
 	var this_host = window.location.hostname;
 	//console.log(this_host);
-
 	var referrer_host = document.referrer;
 	if (referrer_host.length > 0) {
 		var match = /https?:\/\/([^:\/]*)/.exec(referrer_host);
@@ -60,12 +64,30 @@ function show_intro() {
 		return;
 	}
 
+	// limit the frequency of the pop-up
+	var now = new Date;
+	var max_frequency = 3; // in days
+	var last_seen = localStorage.getItem('popup_1_date');
+	if (last_seen !== null) {
+		last_seen = new Date(last_seen);
+	    //console.log(last_seen);
+		var day = 1000*60*60*24;
+		//console.log(now.getTime());
+		//console.log(last_seen.getTime());
+		//console.log(day);
+		var diff = (now.getTime()-last_seen.getTime())/day;
+		//console.log(diff);
+		if (diff < max_frequency) {
+			return;
+		}
+	}
 	var n = localStorage.getItem('popup_1_counter');
 	if (n === null) {
 		n = 0;
 	}
 	n++;
 	localStorage.setItem("popup_1_counter", n);
+	localStorage.setItem("popup_1_date", now);
 	$('#popup_1').modal('show')
 }
 
@@ -125,9 +147,9 @@ function code_explain() {
 
 function user_info(data, status, jqXHR) {
 	//console.log(data);
-	if (data == 0) {
-    	setTimeout(show_intro, 1000);
-	}
+	logged_in = data == 1;
+
+   	setTimeout(show_intro, 1000);
 }
 
 
