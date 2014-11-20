@@ -22,32 +22,32 @@ Setup
 clone the Perl-Maven repository ( https://github.com/szabgab/Perl-Maven )
 (or fork in and clone the forked version)
 
-$ git clone https://github.com/szabgab/Perl-Maven.git
+```$ git clone https://github.com/szabgab/Perl-Maven.git```
 
 clone the repository of the articles https://github.com/szabgab/perlmaven.com
 into a directory next to the Perl-Maven directory
 
-$ git clone https://github.com/szabgab/perlmaven.com.git
+```$ git clone https://github.com/szabgab/perlmaven.com.git```
 
 
-somdedir/
-   Perl-Maven/
-   perlmaven.com
+    somdedir/
+        Perl-Maven/
+        perlmaven.com/
 
 Generate the meta files
 
-$ cd Perl-Maven
-$ perl bin/create_meta.pl --all
+    $ cd Perl-Maven
+    $ perl bin/create_meta.pl --all
 
 Configure DNS name resolving of perlmaven.com.local to 127.0.0.1
 (On Linux/Unix add the following line to /etc/hosts :
 
-127.0.0.1 perlmaven.com.local
+    127.0.0.1 perlmaven.com.local
 
 
 Launch the application:
 
-$ perl bin/app.pl
+    $ perl bin/app.pl
 
 Visit  http://perlmaven.com.local:3000/
 
