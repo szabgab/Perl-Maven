@@ -1388,6 +1388,3 @@ sub is_free {
 
 true;
 
-# vim:noexpandtab
-# vim:ts=4
-

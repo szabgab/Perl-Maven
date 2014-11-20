@@ -200,5 +200,3 @@ sub log_paypal {
 
 true;
 
-# vim:noexpandtab
-# vim:ts=4

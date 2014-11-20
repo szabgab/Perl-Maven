@@ -37,5 +37,3 @@ sub circle {
 
 1;
 
-# vim:noexpandtab
-

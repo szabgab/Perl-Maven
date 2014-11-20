@@ -348,5 +348,3 @@ sub delete_verification_code {
 
 1;
 
-# vim:noexpandtab
-

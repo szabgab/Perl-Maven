@@ -302,7 +302,5 @@ sub consultants {
 	save( 'consultants', $config->{meta}, \@people );
 }
 
-# vim:noexpandtab
-
 1;
 

@@ -224,5 +224,3 @@ SCREENCAST
 
 1;
 
-# vim:noexpandtab
-
