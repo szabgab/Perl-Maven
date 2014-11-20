@@ -25,9 +25,9 @@
 <meta name="description" content="<% description %>">
 <meta name="author" content="<% author %>">
 
-<link href="/css/style.css" rel="stylesheet">
+<link href="/css/style.css?<% pm_version %>" rel="stylesheet">
 <% IF conf.rtl %>
-	<link href="/css/rtl.css" rel="stylesheet">
+	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
 <% END %>
 
 </head>

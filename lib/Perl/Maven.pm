@@ -4,6 +4,7 @@ use Dancer::Plugin::Passphrase;
 use Perl::Maven::DB;
 
 our $VERSION = '0.11';
+my $PM_VERSION = 1;  # Version number to force JavaScript and CSS files reload
 my $TIMEOUT            = 60 * 60 * 24 * 365;
 my $MAX_INDEX          = 3;
 my $MAX_FEED           = 10;
@@ -157,17 +158,21 @@ hook before_template => sub {
 		$t->{conf}{google_analytics} = 0;
 	}
 
-	my $host = request->host;
-
-	if ( $host =~ /local(:\d+)?$/ ) {
+	if ( in_development() ) {
 		$t->{social}                 = 0;
 		$t->{comments}               = 0;
 		$t->{conf}{clicky}           = 0;
 		$t->{conf}{google_analytics} = 0;
 	}
 
+	$t->{pm_version} = in_development() ? time : $PM_VERSION;
+
 	return;
 };
+
+sub in_development {
+	return request->host =~ /local(:\d+)?$/;
+}
 
 # Dynamic robots.txt generation to allow dynamic Sitemap URL
 get '/robots.txt' => sub {
