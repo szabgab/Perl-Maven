@@ -127,11 +127,23 @@ function code_explain() {
     //alert($('#code').val());
 }
 
+function user_info(data, status, jqXHR) {
+	//console.log(data);
+	if (data == 0) {
+    	setTimeout(show_intro, 1000);
+	}
+}
+
 
 $(document).ready(function() {
     $('#explain').click(code_explain);
 
-    setTimeout(show_intro, 1000);
+    $.ajax({
+        url: '/logged-in',
+        data: {},
+        dataType: "json",
+        success: user_info,
+    });
 
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );
