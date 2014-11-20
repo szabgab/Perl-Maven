@@ -1,0 +1,21 @@
+<p>
+Admin page. For authorized users only.
+</p>
+
+
+<table>
+<tr><td>Product code</td><td>Number of subscribers</td></tr>
+<% FOR code IN stats.products.sort %>
+   <tr><td><% stats.products.$code.code %></td><td><% stats.products.$code.cnt %></td></tr>
+<% END %>
+</table>
+<hr>
+<table>
+<tr><td>Total 'purchases':</td><td><% stats.all_subs %></td></tr>
+<tr><td>Distinct # of clients:</td><td><% stats.distinct_subs %></td></tr>
+<tr><td>All the users</td><td><% stats.all_users %></td></tr>
+<tr><td>Verified</td><td><% stats.all_users - stats.not_verified %></td></tr>
+<tr><td>NOT Verified</td><td><% stats.not_verified %></td></tr>
+<tr><td>Verified but NO password</td><td><% stats.no_password %>
+</table>
+
