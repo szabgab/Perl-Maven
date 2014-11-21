@@ -15,11 +15,12 @@ psgi_start();
 
 my $url            = 'http://test-perl-maven.com';
 my $EMAIL          = 'gabor@perlmaven.com';
+my $EMAIL2         = 'other@perlmaven.com';
 my @PASSWORD       = ( '123456', 'abcdef', );
 my $sha1_of_abcdef = 'H4rBDyPFtbwRZ72oS4M+XAV6d9I';
 my @NAMES          = ( 'Foo Bar', );
 
-plan tests => 6;
+plan tests => 7;
 
 my $cookbook_url
 	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
@@ -44,7 +45,7 @@ my $visitor = Test::WWW::Mechanize::PSGI->new( app => $app );
 diag 'subscribe to free newsletter, let them download the cookbook';
 
 subtest pages => sub {
-	plan tests => 17;
+	plan tests => 19;
 
 	$visitor->get_ok($url);
 	$visitor->content_like(qr/Some text comes here/);
@@ -71,6 +72,10 @@ subtest pages => sub {
 	is $visitor->base, "$url/", 'redirected to root';
 
 	$visitor->get_ok('/account');
+	is $visitor->base, "$url/login", 'redirected to login page';
+
+# strangely for this post() request I had to supply the full URL or it would go to http://localhost/
+	$visitor->post_ok("$url/change-email");
 	is $visitor->base, "$url/login", 'redirected to login page';
 
 	#diag $visitor->content;
@@ -323,6 +328,8 @@ subtest 'change password while logged in' => sub {
 	$w->content_is(1);
 
 	#diag($w->content);
+
+	# TODO check thet the password of other users has not changed
 };
 
 subtest 'name' => sub {
@@ -382,6 +389,49 @@ subtest 'upgrade_pw' => sub {
 	# white-box:
 	my $user_after = $db->get_user_by_email($EMAIL);
 	is substr( $user_after->{password}, 0, 7 ), '{CRYPT}';
+};
+
+subtest change_email => sub {
+	plan tests => 11;
+
+	$w->get_ok('/account');
+	$w->submit_form_ok(
+		{
+			form_name => 'change_email',
+			fields    => {
+				email => $EMAIL2,
+			},
+		},
+		'change_email'
+	);
+
+	my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
+	unlink $ENV{PERL_MAVEN_MAIL};
+
+	my $mail_regex = qr{<a href="($url/verify2/\w+)">verify</a>};
+	my ($set_url) = $mail =~ $mail_regex;
+	ok $set_url, 'mail with set url address';
+	diag $set_url;
+
+	$w->get_ok("$url/verify2/1234567");
+	$w->content_like( qr{Invalid or expired verification code.},
+		'invalid verification code' );
+
+	my $before = $db->get_user_by_id(1);
+	is $before->{email}, $EMAIL, 'old email';
+
+	$w->get_ok($set_url);
+	$w->content_like( qr{Email updated successfully.},
+		'updated successfully mesage' );
+
+	my $after = $db->get_user_by_id(1);
+	is $after->{email}, $EMAIL2, 'old email';
+
+	$w->get_ok($set_url);
+	$w->content_like( qr{Invalid or expired verification code.},
+		'invalid verification code' );
+
+	# TODO check that the e-mail of other users has not chaged
 };
 
 # when a user sets his password consider that user to have been verified (after all he got the code)
