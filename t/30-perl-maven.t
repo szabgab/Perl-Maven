@@ -443,20 +443,4 @@ subtest change_email => sub {
 	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';
 };
 
-# when a user sets his password consider that user to have been verified (after all he got the code)
-# even he did not click on the verify link.
-
-# after verifying the e-mail allow the user to set his her password
-# after logging in
-#   Allow user to mark "unregistered" from the Perl Maven newsletter (but keep e-mail, passsword)
-#   If registered to the mailing list, let the person download the latest edition of the cookbook
-
-# login
-# reset password (send code, allow typing in a password 6+ characters)
-# After reseting the password and after verifying the e-mail address the user should be already logged in
-#
-# Allow admin to send e-mail to all the subscribers
-#
-# Allow user to buy another item
-# A hisory of purchases
 
