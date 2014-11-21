@@ -15,6 +15,7 @@ use Data::Dumper qw(Dumper);
 use DateTime;
 use Digest::SHA;
 use Email::Valid;
+use Fcntl qw(:flock SEEK_END);
 use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
@@ -78,6 +79,10 @@ sub log_request {
 	return if $SKIP{ request->uri };
 
 	my $time = time;
+	my $dir = path( config->{appdir}, 'logs' );
+	mkdir $dir if not -e $dir;
+	my $file = path( $dir,
+		POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
 
 	# direct access
 	my $ip = request->remote_address;
@@ -91,32 +96,26 @@ sub log_request {
 	}
 
 	my %details = (
+		sid      => session('id'),
 		time     => $time,
 		host     => request->host,
 		page     => request->uri,
 		referrer => request->referer,
 		ip       => $ip,
 	);
-
 	if (logged_in) {
 
 		# TODO store in the database
 		# TODO if there are entries in the session, move them to the database
+		#$datails{uid} = session('uid');
 	}
 
-	my $pages = session('pages');
-	if ( defined $pages ) {
-		$pages = eval { from_json $pages};
-		$pages = [] if $@;
+	if ( open my $fh, '>>', $file ) {
+		flock( $fh, LOCK_EX ) or return;
+		seek( $fh, 0, SEEK_END ) or return;
+		say $fh to_json \%details, { pretty => 0, canonical => 1 };
+		close $fh;
 	}
-	else {
-		$pages = [];
-	}
-
-	# TODO: if logged_in save this to the database
-	#$env->{HTTP_X_REAL_IP}
-	push @$pages, \%details;
-	session pages => to_json $pages;
 	return;
 }
 
