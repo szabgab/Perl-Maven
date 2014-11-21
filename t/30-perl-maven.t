@@ -41,17 +41,7 @@ my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 
 my $visitor = Test::WWW::Mechanize::PSGI->new( app => $app );
 
-diag
-	'subscribe to free Perl Maven newsletter, let them download the cookbook';
-
-# There can be products downloadable by any visitor
-#                                    by registered user
-#                                    by user subscribed to mailing list (a free product)
-#                                    by owner of a product
-# There can be individual pages viewable
-#                                    by
-#                                    by registered user
-#                                    by owner of a product
+diag 'subscribe to free newsletter, let them download the cookbook';
 
 subtest pages => sub {
 	plan tests => 17;
