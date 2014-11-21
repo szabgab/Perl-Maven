@@ -68,7 +68,42 @@ hook before => sub {
 		host => request->host,
 		meta => mymaven->{meta}
 	);
+
+	log_request();
 };
+
+sub log_request {
+	return if request->uri =~ m{^/img/};
+	my %SKIP = map { $_ => 1 } qw(/logged-in);
+	return if $SKIP{ request->uri };
+
+	my $time = time;
+
+	#session last_seen => $time;
+
+	my $pages = session('pages');
+	if ( defined $pages ) {
+		$pages = eval { from_json $pages};
+		$pages = [] if $@;
+	}
+	else {
+		$pages = [];
+	}
+
+	# TODO: if logged_in save this to the database
+	#$env->{HTTP_X_REAL_IP}
+	push @$pages, {
+		time     => $time,
+		page     => request->uri,
+		referrer => request->referer,
+
+		#forwarded_host => request->forwarded_host,
+		forwarded_for_address => request->forwarded_for_address,
+		ip                    => request->remote_address,
+	};
+	session pages => to_json $pages;
+	return;
+}
 
 hook before_template => sub {
 	my $t = shift;
