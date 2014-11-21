@@ -79,7 +79,30 @@ sub log_request {
 
 	my $time = time;
 
-	#session last_seen => $time;
+	# direct access
+	my $ip = request->remote_address;
+	if ( $ip eq '::ffff:127.0.0.1' ) {
+
+		# forwarded by Nginx
+		my $forwarded = request->forwarded_for_address;
+		if ($forwarded) {
+			$ip = $forwarded;
+		}
+	}
+
+	my %details = (
+		time     => $time,
+		host     => request->host,
+		page     => request->uri,
+		referrer => request->referer,
+		ip       => $ip,
+	);
+
+	if (logged_in) {
+
+		# TODO store in the database
+		# TODO if there are entries in the session, move them to the database
+	}
 
 	my $pages = session('pages');
 	if ( defined $pages ) {
@@ -92,15 +115,7 @@ sub log_request {
 
 	# TODO: if logged_in save this to the database
 	#$env->{HTTP_X_REAL_IP}
-	push @$pages, {
-		time     => $time,
-		page     => request->uri,
-		referrer => request->referer,
-
-		#forwarded_host => request->forwarded_host,
-		forwarded_for_address => request->forwarded_for_address,
-		ip                    => request->remote_address,
-	};
+	push @$pages, \%details;
 	session pages => to_json $pages;
 	return;
 }
