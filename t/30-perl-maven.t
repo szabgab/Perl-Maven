@@ -16,7 +16,8 @@ psgi_start();
 my $url            = 'http://test-perl-maven.com';
 my $EMAIL          = 'gabor@perlmaven.com';
 my $EMAIL2         = 'other@perlmaven.com';
-my @PASSWORD       = ( '123456', 'abcdef', );
+my $EMAIL3         = 'zorg@perlmaven.com';
+my @PASSWORD       = ( '123456', 'abcdef', 'secret' );
 my $sha1_of_abcdef = 'H4rBDyPFtbwRZ72oS4M+XAV6d9I';
 my @NAMES          = ( 'Foo Bar', );
 
@@ -160,6 +161,11 @@ subtest 'subscribe' => sub {
 	is $w->content, 0;
 };
 
+{
+	my $id = $db->add_registration( $EMAIL3, '123' );
+	$db->set_password( $id, $PASSWORD[2] );
+}
+
 # ask the system to send a password reminder, use the link to set the password
 # log out and then login again
 subtest 'ask for password reset, then login' => sub {
@@ -254,7 +260,7 @@ subtest 'ask for password reset, then login' => sub {
 # log out and check if we fail to log in with
 # the old password but we can log in with the new.
 subtest 'change password while logged in' => sub {
-	plan tests => 19;
+	plan tests => 20;
 
 	$w->get_ok('/account');
 
@@ -329,7 +335,9 @@ subtest 'change password while logged in' => sub {
 
 	#diag($w->content);
 
-	# TODO check thet the password of other users has not changed
+	my $other_user = $db->get_user_by_id(2);
+	is $other_user->{password}, $PASSWORD[2],
+		'other use still exists with old password';
 };
 
 subtest 'name' => sub {
@@ -392,7 +400,7 @@ subtest 'upgrade_pw' => sub {
 };
 
 subtest change_email => sub {
-	plan tests => 11;
+	plan tests => 12;
 
 	$w->get_ok('/account');
 	$w->submit_form_ok(
@@ -431,7 +439,8 @@ subtest change_email => sub {
 	$w->content_like( qr{Invalid or expired verification code.},
 		'invalid verification code' );
 
-	# TODO check that the e-mail of other users has not chaged
+	my $other_user = $db->get_user_by_id(2);
+	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';
 };
 
 # when a user sets his password consider that user to have been verified (after all he got the code)
