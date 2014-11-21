@@ -1213,7 +1213,7 @@ sub sendmail {
 
 sub _generate_code {
 	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
-	my $code = '';
+	my $code = time;
 	$code .= $chars[ rand( scalar @chars ) ] for 1 .. 20;
 	return $code;
 }
