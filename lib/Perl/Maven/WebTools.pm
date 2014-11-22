@@ -10,7 +10,6 @@ our @EXPORT_OK = qw(logged_in is_admin);
 
 sub logged_in {
 
-	# converting old sessions with e-mail addresses to new sessions with uid
 	#my $email = session('email');
 	#if ($email) {
 	#	my $db   = setting('db');
