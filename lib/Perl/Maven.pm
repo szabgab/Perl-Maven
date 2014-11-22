@@ -1293,6 +1293,8 @@ sub read_sites {
 	return from_yaml $yaml;
 }
 
+# Each site can have a file called resources.txt with rows of key=value pairs
+# This is text messages and translated text messages.
 sub read_resources {
 	my %resources;
 	open my $fh, '<encoding(UTF-8)', mymaven->{site} . '/resources.txt'
