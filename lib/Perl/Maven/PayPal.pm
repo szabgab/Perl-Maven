@@ -2,6 +2,7 @@ package Perl::Maven::PayPal;
 use Dancer ':syntax';
 use Perl::Maven::DB;
 use Perl::Maven::Config;
+use Perl::Maven::WebTools qw(logged_in);
 
 use POSIX;
 use Data::Dumper qw(Dumper);
@@ -17,7 +18,8 @@ sub mymaven {
 	return $mymaven->config( request->host );
 }
 
-# Start by requireing the user to be loged in first
+# TODO fix PayPal connection
+# Start by requiring the user to be loged in first
 
 # Plan:
 # If user logged in, add purchase information to his account
@@ -31,7 +33,7 @@ sub mymaven {
 # If this is a new e-mail, save the data as a new user and
 # at the end of the transaction ask the user if he already
 # has an account or if a new one should be created?
-# If he wants to use the existing account, ask for credentials,
+# If the user wants to use the existing account, ask for credentials,
 # after successful login merge the two accounts
 
 # last_name
@@ -39,10 +41,9 @@ sub mymaven {
 # payer_email
 
 get '/buy' => sub {
-	if ( not Perl::Maven::logged_in() ) {
+	if ( not logged_in() ) {
 		return template 'error', { please_log_in => 1 };
-
-		# TODO redirect back the user once logged in!!!
+		session url => request->path;
 	}
 	my $products = setting('products');
 	my $what     = param('product');
@@ -165,7 +166,7 @@ sub paypal_buy {
 
 	my $paypal_data = session('paypal') || {};
 
-	my $uid = Perl::Maven::logged_in() ? session('uid') : '';
+	my $uid = logged_in() ? session('uid') : '';
 	my %data = (
 		what     => $what,
 		quantity => $quantity,
