@@ -263,11 +263,6 @@ get '/foobar' => sub {
 	);
 };
 
-#get qr{/style.css} => sub {
-#	my $path = path(config->{appdir}, (splat)[0]);
-#	send_file($path);
-#};
-
 get '/contributor/:name' => sub {
 	my $name = param('name');
 	if ( request->host !~ /^meta\./ ) {
