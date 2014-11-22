@@ -80,7 +80,7 @@ elsif ( $opt{replace} and $opt{email} ) {
 	show_people( $opt{replace} );
 }
 elsif ( $opt{addsub} and $opt{email} ) {
-	my $res = $db->subscribe_to( $opt{email}, $opt{addsub} );
+	my $res = $db->subscribe_to( email => $opt{email}, code => $opt{addsub} );
 	if ($res) {
 		usage("Could not find product '$opt{addsub}'")
 			if $res eq 'no_such_code';
@@ -91,7 +91,8 @@ elsif ( $opt{addsub} and $opt{email} ) {
 	show_people( $opt{email} );
 }
 elsif ( $opt{unsub} and $opt{email} ) {
-	my $res = $db->unsubscribe_from( $opt{email}, $opt{unsub} );
+	my $res
+		= $db->unsubscribe_from( email => $opt{email}, code => $opt{unsub} );
 
 	#print "PID: $pid  UID: $uid\n";
 	if ($res) {

@@ -123,7 +123,10 @@ hook before_template => sub {
 	my $t = shift;
 	$t->{title} ||= '';
 	if ( logged_in() ) {
-		( $t->{username} ) = split /@/, session 'email';
+		my $uid   = session('uid');
+		my $user  = $db->get_user_by_id($uid);
+		my $email = $user->{email};
+		( $t->{username} ) = split /@/, $email;
 	}
 
 # we assume that the whole complex is written in one leading language
@@ -525,9 +528,8 @@ post '/change-password' => sub {
 	return template 'error', { bad_password => 1, }
 		if length($password) < 6;
 
-	my $email = session('email');
-	my $user  = $db->get_user_by_email($email);
-	$db->set_password( $user->{id}, passphrase($password)->generate );
+	my $uid = session('uid');
+	$db->set_password( $uid, passphrase($password)->generate );
 
 	template 'error', { password_set => 1 };
 };
@@ -544,7 +546,7 @@ post '/set-password' => sub {
 		if not $password
 		or length($password) < 6;
 
-	session email     => $user->{email};
+	session uid       => $user->{id};
 	session logged_in => 1;
 	session last_seen => time;
 
@@ -561,9 +563,8 @@ post '/update-user' => sub {
 
 	my $name = param('name') || '';
 
-	my $email = session('email');
-	my $user  = $db->get_user_by_email($email);
-	$db->update_user( $user->{id}, name => $name );
+	my $uid = session('uid');
+	$db->update_user( $uid, name => $name );
 
 	template 'error', { user_updated => 1 };
 };
@@ -598,7 +599,7 @@ post '/login' => sub {
 		$db->set_password( $user->{id}, passphrase($password)->generate );
 	}
 
-	session email     => $user->{email};
+	session uid       => $user->{id};
 	session logged_in => 1;
 	session last_seen => time;
 
@@ -613,17 +614,17 @@ post '/login' => sub {
 get '/unsubscribe' => sub {
 	return redirect '/login' if not logged_in();
 
-	my $email = session('email');
+	my $uid = session('uid');
 
-	$db->unsubscribe_from( $email, 'perl_maven_cookbook' );
+	$db->unsubscribe_from( uid => $uid, code => 'perl_maven_cookbook' );
 	template 'error', { unsubscribed => 1 };
 };
 
 get '/subscribe' => sub {
 	return redirect '/login' if not logged_in();
 
-	my $email = session('email');
-	$db->subscribe_to( $email, 'perl_maven_cookbook' );
+	my $uid = session('uid');
+	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
 	template 'error', { subscribed => 1 };
 };
 
@@ -727,14 +728,14 @@ post '/change-email' => sub {
 		return template 'error', { email_exists => 1 };
 	}
 
-	my $user = $db->get_user_by_email( session('email') );
+	my $uid = session('uid');
 
 	my $code = _generate_code();
 	$db->save_verification(
 		code      => $code,
 		action    => 'change_email',
 		timestamp => time,
-		uid       => $user->{id},
+		uid       => $uid,
 		details   => to_json {
 			new_email => $email,
 		},
@@ -767,8 +768,10 @@ get '/logout' => sub {
 get '/account' => sub {
 	return redirect '/login' if not logged_in();
 
-	my $email         = session('email');
-	my @subscriptions = $db->get_subscriptions($email);
+	my $uid  = session('uid');
+	my $user = $db->get_user_by_id($uid);
+
+	my @subscriptions = $db->get_subscriptions( $user->{email} );
 	my @owned_products;
 	foreach my $code (@subscriptions) {
 		my @files = get_download_files($code);
@@ -793,14 +796,12 @@ get '/account' => sub {
 		}
 	}
 
-	my $user = $db->get_user_by_email($email);
-
 	template 'account',
 		{
 		subscriptions => \@owned_products,
-		subscribed    => $db->is_subscribed( $email, 'perl_maven_cookbook' ),
+		subscribed    => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
 		name          => $user->{name},
-		email         => $email,
+		email         => $user->{email},
 		};
 };
 
@@ -814,7 +815,7 @@ get '/download/:dir/:file' => sub {
 	return redirect '/' if not setting('products')->{$dir};  # no such product
 
 	# check if the user is really subscribed to the newsletter?
-	return redirect '/' if not $db->is_subscribed( session('email'), $dir );
+	return redirect '/' if not $db->is_subscribed( session('uid'), $dir );
 
 	send_file( path( mymaven->{dirs}{download}, $dir, $file ),
 		system_path => 1 );
@@ -824,7 +825,7 @@ get qr{^/pro/?$} => sub {
 	my $product = 'perl_maven_pro';
 	my $path    = mymaven->{site} . '/pages/pro.tt';
 	my $promo   = 1;
-	if ( logged_in() and $db->is_subscribed( session('email'), $product ) ) {
+	if ( logged_in() and $db->is_subscribed( session('uid'), $product ) ) {
 		$promo = 0;
 	}
 	return _show_abstract( { path => $path, promo => $promo } );
@@ -845,7 +846,7 @@ get qr{/pro/(.+)} => sub {
 	pass if is_free("/pro/$article");
 	pass
 		if logged_in()
-		and $db->is_subscribed( session('email'), $product );
+		and $db->is_subscribed( session('uid'), $product );
 
 	session url => request->path;
 
@@ -907,9 +908,9 @@ get '/verify/:id/:code' => sub {
 		return template 'verify_form', { error => 1, };
 	}
 
-	$db->subscribe_to( $user->{email}, 'perl_maven_cookbook' );
+	$db->subscribe_to( uid => $user->{id}, code => 'perl_maven_cookbook' );
 
-	session email     => $user->{email};
+	session uid       => $user->{id};
 	session logged_in => 1;
 	session last_seen => time;
 
@@ -1009,7 +1010,7 @@ get qr{/media/(.+)} => sub {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber'
-			if not $db->is_subscribed( session('email'), $product );
+			if not $db->is_subscribed( session('uid'), $product );
 	}
 
 	push_header 'X-Accel-Redirect' => "/send/$item";

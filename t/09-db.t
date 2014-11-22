@@ -137,22 +137,34 @@ subtest subscriptions => sub {
 
 	my @subs = $db->get_subscriptions('foo@bar.com');
 	is_deeply \@subs, [];
-	$db->subscribe_to( 'foo@bar.com', 'beginner_perl_maven_ebook' );
+	$db->subscribe_to(
+		email => 'foo@bar.com',
+		code  => 'beginner_perl_maven_ebook'
+	);
 
 	@subs = $db->get_subscriptions('foo@bar.com');
 	is_deeply \@subs, ['beginner_perl_maven_ebook'], 'subscribed';
 
-	$db->subscribe_to( 'foo@bar.com', 'mars_landing_handbook' );
+	$db->subscribe_to(
+		email => 'foo@bar.com',
+		code  => 'mars_landing_handbook'
+	);
 	@subs = $db->get_subscriptions('foo@bar.com');
 	is_deeply \@subs,
 		[ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ],
 		'subscribed';
 
-	$db->unsubscribe_from( 'foo@bar.com', 'mars_landing_handbook' );
+	$db->unsubscribe_from(
+		email => 'foo@bar.com',
+		code  => 'mars_landing_handbook'
+	);
 	@subs = $db->get_subscriptions('foo@bar.com');
 	is_deeply \@subs, ['beginner_perl_maven_ebook'], 'subscribed';
 
-	$db->unsubscribe_from( 'foo@bar.com', 'beginner_perl_maven_ebook' );
+	$db->unsubscribe_from(
+		email => 'foo@bar.com',
+		code  => 'beginner_perl_maven_ebook'
+	);
 	@subs = $db->get_subscriptions('foo@bar.com');
 	is_deeply \@subs, [];
 

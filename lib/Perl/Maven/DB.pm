@@ -145,35 +145,38 @@ sub get_subscribers {
 }
 
 sub is_subscribed {
-	my ( $self, $email, $code ) = @_;
+	my ( $self, $id, $code ) = @_;
 
 	my ($subscribed) = $self->{dbh}->selectrow_array(
 		q{
 		SELECT COUNT(*)
 		FROM subscription, product, user
 		WHERE user.id=subscription.uid
-			AND user.email=?
+			AND user.id=?
 			AND product.code=?
 			AND product.id=subscription.pid
-	}, undef, $email, $code
+	}, undef, $id, $code
 	);
 
 	return $subscribed;
 }
 
 sub subscribe_to {
-	my ( $self, $email, $code ) = @_;
+	my ( $self, %args ) = @_;
 
 	my ($pid)
 		= $self->{dbh}
 		->selectrow_array( q{SELECT product.id FROM product WHERE code=?},
-		undef, $code );
+		undef, $args{code} );
 	return 'no_such_code' if not $pid;
 
-	my ($uid)
-		= $self->{dbh}
-		->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
-		undef, $email );
+	my $uid = $args{uid};
+	if ( not $uid ) {
+		($uid)
+			= $self->{dbh}
+			->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
+			undef, $args{email} );
+	}
 	return 'no_such_email' if not $uid;
 
 	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid) VALUES (?, ?)',
@@ -183,19 +186,22 @@ sub subscribe_to {
 }
 
 sub unsubscribe_from {
-	my ( $self, $email, $code ) = @_;
+	my ( $self, %args ) = @_;
 
 	my ($pid)
 		= $self->{dbh}
 		->selectrow_array( q{SELECT product.id FROM product WHERE code=?},
-		undef, $code );
+		undef, $args{code} );
 	return 'no_such_code' if not $pid;
 
-	my ($uid)
-		= $self->{dbh}
-		->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
-		undef, $email );
-	return 'no_such_email' if not $uid;
+	my $uid = $args{uid};
+	if ( not $uid ) {
+		($uid)
+			= $self->{dbh}
+			->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
+			undef, $args{email} );
+		return 'no_such_email' if not $uid;
+	}
 
 	$self->{dbh}->do( 'DELETE FROM subscription WHERE uid=? AND pid=?',
 		undef, $uid, $pid );

@@ -96,7 +96,8 @@ any '/paypal' => sub {
 		my $email = $paypal_data->{email};
 
   #debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
-		setting('db')->subscribe_to( $email, $paypal_data->{what} );
+		setting('db')
+			->subscribe_to( email => $email, code => $paypal_data->{what} );
 		log_paypal( 'IPN-ok', \%query );
 		return 'ipn-ok';
 	}
@@ -164,12 +165,12 @@ sub paypal_buy {
 
 	my $paypal_data = session('paypal') || {};
 
-	my $email = Perl::Maven::logged_in() ? session('email') : '';
+	my $uid = Perl::Maven::logged_in() ? session('uid') : '';
 	my %data = (
 		what     => $what,
 		quantity => $quantity,
 		usd      => $usd,
-		email    => $email,
+		uid      => $uid,
 	);
 	$paypal_data->{$id} = \%data;
 	session paypal => $paypal_data;

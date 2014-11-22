@@ -9,22 +9,32 @@ use Exporter qw(import);
 our @EXPORT_OK = qw(logged_in is_admin);
 
 sub logged_in {
+
+	# converting old sessions with e-mail addresses to new sessions with uid
+	#my $email = session('email');
+	#if ($email) {
+	#	my $db   = setting('db');
+	#	my $user  = $db->get_user_by_email($email);
+	#	session uid => $user->{id};
+	#	session email => undef;
+	#}
+
 	if (    session('logged_in')
-		and session('email')
+		and session('uid')
 		and session('last_seen') > time - $TIMEOUT )
 	{
 		session last_seen => time;
 		return 1;
 	}
 	return;
+
 }
 
 sub is_admin {
 	return if not logged_in();
 
-	#die session('email');
 	my $db   = setting('db');
-	my $user = $db->get_user_by_email( session('email') );
+	my $user = $db->get_user_by_id( session('uid') );
 	return if not $user or not $user->{admin};
 	return 1;
 }
