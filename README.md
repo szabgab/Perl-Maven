@@ -17,7 +17,7 @@ With that said, you are more than welcome to try the application, give feedback,
 suggest bug fixes, features, changes etc.
 
 Setup
-----------
+==========
 
 clone the Perl-Maven repository ( https://github.com/szabgab/Perl-Maven )
 (or fork in and clone the forked version)
@@ -59,6 +59,13 @@ Then you can visit http://ko.perlmaven.com.local:3000/
 though the links between the language will lead to the production site.
 
 
+Contribution
+===============
+
+Before contributing anything beyond really simple fixes, please open an issue and then
+in each commit message mention that issue. That will make it easier later to map changes
+to features.
+
 
 Third-party sources
 ------------------------
@@ -86,61 +93,6 @@ Adding a new language (site)
 * Add site to the  app.psgi and restart Starman on the server
 * Updating the mymaven.yml configuration file is optional
 
-
-
-TODO
--------
-Clean up and move the TODO list to the GitHub issue system.
-
-Add some color mark to each entry in the archive and on the index page
-  showing the tags:
-      Interview, Pro, Free, Video, Audio, Perldoc
-Create separate listing (probably paged) listing all the enties or only
-one in a certain tag.
-
-Add some mark to the user account when the user has purchased the pro account.
-Send e-mail to the person when they bought one of the products
-
-If I save all the meta information in one json file (or database), the following
-operations are needed:
-  list the most recent pages
-     filtered by one or more tags
-     filtered by a keyword
-     filtered based on show mode (archive, index, feed ...)
-     limited to N (or not limited), maybe paged
-     sometimes include abstract, sometime not
-
-Allow user to subscribe (by e-mail) to any combination of these:
-  *) free articles
-  *) interviews
-  *) Pro articles
-  Subscribe []
-  Everything []
-  Or select:
-    Free:
-    Pro:
-    TV:
-  In the database:
-  news_all
-  news_free
-  news_pro
-  news_tv
-
-
-Feeds of any combination of these
-  *) free articles
-  *) interviews
-  *) pro articles
-  /atom  = everything
-  /atom?free=1&pro=1&tv=1  = everything
-  /tv/atom should redirect to /atom?tv=1
-
-
-podfeed:
-Philip Durbin
-podcatcher http://en.wikipedia.org/wiki/List_of_podcatchers
-https://github.com/inoks/dropcast can make a feed. I subscribe to feeds in BeyondPod on Android.
-You could make a feed for all of us to subscribe to the audio at http://huffduffer.com
 
 Registration and purchase process
 =================================
