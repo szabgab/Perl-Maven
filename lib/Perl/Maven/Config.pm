@@ -112,9 +112,8 @@ sub realhost {
 
 sub host {
 	my ($host) = @_;
-	$host =~ s/:.*//;                  # remove port
-	$host =~ s/\.(local|linux|win32)$//g
-		; # development environemts domain.com.linux or domain.com.win32 or domain.com.local
+	$host =~ s/:.*//;          # remove port
+	$host =~ s/\.local$//g;    # development environemt domain.com.local
 	return $host;
 }
 
