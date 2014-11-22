@@ -355,11 +355,10 @@ get '/about' => sub {
 	my $pages = setting('tools')->read_meta_array('archive');
 	my %cont;
 	foreach my $p (@$pages) {
-		if ( $p->{translator} and $p->{translator} ) {
+		if ( $p->{translator} ) {
 			$cont{ $p->{translator} }++;
 		}
-		if ( $p->{author} and $p->{author} ne 'szabgab' )
-		{    # TODO remove hardcoding
+		if ( $p->{author} ) {
 			$cont{ $p->{author} }++;
 		}
 	}
