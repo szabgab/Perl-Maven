@@ -443,4 +443,3 @@ subtest change_email => sub {
 	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';
 };
 
-
