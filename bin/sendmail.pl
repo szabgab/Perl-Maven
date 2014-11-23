@@ -31,7 +31,7 @@ $mymaven = $config;
 my $from = $mymaven->{from};
 
 my %opt;
-GetOptions( \%opt, 'to=s@', 'url=s', 'send', ) or usage();
+GetOptions( \%opt, 'to=s@', 'exclude=s@', 'url=s', 'send', ) or usage();
 usage() if not $opt{to} or not $opt{url};
 
 my ( $subject, %content ) = build_content();
@@ -66,11 +66,29 @@ sub send_messages {
 			my $total  = scalar @$emails;
 			say "Including $total number of addresses ($to)";
 			foreach my $email (@$emails) {
-				my $address = $email->[0];
 				$todo{ $email->[0] } = $email->[1];
 			}
 		}
 	}
+	foreach my $no ( @{ $opt{exclude} } ) {
+		if ( $no =~ /\@/ ) {
+			if ( exists $todo{$no} ) {
+				delete $todo{$no};
+				say "Excluding 1 ($no)";
+			}
+		}
+		else {
+			my $emails = $db->get_subscribers($no);
+			my $total  = scalar @$emails;
+			say "Excluding $total number of addresses ($no)";
+			foreach my $email (@$emails) {
+				if ( exists $todo{ $email->[0] } ) {
+					delete $todo{ $email->[0] };
+				}
+			}
+		}
+	}
+
 	my $planned = scalar keys %todo;
 	say "Total number of addresses: $planned";
 	my $count = 0;
@@ -178,6 +196,8 @@ Usage: $0 --url http://url
 
     --to mail\@address.com
 #    --to all                      (all the subscribers) currently not supported
+
+    --exclude       Anything that --to can accept - excluded these
 
 END_USAGE
 
