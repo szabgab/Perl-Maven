@@ -134,7 +134,7 @@ sub get_subscribers {
 
 	return $self->{dbh}->selectall_arrayref(
 		q{
-	   SELECT email
+	   SELECT email, user.id
 	   FROM user, subscription, product
 	   WHERE user.id=subscription.uid
 	     AND user.verify_time is not null

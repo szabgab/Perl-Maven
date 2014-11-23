@@ -54,36 +54,32 @@ sub build_content {
 }
 
 sub send_messages {
-	my %sent;
-	my $count   = 0;
-	my $planned = 0;
+	my %todo;
+
 	foreach my $to ( @{ $opt{to} } ) {
 		if ( $to =~ /\@/ ) {
-			$planned++;
-			next if $sent{$to};
-			send_mail($to);
-			$count++;
-			$sent{$to} = 1;
+			$todo{$to} //= 0;
+			say "Including 1 ($to)";
 		}
 		else {
 			my $emails = $db->get_subscribers($to);
-
-			#'perl_maven_cookbook'
-			#die Dumper $emails;
-			my $total = scalar @$emails;
-			print "Sending to $total number of addresses\n";
-			next if not $opt{send};
+			my $total  = scalar @$emails;
+			say "Including $total number of addresses ($to)";
 			foreach my $email (@$emails) {
-				$planned++;
 				my $address = $email->[0];
-				next if $sent{$address};
-				$count++;
-				$sent{$address} = 1;
-				say "$count out of $total to $address";
-				send_mail($address);
-				sleep 1;
+				$todo{ $email->[0] } = $email->[1];
 			}
 		}
+	}
+	my $planned = scalar keys %todo;
+	say "Total number of addresses: $planned";
+	my $count = 0;
+	foreach my $to ( sort { $todo{$a} <=> $todo{$b} } keys %todo ) {
+		$count++;
+		say "$count out of $planned to $to";
+		next if not $opt{send};
+		send_mail($to);
+		sleep 1;
 	}
 	say "Total sent $count. Planned: $planned";
 	return;
