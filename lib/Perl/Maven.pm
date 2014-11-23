@@ -134,7 +134,7 @@ hook before_template => sub {
 # and some of the pages are to other languages The domain-site give the name of the
 # default language and this is the same content that is displayed on the site
 # without a hostname: 	# http://domain.com
-	my $original_language = mymaven->{domain}{site};
+	my $original_language = mymaven->{main_site};
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
 	my $data = setting('tools')->read_meta_hash('keywords');

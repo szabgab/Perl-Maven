@@ -41,18 +41,10 @@ sub new {
 sub config {
 	my ( $self, $fullhost ) = @_;
 
-	my $host = host($fullhost);
-	my $domain;
-	if ( $host =~ /([^.]+\.(com|net|org))$/ ) {
-		$domain = $1;
-	}
-	elsif ( $host =~ /([^.]+\.[^.]+\.[^.]+)$/ ) {
-		$domain = $1;
-	}
-	else {
-		die "Could not map '$host' to domain";
-	}
-	my $lang = substr( $host, 0, -length($domain) - 1 ) || 'en';
+	my $mymaven = dclone $self->{config}{installation};
+	my $host    = host($fullhost);
+	my $domain  = $mymaven->{domain};
+	my $lang    = substr( $host, 0, -length($domain) - 1 ) || 'en';
 
 	die 'localhost is not supported'
 		if $host =~ /localhost/;    # avoid stupid mistakes
@@ -65,8 +57,6 @@ sub config {
 	#return config->{mymaven}{default};
 	#}
 
-	my $config  = $self->{config};
-	my $mymaven = dclone $config->{$domain};
 	$mymaven->{lang} = $lang;
 	my $host_config = $mymaven->{sites}{$host};
 	if ($host_config) {

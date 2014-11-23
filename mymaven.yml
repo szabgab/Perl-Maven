@@ -8,10 +8,10 @@
 # root: where the whole site lives, see the layout on https://github.com/szabgab/perlmaven.com
 # meta: where the meta files are generated and read from
 
-perlmaven.com:
-  domain:
-    site: en
-    redirect: 0
+installation:
+  domain: perlmaven.com
+  main_site: en
+    #redirect: 0
   www:
     redirect: http://perlmaven.com/
   root: '../perlmaven.com'
