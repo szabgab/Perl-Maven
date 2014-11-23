@@ -32,7 +32,9 @@ In order to subscribe to the Perl Maven Pro, first
 to the web site, and then pay via PayPal:
 </p>
 <p>
-<div class="btn"><a href="/buy?product=perl_maven_pro">Subscribe for just $9 per month</a></div>
+<div class="btn"><a href="/buy?product=perl_maven_pro">Subscribe for $9 per month</a></div>
+or
+<div class="btn"><a href="/buy?product=perl_maven_pro&type=trial">Subscribe for $9 per month, first month FREE!</a></div>
 or
 <div class="btn"><a href="/buy?product=perl_maven_pro&type=annual">$90 per year</a></div>
 </p>

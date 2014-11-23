@@ -134,15 +134,26 @@ sub paypal_buy {
 			p3 => 1,
 			t3 => 'M',    # monthly
 		);
+		if ( $type eq 'trial' ) {
+			$params{a1} = 0;
+			$params{p1} = 1;
+			$params{t1} = 'M';
+		}
 		if ( $type eq 'annual' ) {    # TODO remove hardcoding
 			$usd        = 90;
 			$params{a3} = $usd;
-			$params{t3} = 'Y';
+			$params{t3} = 'Y';        # yearly
 		}
 	}
 	else {
 		$params{amount} = $usd;
 	}
+
+# https://www.paypal.com/en/cgi-bin/webscr?cmd=_pdn_subscr_techview_outside
+# https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
+# a3 = amount to billed each recurrence
+# p3 = number of time periods between each recurrence
+# t3 = time period (D=days, W=weeks, M=months, Y=years)
 
 # uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
 # and the hidden() method of CGI.pm checks if this is a reference and then blows up.
