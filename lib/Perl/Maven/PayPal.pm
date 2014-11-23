@@ -41,6 +41,7 @@ sub mymaven {
 # first_name
 # payer_email
 
+# IPN listener: https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNImplementation/
 # https://developer.paypal.com/webapps/developer/applications/ipn_simulator
 # resend old IPNs from IPN history: https://www.paypal.com/il/cgi-bin/webscr?cmd=_display-ipns-history&nav=0%2e3%2e4
 sub confirm_ipn {
