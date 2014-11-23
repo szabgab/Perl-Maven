@@ -6,20 +6,21 @@
 <div id="promo">
 While many of the Perl Maven articles are <a href="/archive?tag=free">free</a>, this article is only available for Perl Maven Pro subscribers.
 
-<h2>Perl Maven Pro - extra articles and screencasts</h2>
+<h2>Perl Maven Pro - screencasts with articles</h2>
 <p>
 As a Perl Maven Pro subscriber you will enjoy a growing library of articles and screencasts.
-After the launch at least four new articles or screencasts will be published every month.
-Probably more.
 </p>
 <p>
-The articles will contain topics such as Web Application Development,
+Two screencasts a week and all the previous screencasts!
+</p>
+<p>
+The articles contain topics such as Web Application Development,
 Object Oriented programming, testing, deployment,
 code walkthroughs, best practices, and many more subjects in Perl,
 and in related technologies.
 </p>
 <p>
-The related technologies will cover HTML5, CSS3, JavaScript, Git, Subversion, vim,
+The related technologies over HTML5, CSS3, JavaScript, Git, Subversion, vim,
 Unix/Linux shell, SQL and NoSQL just to name a few topic that I, as a Perl programmer
 find useful.
 </p>
@@ -32,11 +33,12 @@ In order to subscribe to the Perl Maven Pro, first
 to the web site, and then pay via PayPal:
 </p>
 <p>
+<div class="btn"><a href="/buy?product=perl_maven_pro&type=trial">Subscribe for $9 per month, first month FREE!</a></div>
+<!--
 <div class="btn"><a href="/buy?product=perl_maven_pro">Subscribe for $9 per month</a></div>
 or
-<div class="btn"><a href="/buy?product=perl_maven_pro&type=trial">Subscribe for $9 per month, first month FREE!</a></div>
-or
 <div class="btn"><a href="/buy?product=perl_maven_pro&type=annual">$90 per year</a></div>
+-->
 </p>
 
 <p>
