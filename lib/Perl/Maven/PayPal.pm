@@ -46,7 +46,9 @@ sub confirm_ipn {
 	my $url = 'https://www.paypal.com/cgi-bin/webscr';
 
 	#my $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-	log_paypal( 'content', { body => request->body } );
+	my $content = request->body;
+	log_paypal( 'content', { body => $content } );
+	$ua->post( $url, Content => 'cmd=_notify-validate variable&' . $content );
 	return;
 }
 
