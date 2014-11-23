@@ -67,6 +67,14 @@ perlmaven.com:
         google_analytics_name: 'cn.perlmaven.com'
       redirect:
         'products': 'http://perlmaven.com/products'
+    cs.perlmaven.com:
+    de.perlmaven.com:
+    eo.perlmaven.com:
+    es.perlmaven.com:
+    fr.perlmaven.com:
+      conf:
+        google_analytics_code: 6
+        google_analytics_name: 'fr.perlmaven.com'
     he.perlmaven.com:
       conf:
         rtl: 1
@@ -74,6 +82,11 @@ perlmaven.com:
         disqus: 'he-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
+    id.perlmaven.com:
+    it.perlmaven.com:
+      conf:
+        google_analytics_code: 5
+        google_analytics_name: 'it.perlmaven.com'
     ko.perlmaven.com:
       conf:
         google_analytics_code: 3
@@ -82,24 +95,20 @@ perlmaven.com:
         disqus: 'ko-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
+    ne.perlmaven.com:
+    ro.perlmaven.com:
+    ru.perlmaven.com:
+      conf:
+        google_analytics_code: 4
+        google_analytics_name: 'ru.perlmaven.com'
     te.perlmaven.com:
       conf:
         enable_comments: 'disqus'
         disqus: 'te-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
-    fr.perlmaven.com:
-      conf:
-        google_analytics_code: 6
-        google_analytics_name: 'fr.perlmaven.com'
-    it.perlmaven.com:
-      conf:
-        google_analytics_code: 5
-        google_analytics_name: 'it.perlmaven.com'
-    ru.perlmaven.com:
-      conf:
-        google_analytics_code: 4
-        google_analytics_name: 'ru.perlmaven.com'
+    tr.perlmaven.com:
+    tw.perlmaven.com:
     perlmaven.com:
       dirs:
         mail: '../articles/mail'
@@ -114,5 +123,4 @@ perlmaven.com:
         disqus: 'perl5maven'
         show_newsletter_form: 1
         right_search: 0
-
 
