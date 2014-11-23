@@ -20,6 +20,7 @@ use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
 use Storable qw(dclone);
+use YAML qw(LoadFile);
 
 use Web::Feed;
 
@@ -1296,15 +1297,9 @@ sub read_sites {
 # Each site can have a file called resources.txt with rows of key=value pairs
 # This is text messages and translated text messages.
 sub read_resources {
-	my %resources;
-	open my $fh, '<encoding(UTF-8)', mymaven->{site} . '/resources.txt'
-		or return \%resources;
-	while ( my $line = <$fh> ) {
-		chomp $line;
-		my ( $field, $value ) = split /=/, $line;
-		$resources{$field} = $value;
-	}
-	return \%resources;
+	my $resources_file = mymaven->{site} . '/resources.yml';
+	my $data = eval { LoadFile $resources_file};
+	return $data || {};
 }
 
 sub read_authors {

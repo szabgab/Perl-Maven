@@ -1,69 +1,57 @@
-          <a class="brand" href="/">Perl Maven</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li><a href="/perl-tutorial">Perl Tutorial</a></li>
-              <li><a href="/pro">Pro</a></li>
+<a class="brand" href="/">Perl Maven</a>
+<div class="nav-collapse">
+  <% FOR m IN resources.menu %>
+    <% IF m.dir == 'left' %>
+    <ul class="nav">
+    <% END %>
+    <% IF m.dir == 'right' %>
+    <ul class="nav pull-right">
+    <% END %>
 
-<li class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-    Articles
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/testing">Test Automation</a></li>
-    <li role="presentation" class="dropdown-header">Modern Web</li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/search-cpan-org">The search.cpan.org cloning project</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/mojolicious">Mojolicious</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/dancer">Dancer</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/catalyst">Catalyst</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/psgi">PSGI/Plack</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/cgi">CGI</a></li>
-    <li role="presentation" class="dropdown-header">Object Oriented Perl</li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/moo">Moo</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/moose">Moose</a></li>
-    <li role="presentation" class="dropdown-header">Other</li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/metacpan">MetaCPAN</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/net-server">Net::Server</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/mongodb">MongoDB</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/anyevent">AnyEvent, asynchronous programming</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/tv">Interviews with Perl developers</a></li>
-    <li role="presentation" class="divider"></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/pro">Pro</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="/products">Products</a></li>
-  </ul>
-</li>
+      <% FOR e IN m.menu %>
+        <%- IF e.url -%>
+           <li><a href="<% e.url %>"><% e.title %></a></li>
+        <%- END -%>
 
-              <% IF username %>
-                 <li><a href="/account">hi <% username %></a></li>
-              <% ELSE %>
-                 <li><a href="/login">Login</a></li>
+        <% IF e.dropdown -%>
+          <li class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+              <% e.title %>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <% FOR d IN e.dropdown %>
+                <% IF d.url %>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="<% d.url %>"><% d.title %></a></li>
+                <% END %>
+                <% IF d.subtitle %><li role="presentation" class="dropdown-header"><% d.subtitle %></li><% END %>
+                <% IF d.divider %><li role="presentation" class="divider"></li><% END %>
               <% END %>
             </ul>
-            <ul class="nav pull-right">
+          </li>
+        <%- END %>
 
-<!--
-<% IF languages.keys.size %>
-<li class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-    Languages
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <% FOR lang IN languages.keys %>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
-    <% END %>
-    <li role="presentation" class="divider"></li>
-      <li role="presentation"><a role="menuitem" tabindex="-1" href="http://perlmaven.com/about#translations">About the translations</a></li>
-  </ul>
-</li>
-<% END %>
--->
-              <li><a href="/keywords">Type keyword:</a></li>
-              <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" ></li>
-              <li><a href="/archive">Archive</a></li>
-              <li><a href="/about">About</a></li>
-              <li><a href="/atom" rel="alternate" type="application/atom+xml"><img
-                   src="/img/feed-icon16x16.png" id="atom-icon" alt="" /></a>
-              </li>
-            </ul>
-          </div><!--/.nav-collapse -->
+        <% IF e.login %>
+          <% IF username %>
+             <li><a href="/account"><% username %></a></li>
+          <% ELSE %>
+             <li><a href="/login"><% e.title %></a></li>
+          <% END %>
+        <% END %>
+
+        <% IF e.searchbox %>
+          <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" ></li>
+        <% END %>
+
+        <% IF e.atom %>
+          <li><a href="/atom" rel="alternate" type="application/atom+xml"><img
+               src="/img/feed-icon16x16.png" id="atom-icon" alt="" /></a>
+          </li>
+        <% END %>
+
+      <% END %>
+
+    </ul>
+  <% END %>
+
+</div><!--/.nav-collapse -->
