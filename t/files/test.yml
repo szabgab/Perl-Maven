@@ -1,7 +1,7 @@
-test-perl-maven.com:
-  domain:
-    site: en
-    redirect: 0
+installation:
+  domain: test-perl-maven.com
+  main_site: en
+    #redirect: 0
   www:
     redirect: http://test-perl-maven.com/
   root: 'test'

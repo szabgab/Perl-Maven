@@ -1,7 +1,7 @@
-perlmaven.com:
-  domain:
-    site: en
-    redirect: 0
+installation:
+  domain: perlmaven.com
+  main_site: en
+    #redirect: 0
   www:
     redirect: http://perlmaven.com/
   root: '../sites/perlmaven.com/'
