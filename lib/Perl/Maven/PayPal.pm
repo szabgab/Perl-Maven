@@ -41,6 +41,8 @@ sub mymaven {
 # first_name
 # payer_email
 
+# https://developer.paypal.com/webapps/developer/applications/ipn_simulator
+# resend old IPNs from IPN history: https://www.paypal.com/il/cgi-bin/webscr?cmd=_display-ipns-history&nav=0%2e3%2e4
 sub confirm_ipn {
 	my $ua  = LWP::UserAgent->new;
 	my $url = 'https://www.paypal.com/cgi-bin/webscr';
@@ -48,7 +50,12 @@ sub confirm_ipn {
 	#my $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 	my $content = request->body;
 	log_paypal( 'content', { body => $content } );
-	$ua->post( $url, Content => 'cmd=_notify-validate variable&' . $content );
+	my $response
+		= $ua->post( $url, Content => 'cmd=_notify-validate&' . $content );
+	log_paypal( 'IPN response', { content => $response->content } );
+
+	#log_paypal('IPN response', {resp => Dumper $response});
+
 	return;
 }
 
@@ -100,29 +107,42 @@ any '/paypal' => sub {
 	my ( $txnstatus, $reason ) = $paypal->ipnvalidate( \%query );
 	if ( not $txnstatus ) {
 		log_paypal( "IPN-no $reason", \%query );
-		return 'ipn-transaction-failed';
+
+		#return 'ipn-transaction-failed';
+		return '';
 	}
 
 	my $paypal_data = from_yaml setting('db')->get_transaction($id);
 	if ( not $paypal_data ) {
 		log_paypal( 'IPN-unrecognized-id', \%query );
-		return 'ipn-transaction-invalid';
+		return '';
+
+		#return 'ipn-transaction-invalid';
 	}
 	my $payment_status = $query{payment_status} || '';
 	if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
 		my $email = $paypal_data->{email};
 
   #debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
-		setting('db')->subscribe_to(
-			email => $email,
-			code  => $paypal_data->{what}
-		);
+		eval {
+			setting('db')->subscribe_to(
+				email => $email,
+				code  => $paypal_data->{what}
+			);
+		};
+		if ($@) {
+			log_paypal( 'exception', { ex => $@ } );
+		}
 		log_paypal( 'IPN-ok', \%query );
-		return 'ipn-ok';
+		return '';
+
+		#return 'ipn-ok';
 	}
 
 	log_paypal( 'IPN-failed', \%query );
-	return 'ipn-failed';
+	return '';
+
+	#return 'ipn-failed';
 };
 
 ###################################### subroutines:
