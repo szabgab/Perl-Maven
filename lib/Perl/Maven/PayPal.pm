@@ -6,6 +6,7 @@ use Perl::Maven::WebTools qw(logged_in);
 
 use POSIX;
 use Data::Dumper qw(Dumper);
+use LWP::UserAgent;
 
 our $VERSION = '0.11';
 
@@ -40,6 +41,15 @@ sub mymaven {
 # first_name
 # payer_email
 
+sub confirm_ipn {
+	my $ua  = LWP::UserAgent->new;
+	my $url = 'https://www.paypal.com/cgi-bin/webscr';
+
+	#my $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+	log_paypal( 'content', { body => request->body } );
+	return;
+}
+
 get '/buy' => sub {
 	if ( not logged_in() ) {
 		return template 'error', { please_log_in => 1 };
@@ -62,6 +72,7 @@ get '/buy' => sub {
 };
 
 get '/canceled' => sub {
+	confirm_ipn();
 
 	#debug 'get canceled ' . Dumper params();
 	return template 'error', { canceled => 1 };
@@ -69,12 +80,15 @@ get '/canceled' => sub {
 };
 
 any '/paid' => sub {
+	confirm_ipn();
 
 	#debug 'paid ' . Dumper params();
 	return template 'thank_you_buy';
 };
 
 any '/paypal' => sub {
+	confirm_ipn();
+
 	my %query = params();
 
 	#debug 'paypal ' . Dumper \%query;
@@ -97,8 +111,10 @@ any '/paypal' => sub {
 		my $email = $paypal_data->{email};
 
   #debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
-		setting('db')
-			->subscribe_to( email => $email, code => $paypal_data->{what} );
+		setting('db')->subscribe_to(
+			email => $email,
+			code  => $paypal_data->{what}
+		);
 		log_paypal( 'IPN-ok', \%query );
 		return 'ipn-ok';
 	}
