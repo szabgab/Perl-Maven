@@ -34,10 +34,14 @@ into a directory next to the Perl-Maven directory
         Perl-Maven/
         perlmaven.com/
 
-Generate the meta files
+Generate the meta files:
 
     $ cd Perl-Maven
     $ perl bin/create_meta.pl --all
+
+Create the database:
+
+    $perl bin/setup.pl
 
 Configure DNS name resolving of perlmaven.com.local to 127.0.0.1
 (On Linux/Unix add the following line to /etc/hosts :
