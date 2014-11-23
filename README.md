@@ -41,7 +41,7 @@ Generate the meta files:
 
 Create the database:
 
-    $perl bin/setup.pl
+    $ perl bin/setup.pl
 
 Configure DNS name resolving of perlmaven.com.local to 127.0.0.1
 (On Linux/Unix add the following line to /etc/hosts :
