@@ -489,7 +489,7 @@ post '/send-reset-pw-code' => sub {
 		{ layout => 'email', };
 
 	my $mymaven = mymaven;
-	sendmail(
+	send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $email,
@@ -704,7 +704,7 @@ sub send_verification_mail {
 
 	my $html = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
-	sendmail(
+	send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $email,
@@ -922,7 +922,7 @@ get '/verify/:id/:code' => sub {
 	session last_seen => time;
 
 	my $mymaven = mymaven;
-	sendmail(
+	send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $user->{email},
@@ -939,7 +939,7 @@ get '/verify/:id/:code' => sub {
 		}
 	);
 
-	sendmail(
+	send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $mymaven->{admin}{email},
@@ -1238,7 +1238,7 @@ sub read_file {
 	return scalar <$fh>;
 }
 
-sub sendmail {
+sub send_mail {
 	my ( $header, $content ) = @_;
 
 	# TODO convert to text and add that too
