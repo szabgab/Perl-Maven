@@ -22,41 +22,55 @@ use lib 'lib';
 use Perl::Maven::Config;
 use Perl::Maven::DB;
 
-my $db = Perl::Maven::DB->new('pm.db');
-
-my $cfg     = YAML::LoadFile('config.yml');
-my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
-my $config  = $mymaven->config('perlmaven.com');
-$mymaven = $config;
-my $from = $mymaven->{from};
-
-my %opt;
-GetOptions( \%opt, 'to=s@', 'exclude=s@', 'url=s', 'send', ) or usage();
-usage() if not $opt{to} or not $opt{url};
-
-my ( $subject, %content ) = build_content();
-send_messages();
+main();
 exit;
 ################################################################################
 
+sub main {
+
+	my $cfg     = YAML::LoadFile('config.yml');
+	my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
+	my $config  = $mymaven->config('perlmaven.com');
+	$mymaven = $config;
+
+	my %opt;
+	GetOptions( \%opt, 'to=s@', 'exclude=s@', 'url=s', 'send', ) or usage();
+	usage() if not $opt{to} or not $opt{url};
+
+	my ( $title, $content ) = build_content( $opt{url} );
+	send_messages(
+		{
+			From      => $mymaven->{from},
+			Subject   => ( $mymaven->{prefix} . ' ' . $title ),
+			'List-Id' => $mymaven->{listid},
+		},
+		\%opt,
+		$content
+	);
+}
+
 sub build_content {
+	my ($url) = @_;
+
 	my $w = WWW::Mechanize->new;
-	$w->get( $opt{url} );
+	$w->get($url);
 	die 'missing title' if not $w->title;
-	my $subject = $mymaven->{prefix} . ' ' . $w->title;
 
 	my %content;
 	my $utf8 = $w->content;
 	$content{html} = $utf8;
 	$content{text} = html2text($utf8);
 
-	return $subject, %content;
+	return $w->title, \%content;
 }
 
 sub send_messages {
-	my %todo;
+	my ( $cfg, $opt, $content ) = @_;
 
-	foreach my $to ( @{ $opt{to} } ) {
+	my %todo;
+	my $db = Perl::Maven::DB->new('pm.db');
+
+	foreach my $to ( @{ $opt->{to} } ) {
 		if ( $to =~ /\@/ ) {
 			$todo{$to} //= 0;
 			say "Including 1 ($to)";
@@ -70,7 +84,7 @@ sub send_messages {
 			}
 		}
 	}
-	foreach my $no ( @{ $opt{exclude} } ) {
+	foreach my $no ( @{ $opt->{exclude} } ) {
 		if ( $no =~ /\@/ ) {
 			if ( exists $todo{$no} ) {
 				delete $todo{$no};
@@ -95,8 +109,9 @@ sub send_messages {
 	foreach my $to ( sort { $todo{$a} <=> $todo{$b} } keys %todo ) {
 		$count++;
 		say "$count out of $planned to $to";
-		next if not $opt{send};
-		send_mail($to);
+		next if not $opt->{send};
+		$cfg->{To} = $to;
+		send_mail( $cfg, $content );
 		sleep 1;
 	}
 	say "Total sent $count. Planned: $planned";
@@ -104,15 +119,12 @@ sub send_messages {
 }
 
 sub send_mail {
-	my $to = shift;
+	my ( $cfg, $content ) = @_;
 
 	my %type = (
 		text => 'text/plain',
 		html => 'text/html',
 	);
-
-	#print $content{html};
-	#exit;
 
 	my @parts;
 	foreach my $t (qw(html text)) {
@@ -126,7 +138,7 @@ sub send_mail {
 				#($t eq 'text'? (filename => "$subject.txt") : ()),
 				#($t eq 'text'? (filename => 'plain.txt') : ()),
 			},
-			body_str => $content{$t},
+			body_str => $content->{$t},
 		);
 		$parts[-1]->charset_set('UTF-8');
 	}
@@ -138,11 +150,8 @@ sub send_mail {
 
 	my $msg = Email::MIME->create(
 		header_str => [
-			'From'    => $from,
-			'To'      => $to,
+			%$cfg,
 			'Type'    => 'multipart/alternative',
-			'Subject' => $subject,
-			'List-Id' => $mymaven->{listid},
 			'Charset' => 'UTF-8',
 		],
 		parts => \@parts,
@@ -154,7 +163,7 @@ sub send_mail {
 
 	# TODO this is not the best solution to extract the e-mail address
 	# but works for now.
-	my ($return_path) = $from =~ /<(.*)>/;
+	my ($return_path) = $cfg->{From} =~ /<(.*)>/;
 	die 'time to fix this regex' if not $return_path;
 	try {
 		sendmail(
@@ -201,6 +210,7 @@ Usage: $0 --url http://url
 
 END_USAGE
 
+	my $db       = Perl::Maven::DB->new('pm.db');
 	my $products = $db->get_products;
 	foreach my $code (
 		sort
