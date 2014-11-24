@@ -22,6 +22,7 @@ GetOptions(
 
 	'addsub=s',
 	'email=s',
+	'uid=i',
 
 	'deluser=s',
 
@@ -73,6 +74,15 @@ elsif ( $opt{stats} ) {
 }
 elsif ( $opt{show} and $opt{email} ) {
 	show_people( $opt{email} );
+}
+elsif ( $opt{show} and $opt{uid} ) {
+	my $user = $db->get_user_by_id( $opt{uid} );
+	if ($user) {
+		show_people( $user->{email} );
+	}
+	else {
+		say "Could not find user with uid '$opt{uid}'";
+	}
 }
 elsif ( $opt{replace} and $opt{email} ) {
 	show_people( $opt{email} );
@@ -169,6 +179,7 @@ Usage: $0
     --products                               list of products
     --stats                                  subscription statistics
     --show   --email FILTER_FOR_EMAIL        list users
+    --show   --uid 123                       show user
 
     --replace NEW_EMAIL --email OLD_EMAIL
 
