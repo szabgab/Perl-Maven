@@ -19,46 +19,33 @@ sub mymaven {
 	return $mymaven->config( request->host );
 }
 
-# TODO fix PayPal connection
-# Start by requiring the user to be loged in first
+=pod
 
-# Plan:
-# If user logged in, add purchase information to his account
+=head2 If the user is already logged in to Perl Maven
 
-# If user is not logged in
-#  If the e-mail supplied by Paypal is in our database already
-#     assume they are the same user and add the purchase to that account
-#     and even log the user in (how?)
-# If the e-mail exists but not yet verified in the system ????
+When viewing a page (eg. /pro ) we have a button that will lead to the /buy url.
+When user arrives to the /buy URL shows the paypal button and saves a unique value for this potential
+transaction.
 
-# If this is a new e-mail, save the data as a new user and
-# at the end of the transaction ask the user if he already
-# has an account or if a new one should be created?
-# If the user wants to use the existing account, ask for credentials,
-# after successful login merge the two accounts
 
-# last_name
-# first_name
-# payer_email
 
-# IPN listener: https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNImplementation/
-# https://developer.paypal.com/webapps/developer/applications/ipn_simulator
-# resend old IPNs from IPN history: https://www.paypal.com/il/cgi-bin/webscr?cmd=_display-ipns-history&nav=0%2e3%2e4
-sub confirm_ipn {
-	my $ua  = LWP::UserAgent->new;
-	my $url = 'https://www.paypal.com/cgi-bin/webscr';
+=head2 If the user is not logged in
 
-	#my $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-	my $content = request->body;
-	log_paypal( 'content', { body => $content } );
-	my $response
-		= $ua->post( $url, Content => 'cmd=_notify-validate&' . $content );
-	log_paypal( 'IPN response', { content => $response->content } );
+or now we require the user to be logged in when starting the transaction,
+ut later we should implement a version when the user can start withot being logged in.
+hen the question will be: shall we create a new account with the e-mail received from PayPal
+  or shall we look for the account of the user.
+If the e-mail supplied by Paypal is in our database already
+   assume they are the same user and add the purchase to that account
+   and even log the user in (how?)
+If the e-mail exists but not yet verified in the system ????
+If this is a new e-mail, save the data as a new user and
+at the end of the transaction ask the user if he already
+has an account or if a new one should be created?
+If the user wants to use the existing account, ask for credentials,
+after successful login merge the two accounts
 
-	#log_paypal('IPN response', {resp => Dumper $response});
-
-	return;
-}
+=cut
 
 get '/buy' => sub {
 	if ( not logged_in() ) {
@@ -82,26 +69,37 @@ get '/buy' => sub {
 };
 
 get '/canceled' => sub {
-	confirm_ipn();
-
-	#debug 'get canceled ' . Dumper params();
 	return template 'error', { canceled => 1 };
 	return 'canceled';
 };
 
 any '/paid' => sub {
-	confirm_ipn();
-
-	#debug 'paid ' . Dumper params();
 	return template 'thank_you_buy';
 };
 
+# IPN listener: https://developer.paypal.com/webapps/developer/docs/classic/ipn/integration-guide/IPNImplementation/
+# https://developer.paypal.com/webapps/developer/applications/ipn_simulator
+# resend old IPNs from IPN history: https://www.paypal.com/il/cgi-bin/webscr?cmd=_display-ipns-history&nav=0%2e3%2e4
 any '/paypal' => sub {
-	confirm_ipn();
-
 	my %query = params();
 
-	#debug 'paypal ' . Dumper \%query;
+	# confirm IPN
+	my $ua      = LWP::UserAgent->new( ssl_opts => { verify_hostname => 1 } );
+	my $url     = 'https://www.paypal.com/cgi-bin/webscr';
+	my $content = request->body;
+	log_paypal( 'IPN content', { body => $content } );
+	my $response
+		= $ua->post( $url, Content => 'cmd=_notify-validate&' . $content );
+	log_paypal( 'IPN response', { content => $response->content } );
+
+	if ( $response->content ne 'VERIFIED' ) {
+
+# This probably means someone other than PayPal has accessed the /paypal URL
+# We want to log this an maybe look into it.
+# for this we probably want to log the IP of the client that sent this request
+#return '';
+	}
+
 	my $id = param('custom');
 	my $paypal = paypal( id => $id );
 
@@ -122,13 +120,12 @@ any '/paypal' => sub {
 	}
 	my $payment_status = $query{payment_status} || '';
 	if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
-		my $email = $paypal_data->{email};
+		my $uid = $paypal_data->{id};
 
-  #debug "subscribe '$email' to '$paypal_data->{what}'" . Dumper $paypal_data;
 		eval {
 			setting('db')->subscribe_to(
-				email => $email,
-				code  => $paypal_data->{what}
+				uid  => $uid,
+				code => $paypal_data->{what}
 			);
 		};
 		if ($@) {
