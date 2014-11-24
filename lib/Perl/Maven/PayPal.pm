@@ -152,12 +152,12 @@ any '/paypal' => sub {
   #if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
 	my $uid = $paypal_data->{id};
 
-	eval {
-		setting('db')->subscribe_to(
-			uid  => $uid,
-			code => $paypal_data->{what}
-		);
-	};
+	my %params = (
+		uid  => $uid,
+		code => $paypal_data->{what}
+	);
+	log_paypal( 'subscribe_to', \%params );
+	eval { setting('db')->subscribe_to(%params); };
 	if ($@) {
 		log_paypal( 'exception', { ex => $@ } );
 	}
