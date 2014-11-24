@@ -141,11 +141,6 @@ sub send_mail {
 		$parts[-1]->charset_set('UTF-8');
 	}
 
-	#print $parts[0]->as_string;
-	#print $parts[1]->body_raw;
-	#print $parts[1]->as_string;
-	#exit;
-
 	my $msg = Email::MIME->create(
 		header_str => [
 			%$cfg,
