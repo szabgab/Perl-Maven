@@ -150,7 +150,7 @@ any '/paypal' => sub {
   # When allowing for "one month free", there won't be a payment_status at all
   # there won't be a txn_id either (transaction id)
   #if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
-	my $uid = $paypal_data->{id};
+	my $uid = $paypal_data->{uid};
 
 	my %params = (
 		uid  => $uid,
