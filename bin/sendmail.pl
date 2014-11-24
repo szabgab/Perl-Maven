@@ -119,7 +119,11 @@ sub send_messages {
 }
 
 sub send_mail {
-	my ( $header, $content ) = @_;
+	my ( $header, $raw_content ) = @_;
+
+	my %content = %$raw_content;
+
+	$content{text} ||= html2text( $content{html} );
 
 	my %type = (
 		text => 'text/plain',
@@ -136,7 +140,7 @@ sub send_mail {
 				encoding => 'quoted-printable',
 				charset  => 'UTF-8',
 			},
-			body_str => $content->{$t},
+			body_str => $content{$t},
 			);
 		$parts[-1]->charset_set('UTF-8');
 	}
