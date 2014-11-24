@@ -27,6 +27,38 @@ When viewing a page (eg. /pro ) we have a button that will lead to the /buy url.
 When user arrives to the /buy URL shows the paypal button and saves a unique value for this potential
 transaction.
 
+When we get an IPN message we need to check what kind of message is that.
+
+Product types
+1) One-time payment
+   paied -> enable
+   Refund payment -> disable
+
+2) Subscription:
+     payment arrives on date covering a period => enable and set expiration date on the product
+     cancelled => does not need to do anything, the exparation date will take care of it
+     refund => disable
+     'Payment Skipped' ??
+3) Subscription with some free period
+     When the user signs up to the service, we enable and set an expiration date
+     cancelled => we can either cancel the subscription or we can let it expire
+     The rest is the same as in 2)
+4) Giving free subscription to someone
+    Set an expiration date
+    Be also able to allow 'no expiration date'
+
+On a regular base we run a script that checks for expired services and removes them from the user.
+If someone tries to sign up to a service that was expired we can let the user do this.
+I think the only loophole might be people signing up to free subscription, cancelling it and then signing up again.
+This is not a big issue for us, but we could save a flag that says, 'this user has already had a free period'
+and then not let the free signup. I don't think this is worth the effort now.
+
+Daily cron job that will check all the subscriptions and send e-mail to the ones that will be charged in the next 24 hours.
+(or some other time period)
+It will also remove subscriptions that have expired a while ago. (e.g. a week ago)
+
+
+
 
 
 =head2 If the user is not logged in
@@ -83,64 +115,59 @@ any '/paid' => sub {
 any '/paypal' => sub {
 	my %query = params();
 
-	# confirm IPN
-	my $ua      = LWP::UserAgent->new( ssl_opts => { verify_hostname => 1 } );
-	my $url     = 'https://www.paypal.com/cgi-bin/webscr';
 	my $content = request->body;
 	log_paypal( 'IPN content', { body => $content } );
-	my $response
-		= $ua->post( $url, Content => 'cmd=_notify-validate&' . $content );
-	log_paypal( 'IPN response', { content => $response->content } );
-
-	if ( $response->content ne 'VERIFIED' ) {
-
-# This probably means someone other than PayPal has accessed the /paypal URL
-# We want to log this an maybe look into it.
-# for this we probably want to log the IP of the client that sent this request
-#return '';
-	}
 
 	my $id = param('custom');
 	my $paypal = paypal( id => $id );
 
 	my ( $txnstatus, $reason ) = $paypal->ipnvalidate( \%query );
 	if ( not $txnstatus ) {
-		log_paypal( "IPN-no $reason", \%query );
 
-		#return 'ipn-transaction-failed';
+# This probably means someone other than PayPal has accessed the /paypal URL
+# We want to log this an maybe look into it.
+# for this we probably want to log the IP of the client that sent this request
+# maybe even send an e-mail alert?
+# TODO we should report this
+
+		log_paypal( "IPN - could not verify - $reason", \%query );
 		return '';
 	}
 
 	my $paypal_data = from_yaml setting('db')->get_transaction($id);
 	if ( not $paypal_data ) {
+
+	 # PayPal sent us some message related to a request - they claim we sent -
+	 # but we cannot find that request. Do they make the mistake?
+	 # Has somene else sent them the request on our behalf?
+	 # Have we lost the request?
+	 # TODO we should report this
 		log_paypal( 'IPN-unrecognized-id', \%query );
 		return '';
-
-		#return 'ipn-transaction-invalid';
 	}
 	my $payment_status = $query{payment_status} || '';
-	if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
-		my $uid = $paypal_data->{id};
 
-		eval {
-			setting('db')->subscribe_to(
-				uid  => $uid,
-				code => $paypal_data->{what}
-			);
-		};
-		if ($@) {
-			log_paypal( 'exception', { ex => $@ } );
-		}
-		log_paypal( 'IPN-ok', \%query );
-		return '';
+  # When allowing for "one month free", there won't be a payment_status at all
+  # there won't be a txn_id either (transaction id)
+  #if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
+	my $uid = $paypal_data->{id};
 
-		#return 'ipn-ok';
+	eval {
+		setting('db')->subscribe_to(
+			uid  => $uid,
+			code => $paypal_data->{what}
+		);
+	};
+	if ($@) {
+		log_paypal( 'exception', { ex => $@ } );
 	}
-
-	log_paypal( 'IPN-failed', \%query );
+	log_paypal( 'IPN-ok', \%query );
 	return '';
 
-	#return 'ipn-failed';
+	#}
+
+	#log_paypal( 'IPN-failed', \%query );
+	#return '';
 };
 
 ###################################### subroutines:
