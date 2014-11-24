@@ -65,7 +65,7 @@ sub build_content {
 }
 
 sub send_messages {
-	my ( $cfg, $opt, $content ) = @_;
+	my ( $header, $opt, $content ) = @_;
 
 	my %todo;
 	my $db = Perl::Maven::DB->new('pm.db');
@@ -110,8 +110,8 @@ sub send_messages {
 		$count++;
 		say "$count out of $planned to $to";
 		next if not $opt->{send};
-		$cfg->{To} = $to;
-		send_mail( $cfg, $content );
+		$header->{To} = $to;
+		send_mail( $header, $content );
 		sleep 1;
 	}
 	say "Total sent $count. Planned: $planned";
@@ -119,7 +119,7 @@ sub send_messages {
 }
 
 sub send_mail {
-	my ( $cfg, $content ) = @_;
+	my ( $header, $content ) = @_;
 
 	my %type = (
 		text => 'text/plain',
@@ -143,7 +143,7 @@ sub send_mail {
 
 	my $msg = Email::MIME->create(
 		header_str => [
-			%$cfg,
+			%$header,
 			'Type'    => 'multipart/alternative',
 			'Charset' => 'UTF-8',
 		],
