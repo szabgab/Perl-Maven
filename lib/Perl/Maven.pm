@@ -490,10 +490,14 @@ post '/send-reset-pw-code' => sub {
 
 	my $mymaven = mymaven;
 	sendmail(
-		From    => $mymaven->{from},
-		To      => $email,
-		Subject => "Code to reset your $mymaven->{title} password",
-		html    => $html,
+		{
+			From    => $mymaven->{from},
+			To      => $email,
+			Subject => "Code to reset your $mymaven->{title} password",
+		},
+		{
+			html => $html,
+		}
 	);
 
 	template 'error', { reset_password_sent => 1, };
@@ -701,10 +705,14 @@ sub send_verification_mail {
 	my $html = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
 	sendmail(
-		From    => $mymaven->{from},
-		To      => $email,
-		Subject => $subject,
-		html    => $html,
+		{
+			From    => $mymaven->{from},
+			To      => $email,
+			Subject => $subject,
+		},
+		{
+			html => $html,
+		}
 	);
 }
 
@@ -915,23 +923,31 @@ get '/verify/:id/:code' => sub {
 
 	my $mymaven = mymaven;
 	sendmail(
-		From    => $mymaven->{from},
-		To      => $user->{email},
-		Subject => 'Thank you for registering',
-		html    => template(
-			'post_verification_mail',
-			{
-				url => uri_for('/account'),
-			},
-			{ layout => 'email', }
-		),
+		{
+			From    => $mymaven->{from},
+			To      => $user->{email},
+			Subject => 'Thank you for registering',
+		},
+		{
+			html => template(
+				'post_verification_mail',
+				{
+					url => uri_for('/account'),
+				},
+				{ layout => 'email', }
+			),
+		}
 	);
 
 	sendmail(
-		From    => $mymaven->{from},
-		To      => $mymaven->{admin}{email},
-		Subject => "New $mymaven->{title} newsletter registration",
-		html    => "$user->{email} has registered",
+		{
+			From    => $mymaven->{from},
+			To      => $mymaven->{admin}{email},
+			Subject => "New $mymaven->{title} newsletter registration",
+		},
+		{
+			html => "$user->{email} has registered",
+		}
 	);
 
 	my ($cookbook) = get_download_files('perl_maven_cookbook');
@@ -1223,28 +1239,14 @@ sub read_file {
 }
 
 sub sendmail {
-	my %args = @_;
-
-	my $html = delete $args{html};
+	my ( $header, $content ) = @_;
 
 	# TODO convert to text and add that too
-
-	my $attachments = delete $args{attachments};
-
-	my $mail = MIME::Lite->new( %args, Type => 'multipart/mixed', );
+	my $mail = MIME::Lite->new( %$header, Type => 'multipart/mixed', );
 	$mail->attach(
 		Type => 'text/html',
-		Data => $html,
+		Data => $content->{html},
 	);
-	foreach my $file (@$attachments) {
-		my ( $basename, $dir, $ext ) = fileparse($file);
-		$mail->attach(
-			Type        => "application/$ext",
-			Path        => $file,
-			Filename    => $basename,
-			Disposition => 'attachment',
-		);
-	}
 	if ( $ENV{PERL_MAVEN_MAIL} ) {
 		if ( open my $out, '>>', $ENV{PERL_MAVEN_MAIL} ) {
 			print $out $mail->as_string;
@@ -1255,7 +1257,6 @@ sub sendmail {
 		return;
 	}
 
-	#$mail->send( 'smtp', 'mail.hostlocal.com' );
 	$mail->send();
 	return;
 }
