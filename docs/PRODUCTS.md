@@ -11,9 +11,19 @@ Eevery product can have a list of items
   - videos (mp4, webm, etc. files) these can be downloaded, played on an html page.
 With time we might replace some of the files in a product by other files. For example when we release a new edition of an e-book
 we might want to give it a name based on the version number.
+An item can be part of more than one products. For example we can have a product called "Learn PSGI" and a product "Learn Dancer"
+and both can have items covering "Introduction to Template Toolkit".
+An item can be a given file /download/frobnix/frobo-1.23.tar.gz  (+ title)
 
-Each product can be sold for a fixed prices.
 
+product: id, code, name, price  (TODO: currency), type: unlimited, recurring
+
+
+
+Each product can be sold for a fixed price.
+There can be a discount for a single product (product_id, dicount_code, price, end date)
+
+There can be a discount ????
 
 
 
