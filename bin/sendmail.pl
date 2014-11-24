@@ -128,18 +128,16 @@ sub send_mail {
 
 	my @parts;
 	foreach my $t (qw(html text)) {
-		push @parts, Email::MIME->create(
+		push @parts,
+			Email::MIME->create(
 			attributes => {
 				content_type => $type{$t},
 				( $t eq 'text' ? ( disposition => 'attachment' ) : () ),
 				encoding => 'quoted-printable',
 				charset  => 'UTF-8',
-
-				#($t eq 'text'? (filename => "$subject.txt") : ()),
-				#($t eq 'text'? (filename => 'plain.txt') : ()),
 			},
 			body_str => $content->{$t},
-		);
+			);
 		$parts[-1]->charset_set('UTF-8');
 	}
 
@@ -158,23 +156,13 @@ sub send_mail {
 	);
 	$msg->charset_set('UTF-8');
 
-	#print $msg->as_string;
-	#exit;
-
-	# TODO this is not the best solution to extract the e-mail address
-	# but works for now.
-	my ($return_path) = $cfg->{From} =~ /<(.*)>/;
-	die 'time to fix this regex' if not $return_path;
 	try {
 		sendmail(
 			$msg,
 			{
-				from      => $return_path,
 				transport => Email::Sender::Transport::SMTP->new(
 					{
 						host => 'localhost',
-
-						#port => $SMTP_PORT,
 					}
 				)
 			}
