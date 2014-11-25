@@ -8,7 +8,7 @@ plan tests => 2;
 use Perl::Maven::Config;
 
 subtest mymaven => sub {
-	plan tests => 6,
+	plan tests => 8,
 
 		my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
 	my $main = $mymaven->config('perlmaven.com');
@@ -32,6 +32,19 @@ subtest mymaven => sub {
 
 		'szg' => 'http://szabgab.com/?r=12345',
 	};
+	is_deeply $main->{dirs},
+		{
+		'articles' => '/home/foobar/articles',
+		'download' => '/home/foobar/articles/download',
+		'img'      => '/home/foobar/perlmaven.com/sites/en/img',
+		'mail'     => 't/files/../articles/mail',
+		'media'    => '/home/foobar/media.perlmaven.com',
+		'pro'      => '/home/foobar/articles/pro'
+		};
+
+	is_deeply $br->{dirs},
+		{ 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
+
 };
 
 subtest testmaven => sub {

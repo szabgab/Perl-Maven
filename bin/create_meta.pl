@@ -22,29 +22,37 @@ my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 GetOptions(
 	'domain=s' => \my $domain_name,
 	'verbose'  => \my $verbose,
-	'all'      => \my $all,
+
+	#	'all'      => \my $all,
 );
 $ENV{METAMETA} = 1;
 
-if ($all) {
-	for my $domain_name ( keys %{ $mymaven->{config} } ) {
-		my $meta = Perl::Maven::Meta->new(
-			verbose => $verbose,
-			mymaven => $mymaven,
-		);
-		$meta->process_domain($domain_name);
-	}
-}
-else {
-	usage('Missing domain') if not $domain_name;
-	usage("Invalid site '$domain_name'")
-		if not $mymaven->{config}{$domain_name};
-	my $meta = Perl::Maven::Meta->new(
-		verbose => $verbose,
-		mymaven => $mymaven,
-	);
-	$meta->process_domain($domain_name);
-}
+my $domain_name = $mymaven->{config}{installation}{domain};
+my $meta        = Perl::Maven::Meta->new(
+	verbose => $verbose,
+	mymaven => $mymaven,
+);
+$meta->process_domain($domain_name);
+
+#if ($all) {
+#	for my $domain_name ( keys %{ $mymaven->{config} } ) {
+#		my $meta = Perl::Maven::Meta->new(
+#			verbose => $verbose,
+#			mymaven => $mymaven,
+#		);
+#		$meta->process_domain($domain_name);
+#	}
+#}
+#else {
+#	usage('Missing domain') if not $domain_name;
+#	usage("Invalid site '$domain_name'")
+#		if not $mymaven->{config}{$domain_name};
+#	my $meta = Perl::Maven::Meta->new(
+#		verbose => $verbose,
+#		mymaven => $mymaven,
+#	);
+#	$meta->process_domain($domain_name);
+#}
 
 exit;
 ###############################################################################
