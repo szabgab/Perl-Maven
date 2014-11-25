@@ -23,6 +23,8 @@ my @NAMES          = ( 'Foo Bar', );
 
 plan tests => 7;
 
+$ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
+
 my $cookbook_url
 	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
 my $cookbook_text = basename $cookbook_url;
@@ -85,7 +87,7 @@ subtest pages => sub {
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 subtest 'subscribe' => sub {
-	plan tests => 31;
+	plan tests => 35;
 	$w->get_ok($url);
 	$w->content_like(qr/Perl Maven/);
 
@@ -98,37 +100,66 @@ subtest 'subscribe' => sub {
 		},
 		'has registeration form'
 	);
-	my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
-	unlink $ENV{PERL_MAVEN_MAIL};
 
-	my $mail_regex = qr{<a href="($url/verify/1/\w+)">verify</a>};
+	#my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
+	my @mails = Email::Sender::Simple->default_transport->deliveries;
+
+	# Returns a list of hashesh. Each has has 4 keys:
+	# successes, failures, envelope, email
+	#diag join ', ', keys %{ $mails[0] };
+	is_deeply $mails[0]{successes}, [$EMAIL];
+	is_deeply $mails[0]{failures},  [];
+
+	#diag explain $mails[0]{successes};
+	#diag explain $mails[0]{failures};
+	is_deeply $mails[0]{envelope},
+		{
+		'from' => 'test@perlmaven.com',
+		'to'   => [ 'gabor@perlmaven.com' ]
+		};
+
+	#diag explain $mails[0]{email}; # Email::Abstract object
+	my $o    = $mails[0]{email}->object;
+	my $mail = $mails[0]{email}->as_string;
+
+	#diag $mail;
+
+	#my $mail_regex = qr{<a href="($url/verify/1/\w+)">verify</a>};
+	my $mail_regex = qr{verify\s+\[\s+($url/verify/1/\w+)=};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
-	diag $set_url;
 
+	#diag $set_url;
+	#diag explain $db->{dbh}->selectall_arrayref('SELECT * FROM user');
 	$w->get_ok("$url/verify/20/1234567");
 	$w->content_like( qr{User not found}, 'no such user' );
 
 	$w->get_ok("$url/verify/1/1234567");
 	$w->content_like( qr{Invalid or missing code}, 'incorrect code' );
-
 	$w->get_ok($set_url);
+
+	#diag $w->content;
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
 		'download link' );
 	$w->get_ok("$url/logged-in");
 	$w->content_is(1);
 
 	# check e-mails
-	my $mail2 = read_file( $ENV{PERL_MAVEN_MAIL} );
-	unlink $ENV{PERL_MAVEN_MAIL};
+	@mails = Email::Sender::Simple->default_transport->deliveries;
+	is scalar @mails, 3;
+	my $mail2 = $mails[1]{email}->as_string;
+	my $mail3 = $mails[2]{email}->as_string;
 
 	like $mail2, qr{Thank you for registering}, 'thank you mail';
-	like $mail2, qr{$EMAIL has registered},     'self reporting';
+	like $mail3, qr{$EMAIL has registered},     'self reporting';
 
 	# hit it again
 	$w->get_ok($set_url);
 
-	ok !-e $ENV{PERL_MAVEN_MAIL}, 'no additional mail was sent';
+	@mails = Email::Sender::Simple->default_transport->deliveries;
+	is scalar @mails, 3;
+
+	#ok !-e $ENV{PERL_MAVEN_MAIL}, 'no additional mail was sent';
 
 	$w->follow_link_ok(
 		{
@@ -200,13 +231,16 @@ subtest 'ask for password reset, then login' => sub {
 	);
 	$w->content_like(qr{E-mail sent with code to reset password});
 
-	my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
-	unlink $ENV{PERL_MAVEN_MAIL};
+	my @mails = Email::Sender::Simple->default_transport->deliveries;
+	my $mail  = $mails[3]{email}->as_string;
 
 	#diag $mail;
+	#my $mail_regex
+	#	= qr{<a href="($url/set-password/1/(\w+))">set new password</a>};
 	my $mail_regex
-		= qr{<a href="($url/set-password/1/(\w+))">set new password</a>};
-	my ($set_url) = $mail =~ $mail_regex;
+		= qr{set new password \[ ($url/set-password/1/(?:\w+))=\s*(\w+) \]};
+	my ( $url1, $url2 ) = $mail =~ $mail_regex;
+	my $set_url = "$url1$url2";
 	ok $set_url, 'mail with set url address';
 	diag $set_url;
 
@@ -413,10 +447,12 @@ subtest change_email => sub {
 		'change_email'
 	);
 
-	my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
-	unlink $ENV{PERL_MAVEN_MAIL};
+	my @mails = Email::Sender::Simple->default_transport->deliveries;
+	my $mail  = $mails[4]{email}->as_string;
 
-	my $mail_regex = qr{<a href="($url/verify2/\w+)">verify</a>};
+	#diag $mail;
+	#my $mail_regex = qr{<a href="($url/verify2/\w+)">verify</a>};
+	my $mail_regex = qr{verify \[ ($url/verify2/\w+)};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
 	diag $set_url;

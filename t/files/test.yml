@@ -10,6 +10,8 @@ installation:
     show_newsletter_form: 0
   title: 'Test Maven'
   from: '<test@perlmaven.com>'
+  admin:
+    email: 'Test Maven <admin-test@perlmaven.com>'
   sites:
     test-perl-maven.com:
       conf:

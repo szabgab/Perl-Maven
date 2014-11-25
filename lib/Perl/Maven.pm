@@ -29,6 +29,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools qw(logged_in);
+use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
 require Perl::Maven::Admin;
@@ -1236,29 +1237,6 @@ sub read_file {
 	open my $fh, '<encoding(UTF-8)', $file or return '';
 	local $/ = undef;
 	return scalar <$fh>;
-}
-
-sub send_mail {
-	my ( $header, $content ) = @_;
-
-	# TODO convert to text and add that too
-	my $mail = MIME::Lite->new( %$header, Type => 'multipart/mixed', );
-	$mail->attach(
-		Type => 'text/html',
-		Data => $content->{html},
-	);
-	if ( $ENV{PERL_MAVEN_MAIL} ) {
-		if ( open my $out, '>>', $ENV{PERL_MAVEN_MAIL} ) {
-			print $out $mail->as_string;
-		}
-		else {
-			error "Could not open $ENV{PERL_MAVEN_MAIL} $!";
-		}
-		return;
-	}
-
-	$mail->send();
-	return;
 }
 
 sub _generate_code {
