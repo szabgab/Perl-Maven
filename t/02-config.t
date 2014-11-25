@@ -60,7 +60,10 @@ subtest testmaven => sub {
 		'meta'      => 't/files/meta',
 		'title'     => 'Test Maven',
 		'site'      => 't/files/test/sites/en',
-		'www'       => {
+		'admin'     => {
+			'email' => 'Test Maven <admin-test@perlmaven.com>'
+		},
+		'www' => {
 			'redirect' => 'http://test-perl-maven.com/'
 		}
 		};
