@@ -115,7 +115,7 @@ subtest 'subscribe' => sub {
 	is_deeply $mails[0]{envelope},
 		{
 		'from' => 'test@perlmaven.com',
-		'to'   => [ 'gabor@perlmaven.com' ]
+		'to'   => ['gabor@perlmaven.com']
 		};
 
 	#diag explain $mails[0]{email}; # Email::Abstract object
