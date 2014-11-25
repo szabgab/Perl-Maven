@@ -34,7 +34,6 @@ WriteMakefile(
 		'Web::Feed'                  => 0.02,
 		'Digest::SHA'                => 5.92,
 
-		'MIME::Lite'            => 0,
 		'Email::Sender::Simple' => 1.300012,
 		'Email::MIME::Creator'  => 1.926,
 

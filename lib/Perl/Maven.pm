@@ -16,7 +16,6 @@ use DateTime;
 use Digest::SHA;
 use Email::Valid;
 use Fcntl qw(:flock SEEK_END);
-use MIME::Lite;
 use File::Basename qw(fileparse);
 use POSIX ();
 use Storable qw(dclone);
