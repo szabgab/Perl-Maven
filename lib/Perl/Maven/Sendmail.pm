@@ -2,6 +2,8 @@ package Perl::Maven::Sendmail;
 use strict;
 use warnings;
 
+our $VERSION = '0.11';
+
 use Email::Sender::Simple qw(sendmail);
 use Email::Sender::Transport::SMTP qw();
 use Email::MIME::Creator;
