@@ -20,8 +20,7 @@ my $cfg     = LoadFile('config.yml');
 my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 
 GetOptions(
-	'domain=s' => \my $domain_name,
-	'verbose'  => \my $verbose,
+	'verbose' => \my $verbose,
 
 	#	'all'      => \my $all,
 );
@@ -61,13 +60,7 @@ sub usage {
 
 	print "*** $msg\n\n";
 	print "Usage $0\n";
-	print "         --domain DOMAIN\n";
-	print "         --all             all the domains\n";
 	print "         --verbose\n";
-	print "The domains:\n";
-	foreach my $domain ( keys %{ $mymaven->{config} } ) {
-		print "  $domain\n";
-	}
 	exit;
 }
 

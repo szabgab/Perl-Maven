@@ -37,7 +37,7 @@ into a directory next to the Perl-Maven directory
 Generate the meta files:
 
     $ cd Perl-Maven
-    $ perl bin/create_meta.pl --all
+    $ perl bin/create_meta.pl
 
 Create the database:
 
