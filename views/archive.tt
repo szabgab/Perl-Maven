@@ -1,5 +1,5 @@
 
-<% IF archive_selector %>
+<% IF conf.archive_selector %>
 <div id="indexes">
 Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstract %>CHECKED<% END %> />
     <ul>
