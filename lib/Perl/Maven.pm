@@ -256,14 +256,9 @@ get '/foobar' => sub {
 	_show(
 		{ article => 'foobar', template => 'foobar', layout => 'system' },
 		{
-			themes           => [ $ams->themes ],
-			name_count       => scalar @names,
-			names            => \@names,
-			archive_selector => (
-				Perl::Maven::Config::host( request->host ) eq 'perlmaven.com'
-				? 1
-				: 0
-			),
+			themes     => [ $ams->themes ],
+			name_count => scalar @names,
+			names      => \@names,
 		}
 	);
 };
@@ -391,13 +386,8 @@ get '/archive' => sub {
 	_show(
 		{ article => 'archive', template => 'archive', layout => 'system' },
 		{
-			pages            => $pages,
-			abstract         => param('abstract'),
-			archive_selector => (
-				Perl::Maven::Config::host( request->host ) eq 'perlmaven.com'
-				? 1
-				: 0
-			),
+			pages    => $pages,
+			abstract => param('abstract'),
 		}
 	);
 };
