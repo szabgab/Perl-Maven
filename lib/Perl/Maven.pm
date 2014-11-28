@@ -45,10 +45,11 @@ my $db;
 my %authors;
 
 hook before => sub {
-	my $user_agent = request->user_agent || '';
-	if ( $user_agent !~ /Googlebot|AhrefsBot/ ) {
-		set session => 'YAML';
-	}
+
+	#my $user_agent = request->user_agent || '';
+	#if ( $user_agent !~ /Googlebot|AhrefsBot/ ) {
+	#	set session => 'YAML';
+	#}
 
 	my $appdir = abs_path config->{appdir};
 
