@@ -24,7 +24,8 @@ END_CONFIG
 
 			if (open my $fh, '<', $data_file) {
 				while (my $row = <$fh> ){
-					my ($name) = $row =~ /^(.*?)\.value /;
+					my ($name) = $row =~ /^(\S*?)\s/;
+					$name =~ s/\./_/g;
 					print "$name.label $name\n";
 				}
 			}
@@ -34,7 +35,13 @@ END_CONFIG
 
 	if (basename($0) eq 'perl_maven_logs_hostnames') { 
 		if (open my $fh, '<', $data_file) {
-			print <$fh>;
+			while (my $row = <$fh>) {
+				chomp $row;
+				my ($domain, $value) = split /\s+/, $row, 2;
+				$domain =~ s/\./_/g;
+				print "$domain.value $value\n";
+			}
+			cloes $fh;
 		}
 	}
 }
@@ -101,7 +108,7 @@ sub collect {
 
 	my $domains = '';
 	foreach my $k (keys %data) {
-		$domains .= "$k.value $data{$k}\n";
+		$domains .= "$k $data{$k}\n";
 	}
 
 	save_file($data_file, $domains);
