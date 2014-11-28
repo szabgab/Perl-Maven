@@ -24,9 +24,10 @@ END_CONFIG
 
 			if (open my $fh, '<', $data_file) {
 				while (my $row = <$fh> ){
-					my ($name) = $row =~ /^(\S*?)\s/;
+					my ($domain, $value) = split /\s+/, $row, 2;
+					my $name = $domain;
 					$name =~ s/\./_/g;
-					print "$name.label $name\n";
+					print "$name.label $domain\n";
 				}
 			}
 		}
