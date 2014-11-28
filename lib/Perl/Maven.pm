@@ -101,12 +101,14 @@ sub log_request {
 	}
 
 	my %details = (
-		sid      => session('id'),
-		time     => $time,
-		host     => request->host,
-		page     => request->uri,
-		referrer => request->referer,
-		ip       => $ip,
+		sid        => session('id'),
+		time       => $time,
+		host       => request->host,
+		page       => request->uri,
+		referrer   => request->referer,
+		ip         => $ip,
+		user_agent => request->user_agent,
+
 	);
 	if (logged_in) {
 
