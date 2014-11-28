@@ -114,3 +114,16 @@ Register:
   - If a user does not yet have a password, send an e-mail   
     explaining the new story
 
+
+Munin integration
+===================
+
+1) Install dbi and dbd-sqlite to the system perl
+2)
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_subscribers_per_product  /etc/munin/plugins/
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_users  /etc/munin/plugins/
+3) Restart the munin node(!)
+
+
+
+
