@@ -120,10 +120,22 @@ Munin integration
 
 1) Install dbi and dbd-sqlite to the system perl
 2)
+
+```
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_subscribers_per_product  /etc/munin/plugins/
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_users  /etc/munin/plugins/
-3) Restart the munin node(!)
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_new_users  /etc/munin/plugins/
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_hostnames
+```
 
+Add to crontab something like this (except of the username, and the path to perl):
+
+```
+*/5 * * * * (cd /home/foobar/work/Perl-Maven/; /home/foobar/dwimperl-linux-5.20.1-10-x86_64/perl/bin/perl etc/munin/perl_maven_logs collect)
+```
+
+3) Restart the munin node(!)
+```sudo service munin-node restart```
 
 
 
