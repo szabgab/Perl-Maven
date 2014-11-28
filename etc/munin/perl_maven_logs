@@ -5,10 +5,9 @@ use 5.010;
 
 use File::Basename qw(basename);
 use POSIX;
-use JSON qw(from_json);
 
-my $data_file = '/tmp/' . basename($0) . '.data';
-my $size_file = '/tmp/' . basename($0) . '.size';
+my $data_file = '/tmp/perl_maven_logs.data';
+my $size_file = '/tmp/perl_maven_logs.size';
 
 if (@ARGV) {
 	if ($ARGV[0] eq 'collect') {
@@ -51,6 +50,7 @@ sub save_file {
 sub process {
 	my ($file, $location, $data) = @_;
 	my $size = 0;
+	require JSON;
 
 	open my $fh, '<', $file or die "Could not open '$file' for reading";
 	seek $fh, $location, 0;
@@ -58,12 +58,12 @@ sub process {
 		$size += length $row;
 		chomp $row;
 		eval {
-			my $entry = from_json $row;
+			my $entry = JSON::from_json $row;
 			$data->{ $entry->{host} }++;
 			1;
 		} or do {
 			my $err = $@ // 'Unknown error';
-			warn $err;
+			warn "$err  while trying to parse '$row'";
 		};
 	}
 
@@ -72,11 +72,11 @@ sub process {
 
 sub collect {
 	my $time = time;
-	my $this_file = POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) );
-	my $prev_file = POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time-24*60*60) );
+	my $this_file = 'logs/' . POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) );
+	my $prev_file = 'logs/' . POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time-24*60*60) );
 	
-	#say $this_file;
-	#say $prev_file;
+	say $this_file;
+	say $prev_file;
 
 
 	return if not -e $this_file;
