@@ -58,14 +58,13 @@ sub process {
 	my ($file, $location, $data) = @_;
 	print "Processing $file\n";
 	my $cnt = 0;
-	my $size = 0;
 	require JSON;
 
+	my $size = -s $file;
 	open my $fh, '<', $file or die "Could not open '$file' for reading";
 	seek $fh, $location, 0;
 	while (my $row = <$fh>) {
 		$cnt++;
-		$size += length $row;
 		chomp $row;
 		eval {
 			my $entry = JSON::from_json $row;
