@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use File::Basename qw(dirname);
+use Cwd qw(abs_path);
+
+my $root;
+BEGIN {
+	$root = dirname(dirname(dirname(abs_path($0))));
+}
+
+use lib "$root/lib";
+
+
+use Perl::Maven::DB;
+my $db = Perl::Maven::DB->new("$root/pm.db");
+
+my $stats = $db->stats;
+
+if (not @ARGV) {
+
+
+	print "all_the_users.value $stats->{all_users}\n";
+	print 'verified_users.value ' . ( $stats->{all_users} - $stats->{not_verified} ) . "\n";
+	print "not_verified_users.value $stats->{not_verified}\n";
+	print "verified_but_no_password.value $stats->{no_password}\n";
+	exit;
+}
+
+if ($ARGV[0] eq 'config') {
+	print <<"END_CONFIG";
+graph_title Number of users
+graph_vlabel sec
+graph_category PerlMaven
+END_CONFIG
+
+	print "all_the_users.label All the users\n";
+	print "verified_users.label Verified\n";
+	print "not_verified_users.label NOT Verified\n";
+	print "verified_but_no_password.label Verified but NO password\n";
+	exit;
+}
+
+

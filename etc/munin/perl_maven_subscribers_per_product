@@ -5,10 +5,16 @@ use warnings;
 use File::Basename qw(dirname);
 use Cwd qw(abs_path);
 
-use lib dirname(dirname(dirname(abs_path($0)))) . '/lib';
+my $root;
+BEGIN {
+	$root = dirname(dirname(dirname(abs_path($0))));
+}
+
+use lib "$root/lib";
+
 
 use Perl::Maven::DB;
-my $db = Perl::Maven::DB->new('pm.db');
+my $db = Perl::Maven::DB->new("$root/pm.db");
 
 my $stats = $db->stats;
 
@@ -37,7 +43,7 @@ if ($ARGV[0] eq 'config') {
 	print <<"END_CONFIG";
 graph_title Number of subcribers per product
 graph_vlabel sec
-graph_category stats
+graph_category PerlMaven
 END_CONFIG
 
 	foreach my $code ( sort keys %{ $stats->{products} } ) {
