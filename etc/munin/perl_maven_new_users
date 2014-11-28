@@ -15,13 +15,15 @@ use lib "$root/lib";
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new("$root/pm.db");
 
-my $time = time-60*60*24;
-my ($new_users) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $time);
+my $day = time-60*60*24;
+my ($new_users_1) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $day);
+my ($new_users_7) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $day*7);
 # TODO add number of new signups that have not verified yet. I think for this we are 
 # still missing the register_timestamp 
 
 if (not @ARGV) {
-	print "new_users.value $new_users\n";
+	print "new_users_1.value $new_users_1\n";
+	print "new_users_7.value $new_users_7\n";
 	exit;
 }
 
@@ -32,7 +34,8 @@ graph_vlabel #
 graph_category PerlMaven
 END_CONFIG
 
-	print "new_users.label New users (last 24 hours)\n";
+	print "new_users_1.label New users (last 24 hours)\n";
+	print "new_users_7.label New users (last 7 days)\n";
 	exit;
 }
 
