@@ -16,22 +16,27 @@ if (@ARGV) {
 
 	}
 	if ($ARGV[0] eq 'config') {
-		print <<"END_CONFIG";
+		if (basename($0) eq 'perl_maven_logs_hostnames') { 
+			print <<"END_CONFIG";
 graph_title Page view per domain
 graph_vlabel cnt
 graph_category PerlMaven
 END_CONFIG
 
-		if (open my $fh, '<', $data_file) {
-			while (my $row = <$fh> ){
-				my ($name) = $row =~ /^(.*?)\.value /;
-				print "$name.label $name\n";
+			if (open my $fh, '<', $data_file) {
+				while (my $row = <$fh> ){
+					my ($name) = $row =~ /^(.*?)\.value /;
+					print "$name.label $name\n";
+				}
 			}
 		}
 	}
 } else {
-	if (open my $fh, '<', $data_file) {
-		print <$fh>;
+
+	if (basename($0) eq 'perl_maven_logs_hostnames') { 
+		if (open my $fh, '<', $data_file) {
+			print <$fh>;
+		}
 	}
 }
 
