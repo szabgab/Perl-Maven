@@ -41,7 +41,7 @@ END_CONFIG
 				$domain =~ s/\./_/g;
 				print "$domain.value $value\n";
 			}
-			cloes $fh;
+			close $fh;
 		}
 	}
 }
@@ -56,12 +56,15 @@ sub save_file {
 
 sub process {
 	my ($file, $location, $data) = @_;
+	print "Processing $file\n";
+	my $cnt = 0;
 	my $size = 0;
 	require JSON;
 
 	open my $fh, '<', $file or die "Could not open '$file' for reading";
 	seek $fh, $location, 0;
 	while (my $row = <$fh>) {
+		$cnt++;
 		$size += length $row;
 		chomp $row;
 		eval {
@@ -70,7 +73,7 @@ sub process {
 			1;
 		} or do {
 			my $err = $@ // 'Unknown error';
-			warn "$err  while trying to parse '$row'";
+			warn "$err  while trying to parse ($cnt) '$row'";
 		};
 	}
 
@@ -82,9 +85,8 @@ sub collect {
 	my $this_file = 'logs/' . POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) );
 	my $prev_file = 'logs/' . POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time-24*60*60) );
 	
-	say $this_file;
-	say $prev_file;
-
+	#say $this_file;
+	#say $prev_file;
 
 	return if not -e $this_file;
 
