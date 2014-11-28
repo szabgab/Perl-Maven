@@ -1,0 +1,104 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.010;
+
+use File::Basename qw(basename);
+use POSIX;
+use JSON qw(from_json);
+
+my $data_file = '/tmp/' . basename($0) . '.data';
+my $size_file = '/tmp/' . basename($0) . '.size';
+
+if (@ARGV) {
+	if ($ARGV[0] eq 'collect') {
+		collect();
+
+	}
+	if ($ARGV[0] eq 'config') {
+		print <<"END_CONFIG";
+graph_title Page view per domain
+graph_vlabel cnt
+graph_category PerlMaven
+END_CONFIG
+
+		if (open my $fh, '<', $data_file) {
+			while (my $row = <$fh> ){
+				my ($name) = $row =~ /^(.*?)\.value /;
+				print "$name.label $name\n";
+			}
+		}
+	}
+} else {
+	if (open my $fh, '<', $data_file) {
+		print <$fh>;
+	}
+}
+
+sub save_file {
+	my ($file, $text) = @_;
+	open my $out, '>', $file or die "Cannot open '$file' for writing";
+	print $out $text;
+	close $out;
+	return;
+}
+
+sub process {
+	my ($file, $location, $data) = @_;
+	my $size = 0;
+
+	open my $fh, '<', $file or die "Could not open '$file' for reading";
+	seek $fh, $location, 0;
+	while (my $row = <$fh>) {
+		$size += length $row;
+		chomp $row;
+		eval {
+			my $entry = from_json $row;
+			$data->{ $entry->{host} }++;
+			1;
+		} or do {
+			my $err = $@ // 'Unknown error';
+			warn $err;
+		};
+	}
+
+	return $size;
+}
+
+sub collect {
+	my $time = time;
+	my $this_file = POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) );
+	my $prev_file = POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time-24*60*60) );
+	
+	#say $this_file;
+	#say $prev_file;
+
+
+	return if not -e $this_file;
+
+	if (not -e $size_file) {
+		save_file($size_file, -s $this_file);
+		return;
+	}
+
+	open my $fh, '<', $size_file or die "Cannot open '$size_file' for reading";
+	my $last_size = <$fh>;
+	close $fh;
+
+
+	my %data;
+	if (-s $this_file < $last_size) { # TODO add a condition on time as well!
+		if (-e $prev_file) {
+			process($prev_file, $last_size, \%data);
+		}
+	}
+	$last_size = process($this_file, $last_size, \%data);
+
+	my $domains = '';
+	foreach my $k (keys %data) {
+		$domains .= "$k.value $data{$k}\n";
+	}
+
+	save_file($data_file, $domains);
+	save_file($size_file, $last_size);
+}
