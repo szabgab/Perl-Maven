@@ -21,4 +21,4 @@ engines:
   template_toolkit:
     encoding:  'utf8'
 
-session: "YAML"
+#session: "YAML"
