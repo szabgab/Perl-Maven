@@ -16,8 +16,9 @@ use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new("$root/pm.db");
 
 my $day = time-60*60*24;
+my $week = time-60*60*24*7;
 my ($new_users_1) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $day);
-my ($new_users_7) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $day*7);
+my ($new_users_7) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $week);
 # TODO add number of new signups that have not verified yet. I think for this we are 
 # still missing the register_timestamp 
 
