@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use File::Basename qw(dirname);
+use Cwd qw(abs_path);
+
+my $root;
+BEGIN {
+	$root = dirname(dirname(dirname(abs_path($0))));
+}
+
+use lib "$root/lib";
+
+use Perl::Maven::DB;
+my $db = Perl::Maven::DB->new("$root/pm.db");
+
+my $time = time-60*60*24;
+my ($new_users) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $time);
+# TODO add number of new signups that have not verified yet. I think for this we are 
+# still missing the register_timestamp 
+
+if (not @ARGV) {
+	print "new_users.value $new_users\n";
+	exit;
+}
+
+if ($ARGV[0] eq 'config') {
+	print <<"END_CONFIG";
+graph_title Number of new users
+graph_vlabel #
+graph_category PerlMaven
+END_CONFIG
+
+	print "new_users.label New users (last 24 hours)\n";
+	exit;
+}
+
