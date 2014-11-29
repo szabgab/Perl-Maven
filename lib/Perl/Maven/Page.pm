@@ -175,6 +175,15 @@ SCREENCAST
 		die "Too many times =abstract edn: $data{abstract_end}"
 			if $data{abstract_end} > 1;
 	}
+	# die if not $data{abstract} ???
+	my $MAX_ABSTRACT = 1400;
+	if ( length $data{abstract} > $MAX_ABSTRACT ) {
+		die sprintf(
+			'Abstract of %s is too long. It has %s characters. (allowed %s)',
+			$self->file, length $data{abstract},
+			$MAX_ABSTRACT
+		);
+	}
 
 	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
 	foreach my $url ( keys %links ) {
@@ -201,15 +210,6 @@ SCREENCAST
 
 	}
 
-	# die if not $data{abstract} ???
-	my $MAX_ABSTRACT = 1400;
-	if ( length $data{abstract} > $MAX_ABSTRACT ) {
-		die sprintf(
-			'Abstract of %s is too long. It has %s characters. (allowed %s)',
-			$self->file, length $data{abstract},
-			$MAX_ABSTRACT
-		);
-	}
 
 	return \%data;
 }
