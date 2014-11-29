@@ -169,6 +169,16 @@ SCREENCAST
 	$data{mycontent} = $cont;
 	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
 
+	if ( $data{abstract_start} ) {
+		die "Too many times =abstract start: $data{abstract_start}"
+			if $data{abstract_start} > 1;
+		die '=abstract started but not ended' if not $data{abstract_end};
+		die "Too many times =abstract edn: $data{abstract_end}"
+			if $data{abstract_end} > 1;
+	}
+
+	# Replace the anchor text by a the actual title of each linked page to for
+	# the 'related' listing.
 	# TODO: this should not be read into memory for every page!
 	if ( not $ENV{METAMETA} ) {
 		my $site = $self->tools->read_meta_array('sitemap');
@@ -178,14 +188,6 @@ SCREENCAST
 				$links{$url} = $sitemap{$url};
 			}
 		}
-	}
-
-	if ( $data{abstract_start} ) {
-		die "Too many times =abstract start: $data{abstract_start}"
-			if $data{abstract_start} > 1;
-		die '=abstract started but not ended' if not $data{abstract_end};
-		die "Too many times =abstract edn: $data{abstract_end}"
-			if $data{abstract_end} > 1;
 	}
 
 	$data{related} = [
