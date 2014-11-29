@@ -1,4 +1,4 @@
-<% INCLUDE layouts/incl/header.tt %>
+<% INCLUDE incl/header.tt %>
 
 <h1><% title %></h1>
 
@@ -15,7 +15,7 @@
 <% content %>
 
 <% IF conf.show_newsletter_form %>
-    <% INCLUDE "layouts/incl/newsletter.tt" %>
+    <% INCLUDE "incl/newsletter.tt" %>
 <% END %>
 
 <% IF published %>
@@ -26,4 +26,4 @@
 <% END %>
 <% INCLUDE incl/comments.tt %>
 
-<% INCLUDE layouts/incl/footer.tt %>
+<% INCLUDE incl/footer.tt %>

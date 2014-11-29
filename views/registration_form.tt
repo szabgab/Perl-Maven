@@ -1,4 +1,4 @@
-<% INCLUDE layouts/incl/newsletter.tt %>
+<% INCLUDE incl/newsletter.tt %>
 
 <div id="error">
 <% IF no_mail %>

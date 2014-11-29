@@ -1,4 +1,4 @@
-<% INCLUDE layouts/incl/header.tt %>
+<% INCLUDE incl/header.tt %>
 
 <% content %>
 
@@ -16,5 +16,5 @@
 </ul>
 </div>
 
-<% INCLUDE layouts/incl/footer.tt %>
+<% INCLUDE incl/footer.tt %>
 
