@@ -157,7 +157,10 @@ hook before_template => sub {
 	$t->{conf}      = mymaven->{conf};
 	$t->{resources} = read_resources();
 
-	foreach my $f (qw(comments_disqus_enable)) {
+# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
+# which in itself might need to be configurable. For now we add the fields
+# one by one as we convert the code and the pages.
+	foreach my $f (qw(comments_disqus_enable show_related)) {
 		if ( defined $t->{$f} ) {
 			$t->{conf}{$f} = delete $t->{$f};
 		}
@@ -238,19 +241,6 @@ hook before_template => sub {
 	}
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
-
-	# TODO we should be able to configure which page should show related
-	# articles and which should not
-	my %UNRELATED = map { $_ => 1 }
-		qw(/ /perl-tutorial /psgi /catalyst /dancer /metacpan /search-cpan-org /testing /mojolicious /moo /moose /net-server /mongodb /anyevent);
-	if ( $t->{related} ) {
-		if ( not @{ $t->{related} } ) {
-			delete $t->{related};
-		}
-		if ( $UNRELATED{ request->path } ) {
-			delete $t->{related};
-		}
-	}
 
 	return;
 };

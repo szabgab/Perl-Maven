@@ -38,7 +38,7 @@
            </div>
 
 
-           <% IF related %>
+           <% IF conf.show_related && related %>
              <div id="related">
                <b>Related articles</b>
                <ul>

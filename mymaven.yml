@@ -45,6 +45,7 @@ installation:
     show_sponsors: 1
     show_newsletter_form: 0
     show_indexes: 1
+    show_related: 1
     comments_disqus_enable: 0
     archive_selector: 0
   admin:
