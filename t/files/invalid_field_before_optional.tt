@@ -6,7 +6,7 @@
 =books beginner_book
 =author szabgab
 =archive 1
-=social 1
+=show_social 1
 
 
 Some text here.

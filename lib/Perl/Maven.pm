@@ -156,7 +156,7 @@ hook before_template => sub {
 	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
-	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form)) {
+	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form show_social)) {
 		if ( defined $t->{$f} ) {
 			$t->{conf}{$f} = delete $t->{$f};
 		}
@@ -217,7 +217,7 @@ hook before_template => sub {
 
 	# TODO start using a separate development configuration file and remove this code from here:
 	if ( in_development() ) {
-		$t->{social} = 0;
+		$t->{show_social} = 0;
 
 		$t->{conf}{comments_disqus_enable} = 0;
 		$t->{conf}{clicky}                 = 0;

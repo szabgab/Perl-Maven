@@ -48,6 +48,7 @@ installation:
     show_related: 1
     comments_disqus_enable: 0
     show_archive_selector: 0
+    show_social: 1
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:

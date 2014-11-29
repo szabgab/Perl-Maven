@@ -1,4 +1,4 @@
-<% IF social %>
+<% IF conf.show_social %>
 
 <div id="social-share">
 <script>reddit_url='<% reddit_url %>'</script>
