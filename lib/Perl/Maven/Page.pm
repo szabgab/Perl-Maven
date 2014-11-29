@@ -28,8 +28,8 @@ sub read {
 	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
 	#    require it but also have a mark if we want to show it or not?)
 	my @header
-		= qw(title timestamp description? indexes? tags? mp3? status original? books? showright? newsletter? published? author
-		translator? archive comments_disqus_enable? social show_related?);
+		= qw(title timestamp author status description? indexes? tags? mp3? original? books? published? translator?);
+	push @header, qw(archive comments_disqus_enable? social? newsletter? showright? show_related?);
 
 	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
 	my %opts = (
