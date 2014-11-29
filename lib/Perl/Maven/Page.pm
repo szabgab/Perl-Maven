@@ -167,7 +167,6 @@ SCREENCAST
 		}
 	}
 	$data{mycontent} = $cont;
-	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
 
 	if ( $data{abstract_start} ) {
 		die "Too many times =abstract start: $data{abstract_start}"
@@ -177,10 +176,17 @@ SCREENCAST
 			if $data{abstract_end} > 1;
 	}
 
+	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
+	foreach my $url ( keys %links ) {
+		if ( $url !~ m{^/} ) {
+			delete $links{$url};
+		}
+	}
+
 	# Replace the anchor text by a the actual title of each linked page to for
 	# the 'related' listing.
 	# TODO: this should not be read into memory for every page!
-	if ( not $ENV{METAMETA} ) {
+	if ( not $ENV{METAMETA} and %links ) {
 		my $site = $self->tools->read_meta_array('sitemap');
 		my %sitemap = map { '/' . $_->{filename} => $_->{title} } @$site;
 		foreach my $url ( keys %links ) {
@@ -188,13 +194,12 @@ SCREENCAST
 				$links{$url} = $sitemap{$url};
 			}
 		}
-	}
+		$data{related} = [
+			map { { url => $_, text => $links{$_} } }
+			sort keys %links
+		];
 
-	$data{related} = [
-		map { { url => $_, text => $links{$_} } }
-		grep { $_ =~ m{^/} }
-		sort keys %links
-	];
+	}
 
 	# die if not $data{abstract} ???
 	my $MAX_ABSTRACT = 1400;
