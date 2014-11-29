@@ -210,14 +210,6 @@ hook before_template => sub {
 		$t->{$field} = $url;
 	}
 
-	# on May 1 2013 the site was redirected from perl5maven.com to perlmaven.com
-	# we try to salvage some of the social proof.
-	if ( $t->{date} and $t->{date} le '2013-05-01' ) {
-		foreach my $field (qw(reddit_url twitter_data_counturl)) {
-			$t->{$field} =~ s/perlmaven.com/perl5maven.com/;
-		}
-	}
-
 	if ( $t->{no_such_article} ) {
 		$t->{conf}{clicky}           = 0;
 		$t->{conf}{google_analytics} = 0;
