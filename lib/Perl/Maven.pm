@@ -239,6 +239,19 @@ hook before_template => sub {
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
 
+	# TODO we should be able to configure which page should show related
+	# articles and which should not
+	my %UNRELATED = map { $_ => 1 }
+		qw(/ /perl-tutorial /psgi /catalyst /dancer /metacpan /search-cpan-org /testing /mojolicious /moo /moose /net-server /mongodb /anyevent);
+	if ( $t->{related} ) {
+		if ( not @{ $t->{related} } ) {
+			delete $t->{related};
+		}
+		if ( $UNRELATED{ request->path } ) {
+			delete $t->{related};
+		}
+	}
+
 	return;
 };
 
@@ -1182,19 +1195,6 @@ sub _show {
 	}
 
 	$tt->{$_} = $data->{$_} for keys %$data;
-
-	# TODO we should be able to configure which page should show related
-	# articles and which should not
-	my %UNRELATED = map { $_ => 1 }
-		qw(/ /perl-tutorial /psgi /catalyst /dancer /metacpan /search-cpan-org /testing /mojolicious /moo /moose /net-server /mongodb /anyevent);
-	if ( $tt->{related} ) {
-		if ( not @{ $tt->{related} } ) {
-			delete $tt->{related};
-		}
-		if ( $UNRELATED{ request->path } ) {
-			delete $tt->{related};
-		}
-	}
 
 	return template $params->{template}, $tt, { layout => $params->{layout} };
 }
