@@ -61,7 +61,7 @@ hook before => sub {
 	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
 	$engines->{template_toolkit}{INCLUDE_PATH}
-		= [ mymaven->{site} . '/templates', "$appdir/views" ];
+		= [ "$appdir/views" ];
 	Dancer::Template::TemplateToolkit->new(
 		name   => 'template_toolkit',
 		type   => 'template',
