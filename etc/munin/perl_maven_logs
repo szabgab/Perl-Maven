@@ -57,7 +57,7 @@ sub save_file {
 
 sub process {
 	my ($file, $location, $data) = @_;
-	print "Processing $file\n";
+	#print "Processing $file\n";
 	my $cnt = 0;
 	require JSON;
 
