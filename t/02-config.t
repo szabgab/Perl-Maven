@@ -8,11 +8,11 @@ plan tests => 2;
 use Perl::Maven::Config;
 
 subtest mymaven => sub {
-	plan tests => 8,
+	plan tests => 8;
 
-		my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
-	my $main = $mymaven->config('perlmaven.com');
-	my $br   = $mymaven->config('br.perlmaven.com');
+	my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
+	my $main    = $mymaven->config('perlmaven.com');
+	my $br      = $mymaven->config('br.perlmaven.com');
 
 	is $main->{site}, 't/files/../sites/perlmaven.com/sites/en';
 	is $main->{meta}, '/home/foobar/perlmaven-meta';
