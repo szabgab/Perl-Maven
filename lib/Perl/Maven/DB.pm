@@ -46,16 +46,13 @@ sub add_registration {
 sub update_user {
 	my ( $self, $id, %fields ) = @_;
 
-	$self->{dbh}->do( 'UPDATE user SET name=? WHERE id=?',
-		undef, $fields{name}, $id );
+	$self->{dbh}->do( 'UPDATE user SET name=? WHERE id=?', undef, $fields{name}, $id );
 }
 
 sub get_user_by_email {
 	my ( $self, $email ) = @_;
 
-	my $hr
-		= $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE email=?',
-		undef, $email );
+	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE email=?', undef, $email );
 
 	return $hr;
 }
@@ -74,8 +71,7 @@ sub get_people {
 sub get_user_by_id {
 	my ( $self, $id ) = @_;
 
-	my $hr = $self->{dbh}
-		->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
+	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
 
 	return $hr;
 }
@@ -83,8 +79,7 @@ sub get_user_by_id {
 sub verify_registration {
 	my ( $self, $id, $code ) = @_;
 
-	$self->{dbh}
-		->do( 'UPDATE user SET verify_time=? WHERE id=?', undef, time, $id );
+	$self->{dbh}->do( 'UPDATE user SET verify_time=? WHERE id=?', undef, time, $id );
 }
 
 sub set_password_code {
@@ -164,23 +159,16 @@ sub is_subscribed {
 sub subscribe_to {
 	my ( $self, %args ) = @_;
 
-	my ($pid)
-		= $self->{dbh}
-		->selectrow_array( q{SELECT product.id FROM product WHERE code=?},
-		undef, $args{code} );
+	my ($pid) = $self->{dbh}->selectrow_array( q{SELECT product.id FROM product WHERE code=?}, undef, $args{code} );
 	return 'no_such_code' if not $pid;
 
 	my $uid = $args{uid};
 	if ( not $uid ) {
-		($uid)
-			= $self->{dbh}
-			->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
-			undef, $args{email} );
+		($uid) = $self->{dbh}->selectrow_array( q{SELECT user.id FROM user WHERE email=?}, undef, $args{email} );
 	}
 	return 'no_such_email' if not $uid;
 
-	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid) VALUES (?, ?)',
-		undef, $uid, $pid );
+	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid) VALUES (?, ?)', undef, $uid, $pid );
 
 	return;
 }
@@ -188,99 +176,81 @@ sub subscribe_to {
 sub unsubscribe_from {
 	my ( $self, %args ) = @_;
 
-	my ($pid)
-		= $self->{dbh}
-		->selectrow_array( q{SELECT product.id FROM product WHERE code=?},
-		undef, $args{code} );
+	my ($pid) = $self->{dbh}->selectrow_array( q{SELECT product.id FROM product WHERE code=?}, undef, $args{code} );
 	return 'no_such_code' if not $pid;
 
 	my $uid = $args{uid};
 	if ( not $uid ) {
-		($uid)
-			= $self->{dbh}
-			->selectrow_array( q{SELECT user.id FROM user WHERE email=?},
-			undef, $args{email} );
+		($uid) = $self->{dbh}->selectrow_array( q{SELECT user.id FROM user WHERE email=?}, undef, $args{email} );
 		return 'no_such_email' if not $uid;
 	}
 
-	$self->{dbh}->do( 'DELETE FROM subscription WHERE uid=? AND pid=?',
-		undef, $uid, $pid );
+	$self->{dbh}->do( 'DELETE FROM subscription WHERE uid=? AND pid=?', undef, $uid, $pid );
 
 	return;
 }
 
 sub save_transaction {
 	my ( $self, $id, $data ) = @_;
-	$self->{dbh}->do(
-		q{INSERT INTO transactions (id, ts, sys, data) VALUES(?, ?, ?, ?)},
-		{}, $id, time, 'paypal', $data );
+	$self->{dbh}
+		->do( q{INSERT INTO transactions (id, ts, sys, data) VALUES(?, ?, ?, ?)}, {}, $id, time, 'paypal', $data );
 	return;
 }
 
 sub get_transaction {
 	my ( $self, $id ) = @_;
 	my ($data)
-		= $self->{dbh}
-		->selectrow_array( q{SELECT data FROM transactions WHERE id=?},
-		undef, $id );
+		= $self->{dbh}->selectrow_array( q{SELECT data FROM transactions WHERE id=?}, undef, $id );
 	return $data;
 }
 
 sub get_products {
 	my ($self) = @_;
-	return $self->{dbh}
-		->selectall_hashref( q{SELECT id, code, name, price FROM product},
-		'code' );
+	return $self->{dbh}->selectall_hashref( q{SELECT id, code, name, price FROM product}, 'code' );
 }
 
 sub add_product {
 	my ( $self, $code, $name, $price ) = @_;
 
 	die "Invlaid code '$code'" if $code !~ /^[a-z0-9_]+$/;
-	$self->{dbh}
-		->do( 'INSERT INTO product (code, name, price) VALUES (?, ?, ?)',
-		undef, $code, $name, $price );
+	$self->{dbh}->do( 'INSERT INTO product (code, name, price) VALUES (?, ?, ?)', undef, $code, $name, $price );
 }
 
 sub stats {
 	my ($self) = @_;
 
 	my $products = $self->get_products;
-	my $subs     = $self->{dbh}->selectall_hashref(
-		q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
+	my $subs = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
 	foreach my $code ( keys %$products ) {
 		my $pid = $products->{$code}{id};
 		$products->{$code}{cnt} = ( $subs->{$pid}{cnt} || 0 );
 	}
 
 	my %stats = ( products => $products );
-	$stats{all_subs} = $self->{dbh}->selectrow_array(
-		q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
-	$stats{distinct_subs} = $self->{dbh}->selectrow_array(
-		q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
+	$stats{all_subs}
+		= $self->{dbh}->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
+	$stats{distinct_subs}
+		= $self->{dbh}->selectrow_array(q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
 
 	$stats{all_users}
 		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user});
-	$stats{not_verified} = $self->{dbh}->selectrow_array(
-		q{SELECT COUNT(*) FROM user WHERE verify_time is NULL});
+	$stats{not_verified}
+		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NULL});
 	$stats{no_password}
-		= $self->{dbh}->selectrow_array(
-		q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL}
-		);
+		= $self->{dbh}
+		->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL});
 
 	return \%stats;
 }
 
 sub replace_email {
 	my ( $self, $old, $new ) = @_;
-	return $self->{dbh}->do( q{UPDATE user SET email = ? WHERE email = ?},
-		undef, $new, $old );
+	return $self->{dbh}->do( q{UPDATE user SET email = ? WHERE email = ?}, undef, $new, $old );
 }
 
 sub delete_user {
 	my ( $self, $email ) = @_;
-	return $self->{dbh}
-		->do( 'DELETE FROM user WHERE email=?', undef, $email );
+	return $self->{dbh}->do( 'DELETE FROM user WHERE email=?', undef, $email );
 }
 
 sub dump {
@@ -331,25 +301,19 @@ sub setup {
 
 sub save_verification {
 	my ( $self, %params ) = @_;
-	return $self->{dbh}->do(
-		'INSERT INTO verification (code, timestamp, action, uid, details) VALUES (?, ?, ?, ?, ?)',
-		undef, @params{qw(code timestamp action uid details)}
-	);
+	return $self->{dbh}->do( 'INSERT INTO verification (code, timestamp, action, uid, details) VALUES (?, ?, ?, ?, ?)',
+		undef, @params{qw(code timestamp action uid details)} );
 }
 
 sub get_verification {
 	my ( $self, $code ) = @_;
-	my $hr
-		= $self->{dbh}
-		->selectall_hashref( 'SELECT * FROM verification WHERE code=?',
-		'code', undef, $code );
+	my $hr = $self->{dbh}->selectall_hashref( 'SELECT * FROM verification WHERE code=?', 'code', undef, $code );
 	return $hr->{$code};
 }
 
 sub delete_verification_code {
 	my ( $self, $code ) = @_;
-	return $self->{dbh}
-		->do( 'DELETE FROM verification WHERE code=?', undef, $code );
+	return $self->{dbh}->do( 'DELETE FROM verification WHERE code=?', undef, $code );
 }
 
 1;

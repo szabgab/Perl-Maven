@@ -68,10 +68,9 @@ sub config {
 	#	$mymaven = merge( $mymaven, $real_host_config );
 	#}
 	delete $mymaven->{sites};
-	$mymaven->{root}     = $self->_update_root( $mymaven->{root} );
-	$mymaven->{meta}     = $self->_update_root( $mymaven->{meta} );
-	$mymaven->{dirs}{$_} = $self->_update_root( $mymaven->{dirs}{$_} )
-		for keys %{ $mymaven->{dirs} };
+	$mymaven->{root} = $self->_update_root( $mymaven->{root} );
+	$mymaven->{meta} = $self->_update_root( $mymaven->{meta} );
+	$mymaven->{dirs}{$_} = $self->_update_root( $mymaven->{dirs}{$_} ) for keys %{ $mymaven->{dirs} };
 
 	#die Dumper $mymaven;
 
@@ -102,8 +101,8 @@ sub realhost {
 
 sub host {
 	my ($host) = @_;
-	$host =~ s/:.*//;          # remove port
-	$host =~ s/\.local$//g;    # development environemt domain.com.local
+	$host =~ s/:.*//;                  # remove port
+	$host =~ s/\.local$//g;            # development environemt domain.com.local
 	return $host;
 }
 

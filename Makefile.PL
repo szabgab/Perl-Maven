@@ -12,7 +12,7 @@ WriteMakefile(
 		: () ),
 	PL_FILES  => {},
 	PREREQ_PM => {
-		'Acme::MetaSyntactic'        => 1.012,   # or even Task::MetaSyntactic
+		'Acme::MetaSyntactic'        => 1.012,      # or even Task::MetaSyntactic
 		'Business::PayPal'           => 0.13,
 		'Carp::Always'               => 0,
 		'Code::Explain'              => 0.02,
@@ -27,7 +27,7 @@ WriteMakefile(
 		'Hash::Merge::Simple'        => 0.051,
 		'Moo'                        => 1.006000,
 		'Plack'                      => 1.0031,
-		'Storable'                   => 2.51,    # dclone is used
+		'Storable'                   => 2.51,       # dclone is used
 		'Template'                   => 2.25,
 		'YAML'                       => 1.09,
 		'JSON'                       => 2.90,

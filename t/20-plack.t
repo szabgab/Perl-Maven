@@ -28,11 +28,8 @@ test_psgi $app, sub {
 	my $cb  = shift;
 	my $res = $cb->( GET 'http://test-perl-maven.com/' );
 	is $res->code, 200;
-	like(
-		$res->content,
-		qr{<title>Perl Maven - for people who want to get the most out of programming in Perl</title>},
-		'main page'
-	);
+	like( $res->content, qr{<title>Perl Maven - for people who want to get the most out of programming in Perl</title>},
+		'main page' );
 };
 
 done_testing;

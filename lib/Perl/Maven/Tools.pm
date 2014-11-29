@@ -73,13 +73,10 @@ sub read_meta_array {
 	my @pages = @$meta;
 	if ( $p{filter} ) {
 		if ( $p{filter} eq 'free' ) {
-			@pages = grep { Perl::Maven::Tools::_none( 'pro', $_->{tags} ) }
-				@pages;
+			@pages = grep { Perl::Maven::Tools::_none( 'pro', $_->{tags} ) } @pages;
 		}
 		else {
-			@pages
-				= grep { Perl::Maven::Tools::_any( $p{filter}, $_->{tags} ) }
-				@pages;
+			@pages = grep { Perl::Maven::Tools::_any( $p{filter}, $_->{tags} ) } @pages;
 		}
 	}
 	if ( $p{limit} ) {

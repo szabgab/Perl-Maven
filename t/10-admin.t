@@ -60,8 +60,7 @@ subtest list_products => sub {
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --products";
 	};
-	is $stdout,
-		q{ 2 beginner_perl_maven_ebook           Beginner Perl Maven e-book        0.01
+	is $stdout, q{ 2 beginner_perl_maven_ebook           Beginner Perl Maven e-book        0.01
  1 perl_maven_cookbook                 Perl Maven Cookbook                 0
 }, '--products';
 	is $stderr, '', 'stderr is empty';

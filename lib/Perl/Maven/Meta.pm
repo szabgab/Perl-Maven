@@ -38,17 +38,16 @@ sub process_domain {
 		$self->process_site( $lang_config, $domain, $lang );
 	}
 
-	my @meta_archive = reverse sort { $a->{timestamp} cmp $b->{timestamp} }
-		@{ $self->meta_archive };
+	my @meta_archive
+		= reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
 	save( 'archive', "$config->{meta}/meta.$domain/meta", \@meta_archive );
 	save( 'translations', "$config->{meta}", $self->translations );
 
 	my %stats;
 	$self->stats->{pagecount}{$_} ||= 0 for keys %$sites;
 	foreach my $lang (
-		reverse sort {
-			$self->stats->{pagecount}{$a} <=> $self->stats->{pagecount}{$b}
-		} keys %$sites
+		reverse sort { $self->stats->{pagecount}{$a} <=> $self->stats->{pagecount}{$b} }
+		keys %$sites
 		)
 	{
 		$sites->{$lang}{pagecount} = $self->stats->{pagecount}{$lang};
@@ -92,13 +91,11 @@ sub process_site {
 
 	my $pages = $self->get_pages(@sources);
 
-	my ( $keywords, $archive, $sitemap )
-		= $self->process_files( $pages, $lang );
+	my ( $keywords, $archive, $sitemap ) = $self->process_files( $pages, $lang );
 	save( 'archive',  $dest, $archive );
 	save( 'keywords', $dest, $keywords );
 	save( 'sitemap',  $dest, $sitemap );
-	push @{ $self->meta_archive },
-		map { $_->{url} = "http://$site"; $_ } @$archive;
+	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
 	return;
 }
@@ -114,7 +111,7 @@ sub process_files {
 	my %keywords;    # =indexes and =tags are united here
 	my ( @archive, @sitemap );
 
-#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
+	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
 	foreach my $p (@$pages) {
 		my $filename = substr( $p->{url_path}, 0, -3 );
@@ -126,8 +123,7 @@ sub process_files {
 		}
 
 		if ( $ts{ $p->{timestamp} } and $filename !~ /perldoc/ ) {
-			die
-				"Duplicate =timestamp '$p->{timestamp}' in $ts{ $p->{timestamp} } and in $lang/pages/$filename\n";
+			die "Duplicate =timestamp '$p->{timestamp}' in $ts{ $p->{timestamp} } and in $lang/pages/$filename\n";
 		}
 		$ts{ $p->{timestamp} } = "$lang/pages/$filename";
 
@@ -168,10 +164,10 @@ sub process_files {
 			push @archive, $e;
 		}
 
-	 # TODO what to do when there is no abstract might need some configuration
-	 # let's put the title in the abstract for now.
-	 #$p->{abstract} ||= $p->{title};
-	 #$p->{abstract} ||= ' ';
+		# TODO what to do when there is no abstract might need some configuration
+		# let's put the title in the abstract for now.
+		#$p->{abstract} ||= $p->{title};
+		#$p->{abstract} ||= ' ';
 
 		push @sitemap,
 			{
@@ -194,9 +190,7 @@ sub save {
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
-	eval {
-		print $fh to_json $data, { utf8 => 1, pretty => 1, canonical => 1 };
-	};
+	eval { print $fh to_json $data, { utf8 => 1, pretty => 1, canonical => 1 }; };
 	die "$@ when creating '$path'\n" . Dumper $data if $@;
 	close $fh;
 	return;
@@ -209,9 +203,7 @@ sub get_pages {
 	foreach my $s (@sources) {
 		die Dumper $s if not $s->{path};
 		say $s->{path};
-		foreach my $file ( File::Find::Rule->file()->name('*.tt')->relative()
-			->in( $s->{path} ) )
-		{
+		foreach my $file ( File::Find::Rule->file()->name('*.tt')->relative()->in( $s->{path} ) ) {
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
@@ -235,8 +227,8 @@ sub get_pages {
 				$p{autotags} = $s->{autotags};
 			}
 
-	# for now skip the video files
-	# but we put it in the list of pages in order to verify the timestamp etc.
+			# for now skip the video files
+			# but we put it in the list of pages in order to verify the timestamp etc.
 			if ( $file =~ m{beginner-perl/} ) {
 				$p{skip} = 1;
 			}

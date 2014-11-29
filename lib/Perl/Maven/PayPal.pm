@@ -14,8 +14,7 @@ my $sandbox     = 0;
 my $sandbox_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
 sub mymaven {
-	my $mymaven = Perl::Maven::Config->new(
-		path( config->{appdir}, config->{mymaven_yml} ) );
+	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
 	return $mymaven->config( request->host );
 }
 
@@ -36,8 +35,7 @@ get '/buy' => sub {
 	if ( $type eq 'annual' ) {    # TODO remove hardcoding
 		$products->{$what}{price} = 90;
 	}
-	return template 'buy',
-		{ %{ $products->{$what} }, button => paypal_buy( $what, $type, 1 ), };
+	return template 'buy', { %{ $products->{$what} }, button => paypal_buy( $what, $type, 1 ), };
 };
 
 get '/canceled' => sub {
@@ -64,11 +62,11 @@ any '/paypal' => sub {
 	my ( $txnstatus, $reason ) = $paypal->ipnvalidate( \%query );
 	if ( not $txnstatus ) {
 
-# This probably means someone other than PayPal has accessed the /paypal URL
-# We want to log this an maybe look into it.
-# for this we probably want to log the IP of the client that sent this request
-# maybe even send an e-mail alert?
-# TODO we should report this
+		# This probably means someone other than PayPal has accessed the /paypal URL
+		# We want to log this an maybe look into it.
+		# for this we probably want to log the IP of the client that sent this request
+		# maybe even send an e-mail alert?
+		# TODO we should report this
 
 		log_paypal( "IPN - could not verify - $reason", \%query );
 		return '';
@@ -77,19 +75,19 @@ any '/paypal' => sub {
 	my $paypal_data = from_yaml setting('db')->get_transaction($id);
 	if ( not $paypal_data ) {
 
-	 # PayPal sent us some message related to a request - they claim we sent -
-	 # but we cannot find that request. Do they make the mistake?
-	 # Has somene else sent them the request on our behalf?
-	 # Have we lost the request?
-	 # TODO we should report this
+		# PayPal sent us some message related to a request - they claim we sent -
+		# but we cannot find that request. Do they make the mistake?
+		# Has somene else sent them the request on our behalf?
+		# Have we lost the request?
+		# TODO we should report this
 		log_paypal( 'IPN-unrecognized-id', \%query );
 		return '';
 	}
 	my $payment_status = $query{payment_status} || '';
 
-  # When allowing for "one month free", there won't be a payment_status at all
-  # there won't be a txn_id either (transaction id)
-  #if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
+	# When allowing for "one month free", there won't be a payment_status at all
+	# there won't be a txn_id either (transaction id)
+	#if ( $payment_status eq 'Completed' or $payment_status eq 'Pending' ) {
 	my $uid = $paypal_data->{uid};
 
 	my %params = (
@@ -158,9 +156,9 @@ sub paypal_buy {
 # p3 = number of time periods between each recurrence
 # t3 = time period (D=days, W=weeks, M=months, Y=years)
 
-# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
-# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
-# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
+	# uri_for returns an URI::http object but because Business::PayPal is using CGI.pm
+	# and the hidden() method of CGI.pm checks if this is a reference and then blows up.
+	# so we have to forcibly stringify these values. At least for now in Business::PayPal 0.04
 	my $cancel_url = uri_for('/canceled');
 	my $return_url = uri_for('/paid');
 	my $notify_url = uri_for('/paypal');
@@ -200,10 +198,7 @@ sub log_paypal {
 	my ( $action, $data ) = @_;
 
 	my $ts = time;
-	my $logfile
-		= config->{appdir}
-		. '/logs/paypal_'
-		. POSIX::strftime( '%Y%m%d', gmtime($ts) );
+	my $logfile = config->{appdir} . '/logs/paypal_' . POSIX::strftime( '%Y%m%d', gmtime($ts) );
 
 	#debug $logfile;
 	if ( open my $out, '>>', $logfile ) {

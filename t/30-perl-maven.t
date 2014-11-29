@@ -25,8 +25,7 @@ plan tests => 7;
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 
-my $cookbook_url
-	= '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
+my $cookbook_url  = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
 my $cookbook_text = basename $cookbook_url;
 
 my $prod1_download_url = '/download/product_a/file_0.2.txt';
@@ -54,9 +53,7 @@ subtest pages => sub {
 	$visitor->content_like(qr/Some text comes here/);
 
 	$visitor->get_ok("$url/testing");
-	$visitor->content_like(
-		qr/A series of articles about testing, and test automation using Perl./
-	);
+	$visitor->content_like(qr/A series of articles about testing, and test automation using Perl./);
 	$visitor->content_like(qr{A bunch of links.});
 
 	$visitor->get("$url/abc");
@@ -77,7 +74,7 @@ subtest pages => sub {
 	$visitor->get_ok('/account');
 	is $visitor->base, "$url/login", 'redirected to login page';
 
-# strangely for this post() request I had to supply the full URL or it would go to http://localhost/
+	# strangely for this post() request I had to supply the full URL or it would go to http://localhost/
 	$visitor->post_ok("$url/change-email");
 	is $visitor->base, "$url/login", 'redirected to login page';
 
@@ -139,8 +136,7 @@ subtest 'subscribe' => sub {
 	$w->get_ok($set_url);
 
 	#diag $w->content;
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
-		'download link' );
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/logged-in");
 	$w->content_is(1);
 
@@ -168,8 +164,7 @@ subtest 'subscribe' => sub {
 		'download_pdf'
 	);
 	my $src_pdf = read_file("t/files/$cookbook_url");
-	$w->content_is( $src_pdf,
-		'content of the file we downloaded is the same that is on the disk' );
+	$w->content_is( $src_pdf, 'content of the file we downloaded is the same that is on the disk' );
 
 	# go to main page
 	$w->get_ok($url);
@@ -181,13 +176,11 @@ subtest 'subscribe' => sub {
 	is $w->base, "$url/", 'redirected to root';
 
 	$w->get_ok('/account');
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
-		'download link' );
-	$w->content_like( qr{<a href="/logout">logout</a>}, 'logout link' );
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
+	$w->content_like( qr{<a href="/logout">logout</a>},               'logout link' );
 	$w->get_ok('/logout');
 	$w->get_ok('/account');
-	$w->content_unlike( qr{<a href="$cookbook_url">$cookbook_text</a>},
-		'download link' );
+	$w->content_unlike( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/logged-in");
 	is $w->content, 0;
 };
@@ -237,8 +230,7 @@ subtest 'ask for password reset, then login' => sub {
 	#diag $mail;
 	#my $mail_regex
 	#	= qr{<a href="($url/set-password/1/(\w+))">set new password</a>};
-	my $mail_regex
-		= qr{set new password \[ ($url/set-password/1/(?:\w+))=\s*(\w+) \]};
+	my $mail_regex = qr{set new password \[ ($url/set-password/1/(?:\w+))=\s*(\w+) \]};
 	my ( $url1, $url2 ) = $mail =~ $mail_regex;
 	my $set_url = "$url1$url2";
 	ok $set_url, 'mail with set url address';
@@ -281,8 +273,7 @@ subtest 'ask for password reset, then login' => sub {
 		},
 		'login'
 	);
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
-		'download link' );
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 
 	#diag $w->content;
 
@@ -328,8 +319,7 @@ subtest 'change password while logged in' => sub {
 	);
 
 	#diag($w->content);
-	$w->content_like( qr{The password was set successfully},
-		'password was reset' );
+	$w->content_like( qr{The password was set successfully}, 'password was reset' );
 	$w->get_ok("$url/logout");
 	$w->get_ok("$url/logged-in");
 	$w->content_is(0);
@@ -361,8 +351,7 @@ subtest 'change password while logged in' => sub {
 		},
 		'login'
 	);
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
-		'download link' );
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 
 	$w->get_ok("$url/logged-in");
 	$w->content_is(1);
@@ -370,8 +359,7 @@ subtest 'change password while logged in' => sub {
 	#diag($w->content);
 
 	my $other_user = $db->get_user_by_id(2);
-	is $other_user->{password}, $PASSWORD[2],
-		'other use still exists with old password';
+	is $other_user->{password}, $PASSWORD[2], 'other use still exists with old password';
 };
 
 subtest 'name' => sub {
@@ -412,8 +400,7 @@ subtest 'upgrade_pw' => sub {
 	my $user_before = $db->get_user_by_email($EMAIL);
 	$db->set_password( $user_before->{id}, $sha1_of_abcdef );
 	my $user_midi = $db->get_user_by_email($EMAIL);
-	is $user_midi->{password}, $sha1_of_abcdef,
-		'just making sure we set the old pw';
+	is $user_midi->{password}, $sha1_of_abcdef, 'just making sure we set the old pw';
 
 	$w->submit_form_ok(
 		{
@@ -425,8 +412,7 @@ subtest 'upgrade_pw' => sub {
 		},
 		'login'
 	);
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>},
-		'download link' );
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 
 	# white-box:
 	my $user_after = $db->get_user_by_email($EMAIL);
@@ -458,22 +444,19 @@ subtest change_email => sub {
 	diag $set_url;
 
 	$w->get_ok("$url/verify2/1234567");
-	$w->content_like( qr{Invalid or expired verification code.},
-		'invalid verification code' );
+	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
 	my $before = $db->get_user_by_id(1);
 	is $before->{email}, $EMAIL, 'old email';
 
 	$w->get_ok($set_url);
-	$w->content_like( qr{Email updated successfully.},
-		'updated successfully mesage' );
+	$w->content_like( qr{Email updated successfully.}, 'updated successfully mesage' );
 
 	my $after = $db->get_user_by_id(1);
 	is $after->{email}, $EMAIL2, 'old email';
 
 	$w->get_ok($set_url);
-	$w->content_like( qr{Invalid or expired verification code.},
-		'invalid verification code' );
+	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
 	my $other_user = $db->get_user_by_id(2);
 	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';

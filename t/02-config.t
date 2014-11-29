@@ -43,8 +43,7 @@ subtest mymaven => sub {
 		'pro'      => '/home/foobar/articles/pro'
 		};
 
-	is_deeply $br->{dirs},
-		{ 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
+	is_deeply $br->{dirs}, { 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
 	is_deeply $main->{conf},
 		{
 		'clicky'                 => '12345678',

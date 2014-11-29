@@ -23,15 +23,15 @@ sub read {
 	my $cont = '';
 	my $in_code;
 
-# headers need to be in this order.
-# The onese with a ? mark at the end are optional
-# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
-#    require it but also have a mark if we want to show it or not?)
+	# headers need to be in this order.
+	# The onese with a ? mark at the end are optional
+	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
+	#    require it but also have a mark if we want to show it or not?)
 	my @header
 		= qw(title timestamp description? indexes? tags? mp3? status original? books? showright? newsletter? published? author
 		translator? archive comments_disqus_enable? social show_related?);
 
-#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
+	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
 	my %opts = (
 		'?' => 'optional',
 		'@' => 'multivalue',
@@ -69,8 +69,7 @@ sub read {
 				if ( $f =~ /^(indexes|tags|mp3)$/ ) {
 					$data{$f} = [
 						map { my $z = $_; $z =~ s/^\s+|\s+$//g; $z }
-							split /,/,
-						$v
+							split /,/, $v
 					];
 				}
 				else {
@@ -83,10 +82,8 @@ sub read {
 		}
 
 		for my $field ( keys %fields ) {
-			if ( not $fields{$field}{optional} and not defined $data{$field} )
-			{
-				die
-					"Header ended and '$field' was not supplied for file $file\n";
+			if ( not $fields{$field}{optional} and not defined $data{$field} ) {
+				die "Header ended and '$field' was not supplied for file $file\n";
 			}
 		}
 		foreach my $f ( keys %data ) {
@@ -96,18 +93,9 @@ sub read {
 		}
 		die "=timestamp missing in file $file\n" if not $data{timestamp};
 		die "Invalid =timestamp '$data{timestamp}' in file $file\n"
-			if $data{timestamp}
-			!~ /^(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$/;
-		eval {
-			DateTime->new(
-				year   => $1,
-				month  => $2,
-				day    => $3,
-				hour   => $4,
-				minute => $5,
-				second => $6
-			);
-		};    # just check if it is valid
+			if $data{timestamp} !~ /^(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$/;
+		eval { DateTime->new( year => $1, month => $2, day => $3, hour => $4, minute => $5,
+				second => $6 ); };    # just check if it is valid
 		if ($@) {
 			die "$@  in file $file\n";
 		}
@@ -153,13 +141,12 @@ SCREENCAST
 				my $language = $1 || '';
 				$in_code = 1;
 				if ( $language eq 'perl' ) {
-					$cont
-						.= qq{<pre class="prettyprint linenums language-perl">\n};
+					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
 				}
 				else {
-# Without linenumst IE10 does not respect newlines and smashes everything together
-# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
-# in IE10 and in general some pages.
+					# Without linenumst IE10 does not respect newlines and smashes everything together
+					# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
+					# in IE10 and in general some pages.
 					$cont .= qq{<pre class="linenums">\n};
 				}
 				next;

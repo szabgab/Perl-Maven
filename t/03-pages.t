@@ -66,19 +66,14 @@ subtest indexes => sub {
 };
 
 my %cases = (
-	missing_title =>
-		qq{Header ended and 'title' was not supplied for file t/files/missing_title.tt\n},
-	invalid_field =>
-		qq{Invalid entry in header 'darklord' file t/files/invalid_field.tt\n},
+	missing_title => qq{Header ended and 'title' was not supplied for file t/files/missing_title.tt\n},
+	invalid_field => qq{Invalid entry in header 'darklord' file t/files/invalid_field.tt\n},
 	invalid_field_before_optional =>
 		qq{Invalid entry in header 'darklord' file t/files/invalid_field_before_optional.tt\n},
 
-	no_timestamp =>
-		qq{Header ended and 'timestamp' was not supplied for file t/files/no_timestamp.tt\n},
-	invalid_timestamp =>
-		qq{Invalid =timestamp '2014-01-151T07:30:01' in file t/files/invalid_timestamp.tt\n},
-	empty_timestamp =>
-		qq{=timestamp missing in file t/files/empty_timestamp.tt\n},
+	no_timestamp      => qq{Header ended and 'timestamp' was not supplied for file t/files/no_timestamp.tt\n},
+	invalid_timestamp => qq{Invalid =timestamp '2014-01-151T07:30:01' in file t/files/invalid_timestamp.tt\n},
+	empty_timestamp   => qq{=timestamp missing in file t/files/empty_timestamp.tt\n},
 );
 
 subtest errors => sub {

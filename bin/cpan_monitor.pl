@@ -90,9 +90,7 @@ sub update_subscriptions {
 	foreach my $uid ( sort keys %{ $data->{subscribers} } ) {
 		_log("Subscriber $uid");
 		my $msg = '';
-		foreach
-			my $name ( sort keys %{ $data->{subscribers}{$uid}{modules} } )
-		{
+		foreach my $name ( sort keys %{ $data->{subscribers}{$uid}{modules} } ) {
 			_log("   Start monitoring module $name");
 			$data->{modules}{$name} ||= {};
 		}
@@ -111,27 +109,18 @@ sub collect_changes {
 			$change = "Module $name N/A => $module->{version}\n";
 		}
 		elsif ( $data->{modules}{$name}{version} ne $module->{version} ) {
-			$change
-				= "Module $name $data->{modules}{$name}{version} => $module->{version}\n";
+			$change = "Module $name $data->{modules}{$name}{version} => $module->{version}\n";
 		}
 		if ($change) {
-			my $dist
-				= $mcpan->release( distribution => $module->{distribution} );
+			my $dist = $mcpan->release( distribution => $module->{distribution} );
 			_log("$module->{distribution}  ");
 			foreach my $dep ( @{ $dist->{dependency} } ) {
 				next if $dep->{module} eq 'perl';
 				_log("   $dep->{module}  $dep->{version}");
-				if (
-					not exists $data->{modules}{$name}{dependencies}
-					{ $dep->{module} } )
-				{
-					$change
-						.= "Dependency added $dep->{module} $dep->{version}\n";
+				if ( not exists $data->{modules}{$name}{dependencies}{ $dep->{module} } ) {
+					$change .= "Dependency added $dep->{module} $dep->{version}\n";
 				}
-				elsif (
-					$data->{modules}{$name}{dependencies}{ $dep->{module} }
-					ne $dep->{version} )
-				{
+				elsif ( $data->{modules}{$name}{dependencies}{ $dep->{module} } ne $dep->{version} ) {
 					$change
 						.= "Dependency changed $dep->{module} $data->{modules}{$name}{dependencies}{$dep->{module}} => $dep->{version}\n";
 				}
@@ -151,9 +140,9 @@ sub collect_changes {
 {
 	my %deps;
 
-# go over all the modules
-#   go over all the dependencies in a recursive way
-#     if any of the dependencies has changed, add this information to the "deps_changed" field
+	# go over all the modules
+	#   go over all the dependencies in a recursive way
+	#     if any of the dependencies has changed, add this information to the "deps_changed" field
 	sub update_changes {
 		foreach my $name ( sort keys %{ $data->{modules} } ) {
 			%deps = ();
@@ -172,9 +161,7 @@ sub collect_changes {
 
 	sub _deps {
 		my ($name) = @_;
-		foreach my $d (
-			sort keys %{ $data->{modules}{$name}{dependencies} || {} } )
-		{
+		foreach my $d ( sort keys %{ $data->{modules}{$name}{dependencies} || {} } ) {
 			next if exists $deps{$d};
 			$deps{$d} = $data->{modules}{$name}{changes};
 			_deps($d);
@@ -186,9 +173,7 @@ sub generate_messages {
 	foreach my $uid ( sort keys %{ $data->{subscribers} } ) {
 		_log("Subscriber $uid");
 		my $msg = '';
-		foreach
-			my $name ( sort keys %{ $data->{subscribers}{$uid}{modules} } )
-		{
+		foreach my $name ( sort keys %{ $data->{subscribers}{$uid}{modules} } ) {
 			if ( $data->{modules}{$name}{change} ) {
 				$msg .= delete $data->{modules}{$name}{change};
 			}

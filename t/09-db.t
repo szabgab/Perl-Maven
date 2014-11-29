@@ -27,9 +27,7 @@ subtest users => sub {
 	$people = $db->get_people('');
 
 	#diag explain $people;
-	is_deeply $people,
-		[ [ 1, 'foo@bar.com', undef ], [ 2, 'buzz@nasa.com', undef ] ],
-		'two people';
+	is_deeply $people, [ [ 1, 'foo@bar.com', undef ], [ 2, 'buzz@nasa.com', undef ] ], 'two people';
 
 	$people = $db->get_people('oo');
 	is_deeply $people, [ [ 1, 'foo@bar.com', undef ] ], 'one person';
@@ -119,8 +117,7 @@ subtest products => sub {
 	#diag explain $prod;
 	is_deeply $prod, \%products, 'products';
 
-	$db->add_product( 'mars_landing_handbook', 'Mars Landing Handbook',
-		20.40 );
+	$db->add_product( 'mars_landing_handbook', 'Mars Landing Handbook', 20.40 );
 	$products{mars_landing_handbook} = {
 		code  => 'mars_landing_handbook',
 		name  => 'Mars Landing Handbook',
@@ -150,9 +147,7 @@ subtest subscriptions => sub {
 		code  => 'mars_landing_handbook'
 	);
 	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs,
-		[ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ],
-		'subscribed';
+	is_deeply \@subs, [ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ], 'subscribed';
 
 	$db->unsubscribe_from(
 		email => 'foo@bar.com',

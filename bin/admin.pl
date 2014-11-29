@@ -57,17 +57,14 @@ elsif ( $opt{stats} ) {
 	my $format = "%-35s %5s\n";
 	printf $format, 'Product code', 'Number of subscribers';
 	foreach my $code ( sort keys %{ $stats->{products} } ) {
-		printf $format, $stats->{products}{$code}{code},
-			$stats->{products}{$code}{cnt},
-			;
+		printf $format, $stats->{products}{$code}{code}, $stats->{products}{$code}{cnt},;
 	}
 	say '-' x 45;
 	printf $format, q{Total 'purchases':},     $stats->{all_subs};
 	printf $format, q{Distinct # of clients:}, $stats->{distinct_subs};
 	print "\n";
 	printf $format, 'All the users', $stats->{all_users};
-	printf $format, 'Verified',
-		( $stats->{all_users} - $stats->{not_verified} );
+	printf $format, 'Verified', ( $stats->{all_users} - $stats->{not_verified} );
 	printf $format, 'NOT Verified',             $stats->{not_verified};
 	printf $format, 'Verified but NO password', $stats->{no_password};
 
@@ -125,8 +122,8 @@ elsif ( $opt{deluser} ) {
 
 	die "Could not find user with email '$email'\n" if not $user;
 
-#die "There are more than one user with this email '$email'\n" . Dumper $users
-#	if @$users > 1; # nah, this really should not happen, should this
+	#die "There are more than one user with this email '$email'\n" . Dumper $users
+	#	if @$users > 1; # nah, this really should not happen, should this
 
 	#print 'Found user: ' . Dumper $user;
 	print 'Do you want to remove it? (Y/N) ?';

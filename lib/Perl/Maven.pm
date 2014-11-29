@@ -3,9 +3,9 @@ use Dancer ':syntax';
 use Dancer::Plugin::Passphrase;
 
 our $VERSION = '0.11';
-my $PM_VERSION = 1;  # Version number to force JavaScript and CSS files reload
-my $MAX_INDEX  = 3;
-my $MAX_FEED   = 10;
+my $PM_VERSION         = 1;    # Version number to force JavaScript and CSS files reload
+my $MAX_INDEX          = 3;
+my $MAX_FEED           = 10;
 my $MAX_META_FEED      = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
 
@@ -35,8 +35,7 @@ require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
 
 sub mymaven {
-	my $mymaven = Perl::Maven::Config->new(
-		path( config->{appdir}, config->{mymaven_yml} ) );
+	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
 	return $mymaven->config( request->host );
 }
 
@@ -53,15 +52,13 @@ hook before => sub {
 
 	my $appdir = abs_path config->{appdir};
 
-	set session_domain => '.'
-		. mymaven->{domain}
-		. ( in_development() ? '.local' : '' );
+	set session_domain => '.' . mymaven->{domain} . ( in_development() ? '.local' : '' );
 
 	$db ||= Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
 	set db => $db;
 
-# Create a new Template::Toolkit object for every call because we cannot access the existing object
-# and thus we cannot change the include path before rendering
+	# Create a new Template::Toolkit object for every call because we cannot access the existing object
+	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
 	$engines->{template_toolkit}{INCLUDE_PATH}
 		= [ mymaven->{site} . '/templates', "$appdir/views" ];
@@ -92,8 +89,7 @@ sub log_request {
 	my $time = time;
 	my $dir = path( config->{appdir}, 'logs' );
 	mkdir $dir if not -e $dir;
-	my $file = path( $dir,
-		POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
+	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
 
 	# direct access
 	my $ip = request->remote_address;
@@ -142,10 +138,10 @@ hook before_template => sub {
 		( $t->{username} ) = split /@/, $email;
 	}
 
-# we assume that the whole complex is written in one leading language
-# and some of the pages are to other languages The domain-site give the name of the
-# default language and this is the same content that is displayed on the site
-# without a hostname: 	# http://domain.com
+	# we assume that the whole complex is written in one leading language
+	# and some of the pages are to other languages The domain-site give the name of the
+	# default language and this is the same content that is displayed on the site
+	# without a hostname: 	# http://domain.com
 	my $original_language = mymaven->{main_site};
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
@@ -157,9 +153,9 @@ hook before_template => sub {
 	$t->{conf}      = mymaven->{conf};
 	$t->{resources} = read_resources();
 
-# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
-# which in itself might need to be configurable. For now we add the fields
-# one by one as we convert the code and the pages.
+	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
+	# which in itself might need to be configurable. For now we add the fields
+	# one by one as we convert the code and the pages.
 	foreach my $f (qw(comments_disqus_enable show_related)) {
 		if ( defined $t->{$f} ) {
 			$t->{conf}{$f} = delete $t->{$f};
@@ -178,8 +174,7 @@ hook before_template => sub {
 			? substr( $path, 1 )
 			: $t->{original};
 		if ($original) {
-			foreach my $language_code ( keys %{ $translations->{$original} } )
-			{
+			foreach my $language_code ( keys %{ $translations->{$original} } ) {
 				$sites->{$language_code}{url}
 					.= $translations->{$original}{$language_code};
 				$links{$language_code} = $sites->{$language_code};
@@ -196,9 +191,9 @@ hook before_template => sub {
 		%links = %$sites;
 	}
 
-# For cases where our language code does not match the standard:
-# See http://support.google.com/webmasters/bin/answer.py?hl=en&answer=189077&topic=2370587&ctx=topic
-# http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	# For cases where our language code does not match the standard:
+	# See http://support.google.com/webmasters/bin/answer.py?hl=en&answer=189077&topic=2370587&ctx=topic
+	# http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 	my %ISO_LANG = (
 		br => 'pt',
 		cn => 'zh-Hans',
@@ -211,15 +206,12 @@ hook before_template => sub {
 	$t->{languages} = \%links;
 
 	my $url = request->uri_base . request->path;
-	foreach my $field (
-		qw(reddit_url twitter_data_url twitter_data_counturl google_plus_href facebook_href)
-		)
-	{
+	foreach my $field (qw(reddit_url twitter_data_url twitter_data_counturl google_plus_href facebook_href)) {
 		$t->{$field} = $url;
 	}
 
-  # on May 1 2013 the site was redirected from perl5maven.com to perlmaven.com
-  # we try to salvage some of the social proof.
+	# on May 1 2013 the site was redirected from perl5maven.com to perlmaven.com
+	# we try to salvage some of the social proof.
 	if ( $t->{date} and $t->{date} le '2013-05-01' ) {
 		foreach my $field (qw(reddit_url twitter_data_counturl)) {
 			$t->{$field} =~ s/perlmaven.com/perl5maven.com/;
@@ -231,7 +223,7 @@ hook before_template => sub {
 		$t->{conf}{google_analytics} = 0;
 	}
 
-# TODO start using a separate development configuration file and remove this code from here:
+	# TODO start using a separate development configuration file and remove this code from here:
 	if ( in_development() ) {
 		$t->{social} = 0;
 
@@ -292,12 +284,8 @@ get '/contributor/:name' => sub {
 	}
 
 	return "$name could not be found" if not $authors{$name};
-	my $data     = setting('tools')->read_meta('archive');
-	my @articles = grep {
-		$_->{author} eq $name
-			or
-			( $_->{translator} and $_->{translator} eq $name )
-	} @$data;
+	my $data = setting('tools')->read_meta('archive');
+	my @articles = grep { $_->{author} eq $name or ( $_->{translator} and $_->{translator} eq $name ) } @$data;
 
 	return _show(
 		{
@@ -341,12 +329,10 @@ get '/' => sub {
 		);
 	}
 
-	my $pages
-		= setting('tools')->read_meta_array( 'archive', limit => $MAX_INDEX );
+	my $pages = setting('tools')->read_meta_array( 'archive', limit => $MAX_INDEX );
 	_replace_tags($pages);
 
-	_show( { article => 'index', template => 'page', layout => 'index' },
-		{ pages => $pages } );
+	_show( { article => 'index', template => 'page', layout => 'index' }, { pages => $pages } );
 };
 
 sub _replace_tags {
@@ -361,12 +347,9 @@ sub _replace_tags {
 
 get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
-	delete $kw->{keys}
-		; # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
-	      #die Dumper $kw->{__WARN__};
-	_show(
-		{ article => 'keywords', template => 'page', layout => 'keywords' },
-		{ kw      => $kw } );
+	delete $kw->{keys};    # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
+	                       #die Dumper $kw->{__WARN__};
+	_show( { article => 'keywords', template => 'page', layout => 'keywords' }, { kw => $kw } );
 };
 
 get '/about' => sub {
@@ -434,14 +417,12 @@ get '/sitemap.xml' => sub {
 	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
-	$xml
-		.= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
+	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
 		$xml .= qq{  <url>\n};
 		$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
 		if ( $p->{timestamp} ) {
-			$xml .= sprintf qq{    <lastmod>%s</lastmod>\n},
-				substr( $p->{timestamp}, 0, 10 );
+			$xml .= sprintf qq{    <lastmod>%s</lastmod>\n}, substr( $p->{timestamp}, 0, 10 );
 		}
 
 		#$xml .= qq{    <changefreq>monthly</changefreq>\n};
@@ -795,8 +776,7 @@ get '/account' => sub {
 			#debug "$code -  $f->{file}";
 			push @owned_products,
 				{
-				name =>
-					( setting('products')->{$code}{name} . " $f->{title}" ),
+				name     => ( setting('products')->{$code}{name} . " $f->{title}" ),
 				filename => "/download/$code/$f->{file}",
 				linkname => $f->{file},
 				};
@@ -827,13 +807,12 @@ get '/download/:dir/:file' => sub {
 	# TODO better error reporting or handling when not logged in
 	return redirect '/'
 		if not logged_in();
-	return redirect '/' if not setting('products')->{$dir};  # no such product
+	return redirect '/' if not setting('products')->{$dir};    # no such product
 
 	# check if the user is really subscribed to the newsletter?
 	return redirect '/' if not $db->is_subscribed( session('uid'), $dir );
 
-	send_file( path( mymaven->{dirs}{download}, $dir, $file ),
-		system_path => 1 );
+	send_file( path( mymaven->{dirs}{download}, $dir, $file ), system_path => 1 );
 };
 
 get qr{^/pro/?$} => sub {
@@ -873,7 +852,7 @@ get '/verify2/:code' => sub {
 
 	return template 'error', { missing_verification_code => 1 } if not $code;
 
-# TODO Shall we expect here the same user to be logged in already? Can we expect that?
+	# TODO Shall we expect here the same user to be logged in already? Can we expect that?
 
 	my $verification = $db->get_verification($code);
 	return template 'error', { invalid_verification_code => 1 }
@@ -997,8 +976,7 @@ get '/tv' => sub {
 	_show(
 		{ article => 'tv', template => 'archive', layout => 'system' },
 		{
-			pages => setting('tools')
-				->read_meta_array( 'archive', filter => 'interview' )
+			pages => setting('tools')->read_meta_array( 'archive', filter => 'interview' )
 		}
 	);
 };
@@ -1084,13 +1062,12 @@ post '/explain' => sub {
 			$data{explanation} = $ce->explain();
 			$data{ppi_dump} = [ map { _escape($_) } $ce->ppi_dump ];
 			$data{ppi_explain}
-				= [ map { $_->{code} = _escape( $_->{code} ); $_ }
-					$ce->ppi_explain ];
+				= [ map { $_->{code} = _escape( $_->{code} ); $_ } $ce->ppi_explain ];
 		}
 
-		my $time     = time;
-		my $log_file = path( config->{appdir}, 'logs',
-			'code_' . POSIX::strftime( '%Y%m', gmtime($time) ) );
+		my $time = time;
+		my $log_file
+			= path( config->{appdir}, 'logs', 'code_' . POSIX::strftime( '%Y%m', gmtime($time) ) );
 		if ( open my $fh, '>>', $log_file ) {
 			print $fh '-' x 20, "\n";
 			print $fh scalar( gmtime $time ) . "\n";
@@ -1115,8 +1092,7 @@ get '/jobs-employer' => sub {
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
-	return _show(
-		{ article => $article, template => 'page', layout => 'page' } );
+	return _show( { article => $article, template => 'page', layout => 'page' } );
 };
 
 ##########################################################################################
@@ -1136,8 +1112,8 @@ sub _show {
 	my ( $params, $data ) = @_;
 	$data ||= {};
 
-	my $path = ( delete $params->{path} || ( mymaven->{site} . '/pages' ) )
-		. "/$params->{article}.tt";
+	my $path
+		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.tt";
 	if ( not -e $path ) {
 		status 'not_found';
 		return template 'error', { 'no_such_article' => 1 };
@@ -1213,13 +1189,9 @@ sub pw_form {
 
 sub read_tt {
 	my $file = shift;
-	my $tt   = eval {
-		Perl::Maven::Page->new( file => $file, tools => setting('tools') )
-			->read;
-	};
+	my $tt = eval { Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read; };
 	if ($@) {
-		return {
-		}; # hmm, this should have been caught when the meta files were generated...
+		return {};    # hmm, this should have been caught when the meta files were generated...
 	}
 	else {
 		return $tt;
@@ -1301,8 +1273,7 @@ sub _feed {
 
 	$subtitle ||= '';
 
-	my $pages = setting('tools')
-		->read_meta_array( $what, filter => $tag, limit => $MAX_FEED );
+	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => $MAX_FEED );
 
 	my $mymaven = mymaven;
 
@@ -1358,8 +1329,7 @@ sub _feed {
 		entries   => \@entries,             # atom,
 		language  => 'en-us',               #       rss
 		copyright => '2014 Gabor Szabo',    #       rss
-		description =>
-			'The Perl Maven show is about the Perl programming language and about the people using it.'
+		description => 'The Perl Maven show is about the Perl programming language and about the people using it.'
 		,                                   # rss, itunes(rss)
 
 		subtitle => 'A show about Perl and Perl users',    # itunes(rss)
@@ -1386,14 +1356,14 @@ sub rss {
 
 	my $pmf = _feed( $what, $tag, $subtitle );
 
-#$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
-#$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
-#$xml .= qq{  <category>Podcast</category>\n};
-#$xml .= qq{  <docs>http://blogs.law.harvard.edu/tech/rss</docs>\n};
-#$xml .= qq{  <generator>vim</generator>\n};
-#$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
-#$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
-#$xml .= qq{  <ttl>1440</ttl>\n};
+	#$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
+	#$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
+	#$xml .= qq{  <category>Podcast</category>\n};
+	#$xml .= qq{  <docs>http://blogs.law.harvard.edu/tech/rss</docs>\n};
+	#$xml .= qq{  <generator>vim</generator>\n};
+	#$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
+	#$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
+	#$xml .= qq{  <ttl>1440</ttl>\n};
 
 	content_type 'application/rss+xml';
 	return $pmf->rss;
