@@ -21,7 +21,7 @@ my @PASSWORD       = ( '123456', 'abcdef', 'secret' );
 my $sha1_of_abcdef = 'H4rBDyPFtbwRZ72oS4M+XAV6d9I';
 my @NAMES          = ( 'Foo Bar', );
 
-plan tests => 7;
+plan tests => 8;
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 
@@ -459,5 +459,14 @@ subtest change_email => sub {
 
 	my $other_user = $db->get_user_by_id(2);
 	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';
+};
+
+subtest whitelist => sub {
+	plan tests => 2;
+
+	$w->get_ok('/account');
+	my $form = $w->form_name('whitelist');
+	ok $form;
+	#$w->submit_form_ok(
 };
 

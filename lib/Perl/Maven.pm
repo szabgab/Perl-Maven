@@ -310,6 +310,30 @@ get '/contributor/:name' => sub {
 	);
 };
 
+get '/pm/whitelist' => sub {
+	if (not logged_in()) {
+		#session url => request->path;
+		return redirect '/login';
+	}
+	my $do = param('do');
+	my $user = $db->get_user_by_email(session('email'));
+	if ($do) {
+		if ($do eq 'enable') {
+			$db->set_whitelist($user->{id}, 1);
+			return template 'error', { whitelist_enabled => 1 };
+		} elsif ($do eq 'disable') {
+			$db->set_whitelist($user->{id}, 0);
+			return template 'error', { whitelist_disabled => 1 };
+		} else {
+			return template 'error', { invalid_value_provided => 1 };
+			# TODO report error
+		}
+	}
+
+
+};
+
+
 get qr{/(.+)} => sub {
 	my ($article) = splat;
 
@@ -934,6 +958,7 @@ get '/account' => sub {
 		subscribed    => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
 		name          => $user->{name},
 		email         => $user->{email},
+		login_whitelist => $user->{login_whitelist},
 	);
 	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
 		$params{perl_maven_pro_buy_button}

@@ -7,6 +7,10 @@
     <% IF no_email %>
     No e-mail was provided
     <% END %>
+
+    <% IF invalid_value_provided %>
+      Invalid parameter.
+    <% END %>
     
     <% IF invalid_email %>
     Could not find this e-mail address in our database.
@@ -131,5 +135,14 @@
     <% IF email_updated_successfully %>
      Email updated successfully.
     <% END %>
+
+    <% IF whitelist_enabled %>
+     Whitelist enabled
+    <% END %>
+
+    <% IF whitelist_disabled %>
+     Whitelist disabled
+    <% END %>
+
 </div>
 

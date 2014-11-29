@@ -52,6 +52,19 @@ Email: <input name="email" /><br>
 <input type="submit" value="Change Email" />
 </form>
 
+<h2>White list</h2>
+
+<% IF login_whitelist %>
+  <form method="POST" action="/pm/whitelist?do=disable" name="disable_white_list">
+  <input type="submit" value="Disable" />
+  </form>
+<% ELSE %>
+  <form method="POST" action="/pm/whitelist?do=enable" name="enable_white_list">
+  <input type="submit" value="Enable" />
+  </form>
+<% END %>
+
+
 
 <h2>Logout:</h2>
 <p>

@@ -8,7 +8,8 @@ CREATE TABLE user (
   verify_code     VARCHAR(20),
   verify_time     VARCHAR(11),
   name            VARCHAR(255),
-  admin           INTEGER
+  admin           INTEGER,
+  login_whitelist INTEGER
 );
 
 CREATE TABLE product (
@@ -32,6 +33,15 @@ CREATE TABLE transactions (
   ts     VARCHAR(10) NOT NULL,
   data   BLOB
 );
+
+CREATE TABLE login_whitelist (
+  uid     INTEGER NOT NULL,
+  ip      VARCHAR(40),
+  mask    VARCHAR(40),
+  note    VARCHAR(100)
+);
+-- ALTER TABLE user ADD login_whitelist INTEGER;
+
 
 CREATE TABLE verification (
   code        VARCHAR(100) PRIMARY KEY,

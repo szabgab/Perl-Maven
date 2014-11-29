@@ -53,6 +53,13 @@ sub update_user {
 	$self->{dbh}->do( 'UPDATE user SET name=? WHERE id=?', undef, $fields{name}, $id );
 }
 
+sub set_whitelist {
+	my ( $self, $id, $value ) = @_;
+
+	$self->{dbh}->do( 'UPDATE user SET login_whitelist=? WHERE id=?',
+		undef, $value, $id );
+}
+
 sub get_user_by_email {
 	my ( $self, $email ) = @_;
 
