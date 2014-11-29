@@ -14,11 +14,10 @@ sub read {
 	my ($self) = @_;
 
 	my %data = (
-		content    => '',
-		abstract   => '',
-		showright  => 1,
-		newsletter => 1,
-		published  => 1,
+		content   => '',
+		abstract  => '',
+		showright => 1,
+		published => 1,
 	);
 	my $cont = '';
 	my $in_code;
@@ -29,7 +28,7 @@ sub read {
 	#    require it but also have a mark if we want to show it or not?)
 	my @header
 		= qw(title timestamp author status description? indexes? tags? mp3? original? books? published? translator?);
-	push @header, qw(archive comments_disqus_enable? social? newsletter? showright? show_related?);
+	push @header, qw(archive comments_disqus_enable? social? show_newsletter_form? showright? show_related?);
 
 	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
 	my %opts = (

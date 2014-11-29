@@ -4,6 +4,7 @@
 =status draft
 =books beginner_book
 =author szabgab
+=show_newsletter_form 1
 =archive 1
 =comments_disqus_enable 1
 =social 1

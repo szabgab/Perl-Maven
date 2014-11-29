@@ -156,7 +156,7 @@ hook before_template => sub {
 	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
-	foreach my $f (qw(comments_disqus_enable show_related)) {
+	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form)) {
 		if ( defined $t->{$f} ) {
 			$t->{conf}{$f} = delete $t->{$f};
 		}
@@ -233,6 +233,8 @@ hook before_template => sub {
 	}
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
+
+	#die Dumper $t;
 
 	return;
 };

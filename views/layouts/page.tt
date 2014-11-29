@@ -15,9 +15,7 @@
 <% content %>
 
 <% IF conf.show_newsletter_form %>
-  <% IF newsletter %>
     <% INCLUDE "layouts/incl/newsletter.tt" %>
-  <% END %>
 <% END %>
 
 <% IF published %>
