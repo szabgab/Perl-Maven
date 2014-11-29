@@ -47,7 +47,7 @@ installation:
     show_indexes: 1
     show_related: 1
     comments_disqus_enable: 0
-    archive_selector: 0
+    show_archive_selector: 0
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:
@@ -125,5 +125,5 @@ installation:
         comments_disqus_code: 'perl5maven'
         show_newsletter_form: 1
         right_search: 0
-        archive_selector: 1
+        show_archive_selector: 1
 
