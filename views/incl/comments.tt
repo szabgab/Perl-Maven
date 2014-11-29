@@ -1,7 +1,7 @@
-<% IF comments %>
+<% IF conf.comments_disqus_enable %>
 <h2>Comments</h2>
 
-<% IF conf.disqus %>
+<% IF conf.comments_disqus_enable && conf.comments_disqus_code %>
   <% INCLUDE incl/disqus.tt %>
 <% END %>
 

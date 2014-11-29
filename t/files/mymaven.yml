@@ -40,7 +40,7 @@ installation:
     show_sponsors: 0
     show_newsletter_form: 0
     show_indexes: 1
-    enable_comments: 0
+    comments_disqus_enable: 0
   admin:
     email: 'Foo Bar <foobar@perlmaven.com>'
   paypal:
@@ -48,8 +48,8 @@ installation:
   sites:
     br.perlmaven.com:
       conf:
-        enable_comments: 'disqus'
-        disqus: 'br-test-perlmaven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'br-test-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
         'old-article': 'new-article'
@@ -60,8 +60,8 @@ installation:
     he.perlmaven.com:
       conf:
         rtl: 1
-        enable_comments: 'disqus'
-        disqus: 'he-test--perlmaven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'he-test--perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
     perlmaven.com:
@@ -78,8 +78,8 @@ installation:
         - pro
 #        videos: '/home/foobar/perlmaven.com/sites/en/pages/videos'
       conf:
-        enable_comments: 'disqus'
-        disqus: 'perl5maven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'perl5maven'
         show_newsletter_form: 1
         right_search: 0
 

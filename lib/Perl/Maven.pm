@@ -156,7 +156,12 @@ hook before_template => sub {
 
 	$t->{conf}      = mymaven->{conf};
 	$t->{resources} = read_resources();
-	$t->{comments} &&= mymaven->{conf}{enable_comments};
+
+	foreach my $f (qw(comments_disqus_enable)) {
+		if ( defined $t->{$f} ) {
+			$t->{conf}{$f} = delete $t->{$f};
+		}
+	}
 
 	# linking to translations
 	my $sites        = read_sites();
@@ -223,11 +228,13 @@ hook before_template => sub {
 		$t->{conf}{google_analytics} = 0;
 	}
 
+# TODO start using a separate development configuration file and remove this code from here:
 	if ( in_development() ) {
-		$t->{social}                 = 0;
-		$t->{comments}               = 0;
-		$t->{conf}{clicky}           = 0;
-		$t->{conf}{google_analytics} = 0;
+		$t->{social} = 0;
+
+		$t->{conf}{comments_disqus_enable} = 0;
+		$t->{conf}{clicky}                 = 0;
+		$t->{conf}{google_analytics}       = 0;
 	}
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;

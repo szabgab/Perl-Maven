@@ -19,22 +19,22 @@ subtest one => sub {
 
 	cmp_deeply $data,
 		{
-		'abstract'   => '',
-		'archive'    => '1',
-		'author'     => 'szabgab',
-		'books'      => 'beginner_book',
-		'comments'   => '1',
-		'content'    => '',
-		'indexes'    => ['files'],
-		'mycontent'  => re('<p>\s*Some text here\.\s*<p>'),
-		'newsletter' => 1,
-		'published'  => 1,
-		'related'    => [],
-		'showright'  => 1,
-		'social'     => '1',
-		'status'     => 'draft',
-		'timestamp'  => '2014-01-15T07:30:01',
-		'title'      => 'Test 1'
+		'abstract'               => '',
+		'archive'                => '1',
+		'author'                 => 'szabgab',
+		'books'                  => 'beginner_book',
+		'comments_disqus_enable' => '1',
+		'content'                => '',
+		'indexes'                => ['files'],
+		'mycontent'              => re('<p>\s*Some text here\.\s*<p>'),
+		'newsletter'             => 1,
+		'published'              => 1,
+		'related'                => [],
+		'showright'              => 1,
+		'social'                 => '1',
+		'status'                 => 'draft',
+		'timestamp'              => '2014-01-15T07:30:01',
+		'title'                  => 'Test 1'
 		};
 };
 
@@ -47,21 +47,21 @@ subtest indexes => sub {
 
 	cmp_deeply $data,
 		{
-		'abstract'   => '',
-		'archive'    => '1',
-		'author'     => 'szabgab',
-		'comments'   => '1',
-		'content'    => '',
-		'indexes'    => [ 'files', 'and', 'other::values' ],
-		'mycontent'  => re('<p>\s*Some text here\.\s*<p>'),
-		'newsletter' => 1,
-		'published'  => 1,
-		'related'    => [],
-		'showright'  => 1,
-		'social'     => '0',
-		'status'     => 'draft',
-		'timestamp'  => '2014-01-15T07:30:01',
-		'title'      => 'Test 3'
+		'abstract'               => '',
+		'archive'                => '1',
+		'author'                 => 'szabgab',
+		'comments_disqus_enable' => '0',
+		'content'                => '',
+		'indexes'                => [ 'files', 'and', 'other::values' ],
+		'mycontent'              => re('<p>\s*Some text here\.\s*<p>'),
+		'newsletter'             => 1,
+		'published'              => 1,
+		'related'                => [],
+		'showright'              => 1,
+		'social'                 => '0',
+		'status'                 => 'draft',
+		'timestamp'              => '2014-01-15T07:30:01',
+		'title'                  => 'Test 3'
 		};
 };
 

@@ -45,7 +45,7 @@ installation:
     show_sponsors: 1
     show_newsletter_form: 0
     show_indexes: 1
-    enable_comments: 0
+    comments_disqus_enable: 0
     archive_selector: 0
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
@@ -54,8 +54,8 @@ installation:
   sites:
     br.perlmaven.com:
       conf:
-        enable_comments: 'disqus'
-        disqus: 'br-perlmaven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'br-perlmaven'
         google_analytics_code: 2
         google_analytics_name: 'br.perlmaven.com'
       redirect:
@@ -79,8 +79,8 @@ installation:
     he.perlmaven.com:
       conf:
         rtl: 1
-        enable_comments: 'disqus'
-        disqus: 'he-perlmaven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'he-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
     id.perlmaven.com:
@@ -92,8 +92,8 @@ installation:
       conf:
         google_analytics_code: 3
         google_analytics_name: 'ko.perlmaven.com'
-        enable_comments: 'disqus'
-        disqus: 'ko-perlmaven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'ko-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
     ne.perlmaven.com:
@@ -104,8 +104,8 @@ installation:
         google_analytics_name: 'ru.perlmaven.com'
     te.perlmaven.com:
       conf:
-        enable_comments: 'disqus'
-        disqus: 'te-perlmaven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'te-perlmaven'
       redirect:
         'products': 'http://perlmaven.com/products'
     tr.perlmaven.com:
@@ -120,8 +120,8 @@ installation:
       index:
         - pro
       conf:
-        enable_comments: 'disqus'
-        disqus: 'perl5maven'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'perl5maven'
         show_newsletter_form: 1
         right_search: 0
         archive_selector: 1

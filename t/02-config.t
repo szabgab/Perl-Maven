@@ -8,11 +8,12 @@ plan tests => 2;
 use Perl::Maven::Config;
 
 subtest mymaven => sub {
-	plan tests => 8;
+	plan tests => 11;
 
 	my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
 	my $main    = $mymaven->config('perlmaven.com');
 	my $br      = $mymaven->config('br.perlmaven.com');
+	my $cn      = $mymaven->config('cn.perlmaven.com');
 
 	is $main->{site}, 't/files/../sites/perlmaven.com/sites/en';
 	is $main->{meta}, '/home/foobar/perlmaven-meta';
@@ -44,7 +45,38 @@ subtest mymaven => sub {
 
 	is_deeply $br->{dirs},
 		{ 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
-
+	is_deeply $main->{conf},
+		{
+		'clicky'                 => '12345678',
+		'comments_disqus_enable' => '1',
+		'comments_disqus_code'   => 'perl5maven',
+		'google_analytics'       => 'UA-11111112-3',
+		'right_search'           => '0',
+		'show_indexes'           => '1',
+		'show_newsletter_form'   => '1',
+		'show_sponsors'          => '0'
+		},
+		'main conf';
+	is_deeply $br->{conf},
+		{
+		'clicky'                 => '12345678',
+		'comments_disqus_code'   => 'br-test-perlmaven',
+		'comments_disqus_enable' => '1',
+		'google_analytics'       => 'UA-11111112-3',
+		'show_indexes'           => '1',
+		'show_newsletter_form'   => '0',
+		'show_sponsors'          => '0'
+		},
+		'br conf';
+	is_deeply $cn->{conf},
+		{
+		'clicky'                 => '12345678',
+		'comments_disqus_enable' => '0',
+		'google_analytics'       => 'UA-11111112-3',
+		'show_indexes'           => '1',
+		'show_newsletter_form'   => '0',
+		'show_sponsors'          => '0'
+		};
 };
 
 subtest testmaven => sub {

@@ -40,14 +40,16 @@ Disqus and maybe other commenting systems as well? Maybe someone will want to en
 In-house, Disqus, Facebook, G+... so probbaly we should allow each one separately.
 So we probbaly want:
 
-conf.enable_internal_comments: 0/1
+conf.comments_internal_enable: 0/1
 
-conf.enable_disqus_comments: 0/1
-conf.disqus_code: 'code'
+conf.comments_disqus_enable: 0/1
+conf.comments_disqus_code: 'code'
 
-conf.enable_facebook_comments: 0/1
-???
+conf.comments_facebook_enable: 0/1
+...
 
+and then in the actual page we will have
+=comments_disqus_enable: 1
 
 Once there is an internal commenting system, we might want to 
   on new pages enable internal, disable disqus
@@ -55,13 +57,4 @@ Once there is an internal commenting system, we might want to
     that might need a separate configuration option.
 
 There might be extra configuration options.
-Should all the commenting related config options be inside a sub-category?
-eg.
-
-conf.comments.disqus.enable
-conf.comments.disqus.code
-
-and then in the actual page we will have
-
-comments.disqus.enable:
 
