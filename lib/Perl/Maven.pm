@@ -156,7 +156,7 @@ hook before_template => sub {
 	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
-	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form show_social)) {
+	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form show_social show_right)) {
 		if ( defined $t->{$f} ) {
 			$t->{conf}{$f} = delete $t->{$f};
 		}
@@ -618,8 +618,9 @@ get '/logged-in' => sub {
 	return logged_in() ? 1 : 0;
 };
 
+# TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
 get '/register' => sub {
-	return template 'registration_form', { showright => 0, };
+	return template 'registration_form', { show_right => 0, };
 };
 
 post '/register' => sub {
@@ -627,15 +628,15 @@ post '/register' => sub {
 	if ( not $email ) {
 		return template 'registration_form',
 			{
-			no_mail   => 1,
-			showright => 0,
+			no_mail    => 1,
+			show_right => 0,
 			};
 	}
 	if ( not Email::Valid->address($email) ) {
 		return template 'registration_form',
 			{
 			invalid_mail => 1,
-			showright    => 0,
+			show_right   => 0,
 			};
 	}
 
@@ -649,7 +650,7 @@ post '/register' => sub {
 		return template 'registration_form',
 			{
 			duplicate_mail => 1,
-			showright      => 0,
+			show_right     => 0,
 			};
 	}
 

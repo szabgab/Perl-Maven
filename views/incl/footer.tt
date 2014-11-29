@@ -2,7 +2,7 @@
 
     <div class="span3">
       <div id="right-side">
-        <% IF showright %>
+        <% IF conf.show_right %>
          <% IF status != 'show' %>
           <span class="label label-warning"><% status %></span>
          <% END %>
