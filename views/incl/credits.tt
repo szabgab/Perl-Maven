@@ -1,14 +1,41 @@
 <div id="creators">
-  <% IF author %>
-   <img src="/img/<% author_img %>"  />
-      <div class="author_text">
-           Written by<br>
+   <% IF translator %>
+
+      <div id="translator">
+       <img src="/img/<% translator_img %>" />
+       <div class="author_text">
+         <% resources.text.translated_by %><br><a href="<%translator_google_plus_profile %>?rel=author"><% translator_name %></a>
+       </div>
+      </div>
+
+      <% IF author %>
+        <div id="author">
+          <img src="/img/<% author_img %>"  />
+          <div class="author_text">
+             <% resources.text.written_by %><br>
+             <% IF author_google_plus_profile %>
+               <a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
+             <% ELSE %>
+               <% author_name %>
+            <% END %>
+          </div>
+        </div>
+      <% END %>
+
+   <% ELSE %>
+
+      <% IF author %>
+        <img src="/img/<% author_img %>"  />
+        <div class="author_text">
+           <% resources.text.written_by %><br>
            <% IF author_google_plus_profile %>
              <a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
            <% ELSE %>
              <% author_name %>
           <% END %>
-       </div>
-  <% END %>
+        </div>
+      <% END %>
+
+   <% END %>
 </div>
 

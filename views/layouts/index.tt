@@ -1,7 +1,7 @@
 <% INCLUDE incl/header.tt %>
 
 <% content %>
-<h2><% resources.recent_articles %></h2>
+<h2><% resources.text.recent_articles %></h2>
 <% FOR p IN pages %>
   <div class="abstract">
   <h2><% IF p.tags.pro %>Pro: <% END %><a href="/<% p.filename %>"><% p.title %></a></h2>
