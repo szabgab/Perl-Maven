@@ -196,6 +196,7 @@ SCREENCAST
 	# Replace the anchor text by a the actual title of each linked page to for
 	# the 'related' listing.
 	# TODO: this should not be read into memory for every page!
+	$data{related} = [];
 	if ( not $ENV{METAMETA} and %links ) {
 		my $site = $self->tools->read_meta_array('sitemap');
 		my %sitemap = map { '/' . $_->{filename} => $_->{title} } @$site;
