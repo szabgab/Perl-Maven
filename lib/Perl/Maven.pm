@@ -61,7 +61,7 @@ hook before => sub {
 	# and thus we cannot change the include path before rendering
 	my $engines = config->{engines};
 	$engines->{template_toolkit}{INCLUDE_PATH}
-		= [ "$appdir/views" ];
+		= ["$appdir/views"];
 	Dancer::Template::TemplateToolkit->new(
 		name   => 'template_toolkit',
 		type   => 'template',
@@ -1239,9 +1239,17 @@ sub read_sites {
 # Each site can have a file called resources.txt with rows of key=value pairs
 # This is text messages and translated text messages.
 sub read_resources {
+	my $default_file = mymaven->{root} . '/resources.yml';
+	my $defaults = eval { LoadFile $default_file};
+
 	my $resources_file = mymaven->{site} . '/resources.yml';
 	my $data = eval { LoadFile $resources_file};
-	return $data || {};
+	$data ||= {};
+
+	foreach my $key ( keys %{ $defaults->{text} } ) {
+		$data->{text}{$key} ||= $defaults->{text}{$key};
+	}
+	return $data;
 }
 
 sub read_authors {
