@@ -175,6 +175,7 @@ SCREENCAST
 		die "Too many times =abstract edn: $data{abstract_end}"
 			if $data{abstract_end} > 1;
 	}
+
 	# die if not $data{abstract} ???
 	my $MAX_ABSTRACT = 1400;
 	if ( length $data{abstract} > $MAX_ABSTRACT ) {
@@ -198,18 +199,14 @@ SCREENCAST
 	if ( not $ENV{METAMETA} and %links ) {
 		my $site = $self->tools->read_meta_array('sitemap');
 		my %sitemap = map { '/' . $_->{filename} => $_->{title} } @$site;
-		foreach my $url ( keys %links ) {
-			if ( $sitemap{$url} ) {
-				$links{$url} = $sitemap{$url};
-			}
+		foreach my $url ( sort keys %links ) {
+			push @{ $data{related} },
+				{
+				url  => $url,
+				text => ( $sitemap{$url} || $links{$url} ),
+				};
 		}
-		$data{related} = [
-			map { { url => $_, text => $links{$_} } }
-			sort keys %links
-		];
-
 	}
-
 
 	return \%data;
 }
