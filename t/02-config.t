@@ -44,8 +44,7 @@ subtest mymaven => sub {
 		};
 
 	is_deeply $br->{dirs}, { 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
-	is_deeply $main->{conf},
-		{
+	is_deeply $main->{conf}, {
 		'clicky'                 => '12345678',
 		'comments_disqus_enable' => '1',
 		'comments_disqus_code'   => 'perl5maven',
@@ -53,7 +52,9 @@ subtest mymaven => sub {
 		'right_search'           => '0',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '1',
-		'show_sponsors'          => '0'
+		'show_sponsors'          => '0',
+		'show_date'              => 1,
+
 		},
 		'main conf';
 	is_deeply $br->{conf},
@@ -64,7 +65,8 @@ subtest mymaven => sub {
 		'google_analytics'       => 'UA-11111112-3',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '0',
-		'show_sponsors'          => '0'
+		'show_sponsors'          => '0',
+		'show_date'              => 1,
 		},
 		'br conf';
 	is_deeply $cn->{conf},
@@ -74,7 +76,8 @@ subtest mymaven => sub {
 		'google_analytics'       => 'UA-11111112-3',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '0',
-		'show_sponsors'          => '0'
+		'show_sponsors'          => '0',
+		'show_date'              => 1,
 		};
 };
 

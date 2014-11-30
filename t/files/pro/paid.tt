@@ -2,7 +2,7 @@
 =timestamp 2013-08-16T00:00:02
 =indexes SCO, Template::Toolkit, 404
 =status show
-=published 
+=show_date 1 
 =author szabgab
 =archive 1
 =comments_disqus_enable 1

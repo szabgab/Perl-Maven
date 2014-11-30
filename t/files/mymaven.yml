@@ -40,6 +40,7 @@ installation:
     show_sponsors: 0
     show_newsletter_form: 0
     show_indexes: 1
+    show_date: 1
     comments_disqus_enable: 0
   admin:
     email: 'Foo Bar <foobar@perlmaven.com>'
