@@ -297,7 +297,8 @@ get '/search' => sub {
 
 	my ($keyword) = param('keyword');
 	if ( defined $keyword ) {
-		push_header 'Access-Control-Allow-Origin' => '*';
+		#TODO: I thin this is only needed if we want to allow other sites to search here.
+		#push_header 'Access-Control-Allow-Origin' => '*';
 		my $result = $data->{$keyword} || {};
 		return to_json($result);
 	}
