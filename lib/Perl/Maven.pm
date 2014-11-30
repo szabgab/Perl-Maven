@@ -17,6 +17,7 @@ use Digest::SHA;
 use Email::Valid;
 use Fcntl qw(:flock SEEK_END);
 use File::Basename qw(fileparse);
+use List::MoreUtils qw(uniq);
 use POSIX ();
 use YAML qw(LoadFile);
 
@@ -295,17 +296,33 @@ get qr{/(.+)} => sub {
 get '/search' => sub {
 	my $data = setting('tools')->read_meta_hash('keywords');
 
+	#TODO: I thin this is only needed if we want to allow other sites to search here.
+	#push_header 'Access-Control-Allow-Origin' => '*';
+
 	my ($keyword) = param('keyword');
 	if ( defined $keyword ) {
-		#TODO: I thin this is only needed if we want to allow other sites to search here.
-		#push_header 'Access-Control-Allow-Origin' => '*';
-		my $result = $data->{$keyword} || {};
-		return to_json($result);
+		my $result = $data->{$keyword};
+		if ($result) {
+			return to_json($result);
+		}
+		foreach my $kw ( keys %$data ) {
+			my ($url) = grep { $data->{$kw}{$_} eq $keyword } keys %{ $data->{$kw} };
+			if ($url) {
+				return to_json { $url => $keyword };
+			}
+		}
+		return to_json {};
 	}
 
 	my ($query) = param('query');
 	if ( defined $query ) {
-		return to_json( [ sort grep {/$query/i} keys %$data ] );
+		my @titles = map { values %$_ } values %$data;
+		my @hits = uniq sort grep {/$query/i} ( @titles, keys %$data );
+		my $LIMIT = 20;
+		if ( @hits > $LIMIT ) {
+			@hits = @hits[ 0 .. $LIMIT - 1 ];
+		}
+		return to_json( \@hits );
 	}
 
 	return to_json( {} );
