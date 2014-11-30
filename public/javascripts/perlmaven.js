@@ -208,7 +208,7 @@ $(document).ready(function() {
 	    mysearch(e.target.value, false);
 	});
 
-	$('#typeahead').typeahead( { 'source' : setup_search, items : 15  });
+	$('#typeahead').typeahead( { 'source' : setup_search, items : 20  });
 
 	$("#typeahead").keyup(function (e) {
 	    if (e.keyCode == 13) {
