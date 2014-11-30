@@ -147,7 +147,6 @@ subtest one_with_config => sub {
 			'clicky'                 => '12345678',
 			'comments_disqus_code'   => 'perl5maven',
 			'google_analytics'       => 'UA-11111112-3',
-			'right_search'           => '0',
 			'show_indexes'           => '1',
 			'show_sponsors'          => '0',
 			'show_date'              => 1,

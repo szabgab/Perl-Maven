@@ -16,7 +16,6 @@ installation:
     test-perl-maven.com:
       conf:
         show_newsletter_form: 1
-        right_search: 0
       dirs:
         download: 'download'
         pro: 'pro'

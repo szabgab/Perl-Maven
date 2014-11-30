@@ -28,7 +28,6 @@
 
 
            <% INCLUDE incl/social_share.tt %>
-           <% INCLUDE incl/search.tt %>
            <% INCLUDE incl/sponsors.tt %>
 
            <div id="newsletter-right-form">

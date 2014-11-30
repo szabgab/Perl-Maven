@@ -82,6 +82,5 @@ installation:
         comments_disqus_enable: 1
         comments_disqus_code: 'perl5maven'
         show_newsletter_form: 1
-        right_search: 0
 
 

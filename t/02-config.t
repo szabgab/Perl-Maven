@@ -49,7 +49,6 @@ subtest mymaven => sub {
 		'comments_disqus_enable' => '1',
 		'comments_disqus_code'   => 'perl5maven',
 		'google_analytics'       => 'UA-11111112-3',
-		'right_search'           => '0',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '1',
 		'show_sponsors'          => '0',
@@ -91,7 +90,6 @@ subtest testmaven => sub {
 	is_deeply $main,
 		{
 		'conf' => {
-			'right_search'         => '0',
 			'show_newsletter_form' => '1'
 		},
 		'dirs' => {
