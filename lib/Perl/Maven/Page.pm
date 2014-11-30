@@ -62,18 +62,18 @@ sub read {
 		while ( my $line = <$fh> ) {
 			chomp $line;
 			last if $line =~ /^\s*$/;
-			if ( my ( $f, $v ) = $line =~ /=([\w-]+)\s+(.*?)\s*$/ ) {
-				$v //= '';
+			if ( my ( $field, $value ) = $line =~ /=([\w-]+)\s+(.*?)\s*$/ ) {
+				$value //= '';
 
 				# TODO make it configurable, which fields to split?
-				if ( $f =~ /^(indexes|tags|mp3)$/ ) {
-					$data{$f} = [
+				if ( $field =~ /^(indexes|tags|mp3)$/ ) {
+					$data{$field} = [
 						map { my $z = $_; $z =~ s/^\s+|\s+$//g; $z }
-							split /,/, $v
+							split /,/, $value
 					];
 				}
 				else {
-					$data{$f} = $v;
+					$data{$field} = $value;
 				}
 			}
 			else {
