@@ -89,7 +89,7 @@ sub process_site {
 			};
 	}
 
-	my $pages = $self->get_pages(@sources);
+	my $pages = $self->get_pages( $config, @sources );
 
 	my ( $keywords, $archive, $sitemap ) = $self->process_files( $pages, $lang );
 	save( 'archive',  $dest, $archive );
@@ -197,7 +197,7 @@ sub save {
 }
 
 sub get_pages {
-	my ( $self, @sources ) = @_;
+	my ( $self, $config, @sources ) = @_;
 
 	my @pages;
 	foreach my $s (@sources) {
@@ -207,7 +207,7 @@ sub get_pages {
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
-			my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
+			my $data = eval { Perl::Maven::Page->new( file => $path )->read->merge_conf( $config->{conf} )->data };
 			if ($@) {
 				die "Could not read '$path' $@";
 			}
