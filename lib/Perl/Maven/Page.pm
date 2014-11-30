@@ -9,6 +9,7 @@ our $VERSION = '0.11';
 
 has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
+has data  => ( is => 'rw' );
 
 sub read {
 	my ($self) = @_;
@@ -209,7 +210,8 @@ SCREENCAST
 		}
 	}
 
-	return \%data;
+	$self->data( \%data );
+	return $self;
 }
 
 1;

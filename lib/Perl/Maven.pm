@@ -1182,7 +1182,7 @@ sub pw_form {
 
 sub read_tt {
 	my $file = shift;
-	my $tt = eval { Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read; };
+	my $tt = eval { Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->data; };
 	if ($@) {
 		return {};    # hmm, this should have been caught when the meta files were generated...
 	}

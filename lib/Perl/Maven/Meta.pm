@@ -207,7 +207,7 @@ sub get_pages {
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
-			my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+			my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 			if ($@) {
 				die "Could not read '$path' $@";
 			}

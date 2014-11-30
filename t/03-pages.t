@@ -14,7 +14,7 @@ subtest one => sub {
 	plan tests => 2;
 
 	my $path = 't/files/1.tt';
-	my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+	my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 	ok !$@, "load $path" or diag $@;
 
 	cmp_deeply $data,
@@ -41,7 +41,7 @@ subtest indexes => sub {
 	plan tests => 2;
 
 	my $path = 't/files/3.tt';
-	my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+	my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 	ok !$@, "load $path" or diag $@;
 
 	cmp_deeply $data,
@@ -80,7 +80,7 @@ subtest errors => sub {
 
 	foreach my $name ( sort keys %cases ) {
 		my $path = "t/files/$name.tt";
-		my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+		my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 		is $@, $cases{$name}, $name;
 	}
 };
@@ -89,7 +89,7 @@ subtest bad_timestamp => sub {
 	plan tests => 1;
 
 	my $path = 't/files/bad_timestamp.tt';
-	my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+	my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 	like $@,
 		qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback};
 };
@@ -98,7 +98,7 @@ subtest abstract_not_ending => sub {
 	plan tests => 1;
 
 	my $path = 't/files/abstract_not_ending.tt';
-	my $data = eval { Perl::Maven::Page->new( file => $path )->read };
+	my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 	like $@, qr{=abstract started but not ended};
 
 	}
