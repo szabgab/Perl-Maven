@@ -16,7 +16,6 @@ sub read {
 	my ($self) = @_;
 
 	my %data = (
-		content   => '',
 		abstract  => '',
 		published => 1,
 	);
