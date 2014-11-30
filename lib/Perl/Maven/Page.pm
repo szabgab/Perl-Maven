@@ -23,15 +23,14 @@ sub read {
 	my $cont = '';
 	my $in_code;
 
-	# headers need to be in this order.
-	# The onese with a ? mark at the end are optional
+	# ? signals an optional field
+	# @ signals a multi-value, a comma-separated list of values
 	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
 	#    require it but also have a mark if we want to show it or not?)
 	my @header
 		= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books? published? translator?);
 	push @header, qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related?);
 
-	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
 	my %opts = (
 		'?' => 'optional',
 		'@' => 'multivalue',
