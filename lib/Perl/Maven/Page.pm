@@ -224,7 +224,7 @@ sub merge_conf {
 	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
-	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form show_social show_right)) {
+	foreach my $f (qw(archive comments_disqus_enable show_related show_newsletter_form show_social show_right)) {
 		if ( defined $data->{$f} ) {
 			$conf->{$f} = delete $data->{$f};
 		}

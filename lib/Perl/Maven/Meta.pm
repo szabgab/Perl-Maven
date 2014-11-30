@@ -140,7 +140,7 @@ sub process_files {
 		}
 
 		#say "$p->{timestamp} $p->{file}";
-		if ( $p->{archive} ) {
+		if ( $p->{conf}{archive} ) {
 			$self->stats->{pagecount}{$lang}++;
 			my ($date) = split /T/, $p->{timestamp};
 			my $e = {

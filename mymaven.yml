@@ -50,6 +50,7 @@ installation:
     show_archive_selector: 0
     show_social: 1
     show_right: 1
+    archive: 1
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:

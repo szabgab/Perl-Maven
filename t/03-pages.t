@@ -142,10 +142,10 @@ subtest one_with_config => sub {
 	cmp_deeply $data,
 		{
 		'abstract' => '',
-		'archive'  => '1',
 		'author'   => 'szabgab',
 		'books'    => 'beginner_book',
 		'conf'     => {
+			'archive'                => '1',
 			'comments_disqus_enable' => '1',
 			'show_newsletter_form'   => 1,
 			'show_social'            => '1',
