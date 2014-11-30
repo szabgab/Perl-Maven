@@ -95,11 +95,36 @@ subtest bad_timestamp => sub {
 };
 
 subtest abstract_not_ending => sub {
-	plan tests => 1;
+	plan tests => 3;
 
 	my $path = 't/files/abstract_not_ending.tt';
 	my $data = eval { Perl::Maven::Page->new( file => $path )->read->data };
 	like $@, qr{=abstract started but not ended};
 
-	}
+	# repeate the first one because there was a bug
+	# it was including the content as the abstract due to the missing and of abstract in the previous file
+
+	my $path_1 = 't/files/1.tt';
+	my $data_1 = eval { Perl::Maven::Page->new( file => $path_1 )->read->data };
+	ok !$@, "load $path_1" or diag $@;
+
+	cmp_deeply $data_1,
+		{
+		'abstract'               => '',
+		'archive'                => '1',
+		'author'                 => 'szabgab',
+		'books'                  => 'beginner_book',
+		'comments_disqus_enable' => '1',
+		'content'                => '',
+		'indexes'                => ['files'],
+		'mycontent'              => re('<p>\s*Some text here in 1.tt\s*<p>'),
+		'show_newsletter_form'   => 1,
+		'published'              => 1,
+		'related'                => [],
+		'show_social'            => '1',
+		'status'                 => 'draft',
+		'timestamp'              => '2014-01-15T07:30:01',
+		'title'                  => 'Test 1'
+		};
+};
 

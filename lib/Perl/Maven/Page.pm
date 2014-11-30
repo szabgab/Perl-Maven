@@ -127,10 +127,10 @@ SCREENCAST
 			$line =~ s{</hl>}{</span>}g;
 			if ( $line =~ /^=abstract (start|end)/ ) {
 				$data{"abstract_$1"}++;
+				next;
 			}
 
-			if ( $line =~ /^=abstract start/ .. $line =~ /^=abstract end/ ) {
-				next if $line =~ /^=abstract/;
+			if ( $data{abstract_start} and not $data{abstract_end} ) {
 				$data{abstract} .= $line;
 				if ( $line =~ /^\s*$/ ) {
 					$data{abstract} .= "<p>\n";
