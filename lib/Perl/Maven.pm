@@ -144,8 +144,10 @@ hook before_template => sub {
 	my $original_language = mymaven->{main_site};
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
-	my $data = setting('tools')->read_meta_hash('keywords');
-	$t->{keywords} = to_json( [ sort keys %$data ] );
+
+	#my $data = setting('tools')->read_meta_hash('keywords');
+	#$t->{keywords} = to_json( [ sort keys %$data ] );
+	#$t->{keywords} =  '{}';
 
 	$t->{resources} = read_resources();
 
@@ -291,12 +293,21 @@ get qr{/(.+)} => sub {
 };
 
 get '/search' => sub {
-	my ($keyword) = param('keyword');
-	push_header 'Access-Control-Allow-Origin' => '*';
-	return to_json( {} ) if not defined $keyword;
 	my $data = setting('tools')->read_meta_hash('keywords');
-	$data->{$keyword} ||= {};
-	return to_json( $data->{$keyword} );
+
+	my ($keyword) = param('keyword');
+	if ( defined $keyword ) {
+		push_header 'Access-Control-Allow-Origin' => '*';
+		my $result = $data->{$keyword} || {};
+		return to_json($result);
+	}
+
+	my ($query) = param('query');
+	if ( defined $query ) {
+		return to_json( [ sort grep {/$query/i} keys %$data ] );
+	}
+
+	return to_json( {} );
 };
 
 get '/' => sub {

@@ -171,6 +171,22 @@ function admin_show_user_details(data, status, jqXHR) {
 
 }
 
+function setup_search (query, process) {
+	//console.log('setup');
+
+    $.ajax({
+        url: '/search',
+        data: { 'query' :  query},
+        dataType: "json",
+        success: function(data, status, jqXHR) {
+           //console.log('callback');
+           process(data);
+	    },
+    });
+
+    return;
+}
+
 $(document).ready(function() {
     $('#explain').click(code_explain);
 
@@ -192,13 +208,14 @@ $(document).ready(function() {
 	    mysearch(e.target.value, false);
 	});
 
+	$('#typeahead').typeahead( { 'source' : setup_search, items : 15  });
+
 	$("#typeahead").keyup(function (e) {
 	    if (e.keyCode == 13) {
-	        //console.log('----------');
 	        var keyword = $("#typeahead").val();
 
 	        mysearch(keyword, true);
-	    }
+		}
 	});
 
 	$('#email').keypress(function(e) {

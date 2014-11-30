@@ -81,9 +81,6 @@
 
 <script src="/javascripts/svg.js"></script>
 
-<script>
-$('#typeahead').typeahead( { 'source' : <% keywords %>, items : 15  });
-</script>
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
 
 <% IF conf.google_analytics %>
