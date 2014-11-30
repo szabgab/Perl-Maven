@@ -28,7 +28,7 @@ sub read {
 	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
 	#    require it but also have a mark if we want to show it or not?)
 	my @header
-		= qw(title timestamp author status description? indexes? tags? mp3? original? books? published? translator?);
+		= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books? published? translator?);
 	push @header, qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related?);
 
 	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
@@ -65,8 +65,12 @@ sub read {
 			if ( my ( $field, $value ) = $line =~ /=([\w-]+)\s+(.*?)\s*$/ ) {
 				$value //= '';
 
+				if ( not defined $fields{$field} ) {
+					die "Invalid entry in header '$field' file $file\n";
+				}
+
 				# TODO make it configurable, which fields to split?
-				if ( $field =~ /^(indexes|tags|mp3)$/ ) {
+				if ( $fields{$field}{multivalue} ) {
 					$data{$field} = [
 						map { my $z = $_; $z =~ s/^\s+|\s+$//g; $z }
 							split /,/, $value
@@ -84,11 +88,6 @@ sub read {
 		for my $field ( keys %fields ) {
 			if ( not $fields{$field}{optional} and not defined $data{$field} ) {
 				die "Header ended and '$field' was not supplied for file $file\n";
-			}
-		}
-		foreach my $f ( keys %data ) {
-			if ( not defined $fields{$f} ) {
-				die "Invalid entry in header '$f' file $file\n";
 			}
 		}
 		die "=timestamp missing in file $file\n" if not $data{timestamp};
