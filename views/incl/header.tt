@@ -18,9 +18,6 @@
 <% END %>
 
 <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-
-<link rel="stylesheet" href="/jquery-ui-1.11.2/jquery-ui.min.css">
-
 <link href="/atom" rel="alternate" type="application/atom+xml" title ="Perl Maven" />
 
 <title><% title %></title>
