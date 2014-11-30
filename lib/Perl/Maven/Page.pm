@@ -29,7 +29,7 @@ sub read {
 	#    require it but also have a mark if we want to show it or not?)
 	my @header
 		= qw(title timestamp author status description? indexes? tags? mp3? original? books? published? translator?);
-	push @header, qw(archive comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related?);
+	push @header, qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related?);
 
 	#my %fields = map { $_ => 1 } map { my $z = $_; $z =~ s/[?*]*$//; $z } @header;
 	my %opts = (
