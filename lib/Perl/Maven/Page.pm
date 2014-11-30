@@ -4,6 +4,7 @@ use Moo;
 use 5.014;
 use DateTime;
 use Data::Dumper qw(Dumper);
+use Storable qw(dclone);
 
 our $VERSION = '0.11';
 
@@ -211,6 +212,25 @@ SCREENCAST
 	}
 
 	$self->data( \%data );
+	return $self;
+}
+
+sub merge_conf {
+	my ( $self, $ro_conf ) = @_;
+	my $conf = dclone $ro_conf;
+
+	my $data = $self->data;
+
+	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
+	# which in itself might need to be configurable. For now we add the fields
+	# one by one as we convert the code and the pages.
+	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form show_social show_right)) {
+		if ( defined $data->{$f} ) {
+			$conf->{$f} = delete $data->{$f};
+		}
+	}
+
+	$data->{conf} = $conf;
 	return $self;
 }
 

@@ -4,8 +4,9 @@ use warnings;
 use Test::More;
 use Test::Deep;
 
-plan tests => 5;
+plan tests => 6;
 
+use Perl::Maven::Config;
 use Perl::Maven::Page;
 
 $ENV{METAMETA} = 1;
@@ -125,6 +126,44 @@ subtest abstract_not_ending => sub {
 		'status'                 => 'draft',
 		'timestamp'              => '2014-01-15T07:30:01',
 		'title'                  => 'Test 1'
+		};
+};
+
+subtest one_with_config => sub {
+	plan tests => 2;
+
+	my $path    = 't/files/1.tt';
+	my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
+	my $data    = eval {
+		Perl::Maven::Page->new( file => $path )->read->merge_conf( $mymaven->config('perlmaven.com')->{conf} )->data;
+	};
+	ok !$@, "load $path" or diag $@;
+
+	cmp_deeply $data,
+		{
+		'abstract' => '',
+		'archive'  => '1',
+		'author'   => 'szabgab',
+		'books'    => 'beginner_book',
+		'conf'     => {
+			'comments_disqus_enable' => '1',
+			'show_newsletter_form'   => 1,
+			'show_social'            => '1',
+			'clicky'                 => '12345678',
+			'comments_disqus_code'   => 'perl5maven',
+			'google_analytics'       => 'UA-11111112-3',
+			'right_search'           => '0',
+			'show_indexes'           => '1',
+			'show_sponsors'          => '0'
+		},
+		'content'   => '',
+		'indexes'   => ['files'],
+		'mycontent' => re('<p>\s*Some text here in 1.tt\s*<p>'),
+		'published' => 1,
+		'related'   => [],
+		'status'    => 'draft',
+		'timestamp' => '2014-01-15T07:30:01',
+		'title'     => 'Test 1'
 		};
 };
 

@@ -18,7 +18,6 @@ use Email::Valid;
 use Fcntl qw(:flock SEEK_END);
 use File::Basename qw(fileparse);
 use POSIX ();
-use Storable qw(dclone);
 use YAML qw(LoadFile);
 
 use Web::Feed;
@@ -148,17 +147,7 @@ hook before_template => sub {
 	my $data = setting('tools')->read_meta_hash('keywords');
 	$t->{keywords} = to_json( [ sort keys %$data ] );
 
-	$t->{conf}      = mymaven->{conf};
 	$t->{resources} = read_resources();
-
-	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
-	# which in itself might need to be configurable. For now we add the fields
-	# one by one as we convert the code and the pages.
-	foreach my $f (qw(comments_disqus_enable show_related show_newsletter_form show_social show_right)) {
-		if ( defined $t->{$f} ) {
-			$t->{conf}{$f} = delete $t->{$f};
-		}
-	}
 
 	# linking to translations
 	my $sites        = read_sites();
@@ -1182,7 +1171,10 @@ sub pw_form {
 
 sub read_tt {
 	my $file = shift;
-	my $tt = eval { Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->data; };
+	my $tt   = eval {
+		Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->merge_conf( mymaven->{conf} )->data;
+	};
+
 	if ($@) {
 		return {};    # hmm, this should have been caught when the meta files were generated...
 	}
