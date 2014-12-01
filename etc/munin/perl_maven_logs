@@ -5,8 +5,9 @@ use 5.010;
 
 use File::Basename qw(basename);
 use POSIX;
+use JSON::XS qw(encode_json decode_json);
 
-my $data_file = '/tmp/perl_maven_logs.data';
+my $data_file = '/tmp/perl_maven_logs.json';
 my $size_file = '/tmp/perl_maven_logs.size';
 
 if (@ARGV) {
@@ -15,6 +16,8 @@ if (@ARGV) {
 
 	}
 	if ($ARGV[0] eq 'config') {
+		my $data = read_file($data_file);
+
 		if (basename($0) eq 'perl_maven_logs_hostnames') { 
 			print <<"END_CONFIG";
 graph_title Page view per domain
@@ -22,29 +25,35 @@ graph_vlabel cnt
 graph_category PerlMaven
 END_CONFIG
 
-			if (open my $fh, '<', $data_file) {
-				while (my $row = <$fh> ){
-					my ($domain, $value) = split /\s+/, $row, 2;
-					my $name = $domain;
-					$name =~ s/\./_/g;
-					print "$name.label $domain\n";
-				}
+			foreach my $host (keys %{ $data->{hosts} }) {
+				my $name = $host;
+				$name =~ s/\./_/g;
+				say "$name.label $host";
 			}
 		}
 	}
 } else {
+	my $data = read_file($data_file);
 
 	if (basename($0) eq 'perl_maven_logs_hostnames') { 
-		if (open my $fh, '<', $data_file) {
-			while (my $row = <$fh>) {
-				chomp $row;
-				my ($domain, $value) = split /\s+/, $row, 2;
-				$domain =~ s/\./_/g;
-				print "$domain.value $value\n";
-			}
-			close $fh;
+		foreach my $host (keys %{ $data->{hosts} }) {
+			my $name = $host;
+			$name =~ s/\./_/g;
+			say "$name.value $data->{hosts}{$host}";
 		}
 	}
+}
+
+sub read_file {
+	my ($file) = @_;
+
+	my $json = '{}';
+	if (open my $fh, '<', $data_file) {
+		local $/ = undef;
+		$json = <$fh>;
+		close $fh;
+	}
+	return decode_json $json;
 }
 
 sub save_file {
@@ -59,7 +68,6 @@ sub process {
 	my ($file, $location, $data) = @_;
 	#print "Processing $file\n";
 	my $cnt = 0;
-	require JSON;
 
 	my $size = -s $file;
 	open my $fh, '<', $file or die "Could not open '$file' for reading";
@@ -68,8 +76,16 @@ sub process {
 		$cnt++;
 		chomp $row;
 		eval {
-			my $entry = JSON::from_json $row;
-			$data->{ $entry->{host} }++;
+			my $entry = decode_json $row;
+			if (defined $entry->{host}) {
+				$data->{hosts}{ $entry->{host} }++;
+			} else {
+				warn "host is missing in line '$row'";
+			}
+			if (defined $entry->{elapsed_time}) {
+				$data->{total}{time} += $entry->{elapsed_time};
+				$data->{total}{cnt}++;
+			}
 			1;
 		} or do {
 			my $err = $@ // 'Unknown error';
@@ -108,11 +124,6 @@ sub collect {
 	}
 	$last_size = process($this_file, $last_size, \%data);
 
-	my $domains = '';
-	foreach my $k (keys %data) {
-		$domains .= "$k $data{$k}\n";
-	}
-
-	save_file($data_file, $domains);
+	save_file($data_file, encode_json(\%data));
 	save_file($size_file, $last_size);
 }

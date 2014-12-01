@@ -118,7 +118,7 @@ Register:
 Munin integration
 ===================
 
-1) Install dbi and dbd-sqlite to the system perl
+1) Install the following packages to the system perl  libdbi-perl libdbd-sqlite-perl libjson-xs-perl 
 2)
 
 ```
