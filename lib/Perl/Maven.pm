@@ -969,7 +969,6 @@ get '/img/:file' => sub {
 };
 
 get '/mail/:article' => sub {
-
 	my $article = param('article');
 
 	my $path = mymaven->{dirs}{mail} . "/$article.tt";
@@ -1203,9 +1202,11 @@ sub read_tt {
 	my $tt   = eval {
 		Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->merge_conf( mymaven->{conf} )->data;
 	};
-
 	if ($@) {
-		return {};    # hmm, this should have been caught when the meta files were generated...
+
+		# hmm, this should have been caught when the meta files were generated...
+		error $@;
+		return {};
 	}
 	else {
 		return $tt;
