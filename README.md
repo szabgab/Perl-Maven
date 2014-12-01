@@ -4,7 +4,7 @@ VERSION 0.11
 Theoretically this code should be usable to run other sites
 as well, but there are two main issues:
 
-1) Probabaly there are number of assumptions specific to the Perl-Maven site.
+1) Probably there are number of assumptions specific to the Perl-Maven site.
    (These should be cleaned up, so if you encounter them, open a ticket)
 
 2) The application is in flux. I might make some major changes to the file format

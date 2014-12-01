@@ -2,10 +2,10 @@ The main configuration file is called mymaven.yml
 
 For a multi-language installation we can have configuration option set 
   1) for the whole installation under the 'installation' key
-  2) Each sudomain can ovverride these configuration values inside the
+  2) Each subdomain can override these configuration values inside the
      'installation -> sites -> subdomain.name' key
   3) Some configuration option should be overridable by each page as well
-     For example 'enable_comments' shuld be overridable, but 'google_analytics' probably not.
+     For example 'enable_comments' should be overridable, but 'google_analytics' probably not.
      For now, I think we do not need to handle this distinction, and we can allow the page to override both.
 
 
@@ -32,13 +32,13 @@ The value of this field can be either 0 or 'disqus';
 Currently we have integration with Disqus.
 
 If commenting is enabled for the whole subdomain, individual pages can enable/disable commenting using the =comment flag.
-The `conf.disqus` option provides the disqus code to be used on a specifc subdomain.
+The `conf.disqus` option provides the disqus code to be used on a specific subdomain.
 
 
 In the future we will provide built-in commenting. I am not sure when that happens if we should still allow the integration of
-Disqus and maybe other commenting systems as well? Maybe someone will want to enable multiple commenting systesm.
-In-house, Disqus, Facebook, G+... so probbaly we should allow each one separately.
-So we probbaly want:
+Disqus and maybe other commenting systems as well? Maybe someone will want to enable multiple commenting systems.
+In-house, Disqus, Facebook, G+... so probably we should allow each one separately.
+So we probably want:
 
 conf.comments_internal_enable: 0/1
 

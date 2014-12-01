@@ -5,7 +5,7 @@ Description of the products and the buying of products (and services).
 Product types
 --------------
 
-Eevery product can have a list of items
+Every product can have a list of items
   - downloadable files (pdf, zip, tar.gz)
   - web pages (e.g. articles)
   - videos (mp4, webm, etc. files) these can be downloaded, played on an html page.
@@ -21,7 +21,7 @@ product: id, code, name, price  (TODO: currency), type: unlimited, recurring
 
 
 Each product can be sold for a fixed price.
-There can be a discount for a single product (product_id, dicount_code, price, end date)
+There can be a discount for a single product (product_id, discount_code, price, end date)
 
 There can be a discount ????
 
@@ -30,17 +30,17 @@ There can be a discount ????
 
 
 1) One-time payment
-   paied -> enable
+   paid -> enable
    Refund payment -> disable
 
 2) Subscription:
      payment arrives on date covering a period => enable and set expiration date on the product
-     cancelled => does not need to do anything, the exparation date will take care of it
+     canceled => does not need to do anything, the expiration date will take care of it
      refund => disable
      'Payment Skipped' ??
 3) Subscription with some free period
      When the user signs up to the service, we enable and set an expiration date
-     cancelled => we can either cancel the subscription or we can let it expire
+     canceled => we can either cancel the subscription or we can let it expire
      The rest is the same as in 2)
 4) Giving free subscription to someone
     Set an expiration date
@@ -48,7 +48,7 @@ There can be a discount ????
 
 On a regular base we run a script that checks for expired services and removes them from the user.
 If someone tries to sign up to a service that was expired we can let the user do this.
-I think the only loophole might be people signing up to free subscription, cancelling it and then signing up again.
+I think the only loophole might be people signing up to free subscription, canceling it and then signing up again.
 This is not a big issue for us, but we could save a flag that says, 'this user has already had a free period'
 and then not let the free signup. I don't think this is worth the effort now.
 
@@ -74,7 +74,7 @@ If the user is not logged in
 ----------------------------
 
 or now we require the user to be logged in when starting the transaction,
-ut later we should implement a version when the user can start withot being logged in.
+ut later we should implement a version when the user can start without being logged in.
 hen the question will be: shall we create a new account with the e-mail received from PayPal
   or shall we look for the account of the user.
 If the e-mail supplied by Paypal is in our database already
