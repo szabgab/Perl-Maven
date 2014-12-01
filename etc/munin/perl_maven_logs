@@ -21,10 +21,19 @@ if (@ARGV) {
 	if ( $ARGV[0] eq 'config' ) {
 		my $data = read_file($data_file);
 
+		if ( basename($0) eq 'perl_maven_logs_time' ) {
+			print <<"END_CONFIG";
+graph_title Average request processing time
+graph_vlabel sec
+graph_category PerlMaven
+END_CONFIG
+			say 'average_time.label Average request time';
+		}
+
 		if ( basename($0) eq 'perl_maven_logs_processing' ) {
 			print <<"END_CONFIG";
 graph_title Log file processing
-graph_vlabel cnt
+graph_vlabel sec
 graph_category PerlMaven
 END_CONFIG
 			say 'processing_time.label Processing time';
@@ -47,6 +56,10 @@ END_CONFIG
 }
 else {
 	my $data = read_file($data_file);
+
+	if ( basename($0) eq 'perl_maven_logs_time' ) {
+		say 'average_time.value ' . ( $data->{total}{cnt} ? $data->{total}{time} / $data->{total}{cnt} : 0 );
+	}
 
 	if ( basename($0) eq 'perl_maven_logs_processing' ) {
 		say "processing_time.value $data->{processing_time}";
