@@ -88,6 +88,8 @@ hook after => sub {
 
 sub log_request {
 	return if request->uri =~ m{^/img/};
+	return if request->uri =~ m{^/atom};
+	return if request->uri =~ m{^/robots.txt};
 	return if is_bot();
 	my %SKIP = map { $_ => 1 } qw(/logged-in);
 	return if $SKIP{ request->uri };
@@ -1409,7 +1411,8 @@ sub is_free {
 
 sub is_bot {
 	my $user_agent = request->user_agent || '';
-	return $user_agent =~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider/;
+	return $user_agent
+		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider/;
 }
 
 true;
