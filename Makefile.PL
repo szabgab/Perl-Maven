@@ -29,6 +29,7 @@ WriteMakefile(
 		'Plack'                      => 1.0031,
 		'Storable'                   => 2.51,       # dclone is used
 		'Template'                   => 2.25,
+		'Time::HiRes'                => 0,
 		'YAML'                       => 1.09,
 		'JSON'                       => 2.90,
 		'Web::Feed'                  => 0.02,

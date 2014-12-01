@@ -18,7 +18,8 @@ use Email::Valid;
 use Fcntl qw(:flock SEEK_END);
 use File::Basename qw(fileparse);
 use List::MoreUtils qw(uniq);
-use POSIX ();
+use POSIX       ();
+use Time::HiRes ();
 use YAML qw(LoadFile);
 
 use Web::Feed;
@@ -44,6 +45,7 @@ my $db;
 my %authors;
 
 hook before => sub {
+	set start_time => Time::HiRes::time;
 
 	#my $user_agent = request->user_agent || '';
 	#if ( $user_agent !~ /Googlebot|AhrefsBot/ ) {
@@ -78,6 +80,10 @@ hook before => sub {
 		meta => mymaven->{meta}
 	);
 
+	set sid => session('id');
+
+};
+hook after => sub {
 	log_request();
 };
 
@@ -103,21 +109,25 @@ sub log_request {
 	}
 
 	my %details = (
-		sid        => session('id'),
+		sid        => setting('sid'),
 		time       => $time,
 		host       => request->host,
 		page       => request->uri,
 		referrer   => request->referer,
 		ip         => $ip,
 		user_agent => request->user_agent,
-
 	);
-	if (logged_in) {
-
-		# TODO store in the database
-		# TODO if there are entries in the session, move them to the database
-		#$datails{uid} = session('uid');
+	my $start_time = setting('start_time');
+	if ($start_time) {
+		$details{elapsed_time} = Time::HiRes::time - $start_time;
 	}
+
+	#if (logged_in) {
+
+	# TODO store in the database
+	# TODO if there are entries in the session, move them to the database
+	#$datails{uid} = session('uid');
+	#}
 
 	if ( open my $fh, '>>', $file ) {
 		flock( $fh, LOCK_EX ) or return;
