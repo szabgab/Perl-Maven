@@ -12,6 +12,10 @@ my $instance;
 sub new {
 	my ( $class, $dbfile ) = @_;
 
+	if ( $ENV{PERL_MAVEN_DB} ) {
+		$dbfile = $ENV{PERL_MAVEN_DB};
+	}
+
 	return $instance if $instance;
 
 	my $dsn = "dbi:SQLite:dbname=$dbfile";

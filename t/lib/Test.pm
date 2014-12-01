@@ -15,22 +15,14 @@ use DBIx::RunSQL;
 
 use Perl::Maven::DB;
 
-my $dbfile;
-my $backup;
-
 sub setup {
-	my ($dir) = @_;
-
-	$dir //= '.';
-
-	$dbfile = "$dir/pm.db";
+	my $dir = tempdir( CLEANUP => 1 );
 
 	unlink glob 'sessions/*';
-	my $t = time;
-	if ( -e $dbfile ) {
-		$backup = "$dbfile.$t";
-		move $dbfile, $backup;
-	}
+
+	my $dbfile = "$dir/pm.db";
+	$ENV{PERL_MAVEN_DB} = $dbfile;
+
 	system "$^X bin/setup.pl $dbfile" and die;
 	my $db = Perl::Maven::DB->new($dbfile);
 
@@ -39,21 +31,13 @@ sub setup {
 }
 
 sub psgi_start {
-	my $dir = tempdir( CLEANUP => 1 );
 
-	# print STDERR "# $dir\n";
 	my ($cnt) = split /_/, basename $0;
 
 	$ENV{MYMAVEN_YML}     = 't/files/test.yml';
 	$ENV{PERL_MAVEN_TEST} = 1;
 
 	setup();
-}
-
-END {
-	if ($backup) {
-		move $backup, $dbfile;
-	}
 }
 
 sub read_file {
