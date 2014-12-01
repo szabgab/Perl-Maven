@@ -1409,7 +1409,7 @@ sub is_free {
 
 sub is_bot {
 	my $user_agent = request->user_agent || '';
-	return $user_agent =~ /Googlebot|AhrefsBot/;
+	return $user_agent =~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot/;
 }
 
 true;
