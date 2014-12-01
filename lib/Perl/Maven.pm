@@ -47,8 +47,7 @@ my %authors;
 hook before => sub {
 	set start_time => Time::HiRes::time;
 
-	#my $user_agent = request->user_agent || '';
-	#if ( $user_agent !~ /Googlebot|AhrefsBot/ ) {
+	#if (not is_bot()) {
 	#	set session => 'YAML';
 	#}
 
@@ -89,6 +88,7 @@ hook after => sub {
 
 sub log_request {
 	return if request->uri =~ m{^/img/};
+	return if is_bot();
 	my %SKIP = map { $_ => 1 } qw(/logged-in);
 	return if $SKIP{ request->uri };
 
@@ -1405,6 +1405,11 @@ sub rss {
 sub is_free {
 	my ($path) = @_;
 	return Perl::Maven::Tools::_any( $path, mymaven->{free} );
+}
+
+sub is_bot {
+	my $user_agent = request->user_agent || '';
+	return $user_agent =~ /Googlebot|AhrefsBot/;
 }
 
 true;
