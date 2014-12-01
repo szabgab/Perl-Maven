@@ -126,6 +126,7 @@ sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_subscribers_per_pro
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_users  /etc/munin/plugins/
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_new_users  /etc/munin/plugins/
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_hostnames
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_hostnames_daily
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_processing
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_time
 ```
@@ -138,6 +139,5 @@ Add to crontab something like this (except of the username, and the path to perl
 
 3) Restart the munin node(!)
 ```sudo service munin-node restart```
-
 
 
