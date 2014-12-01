@@ -6,8 +6,9 @@ use File::Basename qw(dirname);
 use Cwd qw(abs_path);
 
 my $root;
+
 BEGIN {
-	$root = dirname(dirname(dirname(abs_path($0))));
+	$root = dirname( dirname( dirname( abs_path($0) ) ) );
 }
 
 use lib "$root/lib";
@@ -15,14 +16,14 @@ use lib "$root/lib";
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new("$root/pm.db");
 
-my $day = time-60*60*24;
-my $week = time-60*60*24*7;
-my ($new_verify_1) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $day);
-my ($new_verify_7) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE verify_time > ?', undef, $week);
-my ($new_users_1) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE register_time > ?', undef, $day);
-my ($new_users_7) = $db->{dbh}->selectrow_array('SELECT COUNT(*) FROM user WHERE register_time > ?', undef, $week);
+my $day  = time - 60 * 60 * 24;
+my $week = time - 60 * 60 * 24 * 7;
+my ($new_verify_1) = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE verify_time > ?',   undef, $day );
+my ($new_verify_7) = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE verify_time > ?',   undef, $week );
+my ($new_users_1)  = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE register_time > ?', undef, $day );
+my ($new_users_7)  = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE register_time > ?', undef, $week );
 
-if (not @ARGV) {
+if ( not @ARGV ) {
 	print "new_users_1.value $new_users_1\n";
 	print "new_users_7.value $new_users_7\n";
 	print "new_verified_users_1.value $new_verify_1\n";
@@ -30,7 +31,7 @@ if (not @ARGV) {
 	exit;
 }
 
-if ($ARGV[0] eq 'config') {
+if ( $ARGV[0] eq 'config' ) {
 	print <<"END_CONFIG";
 graph_title Number of new users
 graph_vlabel cnt
