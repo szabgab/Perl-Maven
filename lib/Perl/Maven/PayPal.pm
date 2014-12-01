@@ -135,12 +135,21 @@ sub paypal_buy {
 			p3 => 1,
 			t3 => 'M',    # monthly
 		);
+
+		#if ( $type eq 'trial' ) {
+		#	$params{a1} = 0;
+		#	$params{p1} = 1;
+		#	$params{t1} = 'M';
+		#}
 		if ( $type eq 'trial' ) {
-			$params{a1} = 0;
+			$params{a1} = 1;
 			$params{p1} = 1;
 			$params{t1} = 'M';
 		}
 		if ( $type eq 'annual' ) {    # TODO remove hardcoding
+			$params{a1} = 60;
+			$params{p1} = 1;
+			$params{t1} = 'Y';
 			$usd        = 90;
 			$params{a3} = $usd;
 			$params{t3} = 'Y';        # yearly
