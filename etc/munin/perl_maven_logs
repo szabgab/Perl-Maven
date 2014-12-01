@@ -8,8 +8,9 @@ use POSIX;
 use JSON::XS qw(encode_json decode_json);
 use Time::HiRes ();
 
-my $data_file = '/tmp/perl_maven_logs.json';
-my $size_file = '/tmp/perl_maven_logs.size';
+my $daily_data_file = '/tmp/perl_maven_logs_daily.json';
+my $data_file       = '/tmp/perl_maven_logs.json';
+my $size_file       = '/tmp/perl_maven_logs.size';
 
 my $start_time = Time::HiRes::time;
 
@@ -19,7 +20,7 @@ if (@ARGV) {
 
 	}
 	if ( $ARGV[0] eq 'config' ) {
-		my $data = read_file($data_file);
+		my $data = read_file($data_file) || {};
 
 		if ( basename($0) eq 'perl_maven_logs_time' ) {
 			print <<"END_CONFIG";
@@ -55,7 +56,7 @@ END_CONFIG
 	}
 }
 else {
-	my $data = read_file($data_file);
+	my $data = read_file($data_file) || {};
 
 	if ( basename($0) eq 'perl_maven_logs_time' ) {
 		say 'average_time.value ' . ( $data->{total}{cnt} ? $data->{total}{time} / $data->{total}{cnt} : 0 );
@@ -77,12 +78,13 @@ else {
 sub read_file {
 	my ($file) = @_;
 
-	my $json = '{}';
-	if ( open my $fh, '<', $data_file ) {
+	my $json;
+	if ( open my $fh, '<', $file ) {
 		local $/ = undef;
 		$json = <$fh>;
 		close $fh;
 	}
+	return if not $json;
 	return decode_json $json;
 }
 
@@ -155,9 +157,25 @@ sub collect {
 	}
 	$last_size = process( $this_file, $last_size, \%data );
 
-	$data{processing_time} = Time::HiRes::time - $start_time;
+	# The daily file is a list of hashes;
+	# each hash contains the data for a 5-min intervall and the timestamp when
+	# the processing of that 5-min intervall started.
+	# The file contains the data for one day.
+	my $daily = read_file($daily_data_file) || [];
+	push @$daily,
+		{
+		start_time => $start_time,
+		data       => \%data,
+		};
+	while ( $daily->[0]{start_time} < Time::HiRes::time - 60 * 60 * 24 ) {
+		shift @$daily;
+	}
 
+	save_file( $daily_data_file, encode_json($daily) );
+
+	$data{processing_time} = Time::HiRes::time - $start_time;
 	save_file( $data_file, encode_json( \%data ) );
 	save_file( $size_file, $last_size );
+
 }
 
