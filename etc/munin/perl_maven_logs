@@ -74,6 +74,22 @@ END_CONFIG
 			exit;
 		}
 
+		if ( basename($0) eq 'perl_maven_logs_translations_daily' ) {
+			print <<"END_CONFIG";
+graph_title Page view per domain (last 24 hours)
+graph_vlabel cnt
+graph_category PerlMaven
+END_CONFIG
+
+			foreach my $host ( keys %{ $data->{daily}{hosts} } ) {
+				next if $host eq 'perlmaven.com';    # TODO remove hardcoding
+				my $name = $host;
+				$name =~ s/\./_/g;
+				say "$name.label $host";
+			}
+			exit;
+		}
+
 	}
 }
 else {
@@ -102,6 +118,16 @@ else {
 
 	if ( basename($0) eq 'perl_maven_logs_hostnames_daily' ) {
 		foreach my $host ( keys %{ $data->{daily}{hosts} } ) {
+			my $name = $host;
+			$name =~ s/\./_/g;
+			say "$name.value $data->{daily}{hosts}{$host}";
+		}
+		exit;
+	}
+
+	if ( basename($0) eq 'perl_maven_logs_translations_daily' ) {
+		foreach my $host ( keys %{ $data->{daily}{hosts} } ) {
+			next if $host eq 'perlmaven.com';    # TODO remove hardcoding
 			my $name = $host;
 			$name =~ s/\./_/g;
 			say "$name.value $data->{daily}{hosts}{$host}";
