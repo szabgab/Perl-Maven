@@ -1,16 +1,16 @@
 
 Hi,
 <p>
-Thank you for registering. The current version of the Beginner Perl Maven book can be
-found on the <a href="<% url %>">web site</a>
+Thank you for registering!
+<p>
+You can now go to <a href="http://perlmaven.com/account">your account</a> and set your password.
 </p>
 <p>
-Would you like to tell your friend about the Perl Maven site?
-For your convenience I prepared links to
-<a href="http://twitter.com/home?status=I just subscribed to the Perl Maven site http://perlmaven.com/">tweet about it</a>
-or to share it on <a href="http://www.facebook.com/sharer.php?u=http://perlmaven.com/&t=I just subscribed
-to the Perl Maven site">Facebook</a> or on
-<a href="https://plusone.google.com/_/+1/confirm?hl=en&url=http://perlmaven.com/">Google Plus</a>
+You can also use the opportunity to subscribe to the <a href="http://perlmaven.com/pro">Perl Maven Pro</a>.
+For a modest monthly fee that will give you access to tons of videos and articles.
+<p>
+Among the videos you will find the full length <a href="http://perlmaven.com/beginner-perl-maven-video-course">Beginner Perl course</a>,
+the <a href="http://perlmaven.com/testing">Test Automation using Perl</a> course, and the <a href="http://perlmaven.com/search-cpan-org">search.cpan.org cloning project</a>.
 </p>
 <p>
 Thank you
@@ -18,4 +18,3 @@ Thank you
 <p>
 Gabor Szabo
 </p>
-<p>ps. You can also follow me on <a href="https://plus.google.com/102810219707784087582">Google+</a></p>

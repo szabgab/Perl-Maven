@@ -931,6 +931,9 @@ get '/verify/:id/:code' => sub {
 	session logged_in => 1;
 	session last_seen => time;
 
+	my $url = request->base;
+	$url =~ s{/+$}{};
+
 	my $mymaven = mymaven;
 	send_mail(
 		{
@@ -942,7 +945,7 @@ get '/verify/:id/:code' => sub {
 			html => template(
 				'post_verification_mail',
 				{
-					url => uri_for('/account'),
+					url => $url,
 				},
 				{ layout => 'email', }
 			),
