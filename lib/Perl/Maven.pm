@@ -800,17 +800,8 @@ get '/account' => sub {
 	my @subscriptions = $db->get_subscriptions( $user->{email} );
 	my @owned_products;
 	foreach my $code (@subscriptions) {
-		my @files = get_download_files($code);
-		foreach my $f (@files) {
 
-			#debug "$code -  $f->{file}";
-			push @owned_products,
-				{
-				name     => ( setting('products')->{$code}{name} . " $f->{title}" ),
-				filename => "/download/$code/$f->{file}",
-				linkname => $f->{file},
-				};
-		}
+		# TODO remove the hard-coded special case of the perl_maven_pro
 		if ( $code eq 'perl_maven_pro' ) {
 			push @owned_products,
 				{
@@ -818,6 +809,19 @@ get '/account' => sub {
 				filename => '/archive?tag=pro',
 				linkname => 'List of pro articles',
 				};
+		}
+		else {
+			my @files = get_download_files($code);
+			foreach my $f (@files) {
+
+				#debug "$code -  $f->{file}";
+				push @owned_products,
+					{
+					name     => ( setting('products')->{$code}{name} . " $f->{title}" ),
+					filename => "/download/$code/$f->{file}",
+					linkname => $f->{file},
+					};
+			}
 		}
 	}
 
