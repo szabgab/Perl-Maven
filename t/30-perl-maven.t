@@ -136,7 +136,8 @@ subtest 'subscribe' => sub {
 	$w->get_ok($set_url);
 
 	#diag $w->content;
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
+	# the new page does not contain a link to the cookbook.
+	#$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/logged-in");
 	$w->content_is(1);
 
@@ -157,6 +158,7 @@ subtest 'subscribe' => sub {
 
 	#ok !-e $ENV{PERL_MAVEN_MAIL}, 'no additional mail was sent';
 
+	$w->get_ok("$url/account");
 	$w->follow_link_ok(
 		{
 			text => $cookbook_text,
