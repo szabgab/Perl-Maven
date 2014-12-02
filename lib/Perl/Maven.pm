@@ -333,6 +333,8 @@ get '/search' => sub {
 
 	my ($query) = param('query');
 	if ( defined $query ) {
+
+		$query = quotemeta $query;
 		my @titles = map { values %$_ } values %$data;
 		my @hits = uniq sort grep {/$query/i} ( @titles, keys %$data );
 		my $LIMIT = 20;
