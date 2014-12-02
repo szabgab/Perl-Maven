@@ -87,12 +87,17 @@ hook after => sub {
 };
 
 sub log_request {
-	return if request->uri =~ m{^/img/};
-	return if request->uri =~ m{^/atom};
-	return if request->uri =~ m{^/robots.txt};
+
+	# It seems uri is not set when accessing images on the development server
+	my $uri = request->uri;
+	return if not defined $uri;
+
+	return if $uri =~ m{^/img/};
+	return if $uri =~ m{^/atom};
+	return if $uri =~ m{^/robots.txt};
 	return if is_bot();
 	my %SKIP = map { $_ => 1 } qw(/logged-in);
-	return if $SKIP{ request->uri };
+	return if $SKIP{$uri};
 
 	my $time = time;
 	my $dir = path( config->{appdir}, 'logs' );
