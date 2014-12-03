@@ -83,10 +83,13 @@ hook before => sub {
 
 };
 hook after => sub {
-	log_request();
+	my ($response) = @_;
+	log_request($response);
 };
 
 sub log_request {
+	my ($response) = @_;
+	return if $response->status != 200;
 
 	# It seems uri is not set when accessing images on the development server
 	my $uri = request->uri;
@@ -95,6 +98,9 @@ sub log_request {
 	return if $uri =~ m{^/img/};
 	return if $uri =~ m{^/atom};
 	return if $uri =~ m{^/robots.txt};
+	return if $uri =~ m{^/search};
+
+	#return if $uri =~ m{^/logged-in}; # not logged at all
 	return if is_bot();
 	my %SKIP = map { $_ => 1 } qw(/logged-in);
 	return if $SKIP{$uri};
@@ -1426,7 +1432,8 @@ sub is_free {
 sub is_bot {
 	my $user_agent = request->user_agent || '';
 	return $user_agent
-		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider|Spinn3r|robots|thumboweb_bot|Blekkobot|Exabot/;
+		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider|Spinn3r|robots|thumboweb_bot|Blekkobot|Exabot|LWP::Simple/;
+
 }
 
 true;
