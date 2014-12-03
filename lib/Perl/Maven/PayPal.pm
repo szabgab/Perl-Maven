@@ -146,13 +146,21 @@ sub paypal_buy {
 			$params{p1} = 1;
 			$params{t1} = 'M';
 		}
-		if ( $type eq 'annual' ) {    # TODO remove hardcoding
-			                          #$params{a1} = 60;
-			                          #$params{p1} = 1;
-			                          #$params{t1} = 'Y';
+		if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
+			$params{a1} = 1;
+			$params{p1} = 1;
+			$params{t1} = 'M';
 			$usd        = 90;
 			$params{a3} = $usd;
-			$params{t3} = 'Y';        # yearly
+			$params{t3} = 'Y';          # yearly
+		}
+		if ( $type eq 'annual' ) {      # TODO remove hardcoding
+			                            #$params{a1} = 60;
+			                            #$params{p1} = 1;
+			                            #$params{t1} = 'Y';
+			$usd        = 90;
+			$params{a3} = $usd;
+			$params{t3} = 'Y';          # yearly
 		}
 	}
 	else {
