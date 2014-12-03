@@ -21,6 +21,7 @@ use List::MoreUtils qw(uniq);
 use POSIX       ();
 use Time::HiRes ();
 use YAML qw(LoadFile);
+use MongoDB;
 
 use Web::Feed;
 
@@ -89,21 +90,10 @@ hook after => sub {
 
 sub log_request {
 	my ($response) = @_;
-	return if $response->status != 200;
 
 	# It seems uri is not set when accessing images on the development server
 	my $uri = request->uri;
 	return if not defined $uri;
-
-	return if $uri =~ m{^/img/};
-	return if $uri =~ m{^/atom};
-	return if $uri =~ m{^/robots.txt};
-	return if $uri =~ m{^/search};
-
-	#return if $uri =~ m{^/logged-in}; # not logged at all
-	return if is_bot();
-	my %SKIP = map { $_ => 1 } qw(/logged-in);
-	return if $SKIP{$uri};
 
 	my $time = time;
 	my $dir = path( config->{appdir}, 'logs' );
@@ -129,6 +119,7 @@ sub log_request {
 		referrer   => request->referer,
 		ip         => $ip,
 		user_agent => request->user_agent,
+		status     => $response->status,
 	);
 	my $start_time = setting('start_time');
 	if ($start_time) {
@@ -142,6 +133,19 @@ sub log_request {
 	#$datails{uid} = session('uid');
 	#}
 
+	log_to_mongodb( \%details );
+
+	return if $response->status != 200;
+	return if $uri =~ m{^/img/};
+	return if $uri =~ m{^/atom};
+	return if $uri =~ m{^/robots.txt};
+	return if $uri =~ m{^/search};
+
+	#return if $uri =~ m{^/logged-in}; # not logged at all
+	return if is_bot();
+	my %SKIP = map { $_ => 1 } qw(/logged-in);
+	return if $SKIP{$uri};
+
 	if ( open my $fh, '>>', $file ) {
 		flock( $fh, LOCK_EX ) or return;
 		seek( $fh, 0, SEEK_END ) or return;
@@ -151,6 +155,14 @@ sub log_request {
 	return;
 }
 
+sub log_to_mongodb {
+	my ($data) = @_;
+
+	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database   = $client->get_database('PerlMaven');
+	my $collection = $database->get_collection('logging');
+	$collection->insert($data);
+}
 hook before_template => sub {
 	my $t = shift;
 	$t->{title} ||= '';
