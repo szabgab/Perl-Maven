@@ -3,7 +3,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Passphrase;
 
 our $VERSION = '0.11';
-my $PM_VERSION         = 1;    # Version number to force JavaScript and CSS files reload
+my $PM_VERSION         = 2;    # Version number to force JavaScript and CSS files reload
 my $MAX_INDEX          = 3;
 my $MAX_FEED           = 10;
 my $MAX_META_FEED      = 20;
