@@ -1,6 +1,5 @@
 
 var show_automatically = false;
-var user_info;
 
 function mysearch(keyword, auto) {
     var url = '/search';
@@ -40,57 +39,6 @@ function display_search_result(data, status, jqXHR) {
        $('.modal-body').html(html);
        $('#myModal').modal('show')
     }
-}
-
-function show_intro() {
-//	console.log('show_intro');
-	if (user_info['logged_in']) {
-//		console.log('logged_in');
-		return;
-	}
-
-	var this_host = window.location.hostname;
-	//console.log(this_host);
-	var referrer_host = document.referrer;
-	if (referrer_host.length > 0) {
-		var match = /https?:\/\/([^:\/]*)/.exec(referrer_host);
-		if (match) {
-			referrer_host = match[1];
-		}
-	}
-	//console.log(referrer_host);
-	//if (! referrer_host) {
-	//	return;
-	//}
-	if (this_host == referrer_host) {
-		return;
-	}
-
-	// limit the frequency of the pop-up
-	var now = new Date;
-	var max_frequency = 3; // in days
-	var last_seen = localStorage.getItem('popup_1_date');
-	if (last_seen !== null) {
-		last_seen = new Date(last_seen);
-	    //console.log(last_seen);
-		var day = 1000*60*60*24;
-		//console.log(now.getTime());
-		//console.log(last_seen.getTime());
-		//console.log(day);
-		var diff = (now.getTime()-last_seen.getTime())/day;
-		//console.log(diff);
-		if (diff < max_frequency) {
-			return;
-		}
-	}
-	var n = localStorage.getItem('popup_1_counter');
-	if (n === null) {
-		n = 0;
-	}
-	n++;
-	localStorage.setItem("popup_1_counter", n);
-	localStorage.setItem("popup_1_date", now);
-	$('#popup_1').modal('show')
 }
 
 function show_archive(tag, show_abstract) {
@@ -147,11 +95,10 @@ function code_explain() {
     //alert($('#code').val());
 }
 
-function user_info(data, status, jqXHR) {
-	//console.log(data);
-	user_info = data;
-
-   	setTimeout(show_intro, 1000);
+function show_user_info() {
+	if ('delayed' in user_info) {
+		setTimeout(function () {$( '#' + user_info['delayed']['what'] ).modal('show')} , user_info['delayed']['when'] );
+	}
 }
 
 function admin_show_user_details(data, status, jqXHR) {
@@ -191,13 +138,7 @@ function setup_search (query, process) {
 
 $(document).ready(function() {
     $('#explain').click(code_explain);
-
-    $.ajax({
-        url: '/pm/user-info',
-        data: {},
-        dataType: "json",
-        success: user_info,
-    });
+    show_user_info();
 
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );

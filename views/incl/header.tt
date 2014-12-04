@@ -9,6 +9,10 @@
 <link href="/google-code-prettify/prettify.css" rel="stylesheet">
 <script src="/google-code-prettify/prettify.js"></script>
 
+<script>
+ var user_info = <% user_info %>;
+</script>
+
 
 <%  IF localized_versions.size > 1 %>
   <link rel="alternate" hreflang="x-default" href="<% localized_versions.en.url %>" />
@@ -64,7 +68,7 @@
   <div class="span1">
 
 <!-- Modal start -->
-<div class="modal fade" id="popup_1">
+<div class="modal fade" id="popup_visitor">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -81,6 +85,23 @@
             <input type="submit" value="Register" />
           </form>
          <small>If you are already registered, then please log in and you won't see this pop-up any more.</small>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="popup_logged_in">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Perl Maven</h4>
+      </div>
+
+      <div class="modal-body">
+	      <h2>Do you really want to improve your Perl?</h2>
+          <p>The Perl Maven Pro is now available for only <b>$1</b> for the first month!</p>
+          <p><a class="btn btn-primary btn-lg" href="/pro" role="button">Learn more</a></p>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
