@@ -73,6 +73,16 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
      -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
 }
+
+#promotion-right {
+  margin: 20px;
+  background-color: #F2BD49;
+  padding: 10px;
+          border-radius: 15px;
+     -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+}
+
 #search-on-right {
   text-align: center;
 }

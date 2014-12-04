@@ -30,10 +30,9 @@
            <% INCLUDE incl/social_share.tt %>
            <% INCLUDE incl/sponsors.tt %>
 
-           <div id="newsletter-right-form">
-               <h3>Do you want to become a Pro?</h3>
-               Check out the
-               <a href="/pro">Perl Maven Pro</a>.
+           <div id="promotion-right">
+               <h3>Do you want to become a Pro in Perl?</h3>
+               <a class="btn btn-primary btn-lg" href="/pro" role="button">Learn more</a>
            </div>
 
 
