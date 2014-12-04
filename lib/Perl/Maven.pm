@@ -141,10 +141,10 @@ sub log_request {
 	return if $uri =~ m{^/robots.txt};
 	return if $uri =~ m{^/search};
 
-	#return if $uri =~ m{^/logged-in}; # not logged at all
 	return if is_bot();
-	my %SKIP = map { $_ => 1 } qw(/logged-in);
-	return if $SKIP{$uri};
+
+	#my %SKIP = map { $_ => 1 } qw(/pm/user-info);
+	#return if $SKIP{$uri};
 
 	if ( open my $fh, '>>', $file ) {
 		flock( $fh, LOCK_EX ) or return;
@@ -667,8 +667,9 @@ get '/subscribe' => sub {
 	template 'error', { subscribed => 1 };
 };
 
-get '/logged-in' => sub {
-	return logged_in() ? 1 : 0;
+get '/pm/user-info' => sub {
+	my %data = ( logged_in => logged_in(), );
+	return to_json \%data;
 };
 
 # TODO probably we would want to move the show_right control from here to a template file (if we really need it here)

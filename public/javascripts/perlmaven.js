@@ -1,6 +1,6 @@
 
 var show_automatically = false;
-var logged_in = false;
+var user_info;
 
 function mysearch(keyword, auto) {
     var url = '/search';
@@ -43,7 +43,9 @@ function display_search_result(data, status, jqXHR) {
 }
 
 function show_intro() {
-	if (logged_in) {
+//	console.log('show_intro');
+	if (user_info['logged_in']) {
+//		console.log('logged_in');
 		return;
 	}
 
@@ -147,7 +149,7 @@ function code_explain() {
 
 function user_info(data, status, jqXHR) {
 	//console.log(data);
-	logged_in = data == 1;
+	user_info = data;
 
    	setTimeout(show_intro, 1000);
 }
@@ -191,7 +193,7 @@ $(document).ready(function() {
     $('#explain').click(code_explain);
 
     $.ajax({
-        url: '/logged-in',
+        url: '/pm/user-info',
         data: {},
         dataType: "json",
         success: user_info,

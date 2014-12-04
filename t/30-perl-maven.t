@@ -138,8 +138,8 @@ subtest 'subscribe' => sub {
 	#diag $w->content;
 	# the new page does not contain a link to the cookbook.
 	#$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
-	$w->get_ok("$url/logged-in");
-	$w->content_is(1);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 1 };
 
 	# check e-mails
 	@mails = Email::Sender::Simple->default_transport->deliveries;
@@ -183,8 +183,8 @@ subtest 'subscribe' => sub {
 	$w->get_ok('/logout');
 	$w->get_ok('/account');
 	$w->content_unlike( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
-	$w->get_ok("$url/logged-in");
-	is $w->content, 0;
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 0, };
 };
 
 {
@@ -251,8 +251,8 @@ subtest 'ask for password reset, then login' => sub {
 	);
 
 	#diag($w->content);
-	$w->get_ok("$url/logged-in");
-	$w->content_is(1);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 1, };
 
 	# white-box:
 	my $user = $db->get_user_by_email($EMAIL);
@@ -260,8 +260,8 @@ subtest 'ask for password reset, then login' => sub {
 
 	#diag('now logout');
 	$w->get_ok("$url/logout");
-	$w->get_ok("$url/logged-in");
-	$w->content_is(0);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 0, };
 
 	#diag('login now that we have a password');
 	$w->get_ok("$url/login");
@@ -279,8 +279,8 @@ subtest 'ask for password reset, then login' => sub {
 
 	#diag $w->content;
 
-	$w->get_ok("$url/logged-in");
-	$w->content_is(1);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 1, };
 };
 
 # now change password while logged in,
@@ -323,8 +323,8 @@ subtest 'change password while logged in' => sub {
 	#diag($w->content);
 	$w->content_like( qr{The password was set successfully}, 'password was reset' );
 	$w->get_ok("$url/logout");
-	$w->get_ok("$url/logged-in");
-	$w->content_is(0);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 0, };
 
 	$w->get_ok("$url/login");
 	$w->submit_form_ok(
@@ -338,8 +338,8 @@ subtest 'change password while logged in' => sub {
 		'login'
 	);
 	$w->content_like(qr{Invalid });
-	$w->get_ok("$url/logged-in");
-	$w->content_is(0);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 0, };
 
 	$w->back;
 	$w->get_ok("$url/login");
@@ -355,8 +355,8 @@ subtest 'change password while logged in' => sub {
 	);
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 
-	$w->get_ok("$url/logged-in");
-	$w->content_is(1);
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 1, };
 
 	#diag($w->content);
 

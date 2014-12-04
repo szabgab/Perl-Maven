@@ -25,7 +25,7 @@ sub logged_in {
 		session last_seen => time;
 		return 1;
 	}
-	return;
+	return 0;
 
 }
 
