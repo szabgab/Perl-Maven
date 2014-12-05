@@ -6,12 +6,8 @@ use base 'Exporter';
 
 our @EXPORT_OK = qw(read_file psgi_start);
 
-use Cwd qw(cwd);
 use File::Basename qw(basename);
-use File::Spec;
 use File::Temp qw(tempdir);
-use File::Copy qw(copy move);
-use DBIx::RunSQL;
 
 use Perl::Maven::DB;
 
