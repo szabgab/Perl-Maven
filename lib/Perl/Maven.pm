@@ -1310,13 +1310,6 @@ sub read_tt {
 	}
 }
 
-sub read_file {
-	my $file = shift;
-	open my $fh, '<encoding(UTF-8)', $file or return '';
-	local $/ = undef;
-	return scalar <$fh>;
-}
-
 sub _generate_code {
 	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
 	my $code = time;
