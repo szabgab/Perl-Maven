@@ -6,7 +6,6 @@ use base 'Exporter';
 
 our @EXPORT_OK = qw(read_file psgi_start);
 
-use File::Basename qw(basename);
 use File::Temp qw(tempdir);
 
 use Perl::Maven::DB;
@@ -27,8 +26,6 @@ sub setup {
 }
 
 sub psgi_start {
-
-	my ($cnt) = split /_/, basename $0;
 
 	$ENV{MYMAVEN_YML} = 't/files/test.yml';
 
