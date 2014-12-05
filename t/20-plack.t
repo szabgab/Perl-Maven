@@ -7,8 +7,8 @@ use HTTP::Request::Common;
 use Cwd qw(getcwd);
 use Carp::Always;
 
-use t::lib::Test qw(psgi_start);
-psgi_start();
+use t::lib::Test;
+t::lib::Test::setup();
 
 use Dancer qw(:tests);
 

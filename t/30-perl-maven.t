@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use t::lib::Test qw(psgi_start read_file);
+use t::lib::Test qw(read_file);
 
 use Cwd qw(abs_path getcwd);
 use File::Basename qw(basename);
@@ -11,7 +11,7 @@ use Test::More;
 use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
 
-psgi_start();
+t::lib::Test::setup();
 
 my $url            = 'http://test-perl-maven.com';
 my $EMAIL          = 'gabor@perlmaven.com';
