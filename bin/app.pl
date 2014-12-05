@@ -5,8 +5,5 @@ if ( $ENV{PERL_MAVEN_TEST} ) {
 	set startup_info => 0;
 }
 
-if ( $ENV{PERL_MAVEN_PORT} ) {
-	set port => $ENV{PERL_MAVEN_PORT};
-}
 use Perl::Maven;
 dance;
