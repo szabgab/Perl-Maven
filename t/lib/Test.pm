@@ -34,8 +34,7 @@ sub psgi_start {
 
 	my ($cnt) = split /_/, basename $0;
 
-	$ENV{MYMAVEN_YML}     = 't/files/test.yml';
-	$ENV{PERL_MAVEN_TEST} = 1;
+	$ENV{MYMAVEN_YML} = 't/files/test.yml';
 
 	setup();
 }
