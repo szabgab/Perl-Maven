@@ -98,7 +98,6 @@ subtest 'subscribe' => sub {
 		'has registeration form'
 	);
 
-	#my $mail = read_file( $ENV{PERL_MAVEN_MAIL} );
 	my @mails = Email::Sender::Simple->default_transport->deliveries;
 
 	# Returns a list of hashesh. Each has has 4 keys:
@@ -155,8 +154,6 @@ subtest 'subscribe' => sub {
 
 	@mails = Email::Sender::Simple->default_transport->deliveries;
 	is scalar @mails, 3;
-
-	#ok !-e $ENV{PERL_MAVEN_MAIL}, 'no additional mail was sent';
 
 	$w->get_ok("$url/account");
 	$w->follow_link_ok(
