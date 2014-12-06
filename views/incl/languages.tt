@@ -1,11 +1,13 @@
-<% IF languages.keys.size %>
-<div id="sites">
-  <ul>
-  <% FOR lang IN languages.keys %>
-     <li><a href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
+<% IF conf.show_language_links %>
+  <% IF languages.keys.size %>
+  <div id="sites">
+    <ul>
+    <% FOR lang IN languages.keys %>
+       <li><a href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
+    <% END %>
+       <li><hr></li>
+       <li><a href="http://perlmaven.com/about#translations">about the translations</a></li>
+    </ul>
+  </div>
   <% END %>
-     <li><hr></li>
-     <li><a href="http://perlmaven.com/about#translations">about the translations</a></li>
-  </ul>
-</div>
 <% END %>

@@ -54,6 +54,7 @@ installation:
     show_right: 1
     show_date: 1
     archive: 1
+    show_language_links: 1
   admin:
     email: 'Gabor Szabo <gabor@szabgab.com>'
   paypal:
