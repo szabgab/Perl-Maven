@@ -127,7 +127,7 @@ sub log_request {
 
 	# TODO if there are entries in the session, move them to the database
 	if (logged_in) {
-		$datails{uid} = session('uid');
+		$details{uid} = session('uid');
 	}
 
 	log_to_mongodb( \%details );
