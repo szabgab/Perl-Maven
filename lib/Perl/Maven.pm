@@ -4,7 +4,6 @@ use Dancer::Plugin::Passphrase;
 
 our $VERSION = '0.11';
 my $PM_VERSION         = 2;    # Version number to force JavaScript and CSS files reload
-my $MAX_FEED           = 10;
 my $MAX_META_FEED      = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
 
@@ -1385,7 +1384,7 @@ sub _feed {
 
 	$subtitle ||= '';
 
-	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => $MAX_FEED );
+	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => mymaven->{feed_size} );
 
 	my $mymaven = mymaven;
 
