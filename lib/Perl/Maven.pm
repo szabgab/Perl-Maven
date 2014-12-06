@@ -125,12 +125,10 @@ sub log_request {
 		$details{elapsed_time} = Time::HiRes::time - $start_time;
 	}
 
-	#if (logged_in) {
-
-	# TODO store in the database
 	# TODO if there are entries in the session, move them to the database
-	#$datails{uid} = session('uid');
-	#}
+	if (logged_in) {
+		$datails{uid} = session('uid');
+	}
 
 	log_to_mongodb( \%details );
 

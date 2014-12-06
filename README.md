@@ -118,7 +118,7 @@ Register:
 Munin integration
 ===================
 
-1) Install the following packages to the system perl  libdbi-perl libdbd-sqlite-perl libjson-xs-perl 
+1) Install the following packages to the system perl  libdbi-perl libdbd-sqlite-perl libjson-xs-perl libmongodb-perl
 2)
 
 ```
@@ -130,6 +130,7 @@ sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/pl
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_translations_daily
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_processing
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_time
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/plugins/perl_maven_mongo_hits
 ```
 
 Add to crontab something like this (except of the username, and the path to perl):
