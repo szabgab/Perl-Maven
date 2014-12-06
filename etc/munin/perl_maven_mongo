@@ -4,6 +4,7 @@ use warnings;
 use 5.010;
 
 use File::Basename qw(basename);
+use Data::Dumper qw(Dumper);
 use MongoDB;
 
 if (@ARGV) {
@@ -17,6 +18,19 @@ graph_category PerlMaven
 END_CONFIG
 			say 'total.label Total';
 			say 'ok_200.label OK 200';
+			exit;
+		}
+
+		if ( basename($0) eq 'perl_maven_mongo_elapsed_time' ) {
+			print <<"END_CONFIG";
+graph_title MongoDB average elapsed time
+graph_vlabel sec
+graph_category PerlMaven
+END_CONFIG
+			say 'all_24_hours.label Total';
+			say 'ok_200_24_hours.label OK 200';
+			say 'all_5_min.label Total';
+			say 'ok_200_5_min.label OK 200';
 			exit;
 		}
 	}
@@ -38,6 +52,49 @@ if ( basename($0) eq 'perl_maven_mongo_hits' ) {
 		}
 		)->count;
 	exit;
+}
+
+if ( basename($0) eq 'perl_maven_mongo_elapsed_time' ) {
+	my $time = time;
+
+	say 'all_24_hours.value ' . average( { time => { '$gt', $time - 60 * 60 * 24 } } );
+	say 'ok_200_24_hours.value '
+		. average(
+		{
+			'$and' => [ { time => { '$gt', $time - 60 * 60 * 24 } }, { status => 200 } ]
+		}
+		);
+	say 'all_5_min.value ' . average( { time => { '$gt', $time - 60 * 5 } } );
+	say 'ok_200_5_min.value '
+		. average(
+		{
+			'$and' => [ { time => { '$gt', $time - 60 * 5 } }, { status => 200 } ]
+		}
+		);
+	exit;
+}
+
+sub average {
+	my $cond  = shift;
+	my $count = $collection->find($cond)->count;
+	return 0 if not $count;
+
+	my $res = $collection->aggregate(
+		[
+			{ '$match' => $cond },
+			{
+				'$group' => {
+					'_id' => '',
+					total => {
+						'$sum' => '$elapsed_time'
+					}
+				}
+			}
+		]
+	);
+
+	#say Dumper $res;
+	return $res->[0]{total} / $count;
 }
 
 =pod
