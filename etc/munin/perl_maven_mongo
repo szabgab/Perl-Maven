@@ -1,0 +1,59 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.010;
+
+use File::Basename qw(basename);
+use MongoDB;
+
+if (@ARGV) {
+	if ( $ARGV[0] eq 'config' ) {
+
+		if ( basename($0) eq 'perl_maven_mongo_hits' ) {
+			print <<"END_CONFIG";
+graph_title MongoDB hits (24 hours)
+graph_vlabel sec
+graph_category PerlMaven
+END_CONFIG
+			say 'total.label Total';
+			say 'ok_200.label OK 200';
+			exit;
+		}
+	}
+
+	exit;
+}
+
+my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+my $database   = $client->get_database('PerlMaven');
+my $collection = $database->get_collection('logging');
+
+if ( basename($0) eq 'perl_maven_mongo_hits' ) {
+	my $time = time;
+	say 'total.value ' . $collection->find( { time => { '$gt', $time - 60 * 60 * 24 } } )->count;
+	say 'ok_200.value '
+		. $collection->find(
+		{
+			'$and' => [ { time => { '$gt', $time - 60 * 60 * 24 } }, { status => 200 } ]
+		}
+		)->count;
+	exit;
+}
+
+=pod
+
+{
+  "_id": ObjectId("547f4ad4600b460b3631"),
+  "ip": "127.0.0.1",
+  "time": 1417628380,
+  "status": NumberLong("200"),
+  "elapsed_time": 0.32529497146606445,
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36",
+  "referrer": "http://perlmaven.com.local:5000/abc",
+  "sid": "621662267931985042589654628876",
+  "host": "perlmaven.com.local:5000",
+  "page": "/"
+}
+
+=cut
+
