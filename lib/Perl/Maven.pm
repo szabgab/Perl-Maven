@@ -239,7 +239,7 @@ hook before_template => sub {
 
 	# TODO start using a separate development configuration file and remove this code from here:
 	if ( in_development() ) {
-		$t->{show_social} = 0;
+		$t->{conf}{show_social} = 0;
 
 		$t->{conf}{comments_disqus_enable} = 0;
 		$t->{conf}{clicky}                 = 0;
