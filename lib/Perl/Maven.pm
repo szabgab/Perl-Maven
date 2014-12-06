@@ -4,7 +4,6 @@ use Dancer::Plugin::Passphrase;
 
 our $VERSION = '0.11';
 my $PM_VERSION         = 2;    # Version number to force JavaScript and CSS files reload
-my $MAX_INDEX          = 3;
 my $MAX_FEED           = 10;
 my $MAX_META_FEED      = 20;
 my $CODE_EXPLAIN_LIMIT = 20;
@@ -380,7 +379,7 @@ get '/' => sub {
 		);
 	}
 
-	my $pages = setting('tools')->read_meta_array( 'archive', limit => $MAX_INDEX );
+	my $pages = setting('tools')->read_meta_array( 'archive', limit => mymaven->{main_page_entries} );
 	_replace_tags($pages);
 
 	_show( { article => 'index', template => 'page', layout => 'index' }, { pages => $pages } );
