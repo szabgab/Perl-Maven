@@ -18,6 +18,7 @@ graph_category PerlMaven
 END_CONFIG
 			say 'total.label Total';
 			say 'ok_200.label OK 200';
+			say 'logged_in.label Logged in';
 			exit;
 		}
 
@@ -49,6 +50,12 @@ if ( basename($0) eq 'perl_maven_mongo_hits' ) {
 		. $collection->find(
 		{
 			'$and' => [ { time => { '$gt', $time - 60 * 60 * 24 } }, { status => 200 } ]
+		}
+		)->count;
+	say 'logged_in.value '
+		. $collection->find(
+		{
+			'$and' => [ { time => { '$gt', $time - 60 * 60 * 24 } }, { uid => { '$exists' => boolean::true } } ]
 		}
 		)->count;
 	exit;
