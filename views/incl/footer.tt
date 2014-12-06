@@ -30,11 +30,12 @@
            <% INCLUDE incl/social_share.tt %>
            <% INCLUDE incl/sponsors.tt %>
 
+<!--
            <div id="promotion-right">
                <h3>Do you want to become a Pro in Perl?</h3>
                <a class="btn btn-primary btn-lg" href="/pro" role="button">Learn more</a>
            </div>
-
+-->
 
            <% IF conf.show_related && related %>
              <div id="related">

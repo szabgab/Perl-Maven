@@ -31,6 +31,12 @@
           </li>
         <%- END %>
 
+        <% IF e.button -%>
+              <button class="btn btn-default" type="button" id="free-button">
+                <% e.title %>
+              </button>
+        <%- END %>
+
         <% IF e.login %>
           <% IF username %>
              <li><a href="/account"><% username %></a></li>
