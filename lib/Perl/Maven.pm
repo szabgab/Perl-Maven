@@ -1469,15 +1469,6 @@ sub rss {
 
 	my $pmf = _feed( $what, $tag, $subtitle );
 
-	#$xml .= qq{  <pubDate>${ts}Z</pubDate>\n};
-	#$xml .= qq{  <lastBuildDate>${ts}Z</lastBuildDate>\n};
-	#$xml .= qq{  <category>Podcast</category>\n};
-	#$xml .= qq{  <docs>http://blogs.law.harvard.edu/tech/rss</docs>\n};
-	#$xml .= qq{  <generator>vim</generator>\n};
-	#$xml .= qq{  <managingEditor>szabgab\@gmail.com (Gabor Szabo)</managingEditor>\n};
-	#$xml .= qq{  <webmaster>szabgab\@gmail.com (Gabor Szabo)</webmaster>\n};
-	#$xml .= qq{  <ttl>1440</ttl>\n};
-
 	content_type 'application/rss+xml';
 	return $pmf->rss;
 }
