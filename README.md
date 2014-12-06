@@ -131,6 +131,7 @@ sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/pl
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_processing
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_time
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/plugins/perl_maven_mongo_hits
+sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/plugins/perl_maven_mongo_elapsed_time
 ```
 
 Add to crontab something like this (except of the username, and the path to perl):
