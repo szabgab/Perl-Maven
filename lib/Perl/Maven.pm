@@ -991,13 +991,7 @@ get '/verify/:id/:code' => sub {
 	}
 
 	if ( $user->{verify_time} ) {
-		my ($cookbook) = get_download_files('perl_maven_cookbook');
-
-		return template 'thank_you',
-			{
-			filename => "/download/perl_maven_cookbook/$cookbook->{file}",
-			linkname => $cookbook->{file},
-			};
+		return template 'thank_you';
 	}
 
 	if ( not $db->verify_registration( $id, $code ) ) {
@@ -1042,13 +1036,7 @@ get '/verify/:id/:code' => sub {
 		}
 	);
 
-	my ($cookbook) = get_download_files('perl_maven_cookbook');
-
-	template 'thank_you',
-		{
-		filename => "/download/perl_maven_cookbook/$cookbook->{file}",
-		linkname => $cookbook->{file},
-		};
+	template 'thank_you';
 };
 
 get '/img/:file' => sub {
