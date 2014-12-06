@@ -32,11 +32,11 @@ installation:
     'digitalocean': 'https://www.digitalocean.com/?refcode=0d4cc75b3a74'
     'newsletter': 'perl-maven-newsletter'
     'ip2location': 'http://www.ip2location.com/?rid=41'
-#    'videos/jeffrey-thalhammer-perl-critic-and-pinto': 'jeffrey-thalhammer-perl-critic-and-pinto'
-#    'videos/michael-schwern-on-test-automation-and-git': 'michael-schwern-on-test-automation-and-git'
-#    'videos/getting-started-with-perl-dancer': 'getting-started-with-perl-dancer'
-#    'videos/modern-web-with-perl': 'modern-web-with-perl'
-#    'videos/oop-with-moo': 'oop-with-moo'
+    'videos/jeffrey-thalhammer-perl-critic-and-pinto': '/jeffrey-thalhammer-perl-critic-and-pinto'
+    'videos/michael-schwern-on-test-automation-and-git': '/michael-schwern-on-test-automation-and-git'
+    'videos/getting-started-with-perl-dancer': '/getting-started-with-perl-dancer'
+    'videos/modern-web-with-perl': '/modern-web-with-perl'
+    'videos/oop-with-moo': '/oop-with-moo'
   dirs:
     img: '../perlmaven.com/sites/en/img'
   main_page_entries: 3
