@@ -10,6 +10,7 @@ use Cwd qw(abs_path cwd);
 use File::Basename qw(dirname);
 use Dancer ':syntax';
 use YAML qw();
+use Digest::SHA;
 
 binmode( STDOUT, ':encoding(UTF-8)' );
 binmode( STDERR, ':encoding(UTF-8)' );
@@ -34,21 +35,19 @@ sub main {
 	GetOptions( \%opt, 'to=s@', 'exclude=s@', 'url=s', 'send', ) or usage();
 	usage() if not $opt{to} or not $opt{url};
 
-	my ( $title, $content ) = build_content( $opt{url} );
 	send_messages(
+		$mymaven,
 		{
 			From      => $mymaven->{from},
-			Subject   => ( $mymaven->{prefix} . ' ' . $title ),
 			'List-Id' => $mymaven->{listid},
 		},
 		\%opt,
-		$content
 	);
 }
 
 sub build_content {
-	my ($url) = @_;
-	my ( $host, $path_info ) = $url =~ m{https?://([^/]+)(/.*)};
+	my ( $url,  $query_string ) = @_;
+	my ( $host, $path_info )    = $url =~ m{https?://([^/]+)(/.*)};
 
 	my $dancer = sub {
 		my $env = shift;
@@ -71,7 +70,7 @@ sub build_content {
 		'psgi.url_scheme' => 'http',
 		'HTTP_HOST'       => $host,
 		'PATH_INFO'       => $path_info,
-		'QUERY_STRING'    => 'code=123&amp;email=a@b.com',
+		'QUERY_STRING'    => $query_string,
 		'SERVER_PROTOCOL' => 'HTTP/1.1',
 		'REQUEST_URI'     => $path_info,
 	};
@@ -91,7 +90,7 @@ sub build_content {
 }
 
 sub send_messages {
-	my ( $header, $opt, $content ) = @_;
+	my ( $mymaven, $header, $opt ) = @_;
 
 	my %todo;
 	my $db = Perl::Maven::DB->new('pm.db');
@@ -137,6 +136,10 @@ sub send_messages {
 		say "$count out of $planned to $to";
 		next if not $opt->{send};
 		$header->{To} = $to;
+		my $code = Digest::SHA::sha1_base64("unsubscribe$mymaven->{unsubscribe_salt}");
+		my ( $title, $content ) = build_content( $opt->{url}, "code=$code&amp;email=$to" );
+		$header->{Subject} = ( $mymaven->{prefix} . ' ' . $title );
+
 		send_mail( $header, $content );
 		sleep 1;
 	}
