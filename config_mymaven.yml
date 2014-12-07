@@ -1,0 +1,125 @@
+# Sample configuration file
+# Move this to config/mymaven.yml to get ot working
+
+# The main entries in mymaven are domain names. (e.g. perlmaven.com)
+# domain: what to do when perlmaven.com     is accessed
+# www:    what to do when www.perlmaven.com is accessed
+#   possible fields:
+#      redirect: 0|URL
+#      site:   the hostname of the site (e.g. meta or en) that should be served on the this hostname
+# title: of the site (TODO: should be in sites.yml
+# root: where the whole site lives, see the layout on https://github.com/szabgab/perlmaven.com
+# meta: where the meta files are generated and read from
+
+installation:
+  domain: perlmaven.com
+  main_site: en
+    #redirect: 0
+  www:
+    redirect: http://perlmaven.com/
+  root: '../perlmaven.com'
+  meta: 'meta/perlmaven.com'
+  title: 'Perl Maven'
+  from: 'Perl Maven <gabor@perlmaven.com>'
+  listid: 'Perl Maven newsletter <newsletter.perlmaven.com>'
+  prefix: '[Perl Maven]'
+  free:
+    - '/pro/beginner-perl/process-command-line-using-getopt-long-screencast'
+  redirect:
+    'videos/oop-with-moo': '/oop-with-moo'
+  dirs:
+    img: '../perlmaven.com/sites/en/img'
+  main_page_entries: 3
+  feed_size: 10
+  conf:
+    #clicky: 66509
+    #google_analytics: UA-12199222
+    show_sponsors: 0
+    show_newsletter_form: 0
+    show_indexes: 1
+    show_related: 1
+    comments_disqus_enable: 0
+    show_archive_selector: 0
+    show_social: 1
+    show_right: 1
+    show_date: 1
+    archive: 1
+    show_language_links: 1
+  admin:
+    email: 'Gabor Szabo <gabor@szabgab.com>'
+  paypal:
+    email: 'gabor@szabgab.com'
+  sites:
+    br.perlmaven.com:
+      conf:
+        comments_disqus_enable: 1
+        comments_disqus_code: 'br-perlmaven'
+        google_analytics_code: 2
+        google_analytics_name: 'br.perlmaven.com'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+        'como-substituir-uma-string-em-um-arquivo-com-perl': 'como-substituir-uma-string-em-um-arquivo-usando-perl'
+        'operatores-textuais': 'operadores-textuais'
+    cn.perlmaven.com:
+      conf:
+        google_analytics_code: 1
+        google_analytics_name: 'cn.perlmaven.com'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    cs.perlmaven.com:
+    de.perlmaven.com:
+    eo.perlmaven.com:
+    es.perlmaven.com:
+    fr.perlmaven.com:
+      conf:
+        google_analytics_code: 6
+        google_analytics_name: 'fr.perlmaven.com'
+    he.perlmaven.com:
+      conf:
+        rtl: 1
+        comments_disqus_enable: 1
+        comments_disqus_code: 'he-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    id.perlmaven.com:
+    it.perlmaven.com:
+      conf:
+        google_analytics_code: 5
+        google_analytics_name: 'it.perlmaven.com'
+    ko.perlmaven.com:
+      conf:
+        google_analytics_code: 3
+        google_analytics_name: 'ko.perlmaven.com'
+        comments_disqus_enable: 1
+        comments_disqus_code: 'ko-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    ne.perlmaven.com:
+    ro.perlmaven.com:
+    ru.perlmaven.com:
+      conf:
+        google_analytics_code: 4
+        google_analytics_name: 'ru.perlmaven.com'
+    te.perlmaven.com:
+      conf:
+        comments_disqus_enable: 1
+        comments_disqus_code: 'te-perlmaven'
+      redirect:
+        'products': 'http://perlmaven.com/products'
+    tr.perlmaven.com:
+    tw.perlmaven.com:
+    perlmaven.com:
+      dirs:
+        mail: '../articles/mail'
+        download: '../articles/download'
+        media: '../media.perlmaven.com'
+        pro: '../articles/pro'
+        articles: '../articles'
+      index:
+        - pro
+      conf:
+        comments_disqus_enable: 1
+        comments_disqus_code: 'perl5maven'
+        show_newsletter_form: 1
+        show_archive_selector: 1
+
