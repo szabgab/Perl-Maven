@@ -196,6 +196,8 @@ $(document).ready(function() {
 //		console.log($(this).attr('href'));
 //	});
 
-
+	$('#free-button').on('click', function(e) {
+		$('#popup_visitor').modal('show');
+	});
 });
 
