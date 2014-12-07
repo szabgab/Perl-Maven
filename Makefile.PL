@@ -38,6 +38,7 @@ WriteMakefile(
 
 		'Email::Sender::Simple' => 1.300012,
 		'Email::MIME::Creator'  => 1.926,
+		'Email::Stuffer'        => 0,
 
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,
