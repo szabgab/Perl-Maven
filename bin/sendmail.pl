@@ -95,6 +95,8 @@ sub send_messages {
 	my %todo;
 	my $db = Perl::Maven::DB->new('pm.db');
 
+	# TODO remove the hard coding here
+	my $unsubscribe_link = grep { $_ eq 'perl_maven_cookbook' } @{ $opt->{to} };
 	foreach my $to ( @{ $opt->{to} } ) {
 		if ( $to =~ /\@/ ) {
 			$todo{$to} //= 0;
@@ -132,12 +134,15 @@ sub send_messages {
 	say "Total number of addresses: $planned";
 	my $count = 0;
 	foreach my $to ( sort { $todo{$a} <=> $todo{$b} } keys %todo ) {
+
+		# TODO temp, for debugging
+		next if $to ne 'gabor@pti.co.il';
 		$count++;
 		say "$count out of $planned to $to";
 		next if not $opt->{send};
 		$header->{To} = $to;
 		my $code = Digest::SHA::sha1_base64("unsubscribe$mymaven->{unsubscribe_salt}$to");
-		my ( $title, $content ) = build_content( $opt->{url}, "code=$code&amp;email=$to" );
+		my ( $title, $content ) = build_content( $opt->{url}, ( $unsubscribe_link ? "code=$code&amp;email=$to" : '' ) );
 		$header->{Subject} = ( $mymaven->{prefix} . ' ' . $title );
 
 		send_mail( $header, $content );

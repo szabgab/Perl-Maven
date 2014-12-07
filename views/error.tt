@@ -57,6 +57,15 @@
     <% IF no_admin_rights %>
     You dont have admin rights.
     <% END %>
+
+    <% IF could_not_find_registration %>
+		Could not find registration.
+    <% END %>
+
+    <% IF invalid_unsubscribe_code %>
+    Invalid code
+    <% END %>
+
 </div>
 
 

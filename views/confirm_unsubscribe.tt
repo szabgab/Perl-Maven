@@ -1,0 +1,17 @@
+Do you really want to unsubscribe from the FREE Perl Maven newsletter?
+<p>
+<form method="POST">
+Email: <% email %>
+<input type="hidden" name="email" value="<% email %>" />
+<input type="hidden" name="code" value="<% code %>" />
+<input type="hidden" name="confirm" value="gone with the wind" />
+<input type="submit" value="Unsubscribe" />
+</form>
+
+<form method="GET" action="/">
+<input type="submit" value="No, keep me on the list" />
+</form>
+
+
+
+

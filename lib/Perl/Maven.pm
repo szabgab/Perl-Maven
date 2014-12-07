@@ -666,23 +666,32 @@ get '/subscribe' => sub {
 	template 'error', { subscribed => 1 };
 };
 
-get '/pm/unsubscribe' => sub {
+any '/pm/unsubscribe' => sub {
 	my $code  = param('code');
 	my $email = param('email');
 
 	my $mymaven       = mymaven;
 	my $expected_code = Digest::SHA::sha1_base64("unsubscribe$mymaven->{unsubscribe_salt}$email");
 	if ( $code ne $expected_code ) {
-		return 'Invalid code';
+		return template 'error', { invalid_unsubscribe_code => 1 };
 	}
 
 	my $user = $db->get_user_by_email($email);
 	if ( not $user ) {
-		return 'Could not find registration';
+		return template 'error', { could_not_find_registration => 1 };
 	}
 
-	return 'Do you really want to unsubscribe?';
+	# TODO maybe we will want some stonger checking for confirmation?
+	if ( param('confirm') ) {
+		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
+		return template 'error', { unsubscribed => 1 };
+	}
 
+	return template 'confirm_unsubscribe',
+		{
+		code  => $code,
+		email => $email,
+		};
 };
 
 get '/pm/user-info' => sub {
@@ -702,9 +711,14 @@ sub user_info {
 	#	 	frequency => 60*60*24,   # not more than
 	my $referrer = request->referer || '';
 	my $url      = request->base    || '';
+	my $path     = request->path    || '';
+
+	$referrer =~ s{^(https?://[^/]*/).*}{$1};
 
 	#debug("referrer = '$referrer'");
 	#debug("url = '$url'");
+	return to_json \%data if $path =~ m{/pm/unsubscribe};
+
 	if ( $url ne $referrer ) {
 		if ( logged_in() ) {
 
