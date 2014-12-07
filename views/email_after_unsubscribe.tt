@@ -1,0 +1,13 @@
+
+Hi,
+<p>
+someone, probably you have unsubscribed the email address <b><% email %></b> from the Perl Maven newsletter.
+If it was not you, please report this by sending a reply to this message.
+<p>
+If you'd like re-subscribe, you can do so by visiting the <a href="<% url %>">Perl Maven site</a>, logging in
+to your account, and turning the newsletter on.
+</p>
+<p>
+Thank you
+</p>
+

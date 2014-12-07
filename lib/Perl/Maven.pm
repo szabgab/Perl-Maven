@@ -684,6 +684,19 @@ any '/pm/unsubscribe' => sub {
 	# TODO maybe we will want some stonger checking for confirmation?
 	if ( param('confirm') ) {
 		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
+		my $html = template 'email_after_unsubscribe', { url => uri_for('/'), }, { layout => 'email' };
+		my $mymaven = mymaven;
+		send_mail(
+			{
+				From    => $mymaven->{from},
+				To      => $email,
+				Subject => 'You were unsubscribed from the Perl Maven newsletter',
+			},
+			{
+				html => $html,
+			}
+		);
+
 		return template 'error', { unsubscribed => 1 };
 	}
 
