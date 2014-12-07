@@ -243,6 +243,10 @@ sub stats {
 	$stats{no_password}
 		= $self->{dbh}
 		->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL});
+	$stats{has_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password IS NOT NULL});
+	$stats{new_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password LIKE '{CRYPT}%'});
+	$stats{old_password}
+		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password NOT LIKE '{CRYPT}%'});
 
 	return \%stats;
 }

@@ -118,7 +118,7 @@ Register:
 Munin integration
 ===================
 
-1) Install the following packages to the system perl  libdbi-perl libdbd-sqlite-perl libjson-xs-perl libmongodb-perl
+1) Install the following packages to the system perl  libdbi-perl libdbd-sqlite3-perl libdbd-sqlite-perl libjson-xs-perl libmongodb-perl
 2)
 
 ```

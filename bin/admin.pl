@@ -67,6 +67,9 @@ elsif ( $opt{stats} ) {
 	printf $format, 'Verified', ( $stats->{all_users} - $stats->{not_verified} );
 	printf $format, 'NOT Verified',             $stats->{not_verified};
 	printf $format, 'Verified but NO password', $stats->{no_password};
+	printf $format, 'Has password',             $stats->{has_password};
+	printf $format, '    New pw',               $stats->{new_password};
+	printf $format, '    Old pw',               $stats->{old_password};
 
 }
 elsif ( $opt{show} and $opt{email} ) {
