@@ -670,6 +670,17 @@ get '/pm/unsubscribe' => sub {
 	my $code  = param('code');
 	my $email = param('email');
 
+	my $mymaven       = mymaven;
+	my $expected_code = Digest::SHA::sha1_base64("unsubscribe$mymaven->{unsubscribe_salt}$email");
+	if ( $code ne $expected_code ) {
+		return 'Invalid code';
+	}
+
+	my $user = $db->get_user_by_email($email);
+	if ( not $user ) {
+		return 'Could not find registration';
+	}
+
 	return 'Do you really want to unsubscribe?';
 
 };
