@@ -7,7 +7,8 @@ use Data::Dumper qw(Dumper);
 use Getopt::Long qw(GetOptions);
 
 use Cwd qw(abs_path cwd);
-use WWW::Mechanize;
+use File::Basename qw(dirname);
+use Dancer ':syntax';
 use YAML qw();
 
 binmode( STDOUT, ':encoding(UTF-8)' );
@@ -47,17 +48,45 @@ sub main {
 
 sub build_content {
 	my ($url) = @_;
+	my ( $host, $path_info ) = $url =~ m{https?://([^/]+)(/.*)};
 
-	my $w = WWW::Mechanize->new;
-	$w->get($url);
-	die 'missing title' if not $w->title;
+	my $dancer = sub {
+		my $env = shift;
+
+		my $name = 'Perl::Maven';
+		my $root = dirname( dirname( abs_path($0) ) );
+		local $ENV{DANCER_APPDIR} = $root;
+		setting appdir => $root;
+		load_app $name;
+		Dancer::App->set_running_app($name);
+		Dancer::Handler->init_request_headers($env);
+		my $request = Dancer::Request->new( env => $env );
+		Dancer->dance($request);
+	};
+
+	my $env = {
+		'REMOTE_ADDR'     => '127.0.0.1',
+		'REQUEST_METHOD'  => 'GET',
+		'SCRIPT_NAME'     => '',
+		'HTTP_HOST'       => $host,
+		'PATH_INFO'       => $path_info,
+		'QUERY_STRING'    => '',
+		'SERVER_PROTOCOL' => 'HTTP/1.1',
+		'REQUEST_URI'     => $path_info,
+	};
+	my $r = $dancer->($env);
+
+	#die $r->[0]; # http status
+	my $utf8 = $r->[2][0];                              # html
+	my ($title) = $utf8 =~ m{<title>([^<]*)</title>};
+
+	die 'missing title' if not $title;
 
 	my %content;
-	my $utf8 = $w->content;
 	$content{html} = $utf8;
 	$content{text} = html2text($utf8);
 
-	return $w->title, \%content;
+	return $title, \%content;
 }
 
 sub send_messages {
