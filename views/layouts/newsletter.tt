@@ -15,9 +15,10 @@
 </div>
 <div id="footer" style="font-size: 12px">
 <hr>
-You are receiving this message because you subscribed to the <a href="http://perlmaven.com/">Perl Maven newsletter</a>.
+You are receiving this message because you subscribed to the <a href="<% url %>">Perl Maven newsletter</a>.
 <br>
-If you don't want to receive these messages any more, you can unsubscribe on the web site after logging in to your <a href="http://perlmaven.com/account">account</a>.
+If you don't want to receive these messages any more, you can <a href="<% url %>pm/unsubscribe?code=<% code %>&amp;email=<% email %>">unsubscribe</a> on the web site .
+
 <br>
 In case of any bugs, please reply to this e-mail and let me know.
 </div>

@@ -666,6 +666,14 @@ get '/subscribe' => sub {
 	template 'error', { subscribed => 1 };
 };
 
+get '/pm/unsubscribe' => sub {
+	my $code  = param('code');
+	my $email = param('email');
+
+	return 'Do you really want to unsubscribe?';
+
+};
+
 get '/pm/user-info' => sub {
 	user_info();
 };
@@ -1050,6 +1058,8 @@ get '/img/:file' => sub {
 
 get '/mail/:article' => sub {
 	my $article = param('article');
+	my $code    = param('code') || '';
+	my $email   = param('email') || '';
 
 	my $path = mymaven->{dirs}{mail} . "/$article.tt";
 	return 'NO path' if not -e $path;
@@ -1058,6 +1068,13 @@ get '/mail/:article' => sub {
 	return template 'error', { 'no_such_article' => 1 }
 		if not $tt->{status}
 		or $tt->{status} ne 'show';
+
+	$tt->{code}  = $code;
+	$tt->{email} = $email;
+	my $url = request->base;
+
+	#$url =~ s{/+$}{};
+	$tt->{url} = $url;
 
 	return template 'mail', $tt, { layout => 'newsletter' };
 };

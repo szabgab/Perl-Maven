@@ -68,9 +68,10 @@ sub build_content {
 		'REMOTE_ADDR'     => '127.0.0.1',
 		'REQUEST_METHOD'  => 'GET',
 		'SCRIPT_NAME'     => '',
+		'psgi.url_scheme' => 'http',
 		'HTTP_HOST'       => $host,
 		'PATH_INFO'       => $path_info,
-		'QUERY_STRING'    => '',
+		'QUERY_STRING'    => 'code=123&amp;email=a@b.com',
 		'SERVER_PROTOCOL' => 'HTTP/1.1',
 		'REQUEST_URI'     => $path_info,
 	};
