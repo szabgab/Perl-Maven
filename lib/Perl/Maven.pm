@@ -730,7 +730,7 @@ sub user_info {
 
 	#debug("referrer = '$referrer'");
 	#debug("url = '$url'");
-	return to_json \%data if $path =~ m{/pm/unsubscribe};
+	return to_json \%data if $path =~ m{^(/pm/|/account|/login)};
 
 	if ( $url ne $referrer ) {
 		if ( logged_in() ) {
