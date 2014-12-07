@@ -33,7 +33,7 @@ sub new {
 	$path = $ENV{MYMAVEN_YML} || $path;
 
 	return bless {
-		root => ( dirname($path) || '.' ),
+		root => ( dirname(dirname($path)) || '.' ),
 		config => scalar LoadFile($path),
 	}, $class;
 }
