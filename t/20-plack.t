@@ -17,7 +17,7 @@ use Dancer qw(:tests);
 Dancer::set( appdir => getcwd() );
 
 is Dancer::config->{'appdir'}, getcwd(), 'appdir';
-is Dancer::config->{'mymaven_yml'}, 'mymaven.yml', 'mymaven';
+is Dancer::config->{'mymaven_yml'}, 'config/mymaven.yml', 'mymaven';
 
 use Perl::Maven;
 
