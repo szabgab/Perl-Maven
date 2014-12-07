@@ -128,7 +128,7 @@ subtest one_with_config => sub {
 	plan tests => 2;
 
 	my $path    = 't/files/1.tt';
-	my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
+	my $mymaven = Perl::Maven::Config->new('t/files/config/mymaven.yml');
 	my $data    = eval {
 		Perl::Maven::Page->new( file => $path )->read->merge_conf( $mymaven->config('perlmaven.com')->{conf} )->data;
 	};

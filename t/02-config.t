@@ -10,7 +10,7 @@ use Perl::Maven::Config;
 subtest mymaven => sub {
 	plan tests => 11;
 
-	my $mymaven = Perl::Maven::Config->new('t/files/mymaven.yml');
+	my $mymaven = Perl::Maven::Config->new('t/files/config/mymaven.yml');
 	my $main    = $mymaven->config('perlmaven.com');
 	my $br      = $mymaven->config('br.perlmaven.com');
 	my $cn      = $mymaven->config('cn.perlmaven.com');
@@ -83,7 +83,7 @@ subtest mymaven => sub {
 subtest testmaven => sub {
 	plan tests => 1;
 
-	my $mymaven = Perl::Maven::Config->new('t/files/test.yml');
+	my $mymaven = Perl::Maven::Config->new('t/files/config/test.yml');
 	my $main    = $mymaven->config('test-perl-maven.com');
 
 	#diag explain $main;

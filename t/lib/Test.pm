@@ -12,7 +12,7 @@ use Perl::Maven::DB;
 
 sub setup {
 	my $dir = tempdir( CLEANUP => 1 );
-	$ENV{MYMAVEN_YML} = 't/files/test.yml';
+	$ENV{MYMAVEN_YML} = 't/files/config/test.yml';
 
 	unlink glob 'sessions/*';
 
