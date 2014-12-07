@@ -135,8 +135,6 @@ sub send_messages {
 	my $count = 0;
 	foreach my $to ( sort { $todo{$a} <=> $todo{$b} } keys %todo ) {
 
-		# TODO temp, for debugging
-		next if $to ne 'gabor@pti.co.il';
 		$count++;
 		say "$count out of $planned to $to";
 		next if not $opt->{send};
