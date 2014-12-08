@@ -213,6 +213,13 @@ sub get_products {
 	return $self->{dbh}->selectall_hashref( q{SELECT id, code, name, price FROM product}, 'code' );
 }
 
+sub get_product_by_code {
+	my ( $self, $code ) = @_;
+	my ($data)
+		= $self->{dbh}->selectrow_array( q{SELECT * FROM product WHERE code=?}, undef, $code );
+	return $data;
+}
+
 sub add_product {
 	my ( $self, $code, $name, $price ) = @_;
 

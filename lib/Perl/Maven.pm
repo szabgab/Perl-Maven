@@ -943,7 +943,7 @@ get '/account' => sub {
 		name          => $user->{name},
 		email         => $user->{email},
 	);
-	if ( not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
+	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
 		$params{perl_maven_pro_buy_button}
 			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
 	}

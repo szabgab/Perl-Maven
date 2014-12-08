@@ -149,7 +149,7 @@ sub paypal_buy {
 
 			#$button_text = qq{1 USD for the first month and then $usd USD per month};
 			#$button_text = qq{1 USD for the first month};
-			$button_text = qq{Sign me up to the Perl Maven Pro for \$1!};
+			$button_text = q{Sign me up to the Perl Maven Pro for $1!};
 		}
 
 		if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
