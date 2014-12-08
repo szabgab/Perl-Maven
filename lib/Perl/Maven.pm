@@ -93,6 +93,7 @@ sub log_request {
 	# It seems uri is not set when accessing images on the development server
 	my $uri = request->uri;
 	return if not defined $uri;
+	return if $uri =~ m{^/img/};
 
 	my $time = time;
 	my $dir = path( config->{appdir}, 'logs' );
@@ -133,7 +134,6 @@ sub log_request {
 	log_to_mongodb( \%details );
 
 	return if $response->status != 200;
-	return if $uri =~ m{^/img/};
 	return if $uri =~ m{^/atom};
 	return if $uri =~ m{^/robots.txt};
 	return if $uri =~ m{^/search};
