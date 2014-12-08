@@ -143,7 +143,10 @@ sub send_messages {
 		my ( $title, $content ) = build_content( $opt->{url}, ( $unsubscribe_link ? "code=$code&amp;email=$to" : '' ) );
 		$header->{Subject} = ( $mymaven->{prefix} . ' ' . $title );
 
-		send_mail( $header, $content );
+		my $err = send_mail( $header, $content );
+		if ($err) {
+			say "ERR: $err";
+		}
 		sleep 1;
 	}
 	say "Total sent $count. Planned: $planned";

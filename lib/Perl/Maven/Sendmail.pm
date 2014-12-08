@@ -31,7 +31,13 @@ sub send_mail {
 	foreach my $key ( keys %header ) {
 		$email->header( $key, $header{$key} );
 	}
-	$email->to($to)->send_or_die;
+
+	# TODO: send would return an Email::Sender::Success__WITH__Email::Sender::Role::HasMessage object on success
+	# but it is unclear what would be returned if it failed
+	# so for now we return undef on success and the exception string on failure
+	my $err;
+	eval { $email->to($to)->send_or_die; 1 } or do { $err = $@ // 'Unknonw error'; };
+	return $err;
 }
 
 sub html2text {
