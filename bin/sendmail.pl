@@ -139,7 +139,7 @@ sub send_messages {
 		say "$count out of $planned to $to";
 		next if not $opt->{send};
 		$header->{To} = $to;
-		my $code = Digest::SHA::sha1_base64("unsubscribe$mymaven->{unsubscribe_salt}$to");
+		my $code = Digest::SHA::sha1_hex("unsubscribe$mymaven->{unsubscribe_salt}$to");
 		my ( $title, $content ) = build_content( $opt->{url}, ( $unsubscribe_link ? "code=$code&amp;email=$to" : '' ) );
 		$header->{Subject} = ( $mymaven->{prefix} . ' ' . $title );
 

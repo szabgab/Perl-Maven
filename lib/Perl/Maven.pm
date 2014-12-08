@@ -671,7 +671,7 @@ any '/pm/unsubscribe' => sub {
 	my $email = param('email');
 
 	my $mymaven       = mymaven;
-	my $expected_code = Digest::SHA::sha1_base64("unsubscribe$mymaven->{unsubscribe_salt}$email");
+	my $expected_code = Digest::SHA::sha1_hex("unsubscribe$mymaven->{unsubscribe_salt}$email");
 	if ( $code ne $expected_code ) {
 		return template 'error', { invalid_unsubscribe_code => 1 };
 	}
