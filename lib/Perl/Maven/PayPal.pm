@@ -119,7 +119,7 @@ sub paypal {
 }
 
 sub paypal_buy {
-	my ( $what, $type, $quantity ) = @_;
+	my ( $what, $type, $quantity, $button_text ) = @_;
 
 	my $products = setting('products');
 	my $usd      = $products->{$what}{price};
@@ -135,6 +135,7 @@ sub paypal_buy {
 			p3 => 1,
 			t3 => 'M',    # monthly
 		);
+		$button_text = qq{$usd USD per month};
 
 		#if ( $type eq 'trial' ) {
 		#	$params{a1} = 0;
@@ -145,7 +146,12 @@ sub paypal_buy {
 			$params{a1} = 1;
 			$params{p1} = 1;
 			$params{t1} = 'M';
+
+			#$button_text = qq{1 USD for the first month and then $usd USD per month};
+			#$button_text = qq{1 USD for the first month};
+			$button_text = qq{Sign me up to the Perl Maven Pro for \$1!};
 		}
+
 		if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
 			$params{a1} = 1;
 			$params{p1} = 1;
@@ -166,6 +172,7 @@ sub paypal_buy {
 	else {
 		$params{amount} = $usd;
 	}
+	$button_text ||= 'Buy';
 
 # https://www.paypal.com/en/cgi-bin/webscr?cmd=_pdn_subscr_techview_outside
 # https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
@@ -181,6 +188,10 @@ sub paypal_buy {
 	my $notify_url = uri_for('/paypal');
 	my $paypal     = paypal();
 	my $button     = $paypal->button(
+
+		#button_image  => qq{<button type="button" class="btn btn-success">$button_text</button>},
+		button_image =>
+			qq{<input type="submit" class="btn btn-success" value="$button_text" id="paypal_submit_button" />},
 		business      => mymaven->{paypal}{email},
 		item_name     => $products->{$what}{name},
 		quantity      => $quantity,

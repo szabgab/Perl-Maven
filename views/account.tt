@@ -17,6 +17,14 @@ you to download the latest edition of the Perl Maven Cookbook.
 </p>
 <% END %>
 
+
+<% IF perl_maven_pro_buy_button %>
+<p>
+I see you have not signed up to the Perl Maven Pro yet. But that's where the screencasts are. You can try it for only <b>$1 for the first month</b>.
+</p>
+<% perl_maven_pro_buy_button %>
+<% END %>
+
 <p>
 
 <h2>User information</h2>

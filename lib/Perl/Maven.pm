@@ -937,13 +937,17 @@ get '/account' => sub {
 		}
 	}
 
-	template 'account',
-		{
+	my %params = (
 		subscriptions => \@owned_products,
 		subscribed    => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
 		name          => $user->{name},
 		email         => $user->{email},
-		};
+	);
+	if ( not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
+		$params{perl_maven_pro_buy_button}
+			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
+	}
+	template 'account', \%params;
 };
 
 get '/download/:dir/:file' => sub {
