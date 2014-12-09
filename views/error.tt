@@ -45,6 +45,10 @@
     <% IF internal_verification_error %>
        Internal verification error
     <% END %>
+
+    <% IF internal_error %>
+       Internal error
+    <% END %>
     
     <% IF invalid_uid %>
     User not found
@@ -137,11 +141,11 @@
     <% END %>
 
     <% IF whitelist_enabled %>
-     Whitelist enabled
+     Whitelist enabled. See your <a href="/account">account</a> and add IP addresses.
     <% END %>
 
     <% IF whitelist_disabled %>
-     Whitelist disabled
+     Whitelist disabled. See your <a href="/account">account</a>.
     <% END %>
 
 </div>

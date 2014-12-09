@@ -56,8 +56,7 @@ sub update_user {
 sub set_whitelist {
 	my ( $self, $id, $value ) = @_;
 
-	$self->{dbh}->do( 'UPDATE user SET login_whitelist=? WHERE id=?',
-		undef, $value, $id );
+	return $self->{dbh}->do( 'UPDATE user SET login_whitelist=? WHERE id=?', undef, $value, $id );
 }
 
 sub get_user_by_email {

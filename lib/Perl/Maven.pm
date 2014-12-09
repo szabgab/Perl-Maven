@@ -310,29 +310,35 @@ get '/contributor/:name' => sub {
 	);
 };
 
-get '/pm/whitelist' => sub {
-	if (not logged_in()) {
+post '/pm/whitelist' => sub {
+	if ( not logged_in() ) {
+
 		#session url => request->path;
 		return redirect '/login';
 	}
-	my $do = param('do');
-	my $user = $db->get_user_by_email(session('email'));
+	my $do  = param('do');
+	my $uid = session('uid');
 	if ($do) {
-		if ($do eq 'enable') {
-			$db->set_whitelist($user->{id}, 1);
-			return template 'error', { whitelist_enabled => 1 };
-		} elsif ($do eq 'disable') {
-			$db->set_whitelist($user->{id}, 0);
+		if ( $do eq 'enable' ) {
+			if ( $db->set_whitelist( $uid, 1 ) ) {
+				return template 'error', { whitelist_enabled => 1 };
+			}
+			else {
+				return template 'error', { internal_error => 1 };
+			}
+		}
+		elsif ( $do eq 'disable' ) {
+			$db->set_whitelist( $uid, 0 );
 			return template 'error', { whitelist_disabled => 1 };
-		} else {
+		}
+		else {
 			return template 'error', { invalid_value_provided => 1 };
+
 			# TODO report error
 		}
 	}
-
-
+	return 'parameter missing';
 };
-
 
 get qr{/(.+)} => sub {
 	my ($article) = splat;
@@ -954,11 +960,11 @@ get '/account' => sub {
 	}
 
 	my %params = (
-		subscriptions => \@owned_products,
-		subscribed    => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
-		name          => $user->{name},
-		email         => $user->{email},
-		login_whitelist => $user->{login_whitelist},
+		subscriptions   => \@owned_products,
+		subscribed      => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
+		name            => $user->{name},
+		email           => $user->{email},
+		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
 	);
 	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
 		$params{perl_maven_pro_buy_button}

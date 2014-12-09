@@ -49,6 +49,7 @@ subtest users => sub {
 		'verify_code'            => '123',
 		'verify_time'            => undef,
 		'admin'                  => undef,
+		'login_whitelist'        => undef,
 		};
 };
 
@@ -69,6 +70,7 @@ subtest replace_email => sub {
 		'verify_code'            => '456',
 		'verify_time'            => undef,
 		'admin'                  => undef,
+		'login_whitelist'        => undef,
 		};
 
 	$db->replace_email( 'buzz@nasa.com', 'buzz@buzzaldrin.com' );
@@ -90,6 +92,7 @@ subtest replace_email => sub {
 		'verify_code'            => '456',
 		'verify_time'            => undef,
 		'admin'                  => undef,
+		'login_whitelist'        => undef,
 		};
 
 };

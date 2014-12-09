@@ -462,11 +462,32 @@ subtest change_email => sub {
 };
 
 subtest whitelist => sub {
-	plan tests => 2;
+	plan tests => 9;
 
 	$w->get_ok('/account');
-	my $form = $w->form_name('whitelist');
-	ok $form;
-	#$w->submit_form_ok(
+	my $form = $w->form_name('enable_white_list');
+	ok $form, 'form found';
+	$w->submit_form_ok(
+		{
+			form_name => 'enable_white_list',
+		},
+		'enable whitelist'
+	);
+
+	$w->content_like(qr{Whitelist enabled});
+	$w->follow_link_ok( { text => 'account' }, 'back to account' );
+	my $form2 = $w->form_name('enable_white_list');
+	ok !$form2, 'form not found';
+
+	$w->submit_form_ok(
+		{
+			form_name => 'disable_white_list',
+		},
+		'disable whitelist'
+	);
+	$w->follow_link_ok( { text => 'account' }, 'back to account' );
+	my $form3 = $w->form_name('enable_white_list');
+	ok $form3, 'form found';
+
 };
 

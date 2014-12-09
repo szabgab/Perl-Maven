@@ -55,11 +55,13 @@ Email: <input name="email" /><br>
 <h2>White list</h2>
 
 <% IF login_whitelist %>
-  <form method="POST" action="/pm/whitelist?do=disable" name="disable_white_list">
+  <form method="POST" action="/pm/whitelist" name="disable_white_list">
+  <input type="hidden" name="do" value="disable" />
   <input type="submit" value="Disable" />
   </form>
 <% ELSE %>
-  <form method="POST" action="/pm/whitelist?do=enable" name="enable_white_list">
+  <form method="POST" action="/pm/whitelist" name="enable_white_list">
+  <input type="hidden" name="do" value="enable" />
   <input type="submit" value="Enable" />
   </form>
 <% END %>
