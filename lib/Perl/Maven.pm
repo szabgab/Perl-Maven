@@ -100,16 +100,7 @@ sub log_request {
 	mkdir $dir if not -e $dir;
 	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
 
-	# direct access
-	my $ip = request->remote_address;
-	if ( $ip eq '::ffff:127.0.0.1' ) {
-
-		# forwarded by Nginx
-		my $forwarded = request->forwarded_for_address;
-		if ($forwarded) {
-			$ip = $forwarded;
-		}
-	}
+	my $ip = get_ip();
 
 	my %details = (
 		sid        => setting('sid'),
@@ -122,6 +113,7 @@ sub log_request {
 		status     => $response->status,
 	);
 	my $start_time = setting('start_time');
+
 	if ($start_time) {
 		$details{elapsed_time} = Time::HiRes::time - $start_time;
 	}
@@ -1525,6 +1517,21 @@ sub is_bot {
 	return $user_agent
 		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider|Spinn3r|robots|thumboweb_bot|Blekkobot|Exabot|LWP::Simple/;
 
+}
+
+sub get_ip {
+
+	# direct access
+	my $ip = request->remote_address;
+	if ( $ip eq '::ffff:127.0.0.1' ) {
+
+		# forwarded by Nginx
+		my $forwarded = request->forwarded_for_address;
+		if ($forwarded) {
+			$ip = $forwarded;
+		}
+	}
+	return $ip;
 }
 
 true;
