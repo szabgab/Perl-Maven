@@ -49,9 +49,9 @@ hook before => sub {
 	#	set session => 'YAML';
 	#	set session_domain => '.' . mymaven->{domain} . ( in_development() ? '.local' : '' );
 	#}
+	set session_domain => '.' . mymaven->{domain} . ( in_development() ? '.local' : '' );
 
 	my $appdir = abs_path config->{appdir};
-
 
 	$db ||= Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
 	set db => $db;
