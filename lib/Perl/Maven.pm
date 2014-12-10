@@ -26,17 +26,12 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in get_ip);
+use Perl::Maven::WebTools qw(logged_in get_ip mymaven);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
-
-sub mymaven {
-	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
-	return $mymaven->config( request->host );
-}
 
 ## configure relative pathes
 my $db;

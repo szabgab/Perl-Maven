@@ -6,7 +6,12 @@ my $TIMEOUT = 60 * 60 * 24 * 365;
 our $VERSION = '0.11';
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in is_admin get_ip);
+our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven);
+
+sub mymaven {
+	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
+	return $mymaven->config( request->host );
+}
 
 sub logged_in {
 
