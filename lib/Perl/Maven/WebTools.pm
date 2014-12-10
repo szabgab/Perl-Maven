@@ -66,8 +66,13 @@ sub get_ip {
 }
 
 sub valid_ip {
+	my $uid = session('uid') or die 'No uid found';
+	my $user = setting('db')->get_user_by_id($uid);
+
+	# if white-listing is not turned on, then every IP is valid
+	return 1 if not $user->{login_whitelist};
+
 	my $ip        = get_ip();
-	my $uid       = session('uid') or die 'No uid found';
 	my $whitelist = setting('db')->get_whitelist($uid);
 
 	# TODO make use of the mask with Net::Subnet
