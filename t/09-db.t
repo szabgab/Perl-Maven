@@ -187,7 +187,7 @@ subtest whitelist => sub {
 	$whitelist[0]{id} = 1;
 	is_deeply $list, { 1 => $whitelist[0] };
 
-	$db->delete_from_whitelist(1);
+	$db->delete_from_whitelist( 1, 1 );
 	is_deeply $db->get_whitelist(1), {};
 };
 

@@ -66,8 +66,8 @@ sub add_to_whitelist {
 }
 
 sub delete_from_whitelist {
-	my ( $self, $id ) = @_;
-	$self->{dbh}->do( 'DELETE FROM login_whitelist WHERE id=?', undef, $id );
+	my ( $self, $uid, $id ) = @_;
+	$self->{dbh}->do( 'DELETE FROM login_whitelist WHERE id=? AND uid=?', undef, $id, $uid );
 }
 
 sub get_whitelist {
