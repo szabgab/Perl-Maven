@@ -1,5 +1,5 @@
 package Perl::Maven::WebTools;
-use Dancer ':syntax';
+use Dancer2 appname => 'Perl::Maven';
 
 my $TIMEOUT = 60 * 60 * 24 * 365;
 

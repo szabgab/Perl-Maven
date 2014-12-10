@@ -1,5 +1,5 @@
 package Perl::Maven::PayPal;
-use Dancer ':syntax';
+use Dancer2 appname => 'Perl::Maven';
 use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::WebTools qw(logged_in);

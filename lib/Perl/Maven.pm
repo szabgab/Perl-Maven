@@ -1,6 +1,8 @@
 package Perl::Maven;
-use Dancer ':syntax';
-use Dancer::Plugin::Passphrase qw(passphrase);
+use Dancer2;
+
+#use Dancer2::Plugin::Passphrase qw(passphrase);
+use Fake qw(passphrase);
 
 our $VERSION = '0.11';
 my $PM_VERSION         = 3;    # Version number to force JavaScript and CSS files reload
@@ -58,7 +60,7 @@ hook before => sub {
 	my $engines = config->{engines};
 	$engines->{template_toolkit}{INCLUDE_PATH}
 		= ["$appdir/views"];
-	Dancer::Template::TemplateToolkit->new(
+	Dancer2::Template::TemplateToolkit->new(
 		name   => 'template_toolkit',
 		type   => 'template',
 		config => $engines->{template_toolkit}

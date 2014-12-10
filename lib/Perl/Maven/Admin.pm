@@ -1,5 +1,5 @@
 package Perl::Maven::Admin;
-use Dancer ':syntax';
+use Dancer2 appname => 'Perl::Maven';
 
 use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code);
 use Perl::Maven::Sendmail qw(send_mail);
