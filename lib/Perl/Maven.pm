@@ -321,15 +321,21 @@ post '/pm/whitelist' => sub {
 	if ($do) {
 		if ( $do eq 'enable' ) {
 			if ( $db->set_whitelist( $uid, 1 ) ) {
-				my $ip = get_ip();
-				$db->add_to_whitelist(
-					{
-						uid  => $uid,
-						ip   => $ip,
-						mask => '255.255.255.255',
-						note => 'Added automatically when whitelist enabled'
-					}
-				);
+				my $ip   = get_ip();
+				my $mask = '255.255.255.255';
+
+				my $whitelist = $db->get_whitelist($uid);
+				my $found = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
+				if ( not $found ) {
+					$db->add_to_whitelist(
+						{
+							uid  => $uid,
+							ip   => $ip,
+							mask => $mask,
+							note => 'Added automatically when whitelist enabled'
+						}
+					);
+				}
 				return template 'error', { whitelist_enabled => 1 };
 			}
 			else {
