@@ -1,0 +1,4 @@
+Someone at the ip address '<% ip %>' has tried to access the protected area of the <% title %> site.
+<p>
+If you would like to allow the access click on this link to <a href="<% url %>/<% code %>">verify</a>.
+

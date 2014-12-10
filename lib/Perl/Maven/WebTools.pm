@@ -6,11 +6,18 @@ my $TIMEOUT = 60 * 60 * 24 * 365;
 our $VERSION = '0.11';
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven);
+our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven valid_ip _generate_code);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
 	return $mymaven->config( request->host );
+}
+
+sub _generate_code {
+	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
+	my $code = time;
+	$code .= $chars[ rand( scalar @chars ) ] for 1 .. 20;
+	return $code;
 }
 
 sub logged_in {
@@ -56,6 +63,15 @@ sub get_ip {
 		}
 	}
 	return $ip;
+}
+
+sub valid_ip {
+	my $ip        = get_ip();
+	my $uid       = session('uid') or die 'No uid found';
+	my $whitelist = setting('db')->get_whitelist($uid);
+
+	# TODO make use of the mask with Net::Subnet
+	return scalar grep { $ip eq $_->{ip} } values %$whitelist;
 }
 
 true;

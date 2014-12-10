@@ -1,5 +1,16 @@
 <div id="error">
 
+    <% IF invalid_ip %>
+      You are trying to access a protected page from <% ip %> which is not in the white-list.
+      We have sent an e-mail to your default e-mail address with a code that can be used to add this IP address to the white-list.
+<!--
+      <form action="/pm/whitelist-send-ip-verification" method="POST">
+      <input type="hidden" name="ip" value="<% ip %>">
+      <input type="submit" class="btn btn-default value="Send e-mail">
+      </form> 
+-->
+    <% END %>
+
     <% IF no_such_article %>
     No such article
     <% END %>
@@ -154,6 +165,10 @@
 
     <% IF whitelist_entry_deleted  %>
      Whitelist entry was deleted. See your <a href="/account">account</a>.
+    <% END %>
+
+    <% IF whitelist_updated %>
+     Whitelist entry for <% ip %> was added. See your <a href="/account">account</a>.
     <% END %>
 </div>
 

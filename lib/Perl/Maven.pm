@@ -26,7 +26,7 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in get_ip mymaven);
+use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -1062,14 +1062,38 @@ get '/verify2/:code' => sub {
 	return template 'error', { invalid_verification_code => 1 }
 		if not $verification;
 
+	my $details = eval { from_json $verification->{details} };
+	my $uid     = $verification->{uid};
+	my $user    = $db->get_user_by_id($uid);
+
 	if ( $verification->{action} eq 'change_email' ) {
-		my $details = eval { from_json $verification->{details} };
-		my $user = $db->get_user_by_id( $verification->{uid} );
 		$db->replace_email( $user->{email}, $details->{new_email} );
 
 		$db->delete_verification_code($code);
 
 		return template 'error', { email_updated_successfully => 1 };
+	}
+
+	if ( $verification->{action} eq 'add_to_whitelist' ) {
+		if ( not logged_in() ) {
+			return 'You need to be logged in to validate the IP address';
+		}
+		my $ip        = $details->{ip};
+		my $whitelist = $db->get_whitelist($uid);
+		my $mask      = '255.255.255.255';
+		my $found     = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
+		if ( not $found ) {
+			$db->add_to_whitelist(
+				{
+					uid  => $uid,
+					ip   => $ip,
+					mask => $mask,
+					note => 'Added at ' . gmtime(),
+				}
+			);
+		}
+		$db->delete_verification_code($code);
+		return template 'error', { whitelist_updated => 1, ip => $ip };
 	}
 
 	return template 'error', { internal_verification_error => 1 };
@@ -1404,13 +1428,6 @@ sub read_tt {
 	else {
 		return $tt;
 	}
-}
-
-sub _generate_code {
-	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
-	my $code = time;
-	$code .= $chars[ rand( scalar @chars ) ] for 1 .. 20;
-	return $code;
 }
 
 sub get_download_files {
