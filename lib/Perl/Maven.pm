@@ -332,7 +332,7 @@ post '/pm/whitelist' => sub {
 							uid  => $uid,
 							ip   => $ip,
 							mask => $mask,
-							note => 'Added automatically when whitelist enabled'
+							note => 'Added automatically when whitelist was enabled'
 						}
 					);
 				}
@@ -701,6 +701,15 @@ get '/subscribe' => sub {
 	my $uid = session('uid');
 	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
 	template 'error', { subscribed => 1 };
+};
+
+post '/pm/whitelist-delete' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $uid = session('uid');
+	my $id  = param('id');
+	$db->delete_from_whitelist( $uid, $id );
+	template 'error', { whitelist_entry_deleted => 1 };
 };
 
 any '/pm/unsubscribe' => sub {

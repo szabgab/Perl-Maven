@@ -148,5 +148,8 @@
      Whitelist disabled. See your <a href="/account">account</a>.
     <% END %>
 
+    <% IF whitelist_entry_deleted  %>
+     Whitelist entry was deleted. See your <a href="/account">account</a>.
+    <% END %>
 </div>
 
