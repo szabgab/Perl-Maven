@@ -26,7 +26,7 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in);
+use Perl::Maven::WebTools qw(logged_in get_ip);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -1575,21 +1575,6 @@ sub is_bot {
 	return $user_agent
 		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider|Spinn3r|robots|thumboweb_bot|Blekkobot|Exabot|LWP::Simple/;
 
-}
-
-sub get_ip {
-
-	# direct access
-	my $ip = request->remote_address;
-	if ( $ip eq '::ffff:127.0.0.1' ) {
-
-		# forwarded by Nginx
-		my $forwarded = request->forwarded_for_address;
-		if ($forwarded) {
-			$ip = $forwarded;
-		}
-	}
-	return $ip;
 }
 
 true;

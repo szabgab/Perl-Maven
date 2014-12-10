@@ -6,7 +6,7 @@ my $TIMEOUT = 60 * 60 * 24 * 365;
 our $VERSION = '0.11';
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in is_admin);
+our @EXPORT_OK = qw(logged_in is_admin get_ip);
 
 sub logged_in {
 
@@ -36,6 +36,21 @@ sub is_admin {
 	my $user = $db->get_user_by_id( session('uid') );
 	return if not $user or not $user->{admin};
 	return 1;
+}
+
+sub get_ip {
+
+	# direct access
+	my $ip = request->remote_address;
+	if ( $ip eq '::ffff:127.0.0.1' ) {
+
+		# forwarded by Nginx
+		my $forwarded = request->forwarded_for_address;
+		if ($forwarded) {
+			$ip = $forwarded;
+		}
+	}
+	return $ip;
 }
 
 true;
