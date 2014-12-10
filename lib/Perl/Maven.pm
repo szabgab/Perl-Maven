@@ -321,6 +321,15 @@ post '/pm/whitelist' => sub {
 	if ($do) {
 		if ( $do eq 'enable' ) {
 			if ( $db->set_whitelist( $uid, 1 ) ) {
+				my $ip = get_ip();
+				$db->add_to_whitelist(
+					{
+						uid  => $uid,
+						ip   => $ip,
+						mask => '255.255.255.255',
+						note => 'Added automatically when whitelist enabled'
+					}
+				);
 				return template 'error', { whitelist_enabled => 1 };
 			}
 			else {
@@ -966,6 +975,9 @@ get '/account' => sub {
 		email           => $user->{email},
 		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
 	);
+	if ( $user->{login_whitelist} ) {
+		$params{whitelist} = $db->get_whitelist($uid);
+	}
 	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
 		$params{perl_maven_pro_buy_button}
 			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );

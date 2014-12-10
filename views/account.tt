@@ -54,6 +54,13 @@ Email: <input name="email" /><br>
 
 <h2>White list</h2>
 
+<p>
+If you enable access limitation by IP address you'll only be able to access your account from the IP addresses
+given in the list. If you try to access the account from an IP that is not in the list, we are going to
+send you an e-mail to the address listed in your account with a link that you can use to add the specific IP address
+to the white-list.
+</p>
+
 <% IF login_whitelist %>
   <form method="POST" action="/pm/whitelist" name="disable_white_list">
   <input type="hidden" name="do" value="disable" />
@@ -65,6 +72,16 @@ Email: <input name="email" /><br>
   <input type="submit" value="Enable" />
   </form>
 <% END %>
+
+<% IF whitelist %>
+<table class="table">
+  <tr><th>IP</th><th>Mask</th><th>Note</th><th></th></tr>
+<% FOR w IN whitelist.keys.sort  %>
+  <tr><td><% whitelist.$w.ip %></td><td><% whitelist.$w.mask %></td><td><% whitelist.$w.note %></td><td> x</td></tr>
+<% END %>
+</table>
+<% END %>
+
 
 
 
