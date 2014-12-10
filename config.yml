@@ -18,9 +18,13 @@ mymaven_yml: "config/mymaven.yml"
 
 template: "template_toolkit"
 engines:
-  template_toolkit:
-    encoding:  'utf8'
-    INCLUDE_PATH: 'views'
+  template:
+    template_toolkit:
+      encoding:  'utf8'
+      INCLUDE_PATH: 'views'
+      start_tag: '<%'
+      end_tag:   '%>'
+
 
 session: "YAML"
 
