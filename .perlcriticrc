@@ -5,11 +5,11 @@ verbose = 11
 theme = core
 
 [TestingAndDebugging::RequireUseStrict]
-equivalent_modules = Moo Dancer
+equivalent_modules = Moo Dancer Dancer2
 
 [TestingAndDebugging::RequireUseWarnings]
 severity = 5
-equivalent_modules = Moo Dancer
+equivalent_modules = Moo Dancer Dancer2
 
 #[-ControlStructures::ProhibitPostfixControls]
 #[-Documentation::RequirePodLinksIncludeText]
