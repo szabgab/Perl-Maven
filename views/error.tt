@@ -49,6 +49,10 @@
     <% IF internal_error %>
        Internal error
     <% END %>
+
+    <% IF could_not_send_email %>
+       Internal error. Could not send e-mail to <b><% email %></b>.
+    <% END %>
     
     <% IF invalid_uid %>
     User not found

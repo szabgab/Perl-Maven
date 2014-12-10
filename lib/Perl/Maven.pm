@@ -556,7 +556,7 @@ post '/send-reset-pw-code' => sub {
 		{ layout => 'email', };
 
 	my $mymaven = mymaven;
-	send_mail(
+	my $err     = send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $email,
@@ -566,6 +566,9 @@ post '/send-reset-pw-code' => sub {
 			html => $html,
 		}
 	);
+	if ($err) {
+		return template 'error', { could_not_send_email => 1, email => $email };
+	}
 
 	template 'error', { reset_password_sent => 1, };
 };
@@ -725,9 +728,9 @@ any '/pm/unsubscribe' => sub {
 	# TODO maybe we will want some stonger checking for confirmation?
 	if ( param('confirm') ) {
 		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
-		my $html = template 'email_after_unsubscribe', { url => uri_for('/'), }, { layout => 'email' };
+		my $html    = template 'email_after_unsubscribe', { url => uri_for('/'), }, { layout => 'email' };
 		my $mymaven = mymaven;
-		send_mail(
+		my $err     = send_mail(
 			{
 				From    => $mymaven->{from},
 				To      => $email,
@@ -855,7 +858,7 @@ post '/register' => sub {
 	}
 
 	my $mymaven = mymaven;
-	send_verification_mail(
+	my $err     = send_verification_mail(
 		'first_verification_mail',
 		$email,
 		"Please finish the $mymaven->{title} registration",
@@ -865,6 +868,9 @@ post '/register' => sub {
 			code => $code,
 		},
 	);
+	if ($err) {
+		return template 'error', { could_not_send_email => 1, email => $email };
+	}
 
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
@@ -876,7 +882,7 @@ sub send_verification_mail {
 
 	my $html = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
-	send_mail(
+	return send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $email,
@@ -921,7 +927,7 @@ post '/change-email' => sub {
 	);
 
 	my $mymaven = mymaven;
-	send_verification_mail(
+	my $err     = send_verification_mail(
 		'verification_mail',
 		$email,
 		"Please verify your new e-mail address for $mymaven->{title}",
@@ -930,6 +936,9 @@ post '/change-email' => sub {
 			code => $code,
 		},
 	);
+	if ($err) {
+		return template 'error', { could_not_send_email => 1, email => $email };
+	}
 
 	return template 'error', { verification_email_sent => 1 }
 
@@ -1101,7 +1110,7 @@ get '/verify/:id/:code' => sub {
 	$url =~ s{/+$}{};
 
 	my $mymaven = mymaven;
-	send_mail(
+	my $err     = send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $user->{email},
