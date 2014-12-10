@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Deep qw(cmp_deeply re);
 
 use File::Copy qw(move);
@@ -166,5 +166,28 @@ subtest subscriptions => sub {
 	@subs = $db->get_subscriptions('foo@bar.com');
 	is_deeply \@subs, [];
 
+};
+
+subtest whitelist => sub {
+	plan tests => 3;
+
+	my @whitelist = (
+		{
+			uid  => 1,
+			ip   => '1.2.3.4',
+			mask => '255.255.255.255',
+			note => 'Some text',
+		},
+	);
+
+	my $empty = $db->get_whitelist(1);
+	is_deeply $empty, {};
+	$db->add_to_whitelist( $whitelist[0] );
+	my $list = $db->get_whitelist(1);
+	$whitelist[0]{id} = 1;
+	is_deeply $list, { 1 => $whitelist[0] };
+
+	$db->delete_from_whitelist(1);
+	is_deeply $db->get_whitelist(1), {};
 };
 

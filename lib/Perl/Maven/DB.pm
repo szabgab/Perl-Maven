@@ -59,6 +59,23 @@ sub set_whitelist {
 	return $self->{dbh}->do( 'UPDATE user SET login_whitelist=? WHERE id=?', undef, $value, $id );
 }
 
+sub add_to_whitelist {
+	my ( $self, $args ) = @_;
+	$self->{dbh}->do( 'INSERT INTO login_whitelist (uid, ip, mask, note) VALUES (?, ?, ?, ?)',
+		undef, @{$args}{qw(uid ip mask note)} );
+}
+
+sub delete_from_whitelist {
+	my ( $self, $id ) = @_;
+	$self->{dbh}->do( 'DELETE FROM login_whitelist WHERE id=?', undef, $id );
+}
+
+sub get_whitelist {
+	my ( $self, $uid ) = @_;
+
+	$self->{dbh}->selectall_hashref( 'SELECT * FROM login_whitelist WHERE uid=?', 'id', undef, $uid );
+}
+
 sub get_user_by_email {
 	my ( $self, $email ) = @_;
 

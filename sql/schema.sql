@@ -35,6 +35,7 @@ CREATE TABLE transactions (
 );
 
 CREATE TABLE login_whitelist (
+  id      INTEGER PRIMARY KEY,
   uid     INTEGER NOT NULL,
   ip      VARCHAR(40),
   mask    VARCHAR(40),
