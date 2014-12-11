@@ -46,6 +46,7 @@ WriteMakefile(
 		'Test::WWW::Mechanize'       => 1.44,
 		'Test::WWW::Mechanize::PSGI' => 0.35,
 		'Test::More'                 => 1,
+		'Test::Script'               => 1.07,
 
 		# For deployment
 		'Starman'         => 0.4009,
