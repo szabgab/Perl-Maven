@@ -27,6 +27,7 @@ WriteMakefile(
 		'Hash::Merge::Simple'        => 0.051,
 		'MongoDB'                    => 0,
 		'Moo'                        => 1.006000,
+		'Path::Tiny'                 => 0,
 		'Plack'                      => 1.0031,
 		'Storable'                   => 2.51,       # dclone is used
 		'Template'                   => 2.25,

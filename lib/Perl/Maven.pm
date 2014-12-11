@@ -19,6 +19,8 @@ use POSIX       ();
 use Time::HiRes ();
 use YAML qw(LoadFile);
 use MongoDB;
+use Path::Tiny ();    # the path function would clash with the path function of Dancer
+sub tpath { goto &Path::Tiny::path }
 
 use Web::Feed;
 
@@ -130,12 +132,7 @@ sub log_request {
 	#my %SKIP = map { $_ => 1 } qw(/pm/user-info);
 	#return if $SKIP{$uri};
 
-	if ( open my $fh, '>>', $file ) {
-		flock( $fh, LOCK_EX ) or return;
-		seek( $fh, 0, SEEK_END ) or return;
-		say $fh to_json \%details, { pretty => 0, canonical => 1 };
-		close $fh;
-	}
+	tpath($file)->append_utf8( to_json( \%details, { pretty => 0, canonical => 1 } ) );
 	return;
 }
 
@@ -1295,12 +1292,7 @@ post '/explain' => sub {
 		my $time = time;
 		my $log_file
 			= path( config->{appdir}, 'logs', 'code_' . POSIX::strftime( '%Y%m', gmtime($time) ) );
-		if ( open my $fh, '>>', $log_file ) {
-			print $fh '-' x 20, "\n";
-			print $fh scalar( gmtime $time ) . "\n";
-			print $fh "$code\n\n";
-			close $fh;
-		}
+		tpath($log_file)->append( '-' x 20, "\n", scalar( gmtime $time ) . "\n", "$code\n\n", );
 	}
 	return to_json \%data;
 };
@@ -1437,8 +1429,8 @@ sub get_download_files {
 
 	#debug $manifest;
 	my @files;
-	if ( open my $fh, '<', $manifest ) {
-		while ( my $line = <$fh> ) {
+	eval {
+		foreach my $line ( tpath($manifest)->lines ) {
 			chomp $line;
 			my ( $file, $title ) = split /;/, $line;
 			push @files,
@@ -1447,18 +1439,18 @@ sub get_download_files {
 				title => $title,
 				};
 		}
-	}
-	else {
-		error "Could not open $manifest : $!";
-	}
+		1;
+	} or do {
+		my $err = $@ // 'Unknown error';
+		error "Could not open $manifest : $err";
+	};
 	return @files;
 }
 
 sub read_sites {
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . '/sites.yml'
-		or return {};
-	my $yaml = do { local $/ = undef; <$fh> };
-	return from_yaml $yaml;
+	my $p = tpath mymaven->{root} . '/sites.yml';
+	return {} if not $p;
+	return from_yaml $p->slurp_utf8;
 }
 
 # Each site can have a file called resources.txt with rows of key=value pairs
@@ -1480,17 +1472,22 @@ sub read_resources {
 sub read_authors {
 	return if %authors;
 
-	open my $fh, '<encoding(UTF-8)', mymaven->{root} . '/authors.txt'
-		or return;
-	while ( my $line = <$fh> ) {
-		chomp $line;
-		my ( $nick, $name, $img, $google_plus_profile ) = split /;/, $line;
-		$authors{$nick} = {
-			author_name                => $name,
-			author_img                 => ( $img || 'white_square.png' ),
-			author_google_plus_profile => $google_plus_profile,
-		};
-	}
+	# Path::Tiny would throw an exception if it could not open the file
+	# but we for Perl::Maven this file is optional
+	eval {
+		my $fh = tpath( mymaven->{root} . '/authors.txt' );
+
+		# TODO add row iterator interface to Path::Tiny https://github.com/dagolden/Path-Tiny/issues/107
+		foreach my $line ( $fh->lines_utf8 ) {
+			chomp $line;
+			my ( $nick, $name, $img, $google_plus_profile ) = split /;/, $line;
+			$authors{$nick} = {
+				author_name                => $name,
+				author_img                 => ( $img || 'white_square.png' ),
+				author_google_plus_profile => $google_plus_profile,
+			};
+		}
+	};
 	return;
 }
 
