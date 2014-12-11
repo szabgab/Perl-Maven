@@ -8,7 +8,7 @@ use Getopt::Long qw(GetOptions);
 
 use Cwd qw(abs_path cwd);
 use File::Basename qw(dirname);
-use Dancer ':syntax';
+use Dancer2;
 use YAML qw();
 use Digest::SHA;
 
@@ -16,6 +16,7 @@ binmode( STDOUT, ':encoding(UTF-8)' );
 binmode( STDERR, ':encoding(UTF-8)' );
 
 use lib 'lib';
+use Perl::Maven;
 use Perl::Maven::Config;
 use Perl::Maven::DB;
 use Perl::Maven::Sendmail qw(send_mail html2text);
@@ -49,19 +50,7 @@ sub build_content {
 	my ( $url,  $query_string ) = @_;
 	my ( $host, $path_info )    = $url =~ m{https?://([^/]+)(/.*)};
 
-	my $dancer = sub {
-		my $env = shift;
-
-		my $name = 'Perl::Maven';
-		my $root = dirname( dirname( abs_path($0) ) );
-		local $ENV{DANCER_APPDIR} = $root;
-		setting appdir => $root;
-		load_app $name;
-		Dancer::App->set_running_app($name);
-		Dancer::Handler->init_request_headers($env);
-		my $request = Dancer::Request->new( env => $env );
-		Dancer->dance($request);
-	};
+	my $dancer = Dancer2->psgi_app;
 
 	my $env = {
 		'REMOTE_ADDR'     => '127.0.0.1',
