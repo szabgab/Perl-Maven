@@ -193,8 +193,12 @@ sub save {
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	eval {
-		tpath($path)->spew_utf8( to_json( $data, { utf8 => 1, pretty => 1, canonical => 1 };
-		) ) 1;
+		tpath($path)->spew_utf8(
+			to_json(
+				$data, { utf8 => 1, pretty => 1, canonical => 1 };
+			)
+		);
+		1;
 	} or do {
 		my $err //= 'Unknown Error';
 		die "$err when creating '$path'\n" . Dumper $data;
