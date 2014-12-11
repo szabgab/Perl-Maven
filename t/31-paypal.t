@@ -24,7 +24,7 @@ use Dancer2;    # set
 set( appdir => getcwd() );
 use Perl::Maven;
 
-my $app = Dancer->psgi_app;
+my $app = Dancer2->psgi_app;
 
 my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 
