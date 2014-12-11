@@ -1,6 +1,9 @@
 package Perl::Maven::Meta;
 use Moo;
+use Path::Tiny ();
 use 5.010;
+
+sub tpath { goto &Path::Tiny::path }
 
 our $VERSION = '0.11';
 
@@ -189,10 +192,13 @@ sub save {
 	mkpath $dest;
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
-	open my $fh, '>encoding(UTF-8)', $path or die "Could not open '$path' $!";
-	eval { print $fh to_json $data, { utf8 => 1, pretty => 1, canonical => 1 }; };
-	die "$@ when creating '$path'\n" . Dumper $data if $@;
-	close $fh;
+	eval {
+		tpath($path)->spew_utf8( to_json( $data, { utf8 => 1, pretty => 1, canonical => 1 };
+		) ) 1;
+	} or do {
+		my $err //= 'Unknown Error';
+		die "$err when creating '$path'\n" . Dumper $data;
+	};
 	return;
 }
 
