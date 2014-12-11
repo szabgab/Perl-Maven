@@ -19,12 +19,12 @@ my $url = 'http://test-perl-maven.com';
 
 plan( tests => 4 );
 
-use Dancer qw(:tests);
+use Dancer2;    # set
 
-Dancer::set( appdir => getcwd() );
+set( appdir => getcwd() );
 use Perl::Maven;
 
-my $app = Dancer::Handler->psgi_app;
+my $app = Dancer->psgi_app;
 
 my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 

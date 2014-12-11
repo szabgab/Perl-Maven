@@ -32,14 +32,14 @@ my $cookbook_text = basename $cookbook_url;
 my $prod1_download_url = '/download/product_a/file_0.2.txt';
 my $prod1_text         = basename $prod1_download_url;
 
-use Dancer qw(:tests);
+use Dancer2;    # set
 
-Dancer::set( appdir => getcwd() );
+set( appdir => getcwd() );
 use Perl::Maven;
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new('pm.db');
 
-my $app = Dancer::Handler->psgi_app;
+my $app = Dancer2->psgi_app;
 
 my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 
