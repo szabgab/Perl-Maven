@@ -12,7 +12,7 @@ plan tests => 19;
 use t::lib::Test;
 t::lib::Test::setup();
 
-use Dancer2;    # set, config
+use Dancer2;    # importing: set, config
 
 set( appdir => getcwd() );
 

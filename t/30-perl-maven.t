@@ -32,7 +32,7 @@ my $cookbook_text = basename $cookbook_url;
 my $prod1_download_url = '/download/product_a/file_0.2.txt';
 my $prod1_text         = basename $prod1_download_url;
 
-use Dancer2;    # set
+use Dancer2;    # importing: set
 
 set( appdir => getcwd() );
 use Perl::Maven;

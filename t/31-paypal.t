@@ -19,7 +19,7 @@ my $url = 'http://test-perl-maven.com';
 
 plan( tests => 4 );
 
-use Dancer2;    # set
+use Dancer2;    # importing: set
 
 set( appdir => getcwd() );
 use Perl::Maven;
