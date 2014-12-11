@@ -12,16 +12,16 @@ plan tests => 19;
 use t::lib::Test;
 t::lib::Test::setup();
 
-use Dancer qw(:tests);
+use Dancer2;
 
-Dancer::set( appdir => getcwd() );
+set( appdir => getcwd() );
 
-is Dancer::config->{'appdir'}, getcwd(), 'appdir';
-is Dancer::config->{'mymaven_yml'}, 'config/mymaven.yml', 'mymaven';
+is config->{'appdir'}, getcwd(), 'appdir';
+is config->{'mymaven_yml'}, 'config/mymaven.yml', 'mymaven';
 
 use Perl::Maven;
 
-my $app = Dancer::Handler->psgi_app;
+my $app = Dancer2->psgi_app;
 is( ref $app, 'CODE', 'Got app' );
 
 my $url = 'http://test-perl-maven.com';

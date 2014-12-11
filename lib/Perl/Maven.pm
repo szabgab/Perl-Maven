@@ -107,10 +107,10 @@ sub log_request {
 		time       => $time,
 		host       => request->host,
 		page       => request->uri,
-		referrer   => request->referer,
+		referrer   => scalar( request->referer ),
 		ip         => $ip,
-		user_agent => request->user_agent,
-		status     => $response->status,
+		user_agent => scalar( request->user_agent ),
+		status     => response->status,
 	);
 	my $start_time = setting('start_time');
 
