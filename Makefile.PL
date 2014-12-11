@@ -30,6 +30,7 @@ WriteMakefile(
 		'Path::Tiny'                 => 0,
 		'Plack'                      => 1.0031,
 		'Storable'                   => 2.51,       # dclone is used
+		'SVG'                        => 0,          # for Perl::Maven::SVG
 		'Template'                   => 2.25,
 		'Time::HiRes'                => 0,
 		'YAML'                       => 1.09,
