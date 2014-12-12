@@ -1167,7 +1167,7 @@ get '/img/:file' => sub {
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
 	send_file(
-		mymaven->{dirs}{img} . "/$file",
+		path( mymaven->{dirs}{img}, $file ),
 		content_type => $ext,
 		system_path  => 1,
 	);
@@ -1425,7 +1425,7 @@ sub read_tt {
 sub get_download_files {
 	my ($subdir) = @_;
 
-	my $manifest = path mymaven->{dirs}{download}, $subdir, 'manifest.csv';
+	my $manifest = path( mymaven->{dirs}{download}, $subdir, 'manifest.csv' );
 
 	#debug $manifest;
 	my @files;
@@ -1448,7 +1448,7 @@ sub get_download_files {
 }
 
 sub read_sites {
-	my $p = tpath mymaven->{root} . '/sites.yml';
+	my $p = tpath( mymaven->{root} . '/sites.yml' );
 	return {} if not $p;
 	return from_yaml $p->slurp_utf8;
 }
