@@ -120,7 +120,7 @@ subtest products => sub {
 	#diag explain $prod;
 	is_deeply $prod, \%products, 'products';
 
-	$db->add_product( 'mars_landing_handbook', 'Mars Landing Handbook', 20.40 );
+	$db->add_product( { code => 'mars_landing_handbook', name => 'Mars Landing Handbook', price => 20.40 } );
 	$products{mars_landing_handbook} = {
 		code  => 'mars_landing_handbook',
 		name  => 'Mars Landing Handbook',

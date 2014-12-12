@@ -244,10 +244,11 @@ sub get_product_by_code {
 }
 
 sub add_product {
-	my ( $self, $code, $name, $price ) = @_;
+	my ( $self, $args ) = @_;
 
-	die "Invlaid code '$code'" if $code !~ /^[a-z0-9_]+$/;
-	$self->{dbh}->do( 'INSERT INTO product (code, name, price) VALUES (?, ?, ?)', undef, $code, $name, $price );
+	die "Invlaid code '$args->{code}'" if $args->{code} !~ /^[a-z0-9_]+$/;
+	$self->{dbh}
+		->do( 'INSERT INTO product (code, name, price) VALUES (?, ?, ?)', undef, @{$args}{qw(code name price)} );
 }
 
 sub stats {

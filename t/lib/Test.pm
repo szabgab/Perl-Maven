@@ -22,8 +22,8 @@ sub setup {
 	system "$^X bin/setup.pl $dbfile" and die;
 	my $db = Perl::Maven::DB->new($dbfile);
 
-	$db->add_product( 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 );
-	$db->add_product( 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', 0.01 );
+	$db->add_product( { code => 'perl_maven_cookbook',       name => 'Perl Maven Cookbook',        price => 0 } );
+	$db->add_product( { code => 'beginner_perl_maven_ebook', name => 'Beginner Perl Maven e-book', price => 0.01 } );
 }
 
 sub read_file {
