@@ -4,6 +4,7 @@ use warnings;
 
 use Data::Dumper qw(Dumper);
 use DBI;
+use MongoDB;
 
 our $VERSION = '0.11';
 
@@ -18,19 +19,10 @@ sub new {
 
 	return $instance if $instance;
 
-	die "Database file is missing '$dbfile'" if not -e $dbfile;
+	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database   = $client->get_database('PerlMaven');
 
-	my $dsn = "dbi:SQLite:dbname=$dbfile";
-	my $dbh = DBI->connect(
-		$dsn, '', '',
-		{
-			RaiseError => 1,
-			PrintError => 0,
-			AutoCommit => 1,
-		}
-	);
-
-	$instance = bless { dbh => $dbh, }, $class;
+	$instance = bless { db => $database }, $class;
 
 	return $instance;
 }
@@ -103,21 +95,7 @@ sub get_user_by_id {
 sub get_people {
 	my ( $self, $email ) = @_;
 
-	my $ar = $self->{dbh}->selectall_arrayref(
-		q{
-	   SELECT id, email, verify_time
-	   FROM user WHERE email LIKE ?
-	}, undef, '%' . $email . '%'
-	);
-	my @users = map {
-		{
-			id            => $_->[0],
-			email         => $_->[1],
-			verify_time   => $_->[2],
-			subscriptions => $self->get_subscriptions( $_->[1] )
-		}
-	} @$ar;
-	return \@users;
+	$self->{db}->get_collection('user')->find({ email => qr/$email/ });
 }
 
 sub verify_registration {
@@ -254,8 +232,7 @@ sub add_product {
 	my ( $self, $args ) = @_;
 
 	die "Invlaid code '$args->{code}'" if $args->{code} !~ /^[a-z0-9_]+$/;
-	$self->{dbh}
-		->do( 'INSERT INTO product (code, name, price) VALUES (?, ?, ?)', undef, @{$args}{qw(code name price)} );
+	$self->{db}->get_collection('products')->insert($args);
 }
 
 sub stats {
