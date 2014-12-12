@@ -1463,7 +1463,7 @@ sub get_download_files {
 sub read_sites {
 	my $p = tpath( mymaven->{root} . '/sites.yml' );
 	return {} if not $p;
-	return from_yaml $p->slurp_utf8;
+	return YAML::Load $p->slurp_utf8;
 }
 
 # Each site can have a file called resources.txt with rows of key=value pairs
