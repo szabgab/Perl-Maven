@@ -95,6 +95,7 @@ subtest testmaven => sub {
 		'dirs' => {
 			'download' => 't/files/download',
 			'pro'      => 't/files/pro',
+			'img'      => 't/files/images',
 		},
 		'domain'    => 'test-perl-maven.com',
 		'main_site' => 'en',

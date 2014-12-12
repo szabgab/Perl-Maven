@@ -12,6 +12,8 @@ installation:
   from: '<test@perlmaven.com>'
   admin:
     email: 'Test Maven <admin-test@perlmaven.com>'
+  dirs:
+    img: 'images'
   sites:
     test-perl-maven.com:
       conf:

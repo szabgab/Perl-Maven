@@ -6,6 +6,7 @@ use t::lib::Test qw(read_file);
 use Cwd qw(abs_path getcwd);
 use File::Basename qw(basename);
 use Data::Dumper qw(Dumper);
+use Path::Tiny ();
 
 use Test::More;
 use Test::Deep;
@@ -21,7 +22,7 @@ my @PASSWORD       = ( '123456', 'abcdef', 'secret' );
 my $sha1_of_abcdef = 'H4rBDyPFtbwRZ72oS4M+XAV6d9I';
 my @NAMES          = ( 'Foo Bar', );
 
-plan tests => 8;
+plan tests => 9;
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 
@@ -45,6 +46,29 @@ my $w = Test::WWW::Mechanize::PSGI->new( app => $app );
 my $visitor = Test::WWW::Mechanize::PSGI->new( app => $app );
 
 diag 'subscribe to free newsletter, let them download the cookbook';
+
+subtest static => sub {
+	plan tests => 14;
+
+	$visitor->get_ok("$url/robots.txt");
+	is $visitor->content, <<'END';
+Sitemap: http://test-perl-maven.com/sitemap.xml
+Disallow: /media/*
+END
+
+	$visitor->get_ok("$url/favicon.ico");
+	is $visitor->content, Path::Tiny::path('public/favicon.ico')->slurp;
+	$visitor->get_ok("$url/atom");
+	$visitor->get_ok("$url/rss");
+	$visitor->get_ok("$url/tv/atom");
+	$visitor->get_ok("$url/sitemap.xml");
+	$visitor->get_ok("$url/img/feed-icon16x16.png");
+	is $visitor->content, Path::Tiny::path('t/files/images/feed-icon16x16.png')->slurp;
+	$visitor->get_ok("$url/img/perl_maven_150x212.png");
+	is $visitor->content, Path::Tiny::path('t/files/images/perl_maven_150x212.png')->slurp;
+	$visitor->get_ok("$url/css/style.css");
+	is $visitor->content, Path::Tiny::path('public/css/style.css')->slurp;
+};
 
 subtest pages => sub {
 	plan tests => 19;
