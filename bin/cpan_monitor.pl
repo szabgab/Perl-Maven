@@ -13,7 +13,7 @@ use MetaCPAN::API;
 use JSON qw(from_json to_json);
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
-use File::Slurp qw(read_file write_file);
+use Path::Tiny qw(path);
 use Email::Sender::Simple qw(sendmail);
 use Email::Sender::Transport::SMTP qw();
 use Email::MIME::Creator;
@@ -60,7 +60,7 @@ usage('Need to call --setup') if not -e $file;
 
 exit if not $opt{run};
 
-$data = from_json scalar read_file $file;
+$data = from_json path($file)->slurp_utf8;
 
 my $mcpan = MetaCPAN::API->new;
 update_subscriptions();
@@ -75,7 +75,7 @@ exit;
 ##################################################################
 
 sub save_file {
-	write_file $file, to_json( $data, { utf8 => 1, pretty => 1 } );
+	path($file)->spwe_utf8( to_json( $data, { utf8 => 1, pretty => 1 } ) );
 }
 
 sub _log {
