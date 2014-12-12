@@ -51,6 +51,8 @@ WriteMakefile(
 		# For deployment
 		'Starman'         => 0.4009,
 		'Daemon::Control' => 0.001005,
+
+		'MetaCPAN::API' => 0,    # for bin/cpan_monitor.pl
 	},
 	dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 	clean => { FILES    => 'Perl-Maven-*' },
