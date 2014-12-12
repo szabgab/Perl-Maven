@@ -132,7 +132,12 @@ sub log_request {
 	#my %SKIP = map { $_ => 1 } qw(/pm/user-info);
 	#return if $SKIP{$uri};
 
-	tpath($file)->append_utf8( to_json( \%details, { pretty => 0, canonical => 1 } ) );
+	if ( open my $fh, '>>', $file ) {
+		flock( $fh, LOCK_EX ) or return;
+		seek( $fh, 0, SEEK_END ) or return;
+		say $fh to_json \%details, { pretty => 0, canonical => 1 };
+		close $fh;
+	}
 	return;
 }
 
@@ -1292,7 +1297,12 @@ post '/explain' => sub {
 		my $time = time;
 		my $log_file
 			= path( config->{appdir}, 'logs', 'code_' . POSIX::strftime( '%Y%m', gmtime($time) ) );
-		tpath($log_file)->append( '-' x 20, "\n", scalar( gmtime $time ) . "\n", "$code\n\n", );
+		if ( open my $fh, '>>', $log_file ) {
+			print $fh '-' x 20, "\n";
+			print $fh scalar( gmtime $time ) . "\n";
+			print $fh "$code\n\n";
+			close $fh;
+		}
 	}
 	return to_json \%data;
 };
