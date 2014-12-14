@@ -605,7 +605,7 @@ post '/change-password' => sub {
 		if length($password) < 6;
 
 	my $uid = session('uid');
-	$db->set_password( $uid, passphrase($password)->generate );
+	$db->set_password( $uid, passphrase($password)->generate->rfc2307 );
 
 	template 'error', { password_set => 1 };
 };
@@ -626,7 +626,7 @@ post '/set-password' => sub {
 	session logged_in => 1;
 	session last_seen => time;
 
-	$db->set_password( $id, passphrase($password)->generate );
+	$db->set_password( $id, passphrase($password)->generate->rfc2307 );
 
 	template 'error', { password_set => 1 };
 };
@@ -672,7 +672,7 @@ post '/login' => sub {
 			if $user->{password} ne Digest::SHA::sha1_base64($password);
 
 		# password is good, we need to update it
-		$db->set_password( $user->{id}, passphrase($password)->generate );
+		$db->set_password( $user->{id}, passphrase($password)->generate->rfc2307 );
 	}
 
 	session uid       => $user->{id};
