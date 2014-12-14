@@ -91,6 +91,7 @@ sub log_request {
 	my $uri = request->uri;
 	return if not defined $uri;
 	return if $uri =~ m{^/img/};
+	return if $uri =~ m{^/download/};
 
 	my $time = time;
 	my $dir = path( config->{appdir}, 'logs' );

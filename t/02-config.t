@@ -2,8 +2,11 @@ use strict;
 use warnings;
 
 use Test::More;
+use Cwd qw(abs_path);
 
 plan tests => 2;
+
+my $root = abs_path('.');
 
 use Perl::Maven::Config;
 
@@ -15,9 +18,9 @@ subtest mymaven => sub {
 	my $br      = $mymaven->config('br.perlmaven.com');
 	my $cn      = $mymaven->config('cn.perlmaven.com');
 
-	is $main->{site}, 't/files/../sites/perlmaven.com/sites/en';
+	is $main->{site}, "$root/t/files/../sites/perlmaven.com/sites/en";
 	is $main->{meta}, '/home/foobar/perlmaven-meta';
-	is $main->{dirs}{mail}, 't/files/../articles/mail';
+	is $main->{dirs}{mail}, "$root/t/files/../articles/mail";
 	is $main->{dirs}{pro},  '/home/foobar/articles/pro';
 	is_deeply $main->{redirect},
 		{
@@ -38,7 +41,7 @@ subtest mymaven => sub {
 		'articles' => '/home/foobar/articles',
 		'download' => '/home/foobar/articles/download',
 		'img'      => '/home/foobar/perlmaven.com/sites/en/img',
-		'mail'     => 't/files/../articles/mail',
+		'mail'     => "$root/t/files/../articles/mail",
 		'media'    => '/home/foobar/media.perlmaven.com',
 		'pro'      => '/home/foobar/articles/pro'
 		};
@@ -93,19 +96,19 @@ subtest testmaven => sub {
 			'show_newsletter_form' => '1'
 		},
 		'dirs' => {
-			'download' => 't/files/download',
-			'pro'      => 't/files/pro',
-			'img'      => 't/files/images',
+			'download' => "$root/t/files/download",
+			'pro'      => "$root/t/files/pro",
+			'img'      => "$root/t/files/images",
 		},
 		'domain'    => 'test-perl-maven.com',
 		'main_site' => 'en',
 		'from'      => '<test@perlmaven.com>',
 		'lang'      => 'en',
 		'meta'      => 't/files/',
-		'root'      => 't/files/test',
-		'meta'      => 't/files/meta',
+		'root'      => "$root/t/files/test",
+		'meta'      => "$root/t/files/meta",
 		'title'     => 'Test Maven',
-		'site'      => 't/files/test/sites/en',
+		'site'      => "$root/t/files/test/sites/en",
 		'admin'     => {
 			'email' => 'Test Maven <admin-test@perlmaven.com>'
 		},

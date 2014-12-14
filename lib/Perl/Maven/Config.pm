@@ -21,6 +21,7 @@ See also L<Perl::Maven>.
 
 our $VERSION = '0.11';
 
+use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use File::Basename qw(dirname);
 use Hash::Merge::Simple qw(merge);
@@ -33,7 +34,7 @@ sub new {
 	$path = $ENV{MYMAVEN_YML} || $path;
 
 	return bless {
-		root => ( dirname( dirname($path) ) || '.' ),
+		root => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
 		config => scalar LoadFile($path),
 	}, $class;
 }
@@ -68,6 +69,8 @@ sub config {
 	#	$mymaven = merge( $mymaven, $real_host_config );
 	#}
 	delete $mymaven->{sites};
+
+	#die Dumper $mymaven;
 	$mymaven->{root} = $self->_update_root( $mymaven->{root} );
 	$mymaven->{meta} = $self->_update_root( $mymaven->{meta} );
 	$mymaven->{dirs}{$_} = $self->_update_root( $mymaven->{dirs}{$_} ) for keys %{ $mymaven->{dirs} };
