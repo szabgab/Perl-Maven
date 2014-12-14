@@ -51,8 +51,8 @@ subtest static => sub {
 	plan tests => 14;
 
 	$visitor->get_ok("$url/robots.txt");
-	is $visitor->content, <<'END';
-Sitemap: http://test-perl-maven.com/sitemap.xml
+	is $visitor->content, <<"END";
+Sitemap: $url/sitemap.xml
 Disallow: /media/*
 END
 
@@ -62,12 +62,12 @@ END
 	$visitor->get_ok("$url/rss");
 	$visitor->get_ok("$url/tv/atom");
 	$visitor->get_ok("$url/sitemap.xml");
+	$visitor->get_ok("$url/css/style.css");
+	is $visitor->content, Path::Tiny::path('public/css/style.css')->slurp;
 	$visitor->get_ok("$url/img/feed-icon16x16.png");
 	is $visitor->content, Path::Tiny::path('t/files/images/feed-icon16x16.png')->slurp;
 	$visitor->get_ok("$url/img/perl_maven_150x212.png");
 	is $visitor->content, Path::Tiny::path('t/files/images/perl_maven_150x212.png')->slurp;
-	$visitor->get_ok("$url/css/style.css");
-	is $visitor->content, Path::Tiny::path('public/css/style.css')->slurp;
 };
 
 subtest pages => sub {

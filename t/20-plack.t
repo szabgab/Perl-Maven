@@ -6,14 +6,14 @@ use Plack::Test;
 use HTTP::Request::Common;
 use Cwd qw(getcwd);
 use Carp::Always;
+use Path::Tiny;
+plan tests => 19;
 
 use t::lib::Test;
 t::lib::Test::setup();
 
 use Dancer qw(:tests);
 
-#set log => 'debug';
-#set startup_info => 0;
 Dancer::set( appdir => getcwd() );
 
 is Dancer::config->{'appdir'}, getcwd(), 'appdir';
@@ -24,12 +24,44 @@ use Perl::Maven;
 my $app = Dancer::Handler->psgi_app;
 is( ref $app, 'CODE', 'Got app' );
 
+my $url = 'http://test-perl-maven.com';
+
 test_psgi $app, sub {
 	my $cb  = shift;
-	my $res = $cb->( GET 'http://test-perl-maven.com/' );
+	my $res = $cb->( GET $url );
 	is $res->code, 200;
 	like( $res->content, qr{<title>Perl Maven - for people who want to get the most out of programming in Perl</title>},
 		'main page' );
 };
 
-done_testing;
+test_psgi $app, sub {
+	my $cb = shift;
+
+	my $res = $cb->( GET "$url/robots.txt" );
+	is $res->code,    200;
+	is $res->content, <<"END";
+Sitemap: $url/sitemap.xml
+Disallow: /media/*
+END
+
+	my $favicon = $cb->( GET "$url/favicon.ico" );
+	is $favicon->code,    200;
+	is $favicon->content, Path::Tiny::path('public/favicon.ico')->slurp;
+
+	foreach my $path (qw(atom rss tv/atom sitemap.xml)) {
+		my $res = $cb->( GET "$url/$path" );
+		is $res->code, 200;
+	}
+	my $css = $cb->( GET "$url/css/style.css" );
+	is $css->code,    200;
+	is $css->content, Path::Tiny::path('public/css/style.css')->slurp;
+
+	my $feed_icon = $cb->( GET "$url/img/feed-icon16x16.png" );
+	is $feed_icon->code,    200;
+	is $feed_icon->content, Path::Tiny::path('t/files/images/feed-icon16x16.png')->slurp;
+
+	my $perl_maven = $cb->( GET "$url/img/perl_maven_150x212.png" );
+	is $perl_maven->code,    200;
+	is $perl_maven->content, Path::Tiny::path('t/files/images/perl_maven_150x212.png')->slurp;
+};
+
