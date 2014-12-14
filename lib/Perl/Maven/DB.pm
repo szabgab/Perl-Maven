@@ -34,13 +34,13 @@ sub new {
 }
 
 sub add_registration {
-	my ( $self, $email, $code ) = @_;
+	my ( $self, $args ) = @_;
 
 	$self->{dbh}->do(
 		'INSERT INTO user (email, verify_code, register_time)
 		VALUES (?, ?, ?)',
 		undef,
-		$email, $code, time
+		@{$args}{qw(email code)}, time
 	);
 	my $id = $self->{dbh}->last_insert_id( '', '', '', '' );
 

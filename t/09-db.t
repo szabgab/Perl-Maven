@@ -19,11 +19,11 @@ subtest users => sub {
 	my $people = $db->get_people('');
 	is_deeply $people, [], 'no people';
 
-	my $id = $db->add_registration( 'foo@bar.com', '123' );
+	my $id = $db->add_registration( { email => 'foo@bar.com', code => '123' } );
 	$people = $db->get_people('');
 	is_deeply $people, [ [ 1, 'foo@bar.com', undef ] ], 'first person';
 
-	$db->add_registration( 'buzz@nasa.com', '456' );
+	$db->add_registration( { email => 'buzz@nasa.com', code => '456' } );
 	$people = $db->get_people('');
 
 	#diag explain $people;

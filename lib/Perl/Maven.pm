@@ -858,7 +858,7 @@ post '/register' => sub {
 		$id   = $user->{id};
 	}
 	else {
-		$id = $db->add_registration( $email, $code );
+		$id = $db->add_registration( { email => $email, code => $code } );
 	}
 
 	my $mymaven = mymaven;
