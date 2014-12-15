@@ -10,7 +10,7 @@
 <script src="/google-code-prettify/prettify.js"></script>
 
 <script>
- var user_info = <% user_info %>;
+ var user_info = <% user_info_json %>;
 </script>
 
 

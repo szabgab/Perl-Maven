@@ -228,5 +228,9 @@ $(document).ready(function() {
 	$('#free-button').on('click', function(e) {
 		$('#popup_visitor').modal('show');
 	});
+	$('#pro-button').on('click', function(e) {
+		$('#popup_logged_in').modal('show');
+	});
+
 });
 

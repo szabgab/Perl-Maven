@@ -239,7 +239,8 @@ hook before_template => sub {
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
 
-	$t->{user_info} = user_info();
+	$t->{user_info}      = user_info();
+	$t->{user_info_json} = to_json $t->{user_info};
 
 	#die Dumper $t;
 
@@ -759,11 +760,12 @@ any '/pm/unsubscribe' => sub {
 };
 
 get '/pm/user-info' => sub {
-	user_info();
+	to_json user_info();
 };
 
 sub user_info {
 	my %data = ( logged_in => logged_in(), );
+	$data{perl_maven_pro} = $db->is_subscribed( session('uid'), 'perl_maven_pro' );
 
 	# adding popups:
 
@@ -773,6 +775,7 @@ sub user_info {
 	#		what => 'popup_logged_in',
 	#		when => 1000,
 	#	 	frequency => 60*60*24,   # not more than
+	# } );
 	my $referrer = request->referer || '';
 	my $url      = request->base    || '';
 	my $path     = request->path    || '';
@@ -781,18 +784,18 @@ sub user_info {
 
 	#debug("referrer = '$referrer'");
 	#debug("url = '$url'");
-	return to_json \%data if $path =~ m{^(/pm/|/account|/login)};
+	return \%data if $path =~ m{^(/pm/|/account|/login)};
 
 	if ( $url ne $referrer ) {
 		if ( logged_in() ) {
 
 			# if not a pro subscriber yet
-			if ( not $db->is_subscribed( session('uid'), 'perl_maven_pro' ) ) {
+			if ( not $data{perl_maven_pro} ) {
 				my $seen = session('popup_logged_in');
 
 				if ( not $seen or $seen < time - 60 * 60 * 24 ) {
 
-					#if ( not $seen or $seen < time - 10 ) {
+					#if ( not $seen or $seen < time - 10 ) {}
 					session( 'popup_logged_in' => time );
 					$data{delayed} = {
 						what => 'popup_logged_in',
@@ -813,7 +816,7 @@ sub user_info {
 		}
 	}
 
-	return to_json \%data;
+	return \%data;
 }
 
 # TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
