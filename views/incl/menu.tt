@@ -32,11 +32,10 @@
         <%- END %>
 
         <% IF e.button -%>
-          <% UNLESS username %>
-              <button class="btn btn-warning" type="button" id="free-button">
-                <% e.title %>
-              </button>
-           <% END %>
+               <% IF username %>
+               <% ELSE %>
+                 <button class="btn btn-warning" type="button" id="free-button">FREE Registration</button>
+               <% END %>
         <%- END %>
 
         <% IF e.login %>
