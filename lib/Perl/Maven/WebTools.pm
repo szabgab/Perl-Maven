@@ -117,6 +117,7 @@ sub _resources {
 
 sub _template {
 	my ( $template, $params ) = @_;
+	delete $params->{password};
 	if ( request->path =~ /\.json$/ ) {
 		return to_json $params;
 	}
