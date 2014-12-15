@@ -354,7 +354,7 @@ post '/pm/whitelist' => sub {
 	return 'parameter missing';
 };
 
-get qr{/(.+)} => sub {
+get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
 	if ( mymaven->{redirect}{$article} ) {
@@ -1036,7 +1036,7 @@ get qr{^/pro/?$} => sub {
 	#return template 'prolist', $tt, { layout => 'page' };
 };
 
-get qr{/pro/(.+)} => sub {
+get qr{^/pro/(.+)} => sub {
 	my ($article) = splat;
 	error if $article =~ /\.\./;
 	my $product = 'perl_maven_pro';
@@ -1213,7 +1213,7 @@ get '/tv' => sub {
 };
 
 # TODO this should not be here!!
-get qr{/(pro|perldoc)/(.+)} => sub {
+get qr{^/(pro|perldoc)/(.+)} => sub {
 	my ( $dir, $article ) = splat;
 
 	return _show(
@@ -1234,7 +1234,7 @@ get '/svg.xml' => sub {
 	return $xml;
 };
 
-get qr{/media/(.+)} => sub {
+get qr{^/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
@@ -1320,7 +1320,7 @@ get '/jobs-employer' => sub {
 	template 'jobs_employer', { a => 1, };
 };
 
-get qr{/(.+)} => sub {
+get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
 	return _show( { article => $article, template => 'page', layout => 'page' } );
