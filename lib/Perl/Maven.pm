@@ -881,13 +881,28 @@ post '/register' => sub {
 		},
 	);
 	if ($err) {
-		return template 'error', { could_not_send_email => 1, email => $data{email} };
+		return _error(
+			error  => 'could_not_send_email',
+			params => {
+				email => $data{email}
+			}
+		);
 	}
 
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
 	return template 'response', { from => $html_from };
 };
+
+sub _error {
+	my %args = @_;
+
+	my %p     = %{ $args{params} };
+	my $error = $args{error};
+	$p{$error} = 1;
+
+	return template 'error', \%p;
+}
 
 sub _registration_form {
 	my %args = @_;
