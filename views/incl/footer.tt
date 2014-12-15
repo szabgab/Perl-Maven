@@ -11,8 +11,9 @@
                <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
             </div>
 
-
+<!--
           <% IF conf.show_newsletter_form %>
+
             <div id="newsletter-right-form">
                <h3>Do you want to improve your Perl?</h3>
                Register to the FREE Perl Maven newsletter here.
@@ -23,8 +24,8 @@
                or to the Perl Weekly newletter
               <a href="http://perlweekly.com/">over there</a>
             </div>
-
 		   <% END %>
+-->
 
 
            <% INCLUDE incl/social_share.tt %>
