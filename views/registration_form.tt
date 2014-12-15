@@ -11,18 +11,9 @@ Name: <input name="name" value="<% name %>" />
 
 Registered people will be notified when a new article is published on the Perl Maven web site.
 
-<div id="error">
 <% IF error %>
+<div id="error">
   <% error %>
 <% END %>
 
-<% IF no_mail %>
-Missing e-mail.
-<% END %>
-<% IF invalid_mail %>
-Invalid e-mail.
-<% END %>
-<% IF duplicate_mail %>
-This address is already registered.
-<% END %>
 </div>

@@ -830,7 +830,7 @@ post '/register' => sub {
 		$data{password} //= '';
 		$data{password} =~ s/^\s+|\s+$//g;
 		if ( not $data{password} ) {
-			return _registration_form( %data, error => 'Missing password' );
+			return _registration_form( %data, error => 'missing_password' );
 		}
 		if ( length $data{password} < $mymaven->{require_password} ) {
 			return _registration_form(
@@ -842,10 +842,10 @@ post '/register' => sub {
 	}
 
 	if ( not $data{email} ) {
-		return _registration_form( %data, 'no_mail' => 1 );
+		return _registration_form( %data, error => 'no_mail' );
 	}
 	if ( not Email::Valid->address( $data{email} ) ) {
-		return _registration_form( %data, 'invalid_mail' => 1 );
+		return _registration_form( %data, error => 'invalid_mail' );
 	}
 
 	# check for uniqueness after lc
@@ -855,7 +855,7 @@ post '/register' => sub {
 
 	#debug Dumper $user;
 	if ( $user and $user->{verify_time} ) {
-		return _registration_form( %data, duplicate_mail => 1 );
+		return _registration_form( %data, error => 'duplicate_mail' );
 	}
 
 	my $code = _generate_code();
@@ -892,8 +892,15 @@ post '/register' => sub {
 sub _registration_form {
 	my %args = @_;
 
-	my %RESOURCES = ( password_short =>
-			"Password is too short. It needs to be at least %s characters long not including spaces at the ends." );
+	my %RESOURCES = (
+		password_short =>
+			'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
+		missing_password => 'Missing password',
+		no_mail          => 'Missing e-mail.',
+		invalid_mail     => 'Invalid e-mail.',
+		duplicate_mail   => 'This address is already registered.',
+	);
+
 	my $error = $args{error};
 	if ( $error and $RESOURCES{$error} ) {
 		if ( ref $args{params} ) {
