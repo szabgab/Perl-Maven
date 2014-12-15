@@ -79,12 +79,23 @@
       <div class="modal-body">
 	      <h2>Do you want to improve your Perl?</h2>
 	      <p>Register to the FREE Perl Maven newsletter here.</p>
-          <p>Type in your e-mail address:</p>
-	      <form method="POST" action="/register" name="registration_form">
-            <input name="email" />
-            <input type="submit" value="Register" />
-          </form>
-         <small>If you are already registered, then please log in and you won't see this pop-up any more.</small>
+            <div class="form-group">
+                <label for="register-name">Name</label>
+                <input name="name" class="form-control" id="register-name" type="text" placeholder="Enter your full name" />
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email</label>
+                <input name="email" class="form-control" id="register-email" type="email" placeholder="Enter your email" />
+            </div>
+            <div class="form-group" id="div-password">
+                <label for="register-email">Password</label>
+                <input name="password" type="password" class="form-control" id="register-password" placeholder="Create a password" />
+            </div>
+            <button type="submit" id="register-button" class="btn btn-default">Register</button>
+            <div>
+         <small>If you are already registered, then please <a href="/login">log in</a> and you won't see this pop-up any more.</small>
+            <div id="register-message"></div>
+            </div>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

@@ -112,11 +112,14 @@ sub _resources {
 	}
 
 	$args{show_right} = 0;
-	return _template $template, \%args;
+	return _template( $template, \%args );
 }
 
 sub _template {
 	my ( $template, $params ) = @_;
+	if ( request->path =~ /\.json$/ ) {
+		return to_json $params;
+	}
 	return template $template, $params;
 }
 

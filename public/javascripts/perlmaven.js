@@ -136,6 +136,15 @@ function setup_search (query, process) {
     return;
 }
 
+function register_result (data, status, jqXHR) {
+	console.log(data);
+	if (data['error']) {
+		$('#register-message').html(data['error']);
+		return;
+	}
+	$('#register-message').html('success');
+}
+
 $(document).ready(function() {
     $('#explain').click(code_explain);
     show_user_info();
@@ -181,6 +190,22 @@ $(document).ready(function() {
     	});
 
 		return false;
+	});
+
+	$('#register-button').on('click', function(e) {
+		var name = $('#register-name').val();
+		var email = $('#register-email').val();
+		var password = $('#register-password').val();
+		//console.log(email);
+		// TODO validate before submit
+		$('#register-message').html('');
+	    $.ajax({
+            url: '/pm/register.json',
+            type: 'POST',
+            data: {"name" : name, "email" : email, "password" : password},
+            dataType: "json",
+            success: register_result,
+        });
 	});
 
 	$('a[href^="/pro\\/"]').each(function(i, e) {

@@ -821,6 +821,10 @@ get '/register' => sub {
 	return template 'registration_form', { show_right => 0, };
 };
 
+post '/pm/register.json' => sub {
+	register();
+};
+
 post '/register' => sub {
 	register();
 };
