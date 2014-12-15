@@ -29,7 +29,7 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code);
+use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code _error _registration_form);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -571,7 +571,10 @@ post '/send-reset-pw-code' => sub {
 		}
 	);
 	if ($err) {
-		return template 'error', { could_not_send_email => 1, email => $email };
+		return _error(
+			error  => 'could_not_send_email',
+			params => [$email],
+		);
 	}
 
 	template 'error', { reset_password_sent => 1, };
@@ -883,9 +886,7 @@ post '/register' => sub {
 	if ($err) {
 		return _error(
 			error  => 'could_not_send_email',
-			params => {
-				email => $data{email}
-			}
+			params => [ $data{email} ],
 		);
 	}
 
@@ -893,43 +894,6 @@ post '/register' => sub {
 	$html_from =~ s/</&lt;/g;
 	return template 'response', { from => $html_from };
 };
-
-sub _error {
-	my %args = @_;
-
-	my %p     = %{ $args{params} };
-	my $error = $args{error};
-	$p{$error} = 1;
-
-	return template 'error', \%p;
-}
-
-sub _registration_form {
-	my %args = @_;
-
-	my %RESOURCES = (
-		password_short =>
-			'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
-		missing_password => 'Missing password',
-		no_mail          => 'Missing e-mail.',
-		invalid_mail     => 'Invalid e-mail.',
-		duplicate_mail   => 'This address is already registered.',
-	);
-
-	my $error = $args{error};
-	if ( $error and $RESOURCES{$error} ) {
-		if ( ref $args{params} ) {
-			$error = sprintf $RESOURCES{$error}, @{ $args{params} };
-		}
-		else {
-			$error = $RESOURCES{$error};
-		}
-		$args{error} = $error;
-	}
-
-	$args{show_right} = 0;
-	return template 'registration_form', \%args;
-}
 
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
@@ -991,7 +955,10 @@ post '/change-email' => sub {
 		},
 	);
 	if ($err) {
-		return template 'error', { could_not_send_email => 1, email => $email };
+		return _error(
+			error  => 'could_not_send_email',
+			params => [$email],
+		);
 	}
 
 	return template 'error', { verification_email_sent => 1 }

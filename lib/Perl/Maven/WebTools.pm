@@ -5,8 +5,18 @@ my $TIMEOUT = 60 * 60 * 24 * 365;
 
 our $VERSION = '0.11';
 
+my %RESOURCES = (
+	password_short =>
+		'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
+	missing_password     => 'Missing password',
+	no_mail              => 'Missing e-mail.',
+	invalid_mail         => 'Invalid e-mail.',
+	duplicate_mail       => 'This address is already registered.',
+	could_not_send_email => 'Internal error. Could not send e-mail to <b>%s</b>.',
+);
+
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven valid_ip _generate_code);
+our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -77,6 +87,32 @@ sub valid_ip {
 
 	# TODO make use of the mask with Net::Subnet
 	return scalar grep { $ip eq $_->{ip} } values %$whitelist;
+}
+
+sub _error {
+	return _resources( 'error', @_ );
+}
+
+sub _registration_form {
+	return _resources( 'registration_form', @_ );
+}
+
+sub _resources {
+	my ( $template, %args ) = @_;
+
+	my $error = $args{error};
+	if ( $error and $RESOURCES{$error} ) {
+		if ( ref $args{params} ) {
+			$error = sprintf $RESOURCES{$error}, @{ $args{params} };
+		}
+		else {
+			$error = $RESOURCES{$error};
+		}
+		$args{error} = $error;
+	}
+
+	$args{show_right} = 0;
+	return template $template, \%args;
 }
 
 true;

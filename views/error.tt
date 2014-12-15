@@ -61,8 +61,8 @@
        Internal error
     <% END %>
 
-    <% IF could_not_send_email %>
-       Internal error. Could not send e-mail to <b><% email %></b>.
+    <% IF error %>
+       <% error %>
     <% END %>
     
     <% IF invalid_uid %>
