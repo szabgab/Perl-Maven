@@ -819,6 +819,30 @@ get '/register' => sub {
 };
 
 post '/register' => sub {
+	my $mymaven = mymaven;
+
+	my $password = param('password');
+	if ( $mymaven->{require_password} ) {
+		$password //= '';
+		$password =~ s/^\s+|\s+$//g;
+		if ( not $password ) {
+			return template 'registration_form',
+				{
+				error      => 'Missing password',
+				show_right => 0,
+				};
+		}
+		if ( length $password < $mymaven->{require_password} ) {
+			return template 'registration_form',
+				{
+				error =>
+					"Password is too short. It needs to be at least $mymaven->{require_password} characters long not including spaces at the ends.",
+				show_right => 0,
+				};
+		}
+
+	}
+
 	my $email = param('email');
 	if ( not $email ) {
 		return template 'registration_form',
@@ -861,8 +885,7 @@ post '/register' => sub {
 		$id = $db->add_registration( { email => $email, code => $code } );
 	}
 
-	my $mymaven = mymaven;
-	my $err     = send_verification_mail(
+	my $err = send_verification_mail(
 		'first_verification_mail',
 		$email,
 		"Please finish the $mymaven->{title} registration",
