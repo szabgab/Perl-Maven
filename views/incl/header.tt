@@ -110,6 +110,7 @@
       </div>
 
       <div class="modal-body">
+          <div id="just-register-message"></div>
 	      <h2>Do you really want to improve your Perl?</h2>
           <p>The Perl Maven Pro is now available for only <b>$1</b> for the first month!</p>
           <p><a class="btn btn-primary btn-lg" href="/pro" role="button">Learn more</a></p>

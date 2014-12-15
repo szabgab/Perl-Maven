@@ -137,12 +137,16 @@ function setup_search (query, process) {
 }
 
 function register_result (data, status, jqXHR) {
-	console.log(data);
+	//console.log(data);
 	if (data['error']) {
 		$('#register-message').html(data['error']);
 		return;
 	}
-	$('#register-message').html('success');
+
+	// success:
+	$('#popup_visitor').modal('hide');
+	$('#popup_logged_in').modal('show');
+	$('#just-register-message').html('Thank you for registering!');
 }
 
 $(document).ready(function() {
