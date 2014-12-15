@@ -31,13 +31,13 @@ function display_search_result(data, status, jqXHR) {
     html += '</ul>';
     //console.log(count);
     if (count == 0) {
-       $('.modal-body').html('Not found');
-       $('#myModal').modal('show')
+       $('#search_results').html('Not found');
+       $('#popup_search_results').modal('show')
     } else if (count == 1 && show_automatically) {
        window.location = single;
     } else {
-       $('.modal-body').html(html);
-       $('#myModal').modal('show')
+       $('#search_results').html(html);
+       $('#popup_search_results').modal('show')
     }
 }
 
