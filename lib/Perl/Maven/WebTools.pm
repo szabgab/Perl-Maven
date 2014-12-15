@@ -112,7 +112,7 @@ sub _resources {
 	}
 
 	$args{show_right} = 0;
-	return template $template, \%args;
+	return _template $template, \%args;
 }
 
 sub _template {
