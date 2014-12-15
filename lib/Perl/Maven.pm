@@ -833,9 +833,10 @@ post '/register' => sub {
 			return _registration_form( %data, error => 'Missing password' );
 		}
 		if ( length $data{password} < $mymaven->{require_password} ) {
-			return _registration_form( %data,
-				error =>
-					"Password is too short. It needs to be at least $mymaven->{require_password} characters long not including spaces at the ends."
+			return _registration_form(
+				%data,
+				error  => 'password_short',
+				params => [ $mymaven->{require_password} ]
 			);
 		}
 	}
@@ -889,10 +890,23 @@ post '/register' => sub {
 };
 
 sub _registration_form {
-	my %params = @_;
+	my %args = @_;
 
-	$params{show_right} = 0;
-	return template 'registration_form', \%params;
+	my %RESOURCES = ( password_short =>
+			"Password is too short. It needs to be at least %s characters long not including spaces at the ends." );
+	my $error = $args{error};
+	if ( $error and $RESOURCES{$error} ) {
+		if ( ref $args{params} ) {
+			$error = sprintf $RESOURCES{$error}, @{ $args{params} };
+		}
+		else {
+			$error = $RESOURCES{$error};
+		}
+		$args{error} = $error;
+	}
+
+	$args{show_right} = 0;
+	return template 'registration_form', \%args;
 }
 
 sub send_verification_mail {
