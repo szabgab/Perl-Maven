@@ -26,9 +26,5 @@ Email: <input name="email" />
 </form>
 
 <h2>No account yet?</h2>
-<form method="POST" action="/register" name="registration_form">
-Email: <input name="email" />
-<input type="submit" value="Register" />
-</form>
 
-
+Please <a href="/register">register</a> first!

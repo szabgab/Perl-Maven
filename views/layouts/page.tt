@@ -14,10 +14,6 @@
 
 <% content %>
 
-<% IF conf.show_newsletter_form %>
-    <% INCLUDE "incl/newsletter.tt" %>
-<% END %>
-
 <% IF show_date %>
   <hr>
   <p>
