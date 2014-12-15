@@ -824,24 +824,19 @@ post '/register' => sub {
 	my %data = (
 		password => param('password'),
 		email    => param('email'),
+		name     => param('name'),
 	);
 	if ( $mymaven->{require_password} ) {
 		$data{password} //= '';
 		$data{password} =~ s/^\s+|\s+$//g;
 		if ( not $data{password} ) {
-			return template 'registration_form',
-				{
-				error      => 'Missing password',
-				show_right => 0,
-				};
+			return _registration_form( %data, error => 'Missing password' );
 		}
 		if ( length $data{password} < $mymaven->{require_password} ) {
-			return template 'registration_form',
-				{
+			return _registration_form( %data,
 				error =>
-					"Password is too short. It needs to be at least $mymaven->{require_password} characters long not including spaces at the ends.",
-				show_right => 0,
-				};
+					"Password is too short. It needs to be at least $mymaven->{require_password} characters long not including spaces at the ends."
+			);
 		}
 	}
 
@@ -849,11 +844,7 @@ post '/register' => sub {
 		return _registration_form( %data, 'no_mail' => 1 );
 	}
 	if ( not Email::Valid->address( $data{email} ) ) {
-		return template 'registration_form',
-			{
-			invalid_mail => 1,
-			show_right   => 0,
-			};
+		return _registration_form( %data, 'invalid_mail' => 1 );
 	}
 
 	# check for uniqueness after lc
@@ -863,11 +854,7 @@ post '/register' => sub {
 
 	#debug Dumper $user;
 	if ( $user and $user->{verify_time} ) {
-		return template 'registration_form',
-			{
-			duplicate_mail => 1,
-			show_right     => 0,
-			};
+		return _registration_form( %data, duplicate_mail => 1 );
 	}
 
 	my $code = _generate_code();

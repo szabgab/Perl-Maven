@@ -3,9 +3,9 @@
 In order to register to our web site, please type your e-mail here:
 
 <form method="POST" action="/register" name="registration_form">
-Email: <input name="email" />
-Password: <input name="password" />
-Name: <input name="name" />
+Email: <input name="email" value="<% email %>" />
+Password: <input name="password" value="" type="password" />
+Name: <input name="name" value="<% name %>" />
 <input type="submit" value="Register" />
 </form>
 
