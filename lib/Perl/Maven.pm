@@ -29,7 +29,7 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code _error _registration_form);
+use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code _error _registration_form _template);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -892,7 +892,7 @@ post '/register' => sub {
 
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
-	return template 'response', { from => $html_from };
+	return _template 'response', { from => $html_from };
 };
 
 sub send_verification_mail {

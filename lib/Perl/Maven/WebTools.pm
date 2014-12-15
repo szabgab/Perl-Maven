@@ -16,7 +16,7 @@ my %RESOURCES = (
 );
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form);
+our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -113,6 +113,11 @@ sub _resources {
 
 	$args{show_right} = 0;
 	return template $template, \%args;
+}
+
+sub _template {
+	my ( $template, $params ) = @_;
+	return template $template, $params;
 }
 
 true;
