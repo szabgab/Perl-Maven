@@ -822,6 +822,10 @@ get '/register' => sub {
 };
 
 post '/register' => sub {
+	register();
+};
+
+sub register {
 	my $mymaven = mymaven;
 
 	my %data = (
@@ -893,7 +897,7 @@ post '/register' => sub {
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
 	return _template 'response', { from => $html_from };
-};
+}
 
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
