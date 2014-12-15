@@ -821,18 +821,21 @@ get '/register' => sub {
 post '/register' => sub {
 	my $mymaven = mymaven;
 
-	my $password = param('password');
+	my %data = (
+		password => param('password'),
+		email    => param('email'),
+	);
 	if ( $mymaven->{require_password} ) {
-		$password //= '';
-		$password =~ s/^\s+|\s+$//g;
-		if ( not $password ) {
+		$data{password} //= '';
+		$data{password} =~ s/^\s+|\s+$//g;
+		if ( not $data{password} ) {
 			return template 'registration_form',
 				{
 				error      => 'Missing password',
 				show_right => 0,
 				};
 		}
-		if ( length $password < $mymaven->{require_password} ) {
+		if ( length $data{password} < $mymaven->{require_password} ) {
 			return template 'registration_form',
 				{
 				error =>
@@ -840,18 +843,12 @@ post '/register' => sub {
 				show_right => 0,
 				};
 		}
-
 	}
 
-	my $email = param('email');
-	if ( not $email ) {
-		return template 'registration_form',
-			{
-			no_mail    => 1,
-			show_right => 0,
-			};
+	if ( not $data{email} ) {
+		return _registration_form( %data, 'no_mail' => 1 );
 	}
-	if ( not Email::Valid->address($email) ) {
+	if ( not Email::Valid->address( $data{email} ) ) {
 		return template 'registration_form',
 			{
 			invalid_mail => 1,
@@ -860,9 +857,9 @@ post '/register' => sub {
 	}
 
 	# check for uniqueness after lc
-	$email = lc $email;
+	$data{email} = lc $data{email};
 
-	my $user = $db->get_user_by_email($email);
+	my $user = $db->get_user_by_email( $data{email} );
 
 	#debug Dumper $user;
 	if ( $user and $user->{verify_time} ) {
@@ -882,12 +879,12 @@ post '/register' => sub {
 		$id   = $user->{id};
 	}
 	else {
-		$id = $db->add_registration( { email => $email, code => $code } );
+		$id = $db->add_registration( { email => $data{email}, code => $code } );
 	}
 
 	my $err = send_verification_mail(
 		'first_verification_mail',
-		$email,
+		$data{email},
 		"Please finish the $mymaven->{title} registration",
 		{
 			url  => uri_for('/verify'),
@@ -896,13 +893,20 @@ post '/register' => sub {
 		},
 	);
 	if ($err) {
-		return template 'error', { could_not_send_email => 1, email => $email };
+		return template 'error', { could_not_send_email => 1, email => $data{email} };
 	}
 
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
 	return template 'response', { from => $html_from };
 };
+
+sub _registration_form {
+	my %params = @_;
+
+	$params{show_right} = 0;
+	return template 'registration_form', \%params;
+}
 
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
