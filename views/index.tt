@@ -1,6 +1,6 @@
-<% INCLUDE incl/header.tt %>
 
-<% content %>
+<% mycontent %>
+
 <h2><% resources.text.recent_articles %></h2>
 <% FOR p IN pages %>
   <div class="abstract">
@@ -14,4 +14,3 @@
   <hr />
 <% END %>
 
-<% INCLUDE incl/footer.tt %>

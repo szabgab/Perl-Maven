@@ -8,7 +8,7 @@ my $PM_VERSION         = 4;    # Version number to force JavaScript and CSS file
 my $CODE_EXPLAIN_LIMIT = 20;
 
 use Business::PayPal;
-use Cwd qw(cwd abs_path);
+use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use DateTime;
 use Digest::SHA;
@@ -413,7 +413,7 @@ get '/' => sub {
 	my $pages = setting('tools')->read_meta_array( 'archive', limit => mymaven->{main_page_entries} );
 	_replace_tags($pages);
 
-	_show( { article => 'index', template => 'page', layout => 'index' }, { pages => $pages } );
+	_show( { article => 'index', template => 'index', layout => 'system' }, { pages => $pages } );
 };
 
 sub _replace_tags {
