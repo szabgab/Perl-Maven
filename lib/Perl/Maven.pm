@@ -1066,9 +1066,6 @@ get qr{^/pro/?$} => sub {
 		$promo = 0;
 	}
 	return _show_abstract( { path => $path, promo => $promo } );
-
-	#my $tt = read_tt( $path );
-	#return template 'prolist', $tt, { layout => 'page' };
 };
 
 get qr{^/pro/(.+)} => sub {
