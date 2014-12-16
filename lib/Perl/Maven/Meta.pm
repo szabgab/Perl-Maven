@@ -3,8 +3,6 @@ use Moo;
 use Path::Tiny ();
 use 5.010;
 
-sub tpath { goto &Path::Tiny::path }
-
 our $VERSION = '0.11';
 
 has mymaven      => ( is => 'ro' );
@@ -193,7 +191,7 @@ sub save {
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	eval {
-		tpath($path)->spew_utf8( to_json( $data, { utf8 => 1, pretty => 1, canonical => 1 } ) );
+		Path::Tiny::path($path)->spew_utf8( to_json( $data, { utf8 => 1, pretty => 1, canonical => 1 } ) );
 		1;
 	} or do {
 		my $err //= 'Unknown Error';
