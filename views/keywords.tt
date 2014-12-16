@@ -1,3 +1,4 @@
+<% INCLUDE incl/content.tt %>
 
 <div id="keyword-list">
 <ul>

@@ -1,0 +1,4 @@
+<div role="main" id="main">
+<% mycontent %>
+</div>
+
