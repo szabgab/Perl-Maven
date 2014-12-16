@@ -34,7 +34,6 @@ installation:
   conf:
     #clicky: 66509
     #google_analytics: UA-12199222
-    show_sponsors: 0
     show_newsletter_form: 0
     show_indexes: 1
     show_related: 1

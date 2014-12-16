@@ -1,8 +1,0 @@
-<% IF conf.show_sponsors %>
-
-<div class="sponsor">
- <a href="/digitalocean"><img src="/img/ssd-virtual-servers-250x250.jpg" alt="We recommend Digital Ocean for hosting." /></a> 
-</div>
-
-
-<% END %>

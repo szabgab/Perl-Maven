@@ -54,7 +54,6 @@ subtest mymaven => sub {
 		'google_analytics'       => 'UA-11111112-3',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '1',
-		'show_sponsors'          => '0',
 		'show_date'              => 1,
 
 		},
@@ -67,7 +66,6 @@ subtest mymaven => sub {
 		'google_analytics'       => 'UA-11111112-3',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '0',
-		'show_sponsors'          => '0',
 		'show_date'              => 1,
 		},
 		'br conf';
@@ -78,7 +76,6 @@ subtest mymaven => sub {
 		'google_analytics'       => 'UA-11111112-3',
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '0',
-		'show_sponsors'          => '0',
 		'show_date'              => 1,
 		};
 };

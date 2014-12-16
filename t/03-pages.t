@@ -148,7 +148,6 @@ subtest one_with_config => sub {
 			'comments_disqus_code'   => 'perl5maven',
 			'google_analytics'       => 'UA-11111112-3',
 			'show_indexes'           => '1',
-			'show_sponsors'          => '0',
 			'show_date'              => 1,
 		},
 		'indexes'   => ['files'],

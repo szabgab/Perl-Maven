@@ -12,7 +12,6 @@
             </div>
 
            <% INCLUDE incl/social_share.tt %>
-           <% INCLUDE incl/sponsors.tt %>
 
            <% IF conf.show_related && related %>
              <div id="related">
