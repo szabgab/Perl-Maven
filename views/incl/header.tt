@@ -52,12 +52,12 @@
 <% END %>
 
 <% INCLUDE incl/menu.tt %>
+<% INCLUDE incl/modals.tt %>
 
 <div class="container-fluid">
 <div class="row-fluid">
   <div class="span1">
 
-<% INCLUDE incl/modals.tt %>
     <% IF beginner_book %>
       <div id="bookimg">
       <a href="http://perlmaven.com/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
