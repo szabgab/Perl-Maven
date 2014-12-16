@@ -1,4 +1,4 @@
-package Perl::Maven::Meta;
+package Perl::Maven::CreateMeta;
 use Moo;
 use Path::Tiny ();
 use 5.010;
@@ -25,9 +25,10 @@ my %ts;    # mapping timestamp => filename to ensure uniqueness
 sub process_domain {
 	my ( $self, $domain ) = @_;
 
-	print "** Processing domain $domain\n";
+	say "** Processing domain $domain";
 
 	my $config = $self->mymaven->config($domain);
+	say "   Saving to $config->{meta}";
 
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
@@ -38,7 +39,6 @@ sub process_domain {
 			: $self->mymaven->config("$lang.$domain");
 		$self->process_site( $lang_config, $domain, $lang );
 	}
-
 	my @meta_archive
 		= reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
 	save( 'archive', "$config->{meta}/meta.$domain/meta", \@meta_archive );

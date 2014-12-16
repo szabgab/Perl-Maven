@@ -9,7 +9,7 @@ use YAML qw(LoadFile);
 
 use lib 'lib';
 use Perl::Maven::Config;
-use Perl::Maven::Meta;
+use Perl::Maven::CreateMeta;
 
 binmode( STDOUT, ':encoding(UTF-8)' );
 binmode( STDERR, ':encoding(UTF-8)' );
@@ -27,7 +27,7 @@ GetOptions(
 $ENV{METAMETA} = 1;
 
 my $domain_name = $mymaven->{config}{installation}{domain};
-my $meta        = Perl::Maven::Meta->new(
+my $meta        = Perl::Maven::CreateMeta->new(
 	verbose => $verbose,
 	mymaven => $mymaven,
 );
@@ -35,7 +35,7 @@ $meta->process_domain($domain_name);
 
 #if ($all) {
 #	for my $domain_name ( keys %{ $mymaven->{config} } ) {
-#		my $meta = Perl::Maven::Meta->new(
+#		my $meta = Perl::Maven::CreateMeta->new(
 #			verbose => $verbose,
 #			mymaven => $mymaven,
 #		);
@@ -46,7 +46,7 @@ $meta->process_domain($domain_name);
 #	usage('Missing domain') if not $domain_name;
 #	usage("Invalid site '$domain_name'")
 #		if not $mymaven->{config}{$domain_name};
-#	my $meta = Perl::Maven::Meta->new(
+#	my $meta = Perl::Maven::CreateMeta->new(
 #		verbose => $verbose,
 #		mymaven => $mymaven,
 #	);
