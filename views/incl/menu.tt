@@ -10,13 +10,7 @@
       <a class="brand" href="/">Perl Maven</a>
       <div class="nav-collapse">
       <% FOR m IN resources.menu %>
-        <% IF m.dir == 'left' %>
-          <ul class="nav">
-        <% END %>
-        <% IF m.dir == 'right' %>
-          <ul class="nav pull-right">
-        <% END %>
-
+        <ul class="nav  <% IF m.dir == 'right' %>pull-right<% END %>  ">
         <% FOR e IN m.menu %>
           <%- IF e.url -%>
             <li><a href="<% e.url %>"><% e.title %></a></li>
