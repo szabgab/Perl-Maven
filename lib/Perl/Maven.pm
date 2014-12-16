@@ -1241,9 +1241,10 @@ get '/mail/:article' => sub {
 	my $url = request->base;
 
 	#$url =~ s{/+$}{};
-	$tt->{url} = $url;
+	$tt->{url}          = $url;
+	$tt->{email_footer} = 1;
 
-	return template 'mail', $tt, { layout => 'newsletter' };
+	return template 'mail', $tt, { layout => 'email' };
 };
 
 get '/tv' => sub {

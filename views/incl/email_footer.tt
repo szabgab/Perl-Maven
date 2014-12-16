@@ -1,6 +1,7 @@
   </div>
 </div>
-<div id="footer">
+<div id="footer" style="font-size: 12px">
+<% INCLUDE incl/email_footer_content.tt %>
 </div>
 </body>
 </html>

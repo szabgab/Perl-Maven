@@ -1,4 +1,4 @@
 <% INCLUDE incl/email_header.tt %>
-    <% content %>
+<% content %>
 <% INCLUDE incl/email_footer.tt %>
 
