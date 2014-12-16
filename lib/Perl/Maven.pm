@@ -402,7 +402,7 @@ get '/search' => sub {
 get '/' => sub {
 	if ( request->host =~ /^meta\./ ) {
 		return _show(
-			{ article => 'index', template => 'page', layout => 'meta' },
+			{ article => 'index', template => 'meta', layout => 'system' },
 			{
 				authors => authors(),
 				stats   => setting('tools')->read_meta_meta('stats'),
