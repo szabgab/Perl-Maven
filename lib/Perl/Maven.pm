@@ -298,8 +298,8 @@ get '/contributor/:name' => sub {
 	return _show(
 		{
 			article  => 'contributor',
-			template => 'page',
-			layout   => 'contributor'
+			template => 'contributor',
+			layout   => 'system'
 		},
 		{
 			author   => authors->{$name},
