@@ -430,7 +430,7 @@ get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
 	delete $kw->{keys};    # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
 	                       #die Dumper $kw->{__WARN__};
-	_show( { article => 'keywords', template => 'page', layout => 'keywords' }, { kw => $kw } );
+	_show( { article => 'keywords', template => 'keywords', layout => 'system' }, { kw => $kw } );
 };
 
 get '/about' => sub {

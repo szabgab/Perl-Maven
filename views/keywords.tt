@@ -1,6 +1,3 @@
-<% INCLUDE incl/header.tt %>
-
-<% content %>
 
 <div id="keyword-list">
 <ul>
@@ -15,6 +12,4 @@
 <% END %>
 </ul>
 </div>
-
-<% INCLUDE incl/footer.tt %>
 
