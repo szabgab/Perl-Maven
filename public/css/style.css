@@ -261,4 +261,34 @@ video {
    color: red;
 }
 
+#consultants .person {
+   min-height: 200px;
+}
+#consultants .picture {
+   float: left;
+   width: 130px;
+   /* background-color: green; */
+}
+#consultants .details {
+   /* background-color: red; */
+   float: left;
+   text-align: left;
+}
+
+#consultants .details ul {
+   margin: 0;
+   list-style-type: none;
+}
+
+#consultants .details li {
+   margin-top: 3px;
+   margin-left: 10px;
+}
+
+#consultants .text {
+   padding-top: 20px;
+   padding-left: 10px;
+   clear: both;
+   /* background-color: blue; */
+}
 

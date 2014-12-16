@@ -1,92 +1,60 @@
 <% INCLUDE incl/content.tt %>
 
-<style>
-
-.person {
-   min-height: 200px;
-}
-.picture {
-   float: left;
-   width: 130px;
-   /* background-color: green; */
-}
-.details {
-   /* background-color: red; */
-   float: left;
-   text-align: left;
-}
-
-.details ul {
-   margin: 0;
-   list-style-type: none;
-}
-
-.details li {
-   margin-top: 3px;
-   margin-left: 10px;
-}
-
-.text {
-   padding-top: 20px;
-   padding-left: 10px;
-   clear: both;
-   /* background-color: blue; */
-}
-</style>
-
-<% FOR p IN people %>
-<div class="person">
-
-  <div class="picture">
-  <% IF p.img %>
-  <img src="/img/<% p.img %>" alt="<% p.name %>" />
+<div id="consultants">
+  <% FOR p IN people %>
+    <div class="person">
+      <div class="picture">
+        <% IF p.img %>
+          <img src="/img/<% p.img %>" alt="<% p.name %>" />
+        <% END %>
+      </div>
+      
+      <div class="details">
+        <ul>
+          <li><a href="<% p.url %>"><% p.name %></a></li>
+          <li>
+            <% IF p.twitter %>
+             <a href="http://twitter.com/<% p.twitter %>"><img src="/img/twitter.png" alt="Twitter" /></a>
+            <% END %>
+            <% IF p.gplus %>
+             <a href="https://plus.google.com/<% p.gplus %>"><img src="/img/googleplus.png" alt="Google+" /></a>
+            <% END %>
+            <% IF p.linkedin %>
+              <a href="<% p.linkedin %>"><img src="/img/linkedin.png" alt="LinkedIN" /></a>
+            <% END %>
+            <% IF p.pause %>
+              <a href="http://metacpan.org/author/<% p.pause %>"><% p.pause %></a>
+            <% END %>
+          </li>
+          <li>
+          <li>
+             <% IF p.location %>
+              Location: <% p.location %>
+             <% END %>
+             <% IF p.country %>
+               <img src="/img/flags-iso/shiny/32/<% p.country %>.png" height="20" width="20" />
+             <% END %>
+          </li>
+          <li>
+            <% IF p.languages %>
+               Languages: <%p .languages %>
+            <% END %>
+          </li>
+          <li>
+            <% IF p.specialities %>
+              Specialities: <% p.specialities %>
+            <% END %>
+          </li>
+        </ul>
+      </div>
+    
+    
+      <div class="text">
+        <% p.html %>
+      </div>
+    
+       <hr>
+    </div>
   <% END %>
-  </div>
-  
-  <div class="details">
-  <ul>
-    <li><a href="<% p.url %>"><% p.name %></a></li>
-    <li>
-      <% IF p.twitter %>
-       <a href="http://twitter.com/<% p.twitter %>"><img src="/img/twitter.png" alt="Twitter" /></a>
-      <% END %>
-      <% IF p.gplus %>
-       <a href="https://plus.google.com/<% p.gplus %>"><img src="/img/googleplus.png" alt="Google+" /></a>
-      <% END %>
-      <% IF p.linkedin %>
-        <a href="<% p.linkedin %>"><img src="/img/linkedin.png" alt="LinkedIN" /></a>
-      <% END %>
-      <% IF p.pause %>
-        <a href="http://metacpan.org/author/<% p.pause %>"><% p.pause %></a>
-      <% END %>
-    </li>
-    <li>
-    <li>
-       <% IF p.location %>
-        Location: <% p.location %>
-       <% END %>
-       <% IF p.country %>
-         <img src="/img/flags-iso/shiny/32/<% p.country %>.png" height="20" width="20" />
-       <% END %>
-    </li>
-    <li>
-      <% IF p.languages %>
-         Languages: <%p .languages %>
-      <% END %>
-    </li>
-    <li>
-      <% IF p.specialities %>
-        Specialities: <% p.specialities %>
-      <% END %>
-    </li>
-  </ul>
-  </div>
-
-
-<div class="text">
-<% p.html %>
 </div>
 
-<hr>
-</div>
-<% END %>
