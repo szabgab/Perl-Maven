@@ -152,7 +152,7 @@ sub _show_abstract {
 	#
 	#		if logged in but not subscribed, tell the user to subscribe
 	delete $tt->{mycontent};
-	return template 'propage', $tt, { layout => 'page' };
+	return template 'propage', $tt, { layout => 'system' };
 }
 
 sub _show {

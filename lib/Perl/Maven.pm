@@ -1093,7 +1093,7 @@ get qr{^/pro/(.+)} => sub {
 			path     => mymaven->{dirs}{pro},
 			article  => $article,
 			template => 'page',
-			layout   => 'page'
+			layout   => 'system'
 		}
 	);
 };
@@ -1352,7 +1352,7 @@ get '/jobs-employer' => sub {
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
-	return _show( { article => $article, template => 'page', layout => 'page' } );
+	return _show( { article => $article, template => 'page', layout => 'system' } );
 };
 
 ##########################################################################################

@@ -1,4 +1,25 @@
+<h1><% title %></h1>
+
+<% IF conf.show_indexes %>
+  <div id="indexes">
+    <ul>
+      <% FOR k IN indexes %>
+         <li><button class="btn btn-mini btn-primary kw-button" type="button" value="<% k %>"><% k %></button></li>
+      <% END %>
+    </ul>
+  </div>
+<% END %>
+
 <% INCLUDE incl/content.tt %>
 
 <% INCLUDE incl/credits.tt %>
+
+<% IF show_date %>
+  <hr>
+  <p>
+  Published on <% date %>
+  </p>
+<% END %>
+<% INCLUDE incl/comments.tt %>
+
 
