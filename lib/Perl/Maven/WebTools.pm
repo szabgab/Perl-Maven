@@ -5,6 +5,8 @@ my $TIMEOUT = 60 * 60 * 24 * 365;
 
 our $VERSION = '0.11';
 
+my %authors;
+
 my %RESOURCES = (
 	password_short =>
 		'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
@@ -17,7 +19,7 @@ my %RESOURCES = (
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template read_tt);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template read_tt _show_abstract _show authors);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -139,6 +141,105 @@ sub read_tt {
 	else {
 		return $tt;
 	}
+}
+
+sub _show_abstract {
+	my ($params) = @_;
+	my $tt = read_tt( $params->{path} );
+	$tt->{promo} = $params->{promo} // 1;
+
+	#		if not logged_in(), tell the user to subscribe or log in
+	#
+	#		if logged in but not subscribed, tell the user to subscribe
+	delete $tt->{mycontent};
+	return template 'propage', $tt, { layout => 'page' };
+}
+
+sub _show {
+	my ( $params, $data ) = @_;
+	$data ||= {};
+
+	my $path
+		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.tt";
+	if ( not -e $path ) {
+		status 'not_found';
+		return template 'error', { 'no_such_article' => 1 };
+	}
+
+	my $tt = read_tt($path);
+	if ( not $tt->{status}
+		or ( $tt->{status} !~ /^(show|draft|done)$/ ) )
+	{
+		status 'not_found';
+		return template 'error', { 'no_such_article' => 1 };
+	}
+	( $tt->{date} ) = split /T/, $tt->{timestamp};
+
+	my $nick = $tt->{author};
+	read_authors() if not %authors;
+	if ( $nick and $authors{$nick} ) {
+		$tt->{author_name} = $authors{$nick}{author_name};
+		$tt->{author_img}  = $authors{$nick}{author_img};
+		$tt->{author_google_plus_profile}
+			= $authors{$nick}{author_google_plus_profile};
+	}
+	else {
+		delete $tt->{author};
+	}
+	my $translator = $tt->{translator};
+	if ( $translator and $authors{$translator} ) {
+		$tt->{translator_name} = $authors{$translator}{author_name};
+		$tt->{translator_img}  = $authors{$translator}{author_img};
+		$tt->{translator_google_plus_profile}
+			= $authors{$translator}{author_google_plus_profile};
+	}
+	else {
+		if ($translator) {
+			error("'$translator'");
+		}
+		delete $tt->{translator};
+	}
+
+	my $books = delete $tt->{books};
+	if ($books) {
+		$books =~ s/^\s+|\s+$//g;
+		foreach my $name ( split /\s+/, $books ) {
+			$tt->{$name} = 1;
+		}
+	}
+
+	$tt->{$_} = $data->{$_} for keys %$data;
+
+	return template $params->{template}, $tt, { layout => $params->{layout} };
+}
+
+sub authors {
+	if ( not %authors ) {
+		read_authors();
+	}
+	return \%authors;
+}
+
+sub read_authors {
+	return if %authors;
+
+	# Path::Tiny would throw an exception if it could not open the file
+	# but we for Perl::Maven this file is optional
+	eval {
+		my $fh = Path::Tiny::path( mymaven->{root} . '/authors.txt' );
+
+		# TODO add row iterator interface to Path::Tiny https://github.com/dagolden/Path-Tiny/issues/107
+		foreach my $line ( $fh->lines_utf8 ) {
+			chomp $line;
+			my ( $nick, $name, $img, $google_plus_profile ) = split /;/, $line;
+			$authors{$nick} = {
+				author_name                => $name,
+				author_img                 => ( $img || 'white_square.png' ),
+				author_google_plus_profile => $google_plus_profile,
+			};
+		}
+	};
+	return;
 }
 
 true;

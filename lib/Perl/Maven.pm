@@ -28,7 +28,8 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code _error _registration_form _template read_tt);
+use Perl::Maven::WebTools
+	qw(logged_in get_ip mymaven _generate_code _error _registration_form _template read_tt _show_abstract _show authors);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -37,7 +38,6 @@ require Perl::Maven::PayPal;
 
 ## configure relative pathes
 my $db;
-my %authors;
 
 hook before => sub {
 	set start_time => Time::HiRes::time;
@@ -64,7 +64,6 @@ hook before => sub {
 		config => $engines->{template_toolkit}
 	);
 
-	read_authors();
 	my $p = $db->get_products;
 
 	set products => $p;
@@ -292,7 +291,7 @@ get '/contributor/:name' => sub {
 		return redirect "http://meta.$host/contributor/$name";
 	}
 
-	return "$name could not be found" if not $authors{$name};
+	return "$name could not be found" if not authors->{$name};
 	my $data = setting('tools')->read_meta('archive');
 	my @articles = grep { $_->{author} eq $name or ( $_->{translator} and $_->{translator} eq $name ) } @$data;
 
@@ -303,7 +302,7 @@ get '/contributor/:name' => sub {
 			layout   => 'contributor'
 		},
 		{
-			author   => $authors{$name},
+			author   => authors->{$name},
 			articles => \@articles,
 		}
 	);
@@ -405,7 +404,7 @@ get '/' => sub {
 		return _show(
 			{ article => 'index', template => 'page', layout => 'meta' },
 			{
-				authors => \%authors,
+				authors => authors(),
 				stats   => setting('tools')->read_meta_meta('stats'),
 			}
 		);
@@ -447,7 +446,7 @@ get '/about' => sub {
 	}
 	my %contributors;
 	foreach my $name ( keys %cont ) {
-		$contributors{$name} = $authors{$name};
+		$contributors{$name} = authors->{$name};
 	}
 
 	_show(
@@ -1357,75 +1356,6 @@ get qr{^/(.+)} => sub {
 };
 
 ##########################################################################################
-sub _show_abstract {
-	my ($params) = @_;
-	my $tt = read_tt( $params->{path} );
-	$tt->{promo} = $params->{promo} // 1;
-
-	#		if not logged_in(), tell the user to subscribe or log in
-	#
-	#		if logged in but not subscribed, tell the user to subscribe
-	delete $tt->{mycontent};
-	return template 'propage', $tt, { layout => 'page' };
-}
-
-sub _show {
-	my ( $params, $data ) = @_;
-	$data ||= {};
-
-	my $path
-		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.tt";
-	if ( not -e $path ) {
-		status 'not_found';
-		return template 'error', { 'no_such_article' => 1 };
-	}
-
-	my $tt = read_tt($path);
-	if ( not $tt->{status}
-		or ( $tt->{status} !~ /^(show|draft|done)$/ ) )
-	{
-		status 'not_found';
-		return template 'error', { 'no_such_article' => 1 };
-	}
-	( $tt->{date} ) = split /T/, $tt->{timestamp};
-
-	my $nick = $tt->{author};
-	if ( $nick and $authors{$nick} ) {
-		$tt->{author_name} = $authors{$nick}{author_name};
-		$tt->{author_img}  = $authors{$nick}{author_img};
-		$tt->{author_google_plus_profile}
-			= $authors{$nick}{author_google_plus_profile};
-	}
-	else {
-		delete $tt->{author};
-	}
-	my $translator = $tt->{translator};
-	if ( $translator and $authors{$translator} ) {
-		$tt->{translator_name} = $authors{$translator}{author_name};
-		$tt->{translator_img}  = $authors{$translator}{author_img};
-		$tt->{translator_google_plus_profile}
-			= $authors{$translator}{author_google_plus_profile};
-	}
-	else {
-		if ($translator) {
-			error("'$translator'");
-		}
-		delete $tt->{translator};
-	}
-
-	my $books = delete $tt->{books};
-	if ($books) {
-		$books =~ s/^\s+|\s+$//g;
-		foreach my $name ( split /\s+/, $books ) {
-			$tt->{$name} = 1;
-		}
-	}
-
-	$tt->{$_} = $data->{$_} for keys %$data;
-
-	return template $params->{template}, $tt, { layout => $params->{layout} };
-}
-
 sub pw_form {
 	my $id   = param('id');
 	my $code = param('code');
@@ -1495,28 +1425,6 @@ sub read_resources {
 	return $data;
 }
 
-sub read_authors {
-	return if %authors;
-
-	# Path::Tiny would throw an exception if it could not open the file
-	# but we for Perl::Maven this file is optional
-	eval {
-		my $fh = Path::Tiny::path( mymaven->{root} . '/authors.txt' );
-
-		# TODO add row iterator interface to Path::Tiny https://github.com/dagolden/Path-Tiny/issues/107
-		foreach my $line ( $fh->lines_utf8 ) {
-			chomp $line;
-			my ( $nick, $name, $img, $google_plus_profile ) = split /;/, $line;
-			$authors{$nick} = {
-				author_name                => $name,
-				author_img                 => ( $img || 'white_square.png' ),
-				author_google_plus_profile => $google_plus_profile,
-			};
-		}
-	};
-	return;
-}
-
 sub _feed {
 	my ( $what, $tag, $subtitle ) = @_;
 
@@ -1565,7 +1473,7 @@ sub _feed {
 		$e{id} = $p->{id} ? $p->{id} : "$url/$p->{filename}";
 		$e{content} = qq{<![CDATA[$p->{abstract}]]>};
 		if ( $p->{author} ) {
-			$e{author}{name} = $authors{ $p->{author} }{author_name};
+			$e{author}{name} = authors->{ $p->{author} }{author_name};
 		}
 		push @entries, \%e;
 	}
