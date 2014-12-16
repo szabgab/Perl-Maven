@@ -29,7 +29,7 @@ use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code _error _registration_form _template);
+use Perl::Maven::WebTools qw(logged_in get_ip mymaven _generate_code _error _registration_form _template read_tt);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -1447,22 +1447,6 @@ sub pw_form {
 		if $user->{password_reset_timeout} < time;
 
 	return;
-}
-
-sub read_tt {
-	my $file = shift;
-	my $tt   = eval {
-		Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->merge_conf( mymaven->{conf} )->data;
-	};
-	if ($@) {
-
-		# hmm, this should have been caught when the meta files were generated...
-		error $@;
-		return {};
-	}
-	else {
-		return $tt;
-	}
 }
 
 sub get_download_files {

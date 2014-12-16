@@ -16,7 +16,8 @@ my %RESOURCES = (
 );
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template);
+our @EXPORT_OK
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template read_tt);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -122,6 +123,22 @@ sub _template {
 		return to_json $params;
 	}
 	return template $template, $params;
+}
+
+sub read_tt {
+	my $file = shift;
+	my $tt   = eval {
+		Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->merge_conf( mymaven->{conf} )->data;
+	};
+	if ($@) {
+
+		# hmm, this should have been caught when the meta files were generated...
+		error $@;
+		return {};
+	}
+	else {
+		return $tt;
+	}
 }
 
 true;
