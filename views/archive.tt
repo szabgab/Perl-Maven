@@ -13,27 +13,6 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 
 <% INCLUDE incl/content.tt %>
 
-<style>
-#archive {
-}
-#archive .pro {
-  width: 30px;
-}
-#archive .interview {
-  width: 65px;
-}
-#archive .screencast {
-  width: 80px;
-}
-#archive .title {
-/*  width: 600px; */
-}
-
-#archive .date {
-  width: 80px;
-}
-</style>
-
 <div id="archive">
 Total: <% pages.size %>
 <table>

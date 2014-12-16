@@ -292,3 +292,25 @@ video {
    /* background-color: blue; */
 }
 
+#archive {
+}
+#archive .pro {
+  width: 30px;
+}
+#archive .interview {
+  width: 65px;
+}
+#archive .screencast {
+  width: 80px;
+}
+#archive .title {
+/*  width: 600px; */
+}
+
+#archive .date {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 80px;
+}
+
+
