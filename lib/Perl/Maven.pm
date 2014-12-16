@@ -21,7 +21,6 @@ use Time::HiRes ();
 use YAML qw(LoadFile);
 use MongoDB;
 use Path::Tiny ();    # the path function would clash with the path function of Dancer
-sub tpath { goto &Path::Tiny::path }
 
 use Web::Feed;
 
@@ -1457,7 +1456,7 @@ sub get_download_files {
 	#debug $manifest;
 	my @files;
 	eval {
-		foreach my $line ( tpath($manifest)->lines ) {
+		foreach my $line ( Path::Tiny::path($manifest)->lines ) {
 			chomp $line;
 			my ( $file, $title ) = split /;/, $line;
 			push @files,
@@ -1475,7 +1474,7 @@ sub get_download_files {
 }
 
 sub read_sites {
-	my $p = tpath( mymaven->{root} . '/sites.yml' );
+	my $p = Path::Tiny::path( mymaven->{root} . '/sites.yml' );
 	return {} if not $p;
 	return YAML::Load $p->slurp_utf8;
 }
@@ -1502,7 +1501,7 @@ sub read_authors {
 	# Path::Tiny would throw an exception if it could not open the file
 	# but we for Perl::Maven this file is optional
 	eval {
-		my $fh = tpath( mymaven->{root} . '/authors.txt' );
+		my $fh = Path::Tiny::path( mymaven->{root} . '/authors.txt' );
 
 		# TODO add row iterator interface to Path::Tiny https://github.com/dagolden/Path-Tiny/issues/107
 		foreach my $line ( $fh->lines_utf8 ) {
