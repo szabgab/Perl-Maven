@@ -1,37 +1,36 @@
 
 <% IF conf.show_archive_selector %>
-<div id="indexes">
-Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstract %>CHECKED<% END %> />
+  <div id="indexes">
+    Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstract %>CHECKED<% END %> />
     <ul>
-         <li><button class="btn btn-mini btn-primary archive-button" type="button" value="">All</button></li>
-         <li><button class="btn btn-mini btn-primary archive-button" type="button" value="free">Free</button></li>
-         <li><button class="btn btn-mini btn-primary archive-button" type="button" value="pro">Pro</button></li>
-         <li><button class="btn btn-mini btn-primary archive-button" type="button" value="interview">Interviews</button></li>
+       <li><button class="btn btn-mini btn-primary archive-button" type="button" value="">All</button></li>
+       <li><button class="btn btn-mini btn-primary archive-button" type="button" value="free">Free</button></li>
+       <li><button class="btn btn-mini btn-primary archive-button" type="button" value="pro">Pro</button></li>
+       <li><button class="btn btn-mini btn-primary archive-button" type="button" value="interview">Interviews</button></li>
     </ul>
-</div>
+  </div>
 <% END %>
 
 <% INCLUDE incl/content.tt %>
 
 <div id="archive">
-Total: <% pages.size %>
-<table>
-<% FOR p IN pages %>
- <tr>
-     <td class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></td>
-     <td class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></td>
-     <td class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></td>
-     <td class="date"><% p.date %></td>
-     <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></td>
- </tr>
- <% IF abstract %>
-   <tr>
-     <td colspan="4"></td>
-     <td><% p.abstract %></td>
-   </tr>
- <% END %>
-<% END %>
-</table>
-
+  Total: <% pages.size %>
+  <table>
+    <% FOR p IN pages %>
+      <tr>
+          <td class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></td>
+          <td class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></td>
+          <td class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></td>
+          <td class="date"><% p.date %></td>
+          <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></td>
+      </tr>
+      <% IF abstract %>
+        <tr>
+            <td colspan="4"></td>
+            <td><% p.abstract %></td>
+        </tr>
+      <% END %>
+    <% END %>
+  </table>
 </div>
-<p>&nbsp;</p>
+

@@ -293,6 +293,7 @@ video {
 }
 
 #archive {
+  padding-bottom: 40px;
 }
 #archive .pro {
   width: 30px;
