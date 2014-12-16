@@ -27,7 +27,7 @@
 
          <% END %>
       </div>
-    </div>
+    </div><!-- end of right column -->
   </div>
   <style>
   #footer-menu {

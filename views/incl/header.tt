@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
+  <link href="/google-code-prettify/prettify.css" rel="stylesheet">
+  <script src="/google-code-prettify/prettify.js"></script>
 
-<link href="/google-code-prettify/prettify.css" rel="stylesheet">
-<script src="/google-code-prettify/prettify.js"></script>
+  <script>
+    var user_info = <% user_info_json %>;
+  </script>
 
-<script>
- var user_info = <% user_info_json %>;
-</script>
-
-
-<%  IF localized_versions && localized_versions.size > 1 %>
-  <link rel="alternate" hreflang="x-default" href="<% localized_versions.en.url %>" />
-  <% FOR lang IN localized_versions.keys %>
-     <link rel="alternate" hreflang="<% lang %>" href="<% localized_versions.$lang.url %>" />
+  <%  IF localized_versions && localized_versions.size > 1 %>
+    <link rel="alternate" hreflang="x-default" href="<% localized_versions.en.url %>" />
+    <% FOR lang IN localized_versions.keys %>
+       <link rel="alternate" hreflang="<% lang %>" href="<% localized_versions.$lang.url %>" />
+    <% END %>
   <% END %>
-<% END %>
 
-<link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="/atom" rel="alternate" type="application/atom+xml" title ="Perl Maven" />
+  <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="/atom" rel="alternate" type="application/atom+xml" title ="Perl Maven" />
 
-<title><% title %></title>
-<meta name="description" content="<% description %>">
-<meta name="author" content="<% author %>">
+  <title><% title %></title>
+  <meta name="description" content="<% description %>">
+  <meta name="author" content="<% author %>">
 
-<link href="/css/style.css?<% pm_version %>" rel="stylesheet">
-<% IF conf.rtl %>
-	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
-<% END %>
-
+  <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
+  <% IF conf.rtl %>
+  	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
+  <% END %>
 </head>
 <body onload="prettyPrint()" >
 
@@ -55,25 +52,25 @@
 <% INCLUDE incl/modals.tt %>
 
 <div class="container-fluid">
-<div class="row-fluid">
-  <div class="span1">
+  <div class="row-fluid">
+    <div class="span1">
 
-    <% IF beginner_book %>
-      <div id="bookimg">
-      <a href="http://perlmaven.com/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
-      </div>
-    <% ELSE %>
-      <div id="bookimg">
-      <a href="/"><img src="/img/perl_maven_150x212.png" alt="Perl Maven" /></a>
-      </div>
-    <% END %>
-    <% IF advanced_book %>
-    <a href="http://perlmaven.com/advanced-perl-maven-e-book">Advanced Perl Maven</a>
-    <% END %>
+      <% IF beginner_book %>
+        <div id="bookimg">
+        <a href="http://perlmaven.com/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
+        </div>
+      <% ELSE %>
+        <div id="bookimg">
+        <a href="/"><img src="/img/perl_maven_150x212.png" alt="Perl Maven" /></a>
+        </div>
+      <% END %>
+      <% IF advanced_book %>
+      <a href="http://perlmaven.com/advanced-perl-maven-e-book">Advanced Perl Maven</a>
+      <% END %>
 
-    <% INCLUDE incl/languages.tt %>
+      <% INCLUDE incl/languages.tt %>
 
-  </div>
-  <div class="span8">
+    </div>
+    <div class="span8">
 
 
