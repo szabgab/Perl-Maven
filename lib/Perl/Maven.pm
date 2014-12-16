@@ -1051,6 +1051,13 @@ get '/download/:dir/:file' => sub {
 	send_file( path( mymaven->{dirs}{download}, $dir, $file ), system_path => 1 );
 };
 
+# special treatment of the /pro pages
+# TODO: they should probably be moved to the top-level directory and the
+# fact that they are only available to 'pro' subscribers should be part of the header of the page
+# and not the path of the file
+# actually, probably the first thing should be to add a 'pro' tag to the headers and use that
+# information to decide who can see the file
+# and then we should probably just handle directories seenlessly
 get qr{^/pro/?$} => sub {
 	my $product = 'perl_maven_pro';
 	my $path    = mymaven->{site} . '/pages/pro.tt';
@@ -1081,6 +1088,19 @@ get qr{^/pro/(.+)} => sub {
 	session url => request->path;
 
 	_show_abstract( { path => $path } );
+};
+
+get qr{^/pro/(.+)} => sub {
+	my ($article) = splat;
+
+	return _show(
+		{
+			path     => mymaven->{dirs}{pro},
+			article  => $article,
+			template => 'page',
+			layout   => 'page'
+		}
+	);
 };
 
 get '/verify2/:code' => sub {
@@ -1236,20 +1256,6 @@ get '/tv' => sub {
 		{ article => 'tv', template => 'archive', layout => 'system' },
 		{
 			pages => setting('tools')->read_meta_array( 'archive', filter => 'interview' )
-		}
-	);
-};
-
-# TODO this should not be here!!
-get qr{^/(pro|perldoc)/(.+)} => sub {
-	my ( $dir, $article ) = splat;
-
-	return _show(
-		{
-			path     => mymaven->{dirs}{$dir},
-			article  => $article,
-			template => 'page',
-			layout   => 'page'
 		}
 	);
 };
