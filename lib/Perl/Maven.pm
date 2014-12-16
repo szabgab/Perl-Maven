@@ -272,7 +272,7 @@ get '/foobar' => sub {
 	}
 
 	_show(
-		{ article => 'foobar', template => 'foobar', layout => 'system' },
+		{ article => 'foobar', template => 'foobar' },
 		{
 			themes     => [ $ams->themes ],
 			name_count => scalar @names,
@@ -299,7 +299,6 @@ get '/contributor/:name' => sub {
 		{
 			article  => 'contributor',
 			template => 'contributor',
-			layout   => 'system'
 		},
 		{
 			author   => authors->{$name},
@@ -402,7 +401,7 @@ get '/search' => sub {
 get '/' => sub {
 	if ( request->host =~ /^meta\./ ) {
 		return _show(
-			{ article => 'index', template => 'meta', layout => 'system' },
+			{ article => 'index', template => 'meta', },
 			{
 				authors => authors(),
 				stats   => setting('tools')->read_meta_meta('stats'),
@@ -413,7 +412,7 @@ get '/' => sub {
 	my $pages = setting('tools')->read_meta_array( 'archive', limit => mymaven->{main_page_entries} );
 	_replace_tags($pages);
 
-	_show( { article => 'index', template => 'index', layout => 'system' }, { pages => $pages } );
+	_show( { article => 'index', template => 'index', }, { pages => $pages } );
 };
 
 sub _replace_tags {
@@ -430,7 +429,7 @@ get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
 	delete $kw->{keys};    # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
 	                       #die Dumper $kw->{__WARN__};
-	_show( { article => 'keywords', template => 'keywords', layout => 'system' }, { kw => $kw } );
+	_show( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
 
 get '/about' => sub {
@@ -450,7 +449,7 @@ get '/about' => sub {
 	}
 
 	_show(
-		{ article => 'about', template => 'about', layout => 'system' },
+		{ article => 'about', template => 'about', },
 		{
 			contributors => \%contributors,
 		}
@@ -466,7 +465,7 @@ get '/archive' => sub {
 	_replace_tags($pages);
 
 	_show(
-		{ article => 'archive', template => 'archive', layout => 'system' },
+		{ article => 'archive', template => 'archive', },
 		{
 			pages    => $pages,
 			abstract => param('abstract'),
@@ -483,7 +482,6 @@ get '/perl-training-consulting' => sub {
 		{
 			article  => 'perl-training-consulting',
 			template => 'consultants',
-			layout   => 'system'
 		},
 		{
 			people => setting('tools')->read_meta_meta('consultants'),

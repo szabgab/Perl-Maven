@@ -210,7 +210,7 @@ sub _show {
 
 	$tt->{$_} = $data->{$_} for keys %$data;
 
-	return template $params->{template}, $tt, { layout => $params->{layout} };
+	return template $params->{template}, $tt;
 }
 
 sub authors {
