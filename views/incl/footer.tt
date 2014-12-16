@@ -29,12 +29,6 @@
       </div>
     </div><!-- end of right column -->
   </div>
-  <style>
-  #footer-menu {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  </style>
 </div>
 
 <script src="/javascripts/jquery-1.11.1.min.js"></script>
