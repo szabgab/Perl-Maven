@@ -11,7 +11,7 @@ Show abstract: <input type="checkbox" id="abstract" name="abstract" <% IF abstra
 </div>
 <% END %>
 
-<% mycontent %>
+<% INCLUDE incl/content.tt %>
 
 <style>
 #archive {

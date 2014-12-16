@@ -1,6 +1,4 @@
-<div role="main" id="main">
-<% mycontent %>
-</div>
+<% INCLUDE incl/content.tt %>
 
 <style>
 

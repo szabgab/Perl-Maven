@@ -1,6 +1,4 @@
-<div role="main" id="main">
-<% mycontent %>
-</div>
+<% INCLUDE incl/content.tt %>
 
 <h2>Contributors</h2>
 <div id="translators">
