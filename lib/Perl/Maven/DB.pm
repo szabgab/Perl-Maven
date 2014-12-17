@@ -81,6 +81,12 @@ sub get_user_by_email {
 	return $hr;
 }
 
+sub get_people {
+	my ( $self, $email ) = @_;
+
+	return [ $self->{db}->get_collection('user')->find({ email => qr/$email/ })->all ];
+}
+
 sub get_user_by_id {
 	my ( $self, $id ) = @_;
 
@@ -90,12 +96,6 @@ sub get_user_by_id {
 	}
 
 	return $hr;
-}
-
-sub get_people {
-	my ( $self, $email ) = @_;
-
-	$self->{db}->get_collection('user')->find({ email => qr/$email/ });
 }
 
 sub verify_registration {
