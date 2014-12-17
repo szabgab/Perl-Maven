@@ -2,8 +2,7 @@
 use strict;
 use warnings;
 
-use FindBin;
-use lib "$FindBin::Bin/../lib";
+use lib 'lib';
 
 use Perl::Maven;
-Perl::Maven->dance;
+Perl::Maven->to_app;
