@@ -1238,7 +1238,6 @@ get '/mail/:article' => sub {
 	$tt->{email} = $email;
 	my $url = request->base;
 
-	#$url =~ s{/+$}{};
 	$tt->{url}          = $url;
 	$tt->{email_footer} = 1;
 
