@@ -6,7 +6,7 @@ use Test::Script;
 
 my @scripts = qw(
 	bin/admin.pl
-	bin/app.pl
+	app.psgi
 	bin/cpan_monitor.pl
 	bin/create_meta.pl
 	bin/remove_sessions.pl
