@@ -20,7 +20,7 @@ We have sent you a code that you can use to set your password.
 <hr />
 
 <h2>Forgot your password or don't have one yet?</h2>
-<form method="POST" action="/send-reset-pw-code" name="send_reset_pw">
+<form method="POST" action="/pm/send-reset-pw-code" name="send_reset_pw">
 Email: <input name="email" />
 <input type="submit" value="Get code to reset password" />
 </form>

@@ -293,49 +293,6 @@ get '/contributor/:name' => sub {
 	);
 };
 
-post '/pm/whitelist' => sub {
-	if ( not logged_in() ) {
-
-		#session url => request->path;
-		return redirect '/login';
-	}
-	my $do  = param('do');
-	my $uid = session('uid');
-	if ($do) {
-		if ( $do eq 'enable' ) {
-			if ( $db->set_whitelist( $uid, 1 ) ) {
-				my $ip   = get_ip();
-				my $mask = '255.255.255.255';
-
-				my $whitelist = $db->get_whitelist($uid);
-				my $found = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
-				if ( not $found ) {
-					$db->add_to_whitelist(
-						{
-							uid  => $uid,
-							ip   => $ip,
-							mask => $mask,
-							note => 'Added automatically when whitelist was enabled'
-						}
-					);
-				}
-				return pm_message('whitelist_enabled');
-			}
-			else {
-				return pm_error('internal_error');
-			}
-		}
-		elsif ( $do eq 'disable' ) {
-			$db->set_whitelist( $uid, 0 );
-			return pm_message('whitelist_disabled');
-		}
-		else {
-			return pm_error('invalid_value_provided');
-		}
-	}
-	return 'parameter missing';
-};
-
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
@@ -513,7 +470,50 @@ get '/tv/atom' => sub {
 	return atom( 'archive', 'interview', ' - Interviews' );
 };
 
-post '/send-reset-pw-code' => sub {
+post '/pm/whitelist' => sub {
+	if ( not logged_in() ) {
+
+		#session url => request->path;
+		return redirect '/login';
+	}
+	my $do  = param('do');
+	my $uid = session('uid');
+	if ($do) {
+		if ( $do eq 'enable' ) {
+			if ( $db->set_whitelist( $uid, 1 ) ) {
+				my $ip   = get_ip();
+				my $mask = '255.255.255.255';
+
+				my $whitelist = $db->get_whitelist($uid);
+				my $found = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
+				if ( not $found ) {
+					$db->add_to_whitelist(
+						{
+							uid  => $uid,
+							ip   => $ip,
+							mask => $mask,
+							note => 'Added automatically when whitelist was enabled'
+						}
+					);
+				}
+				return pm_message('whitelist_enabled');
+			}
+			else {
+				return pm_error('internal_error');
+			}
+		}
+		elsif ( $do eq 'disable' ) {
+			$db->set_whitelist( $uid, 0 );
+			return pm_message('whitelist_disabled');
+		}
+		else {
+			return pm_error('invalid_value_provided');
+		}
+	}
+	return 'parameter missing';
+};
+
+post '/pm/send-reset-pw-code' => sub {
 	my $email = param('email');
 	if ( not $email ) {
 		return pm_error('no_email_provided');
@@ -534,7 +534,7 @@ post '/send-reset-pw-code' => sub {
 
 	my $html = template 'email_to_reset_password',
 		{
-		url  => uri_for('/set-password'),
+		url  => uri_for('/pm/set-password'),
 		id   => $user->{id},
 		code => $code,
 		},
@@ -558,7 +558,7 @@ post '/send-reset-pw-code' => sub {
 	pm_message('reset_password_sent');
 };
 
-get '/set-password/:id/:code' => sub {
+get '/pm/set-password/:id/:code' => sub {
 	my $error = pw_form();
 	return $error if $error;
 	template 'set_password',
@@ -568,7 +568,7 @@ get '/set-password/:id/:code' => sub {
 		};
 };
 
-post '/change-password' => sub {
+post '/pm/change-password' => sub {
 	if ( not logged_in() ) {
 		session url => request->path;
 		return redirect '/login';
@@ -592,7 +592,7 @@ post '/change-password' => sub {
 	pm_message('password_set');
 };
 
-post '/set-password' => sub {
+post '/pm/set-password' => sub {
 	my $error = pw_form();
 	return $error if $error;
 
@@ -613,7 +613,7 @@ post '/set-password' => sub {
 	pm_message('password_set');
 };
 
-post '/update-user' => sub {
+post '/pm/update-user' => sub {
 	if ( not logged_in() ) {
 		session url => request->path;
 		return redirect '/login';

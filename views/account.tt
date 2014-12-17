@@ -31,13 +31,13 @@ I see you have not signed up to the Perl Maven Pro yet. But that's where the scr
 <p>
 
 <h2>User information</h2>
-<form method="POST" action="/update-user" name="user">
+<form method="POST" action="/pm/update-user" name="user">
 Name: <input name="name" value="<% name %>" /><br>
 <input type="submit" value="Update" />
 </form>
 
 <h2>Change Password</h2>
-<form method="POST" action="/change-password" name="change_password">
+<form method="POST" action="/pm/change-password" name="change_password">
 Password: <input name="password" type="password" /><br>
 Retype it: <input name="password2" type="password" /><br>
 <input type="submit" value="Change Password" />
