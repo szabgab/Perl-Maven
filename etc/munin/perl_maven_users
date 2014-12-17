@@ -19,6 +19,9 @@ my $db = Perl::Maven::DB->new("$root/pm.db");
 
 my $stats = $db->stats;
 
+# TODO remove hard-coded perl_maven_cookbook
+my $code = 'perl_maven_cookbook';
+
 if ( not @ARGV ) {
 
 	print "all_the_users.value $stats->{all_users}\n";
@@ -28,6 +31,8 @@ if ( not @ARGV ) {
 	say "has_password.value $stats->{has_password}";
 	say "new_password.value $stats->{new_password}";
 	say "old_password.value $stats->{old_password}";
+	say "$stats->{products}{$code}{code}.value $stats->{products}{$code}{cnt}\n";
+
 	exit;
 }
 
@@ -45,6 +50,7 @@ END_CONFIG
 	say "has_password.label Has password";
 	say "new_password.label New password";
 	say "old_password.label Old password";
+	say "$stats->{products}{$code}{code}.label $stats->{products}{$code}{code}";
 
 	exit;
 }
