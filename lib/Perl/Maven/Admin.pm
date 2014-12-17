@@ -1,7 +1,7 @@
 package Perl::Maven::Admin;
 use Dancer2 appname => 'Perl::Maven';
 
-use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code _error);
+use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code pm_error);
 use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';
@@ -63,11 +63,11 @@ get '/admin/user_info.json' => sub {
 
 sub admin_check {
 	if ( not logged_in() ) {
-		return _error( error => 'not_logged_in' );
+		return pm_error('not_logged_in');
 	}
 
 	if ( not is_admin() ) {
-		return _error( error => 'no_admin_rights' );
+		return pm_error('no_admin_rights');
 	}
 
 	my $db = setting('db');
@@ -103,13 +103,10 @@ sub admin_check {
 		);
 
 		if ($err) {
-			return _error(
-				error  => 'could_not_send_email',
-				params => [ $user->{email} ],
-			);
+			return pm_error( 'could_not_send_email', params => [ $user->{email} ], );
 		}
 
-		return _error( error => 'invalid_ip', params => [$ip] );
+		return pm_error( 'invalid_ip', params => [$ip] );
 	}
 
 	return;

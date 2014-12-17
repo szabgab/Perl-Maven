@@ -67,7 +67,7 @@ my %RESOURCES = (
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template read_tt _show_abstract _show authors send_message);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code pm_error _registration_form _template read_tt _show_abstract _show authors pm_message);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -140,13 +140,12 @@ sub valid_ip {
 	return scalar grep { $ip eq $_->{ip} } values %$whitelist;
 }
 
-sub _error {
-	return _resources( 'error', @_ );
+sub pm_error {
+	return _resources( 'error', 'error', @_ );
 }
 
-sub send_message {
-	my @params = @_;
-	return _resources( 'message', 'code', @params );
+sub pm_message {
+	return _resources( 'message', 'code', @_ );
 }
 
 sub _registration_form {

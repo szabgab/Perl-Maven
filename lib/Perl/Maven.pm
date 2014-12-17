@@ -29,7 +29,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(logged_in get_ip mymaven _generate_code _error _registration_form _template read_tt _show_abstract _show authors send_message);
+	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form _template read_tt _show_abstract _show authors pm_message);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -335,18 +335,18 @@ post '/pm/whitelist' => sub {
 						}
 					);
 				}
-				return send_message('whitelist_enabled');
+				return pm_message('whitelist_enabled');
 			}
 			else {
-				return _error( error => 'internal_error' );
+				return pm_error('internal_error');
 			}
 		}
 		elsif ( $do eq 'disable' ) {
 			$db->set_whitelist( $uid, 0 );
-			return send_message('whitelist_disabled');
+			return pm_message('whitelist_disabled');
 		}
 		else {
-			return _error( error => 'invalid_value_provided' );
+			return pm_error('invalid_value_provided');
 		}
 	}
 	return 'parameter missing';
@@ -532,17 +532,17 @@ get '/tv/atom' => sub {
 post '/send-reset-pw-code' => sub {
 	my $email = param('email');
 	if ( not $email ) {
-		return _error( error => 'no_email_provided' );
+		return pm_error('no_email_provided');
 	}
 	$email = lc $email;
 	my $user = $db->get_user_by_email($email);
 	if ( not $user ) {
-		return _error( error => 'invalid_email' );
+		return pm_error('invalid_email');
 	}
 	if ( not $user->{verify_time} ) {
 
 		# TODO: send e-mail with verification code
-		return _error( error => 'not_verified_yet' );
+		return pm_error('not_verified_yet');
 	}
 
 	my $code = _generate_code();
@@ -568,13 +568,10 @@ post '/send-reset-pw-code' => sub {
 		}
 	);
 	if ($err) {
-		return _error(
-			error  => 'could_not_send_email',
-			params => [$email],
-		);
+		return pm_error( 'could_not_send_email', params => [$email], );
 	}
 
-	send_message('reset_password_sent');
+	pm_message('reset_password_sent');
 };
 
 get '/set-password/:id/:code' => sub {
@@ -596,19 +593,19 @@ post '/change-password' => sub {
 	my $password  = param('password')  || '';
 	my $password2 = param('password2') || '';
 
-	return _error( error => 'no_password' )
+	return pm_error('no_password')
 		if not $password;
 
-	return _error( error => 'passwords_dont_match' )
+	return pm_error('passwords_dont_match')
 		if $password ne $password2;
 
-	return _error( error => 'bad_password' )
+	return pm_error('bad_password')
 		if length($password) < 6;
 
 	my $uid = session('uid');
 	$db->set_password( $uid, passphrase($password)->generate->rfc2307 );
 
-	send_message('password_set');
+	pm_message('password_set');
 };
 
 post '/set-password' => sub {
@@ -619,7 +616,7 @@ post '/set-password' => sub {
 	my $id       = param('id');
 	my $user     = $db->get_user_by_id($id);
 
-	return _error( error => 'bad_password' )
+	return pm_error('bad_password')
 		if not $password
 		or length($password) < 6;
 
@@ -629,7 +626,7 @@ post '/set-password' => sub {
 
 	$db->set_password( $id, passphrase($password)->generate->rfc2307 );
 
-	send_message('password_set');
+	pm_message('password_set');
 };
 
 post '/update-user' => sub {
@@ -643,7 +640,7 @@ post '/update-user' => sub {
 	my $uid = session('uid');
 	$db->update_user( $uid, name => $name );
 
-	send_message('user_updated');
+	pm_message('user_updated');
 };
 
 get '/login' => sub {
@@ -656,7 +653,7 @@ post '/login' => sub {
 	my $email    = param('email');
 	my $password = param('password');
 
-	return _error( error => 'missing_data' )
+	return pm_error('missing_data')
 		if not $password or not $email;
 
 	my $user = $db->get_user_by_email($email);
@@ -665,11 +662,11 @@ post '/login' => sub {
 	}
 
 	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
-		return _error( error => 'invalid_pw' )
+		return pm_error('invalid_pw')
 			if not passphrase($password)->matches( $user->{password} );
 	}
 	else {
-		return _error( error => 'invalid_pw' )
+		return pm_error('invalid_pw')
 			if $user->{password} ne Digest::SHA::sha1_base64($password);
 
 		# password is good, we need to update it
@@ -694,7 +691,7 @@ get '/unsubscribe' => sub {
 	my $uid = session('uid');
 
 	$db->unsubscribe_from( uid => $uid, code => 'perl_maven_cookbook' );
-	send_message('unsubscribed');
+	pm_message('unsubscribed');
 };
 
 get '/subscribe' => sub {
@@ -702,7 +699,7 @@ get '/subscribe' => sub {
 
 	my $uid = session('uid');
 	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
-	send_message('subscribed');
+	pm_message('subscribed');
 };
 
 post '/pm/whitelist-delete' => sub {
@@ -711,7 +708,7 @@ post '/pm/whitelist-delete' => sub {
 	my $uid = session('uid');
 	my $id  = param('id');
 	$db->delete_from_whitelist( $uid, $id );
-	send_message('whitelist_entry_deleted');
+	pm_message('whitelist_entry_deleted');
 };
 
 any '/pm/unsubscribe' => sub {
@@ -721,12 +718,12 @@ any '/pm/unsubscribe' => sub {
 	my $mymaven       = mymaven;
 	my $expected_code = Digest::SHA::sha1_hex("unsubscribe$mymaven->{unsubscribe_salt}$email");
 	if ( $code ne $expected_code ) {
-		return _error( error => 'invalid_unsubscribe_code' );
+		return pm_error('invalid_unsubscribe_code');
 	}
 
 	my $user = $db->get_user_by_email($email);
 	if ( not $user ) {
-		return _error( error => 'could_not_find_registration' );
+		return pm_error('could_not_find_registration');
 	}
 
 	# TODO maybe we will want some stonger checking for confirmation?
@@ -745,7 +742,7 @@ any '/pm/unsubscribe' => sub {
 			}
 		);
 
-		send_message('unsubscribed');
+		pm_message('unsubscribed');
 	}
 
 	return template 'confirm_unsubscribe',
@@ -896,10 +893,7 @@ sub register {
 		},
 	);
 	if ($err) {
-		return _error(
-			error  => 'could_not_send_email',
-			params => [ $data{email} ],
-		);
+		return pm_error( 'could_not_send_email', params => [ $data{email} ], );
 	}
 
 	my $html_from = $mymaven->{from};
@@ -930,17 +924,17 @@ post '/change-email' => sub {
 	}
 	my $email = param('email') || '';
 	if ( not $email ) {
-		return _error( error => 'no_email_provided' );
+		return pm_error('no_email_provided');
 	}
 	if ( not Email::Valid->address($email) ) {
-		return _error( error => 'broken_email' );
+		return pm_error('broken_email');
 	}
 
 	# check for uniqueness after lc
 	$email = lc $email;
 	my $other_user = $db->get_user_by_email($email);
 	if ($other_user) {
-		return _error( error => 'email_exists' );
+		return pm_error('email_exists');
 	}
 
 	my $uid = session('uid');
@@ -967,13 +961,10 @@ post '/change-email' => sub {
 		},
 	);
 	if ($err) {
-		return _error(
-			error  => 'could_not_send_email',
-			params => [$email],
-		);
+		return pm_error( 'could_not_send_email', params => [$email], );
 	}
 
-	send_message('verification_email_sent');
+	pm_message('verification_email_sent');
 };
 
 get '/logout' => sub {
@@ -1099,12 +1090,12 @@ get qr{^/pro/(.+)} => sub {
 get '/verify2/:code' => sub {
 	my $code = param('code');
 
-	return _error( error => 'missing_verification_code' ) if not $code;
+	return pm_error('missing_verification_code') if not $code;
 
 	# TODO Shall we expect here the same user to be logged in already? Can we expect that?
 
 	my $verification = $db->get_verification($code);
-	return _error( error => 'invalid_verification_code' )
+	return pm_error('invalid_verification_code')
 		if not $verification;
 
 	my $details = eval { from_json $verification->{details} };
@@ -1116,7 +1107,7 @@ get '/verify2/:code' => sub {
 
 		$db->delete_verification_code($code);
 
-		return send_message('email_updated_successfully');
+		return pm_message('email_updated_successfully');
 	}
 
 	if ( $verification->{action} eq 'add_to_whitelist' ) {
@@ -1138,10 +1129,10 @@ get '/verify2/:code' => sub {
 			);
 		}
 		$db->delete_verification_code($code);
-		return send_message( 'whitelist_updated', ip => $ip );
+		return pm_message( 'whitelist_updated', ip => $ip );
 	}
 
-	return _error( error => 'internal_verification_error' );
+	return pm_error('internal_verification_error');
 };
 
 get '/verify/:id/:code' => sub {
@@ -1151,14 +1142,14 @@ get '/verify/:id/:code' => sub {
 	my $user = $db->get_user_by_id($id);
 
 	if ( not $user ) {
-		return _error( error => 'invalid_uid' );
+		return pm_error('invalid_uid');
 	}
 
 	if (   not $user->{verify_code}
 		or not $code
 		or $user->{verify_code} ne $code )
 	{
-		return _error( error => 'invalid_code' );
+		return pm_error('invalid_code');
 	}
 
 	if ( $user->{verify_time} ) {
@@ -1360,17 +1351,17 @@ sub pw_form {
 
 	# if there is such userid with such code and it has not expired yet
 	# then show a form
-	return _error( error => 'missing_data' )
+	return pm_error('missing_data')
 		if not $id or not $code;
 
 	my $user = $db->get_user_by_id($id);
-	return _error( error => 'invalid_uid' )
+	return pm_error('invalid_uid')
 		if not $user;
-	return _error( error => 'invalid_code' )
+	return pm_error('invalid_code')
 		if not $user->{password_reset_code}
 		or $user->{password_reset_code} ne $code
 		or not $user->{password_reset_timeout};
-	return _error( error => 'old_password_code' )
+	return pm_error('old_password_code')
 		if $user->{password_reset_timeout} < time;
 
 	return;
