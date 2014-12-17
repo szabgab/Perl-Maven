@@ -1082,7 +1082,6 @@ get qr{^/pro/(.+)} => sub {
 			path     => mymaven->{dirs}{pro},
 			article  => $article,
 			template => 'page',
-			layout   => 'system'
 		}
 	);
 };
@@ -1237,7 +1236,7 @@ get '/mail/:article' => sub {
 
 get '/tv' => sub {
 	_show(
-		{ article => 'tv', template => 'archive', layout => 'system' },
+		{ article => 'tv', template => 'archive' },
 		{
 			pages => setting('tools')->read_meta_array( 'archive', filter => 'interview' )
 		}
@@ -1341,7 +1340,7 @@ get '/jobs-employer' => sub {
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
-	return _show( { article => $article, template => 'page', layout => 'system' } );
+	return _show( { article => $article, template => 'page' } );
 };
 
 ##########################################################################################
