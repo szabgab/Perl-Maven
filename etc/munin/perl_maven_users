@@ -24,10 +24,10 @@ my $code = 'perl_maven_cookbook';
 
 if ( not @ARGV ) {
 
-	print "all_the_users.value $stats->{all_users}\n";
-	print 'verified_users.value ' . ( $stats->{all_users} - $stats->{not_verified} ) . "\n";
-	print "not_verified_users.value $stats->{not_verified}\n";
-	print "verified_but_no_password.value $stats->{no_password}\n";
+	say "all_the_users.value $stats->{all_users}";
+	say 'verified_users.value ' . ( $stats->{all_users} - $stats->{not_verified} );
+	say "not_verified_users.value $stats->{not_verified}";
+	say "verified_but_no_password.value $stats->{no_password}";
 	say "has_password.value $stats->{has_password}";
 	say "new_password.value $stats->{new_password}";
 	say "old_password.value $stats->{old_password}";
@@ -37,19 +37,19 @@ if ( not @ARGV ) {
 }
 
 if ( $ARGV[0] eq 'config' ) {
-	print <<"END_CONFIG";
+	print <<'END_CONFIG';
 graph_title Number of users
 graph_vlabel sec
 graph_category PerlMaven
 END_CONFIG
 
-	print "all_the_users.label All the users\n";
-	print "verified_users.label Verified\n";
-	print "not_verified_users.label NOT Verified\n";
-	print "verified_but_no_password.label Verified but NO password\n";
-	say "has_password.label Has password";
-	say "new_password.label New password";
-	say "old_password.label Old password";
+	say 'all_the_users.label All the users';
+	say 'verified_users.label Verified';
+	say 'not_verified_users.label NOT Verified';
+	say 'verified_but_no_password.label Verified but NO password';
+	say 'has_password.label Has password';
+	say 'new_password.label New password';
+	say 'old_password.label Old password';
 	say "$stats->{products}{$code}{code}.label $stats->{products}{$code}{code}";
 
 	exit;
