@@ -35,12 +35,17 @@ my %RESOURCES = (
 	not_logged_in   => 'This area is only accessible to logged in users',
 	invalid_ip      => 'You are trying to access a protected page from %s which is not in the white-list.
       We have sent an e-mail to your default e-mail address with a code that can be used to add this IP address to the white-list.',
+	not_verified_yet => 'This e-mail address has not been verified yet.
+    We have sent you a verification code.
+    Please check your e-mail and follow the instructions there.',
+
+	whitelist_enabled => 'Whitelist enabled. See your <a href="/account">account</a> and add IP addresses.',
 
 );
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template read_tt _show_abstract _show authors);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _error _registration_form _template read_tt _show_abstract _show authors send_message);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -117,6 +122,11 @@ sub _error {
 	return _resources( 'error', @_ );
 }
 
+sub send_message {
+	my @params = @_;
+	return _resources( 'message', 'code', @params );
+}
+
 sub _registration_form {
 	return _resources( 'registration_form', @_ );
 }
@@ -133,6 +143,17 @@ sub _resources {
 			$error = $RESOURCES{$error};
 		}
 		$args{error} = $error;
+	}
+
+	my $code = $args{code};
+	if ( $code and $RESOURCES{$code} ) {
+		if ( ref $args{params} ) {
+			$code = sprintf $RESOURCES{code}, @{ $args{params} };
+		}
+		else {
+			$code = $RESOURCES{$code};
+		}
+		$args{message} = $code;
 	}
 
 	$args{show_right} = 0;

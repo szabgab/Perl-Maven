@@ -29,7 +29,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(logged_in get_ip mymaven _generate_code _error _registration_form _template read_tt _show_abstract _show authors);
+	qw(logged_in get_ip mymaven _generate_code _error _registration_form _template read_tt _show_abstract _show authors send_message);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -335,7 +335,7 @@ post '/pm/whitelist' => sub {
 						}
 					);
 				}
-				return template 'error', { whitelist_enabled => 1 };
+				return send_message('whitelist_enabled');
 			}
 			else {
 				return _error( error => 'internal_error' );
@@ -542,7 +542,7 @@ post '/send-reset-pw-code' => sub {
 	if ( not $user->{verify_time} ) {
 
 		# TODO: send e-mail with verification code
-		return template 'error', { not_verified_yet => 1 };
+		return _error( error => 'not_verified_yet' );
 	}
 
 	my $code = _generate_code();
