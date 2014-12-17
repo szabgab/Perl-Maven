@@ -8,7 +8,7 @@ our $VERSION = '0.11';
 
 get '/admin' => sub {
 	my $res = admin_check();
-	return if $res;
+	return $res if $res;
 
 	my $db = setting('db');
 	return template 'admin', { stats => $db->stats };
@@ -16,7 +16,7 @@ get '/admin' => sub {
 
 get '/admin/sessions' => sub {
 	my $res = admin_check();
-	return if $res;
+	return $res if $res;
 
 	#my $start = param('start');
 	#my $end   = param('end');
@@ -38,7 +38,7 @@ get '/admin/sessions' => sub {
 	return template 'admin_sessions', { count => $count, hits => \@hits };
 };
 
-get '/admin/user_info' => sub {
+get '/admin/user_info.json' => sub {
 	if ( not logged_in() ) {
 		return to_json { error => 'not_logged_in' };
 	}

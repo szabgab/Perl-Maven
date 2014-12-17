@@ -765,7 +765,7 @@ sub user_info {
 	if ($uid) {
 		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
 		my $user = $db->get_user_by_id($uid);
-		$data{admin} = $user->{admin};
+		$data{admin} = $user->{admin} ? 1 : 0;
 	}
 
 	# adding popups:

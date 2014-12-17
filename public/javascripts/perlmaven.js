@@ -187,7 +187,7 @@ $(document).ready(function() {
 			return false;
 		}
     	$.ajax({
-        	url: '/admin/user_info',
+        	url: '/admin/user_info.json',
         	data: { "email" : email },
         	dataType: "json",
         	success: admin_show_user_details,
