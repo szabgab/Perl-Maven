@@ -702,7 +702,7 @@ get '/subscribe' => sub {
 
 	my $uid = session('uid');
 	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
-	template 'error', { subscribed => 1 };
+	send_message('subscribed');
 };
 
 post '/pm/whitelist-delete' => sub {
@@ -745,7 +745,7 @@ any '/pm/unsubscribe' => sub {
 			}
 		);
 
-		return template 'error', { unsubscribed => 1 };
+		send_message('unsubscribed');
 	}
 
 	return template 'confirm_unsubscribe',
@@ -973,12 +973,7 @@ post '/change-email' => sub {
 		);
 	}
 
-	return template 'error', { verification_email_sent => 1 }
-
-		#my $html_from = $mymaven->{from};
-		#$html_from =~ s/</&lt;/g;
-		#return template 'response', { from => $html_from };
-
+	send_message('verification_email_sent');
 };
 
 get '/logout' => sub {
@@ -1121,7 +1116,7 @@ get '/verify2/:code' => sub {
 
 		$db->delete_verification_code($code);
 
-		return template 'error', { email_updated_successfully => 1 };
+		return send_message('email_updated_successfully');
 	}
 
 	if ( $verification->{action} eq 'add_to_whitelist' ) {

@@ -7,38 +7,8 @@
     <% IF error %>
        <% error %>
     <% END %>
-    
 </div>
 
-
 <div id="message">
-    <% IF subscribed %>
-    Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/account">account</a>.
-    <% END %>
-    
-    <% IF no_product_specified %>
-    No product was specified.
-    <% END %>
-    
-    <% IF invalid_product_specified %>
-    Invalid product was specified.
-    <% END %>
-    
-    <% IF please_log_in %>
-    Before making a purchase, please <a href="/register">create an account</a> and  <a href="/login">login</a>,
-    so we can associate your purchase with your account.
-    <% END %>
-    
-    <% IF canceled %>
-    We are sorry that you canceled your purchase.
-    <% END %>
-    
-    <% IF verification_email_sent %>
-    We have sent you an e-mail with a verification code. Please check your e-mail account and click on the link inthe message to verify your new e-mail address.
-    <% END %>
-
-    <% IF email_updated_successfully %>
-     Email updated successfully.
-    <% END %>
 </div>
 

@@ -50,6 +50,18 @@ my %RESOURCES = (
 	password_set            => 'The password was set successfully. <a href="/account">account</a>',
 	user_updated            => 'Updated. <a href="/account">account</a>',
 	unsubscribed            => 'Unsubscribed from the Perl Maven newsletter.',
+	subscribed =>
+		'Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/account">account</a>.',
+	verification_email_sent =>
+		'We have sent you an e-mail with a verification code. Please check your e-mail account and click on the link inthe message to verify your new e-mail address.',
+	email_updated_successfully => 'Email updated successfully.',
+
+	# PayPal
+	no_product_specified      => 'No product was specified.',
+	invalid_product_specified => 'Invalid product was specified.',
+	please_log_in =>
+		'Before making a purchase, please <a href="/register">create an account</a> and  <a href="/login">login</a>, so we can associate your purchase with your account.',
+	canceled => 'We are sorry that you canceled your purchase.',
 
 );
 

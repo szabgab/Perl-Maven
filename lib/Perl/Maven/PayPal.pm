@@ -2,7 +2,7 @@ package Perl::Maven::PayPal;
 use Dancer2 appname => 'Perl::Maven';
 use Perl::Maven::DB;
 use Perl::Maven::Config;
-use Perl::Maven::WebTools qw(logged_in);
+use Perl::Maven::WebTools qw(logged_in _error send_message);
 
 use POSIX;
 use Data::Dumper qw(Dumper);
@@ -20,17 +20,17 @@ sub mymaven {
 
 get '/buy' => sub {
 	if ( not logged_in() ) {
-		return template 'error', { please_log_in => 1 };
 		session url => request->path;
+		return send_message('please_log_in');
 	}
 	my $products = setting('products');
 	my $what     = param('product');
 	my $type     = param('type') || 'standard';
 	if ( not $what ) {
-		return template 'error', { 'no_product_specified' => 1 };
+		return _error( error => 'no_product_specified' );
 	}
 	if ( not $products->{$what} ) {
-		return template 'error', { 'invalid_product_specified' => 1 };
+		return _error( error => 'invalid_product_specified' );
 	}
 	if ( $type eq 'annual' ) {    # TODO remove hardcoding
 		$products->{$what}{price} = 90;
@@ -39,7 +39,7 @@ get '/buy' => sub {
 };
 
 get '/canceled' => sub {
-	return template 'error', { canceled => 1 };
+	return send_message('canceled');
 	return 'canceled';
 };
 
