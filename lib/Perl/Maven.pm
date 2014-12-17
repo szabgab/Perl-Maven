@@ -548,7 +548,7 @@ post '/send-reset-pw-code' => sub {
 	my $code = _generate_code();
 	$db->set_password_code( $user->{email}, $code );
 
-	my $html = template 'reset_password_mail',
+	my $html = template 'email_to_reset_password',
 		{
 		url  => uri_for('/set-password'),
 		id   => $user->{id},
@@ -881,7 +881,7 @@ sub register {
 	}
 
 	my $err = send_verification_mail(
-		'first_verification_mail',
+		'email_first_verification_code',
 		$data{email},
 		"Please finish the $mymaven->{title} registration",
 		{
@@ -953,7 +953,7 @@ post '/change-email' => sub {
 
 	my $mymaven = mymaven;
 	my $err     = send_verification_mail(
-		'verification_mail',
+		'email_verification_code',
 		$email,
 		"Please verify your new e-mail address for $mymaven->{title}",
 		{
@@ -1187,7 +1187,7 @@ get '/verify/:id/:code' => sub {
 		},
 		{
 			html => template(
-				'post_verification_mail',
+				'email_after_verification',
 				{
 					url => $url,
 				},
@@ -1241,7 +1241,7 @@ get '/mail/:article' => sub {
 	$tt->{url}          = $url;
 	$tt->{email_footer} = 1;
 
-	return template 'mail', $tt, { layout => 'email' };
+	return template 'email_newsletter', $tt, { layout => 'email' };
 };
 
 get '/tv' => sub {
