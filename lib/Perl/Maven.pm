@@ -32,6 +32,10 @@ use Perl::Maven::WebTools
 	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_message);
 use Perl::Maven::Sendmail qw(send_mail);
 
+prefix '/foobar';
+require Perl::Maven::MetaSyntactic;
+prefix '/';
+
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
@@ -261,26 +265,6 @@ END_TXT
 
 	content_type 'text/plain';
 	return $txt;
-};
-
-get '/foobar' => sub {
-	require Acme::MetaSyntactic;
-	my $ams = Acme::MetaSyntactic->new;
-
-	my $theme = param('theme');
-	my @names;
-	if ( $theme and $ams->has_theme($theme) ) {
-		@names = sort $ams->name( $theme, 0 );
-	}
-
-	pm_show_page(
-		{ article => 'foobar', template => 'foobar' },
-		{
-			themes     => [ $ams->themes ],
-			name_count => scalar @names,
-			names      => \@names,
-		}
-	);
 };
 
 get '/contributor/:name' => sub {
