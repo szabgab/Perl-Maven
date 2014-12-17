@@ -50,7 +50,7 @@
               <% END %>
 
               <% IF e.searchbox %>
-                <li><input id="typeahead" type="text" data-provide="typeahead" data-items="4" ></li>
+                <li><input id="search_box" type="text" data-provide="typeahead" data-items="4" ></li>
               <% END %>
 
               <% IF e.atom %>
