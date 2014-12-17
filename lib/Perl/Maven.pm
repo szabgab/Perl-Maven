@@ -343,7 +343,7 @@ post '/pm/whitelist' => sub {
 		}
 		elsif ( $do eq 'disable' ) {
 			$db->set_whitelist( $uid, 0 );
-			return template 'error', { whitelist_disabled => 1 };
+			return send_message('whitelist_disabled');
 		}
 		else {
 			return _error( error => 'invalid_value_provided' );
@@ -574,7 +574,7 @@ post '/send-reset-pw-code' => sub {
 		);
 	}
 
-	template 'error', { reset_password_sent => 1, };
+	send_message('reset_password_sent');
 };
 
 get '/set-password/:id/:code' => sub {
@@ -596,19 +596,19 @@ post '/change-password' => sub {
 	my $password  = param('password')  || '';
 	my $password2 = param('password2') || '';
 
-	return template 'error', { no_password => 1, }
+	return _error( error => 'no_password' )
 		if not $password;
 
-	return template 'error', { passwords_dont_match => 1, }
+	return _error( error => 'passwords_dont_match' )
 		if $password ne $password2;
 
-	return template 'error', { bad_password => 1, }
+	return _error( error => 'bad_password' )
 		if length($password) < 6;
 
 	my $uid = session('uid');
 	$db->set_password( $uid, passphrase($password)->generate->rfc2307 );
 
-	template 'error', { password_set => 1 };
+	send_message('password_set');
 };
 
 post '/set-password' => sub {
@@ -619,7 +619,7 @@ post '/set-password' => sub {
 	my $id       = param('id');
 	my $user     = $db->get_user_by_id($id);
 
-	return template 'error', { bad_password => 1, }
+	return _error( error => 'bad_password' )
 		if not $password
 		or length($password) < 6;
 
@@ -629,7 +629,7 @@ post '/set-password' => sub {
 
 	$db->set_password( $id, passphrase($password)->generate->rfc2307 );
 
-	template 'error', { password_set => 1 };
+	send_message('password_set');
 };
 
 post '/update-user' => sub {
@@ -643,7 +643,7 @@ post '/update-user' => sub {
 	my $uid = session('uid');
 	$db->update_user( $uid, name => $name );
 
-	template 'error', { user_updated => 1 };
+	send_message('user_updated');
 };
 
 get '/login' => sub {
@@ -694,7 +694,7 @@ get '/unsubscribe' => sub {
 	my $uid = session('uid');
 
 	$db->unsubscribe_from( uid => $uid, code => 'perl_maven_cookbook' );
-	template 'error', { unsubscribed => 1 };
+	send_message('unsubscribed');
 };
 
 get '/subscribe' => sub {
@@ -711,7 +711,7 @@ post '/pm/whitelist-delete' => sub {
 	my $uid = session('uid');
 	my $id  = param('id');
 	$db->delete_from_whitelist( $uid, $id );
-	template 'error', { whitelist_entry_deleted => 1 };
+	send_message('whitelist_entry_deleted');
 };
 
 any '/pm/unsubscribe' => sub {
@@ -1143,7 +1143,7 @@ get '/verify2/:code' => sub {
 			);
 		}
 		$db->delete_verification_code($code);
-		return template 'error', { whitelist_updated => 1, ip => $ip };
+		return send_message( 'whitelist_updated', ip => $ip );
 	}
 
 	return _error( error => 'internal_verification_error' );

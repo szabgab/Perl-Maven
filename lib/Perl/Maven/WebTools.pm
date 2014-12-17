@@ -28,6 +28,9 @@ my %RESOURCES = (
 	invalid_unsubscribe_code    => 'Invalid code',
 	could_not_find_registration => 'Could not find registration.',
 	invalid_code                => 'Invalid or missing code.',
+	no_password                 => 'No password was given.',
+	passwords_dont_match        => q{Passwords don't match.},
+	bad_password                => 'No or bad password was given.',
 	old_password_code =>
 		'The code you you have received to set your password has timed out. Please ask for a new code.',
 	invalid_email   => 'Could not find this e-mail address in our database.',
@@ -39,7 +42,14 @@ my %RESOURCES = (
     We have sent you a verification code.
     Please check your e-mail and follow the instructions there.',
 
-	whitelist_enabled => 'Whitelist enabled. See your <a href="/account">account</a> and add IP addresses.',
+	whitelist_enabled       => 'Whitelist enabled. See your <a href="/account">account</a> and add IP addresses.',
+	whitelist_disabled      => 'Whitelist disabled. See your <a href="/account">account</a>.',
+	whitelist_entry_deleted => 'Whitelist entry was deleted. See your <a href="/account">account</a>.',
+	whitelist_updated       => 'Whitelist entry for %s was added. See your <a href="/account">account</a>.',
+	reset_password_sent     => 'E-mail sent with code to reset password.',
+	password_set            => 'The password was set successfully. <a href="/account">account</a>',
+	user_updated            => 'Updated. <a href="/account">account</a>',
+	unsubscribed            => 'Unsubscribed from the Perl Maven newsletter.',
 
 );
 

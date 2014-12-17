@@ -12,35 +12,6 @@
 
 
 <div id="message">
-    <% IF reset_password_sent %>
-    E-mail sent with code to reset password.
-    <% END %>
-    
-    <% IF no_password %>
-    No password was given.
-    <% END %>
-    
-    <% IF passwords_dont_match %>
-    Passwords don't match.
-    <% END %>
-    
-    
-    <% IF bad_password %>
-    No or bad password was given.
-    <% END %>
-    
-    <% IF user_updated %>
-    Updated. <a href="/account">account</a>
-    <% END %>
-    
-    <% IF password_set %>
-    The password was set successfully. <a href="/account">account</a>
-    <% END %>
-    
-    <% IF unsubscribed %>
-    Unsubscribed from the Perl Maven newsletter.
-    <% END %>
-    
     <% IF subscribed %>
     Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/account">account</a>.
     <% END %>
@@ -68,19 +39,6 @@
 
     <% IF email_updated_successfully %>
      Email updated successfully.
-    <% END %>
-
-
-    <% IF whitelist_disabled %>
-     Whitelist disabled. See your <a href="/account">account</a>.
-    <% END %>
-
-    <% IF whitelist_entry_deleted  %>
-     Whitelist entry was deleted. See your <a href="/account">account</a>.
-    <% END %>
-
-    <% IF whitelist_updated %>
-     Whitelist entry for <% ip %> was added. See your <a href="/account">account</a>.
     <% END %>
 </div>
 
