@@ -4,7 +4,7 @@ use Dancer2;
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
 our $VERSION = '0.11';
-my $PM_VERSION         = 4;    # Version number to force JavaScript and CSS files reload
+my $PM_VERSION         = 5;    # Version number to force JavaScript and CSS files reload
 my $CODE_EXPLAIN_LIMIT = 20;
 
 use Business::PayPal;
