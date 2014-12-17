@@ -19,6 +19,7 @@ Admin page. For authorized users only.
 <tr><td>Verified but NO password</td><td><% stats.no_password %>
 </table>
 
+<a href="/admin/sessions">Show recent sessions</a>
 
 <hr>
 <h2>Show user details</h2>

@@ -61,6 +61,26 @@ get '/admin' => sub {
 	return template 'admin', { stats => $db->stats };
 };
 
+get '/admin/sessions' => sub {
+	#my $start = param('start');
+	#my $end   = param('end');
+	#my $end = DateTime->now;
+
+	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database   = $client->get_database('PerlMaven');
+	my $collection = $database->get_collection('logging');
+	my $end = time;
+	my $start = - 60 * 60 * 24;
+	my $count = $collection->find( { time => { '$gt', $start, '$lt', $end }, } )->count;
+	my $cursor = $collection->find( { time => { '$gt', $start } } )->limit(10);
+	my @hits;
+	while (my $c = $cursor->next) {
+		push @hits, $c;
+	}
+
+	return template 'admin_sessions', { count => $count, hits => \@hits };
+};
+
 get '/admin/user_info' => sub {
 	if ( not logged_in() ) {
 		return to_json { error => 'not_logged_in' };

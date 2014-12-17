@@ -1,0 +1,31 @@
+Number of entries: <% count %>
+
+<div id="admin-hits">
+<table>
+  <tr>
+   <th>Time</th>
+   <th>Referrer</th>
+   <th>User Agent</th>
+   <th>IP</th>
+   <th>host</th>
+   <th>SID</th>
+   <th>Page</th>
+   <th>Elapsed time</th>
+   <th>Status</th>
+  </tr>
+<% FOR h IN hits %>
+  <tr>
+    <td><% h.time %></td>
+    <td><% h.referrer %></td>
+    <td><% h.user_agent %></td>
+    <td><% h.ip %></td>
+    <td><% h.host %></td>
+    <td><% h.sid %></td>
+    <td><% h.page %></td>
+    <td><% h.elapsed_time %></td>
+    <td><% h.status %></td>
+  </tr>
+<% END %>
+</table>
+</div>
+
