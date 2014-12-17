@@ -22,17 +22,14 @@ get '/admin/sessions' => sub {
 	#my $end   = param('end');
 	#my $end = DateTime->now;
 
-
 	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 	my $database   = $client->get_database('PerlMaven');
 	my $collection = $database->get_collection('logging');
 	my $end        = time;
 	my $start      = $end - 60 * 60 * 24;
-	my %selector = (
-		time => { '$gt', $start, '$lt', $end },
-	);
+	my %selector   = ( time => { '$gt', $start, '$lt', $end }, );
 	my $count      = $collection->find( \%selector )->count;
-	my $cursor     = $collection->find( \%selector )->sort({ time => 1 })->limit(10);
+	my $cursor     = $collection->find( \%selector )->sort( { time => 1 } )->limit(10);
 	my @hits;
 
 	while ( my $c = $cursor->next ) {
