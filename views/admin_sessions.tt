@@ -1,3 +1,5 @@
+<a href="/admin" class="btn btn-danger">Admin</a>
+
 Number of entries: <% count %>
 
 <div id="admin-hits">

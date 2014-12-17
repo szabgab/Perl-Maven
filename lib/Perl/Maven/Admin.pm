@@ -7,6 +7,64 @@ use Perl::Maven::Sendmail qw(send_mail);
 our $VERSION = '0.11';
 
 get '/admin' => sub {
+	my $res = admin_check();
+	return if $res;
+
+	my $db = setting('db');
+	return template 'admin', { stats => $db->stats };
+};
+
+get '/admin/sessions' => sub {
+	my $res = admin_check();
+	return if $res;
+
+	#my $start = param('start');
+	#my $end   = param('end');
+	#my $end = DateTime->now;
+
+	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database   = $client->get_database('PerlMaven');
+	my $collection = $database->get_collection('logging');
+	my $end        = time;
+	my $start      = -60 * 60 * 24;
+	my $count      = $collection->find( { time => { '$gt', $start, '$lt', $end }, } )->count;
+	my $cursor     = $collection->find( { time => { '$gt', $start } } )->limit(10);
+	my @hits;
+
+	while ( my $c = $cursor->next ) {
+		push @hits, $c;
+	}
+
+	return template 'admin_sessions', { count => $count, hits => \@hits };
+};
+
+get '/admin/user_info' => sub {
+	if ( not logged_in() ) {
+		return to_json { error => 'not_logged_in' };
+	}
+
+	if ( not is_admin() ) {
+		return to_json { error => 'no_admin_rights' };
+	}
+	if ( not param('email') ) {
+		return to_json { error => 'no_email_provided' };
+	}
+
+	my $db     = setting('db');
+	my $people = $db->get_people( param('email') );
+	if ( @$people > 20 ) {
+		return to_json { error => 'too_many_hits' };
+	}
+
+	foreach my $p (@$people) {
+		$p->[2] //= '';
+		my @subs = $db->get_subscriptions( $p->[1] );
+		$p->[3] = \@subs;
+	}
+	return to_json { people => $people };
+};
+
+sub admin_check {
 	if ( not logged_in() ) {
 		session url => request->path;
 		return redirect '/login';
@@ -58,55 +116,8 @@ get '/admin' => sub {
 		return template 'error', { invalid_ip => 1, ip => $ip };
 	}
 
-	return template 'admin', { stats => $db->stats };
-};
-
-get '/admin/sessions' => sub {
-	#my $start = param('start');
-	#my $end   = param('end');
-	#my $end = DateTime->now;
-
-	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $database   = $client->get_database('PerlMaven');
-	my $collection = $database->get_collection('logging');
-	my $end = time;
-	my $start = - 60 * 60 * 24;
-	my $count = $collection->find( { time => { '$gt', $start, '$lt', $end }, } )->count;
-	my $cursor = $collection->find( { time => { '$gt', $start } } )->limit(10);
-	my @hits;
-	while (my $c = $cursor->next) {
-		push @hits, $c;
-	}
-
-	return template 'admin_sessions', { count => $count, hits => \@hits };
-};
-
-get '/admin/user_info' => sub {
-	if ( not logged_in() ) {
-		return to_json { error => 'not_logged_in' };
-	}
-
-	if ( not is_admin() ) {
-		return to_json { error => 'no_admin_rights' };
-	}
-	if ( not param('email') ) {
-		return to_json { error => 'no_email_provided' };
-	}
-
-	my $db     = setting('db');
-	my $people = $db->get_people( param('email') );
-	if ( @$people > 20 ) {
-		return to_json { error => 'too_many_hits' };
-	}
-
-	foreach my $p (@$people) {
-		$p->[2] //= '';
-		my @subs = $db->get_subscriptions( $p->[1] );
-		$p->[3] = \@subs;
-	}
-	return to_json { people => $people };
-
-};
+	return;
+}
 
 true;
 
