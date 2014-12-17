@@ -318,3 +318,7 @@ video {
   text-align: center;
 }
 
+#translations td {
+   padding-right: 20px;
+}
+
