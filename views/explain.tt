@@ -3,41 +3,34 @@
 <b>Using Code::Explain Version <% code_explain_version %></b><br>
 (Current restriction <% limit %> characters)<br>
 
-<style>
-#explain_form textarea {
-   width: 600px;
-}
-</style>
 
-
-<div id="explain_form">
+<div id="code-explain-form">
 <form method="GET">
 <textarea name="code" rows="5" cols="60" id="code"><% code %></textarea><br>
 <input type="button" value="Explain" id="explain">
 </form>
 </div>
 
-<div id="error" style="display: none;">
-  The current length limitation is <div id="limit"></div>. This code is <div id="length"></div> characters long.
+<div id="code-explain">
+  <div id="error" ">
+    The current length limitation is <div id="limit"></div>. This code is <div id="length"></div> characters long.
+  </div>
+  
+  <div id="result">
+     <b>Code:</b>
+     <div id="code_echo"></div>
+     <hr />
+     <b>Explanation:</b><br />
+     <div id="explanation"></div>
+  
+     <hr />
+     <b>PPI Dump:</b><br />
+     <div id="ppi_dump"></div>
+  
+  
+     <hr />
+     <b>PPI Explain:</b><br />
+     <div id="ppi_explain"></div>
+  </div>
 </div>
-
-<div id="result" style="display: none;">
-   <b>Code:</b>
-   <div id="code_echo"></div>
-   <hr />
-   <b>Explanation:</b><br />
-   <div id="explanation"></div>
-
-   <hr />
-   <b>PPI Dump:</b><br />
-   <div id="ppi_dump"></div>
-
-
-   <hr />
-   <b>PPI Explain:</b><br />
-   <div id="ppi_explain"></div>
-</div>
-
-</script>
-
 

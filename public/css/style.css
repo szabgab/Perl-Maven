@@ -322,3 +322,16 @@ video {
    padding-right: 20px;
 }
 
+
+#code-explain-form textarea {
+  width: 600px;
+}
+
+#code-explain #error {
+  display: none;
+}
+
+#code-explain #result {
+  display: none;
+}
+
