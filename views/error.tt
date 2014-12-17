@@ -20,14 +20,6 @@
     Could not find this e-mail address in our database.
     <% END %>
     
-    <% IF broken_email %>
-    This does not look like a valid e-mail address.
-    <% END %>
-    
-    <% IF email_exists %>
-    This e-mail already exists in our database.
-    <% END %>
-    
     <% IF not_verified_yet %>
     This e-mail address has not been verified yet.
     We have sent you a verification code.
@@ -36,18 +28,6 @@
     
     <% IF missing_data %>
     Some data is missing.
-    <% END %>
-
-    <% IF missing_verification_code %>
-     Missing verification code.
-    <% END %>
-
-    <% IF invalid_verification_code %>
-      Invalid or expired verification code.
-    <% END %>
-
-    <% IF internal_verification_error %>
-       Internal verification error
     <% END %>
 
 

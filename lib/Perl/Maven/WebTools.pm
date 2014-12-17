@@ -10,13 +10,18 @@ my %authors;
 my %RESOURCES = (
 	password_short =>
 		'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
-	missing_password       => 'Missing password',
-	invalid_mail           => 'Invalid e-mail.',
-	duplicate_mail         => 'This address is already registered.',
-	could_not_send_email   => 'Internal error. Could not send e-mail to <b>%s</b>.',
-	internal_error         => 'Internal error',
-	invalid_value_provided => 'Invalid parameter',
-	no_email_provided      => 'No e-mail was provided.',
+	missing_password            => 'Missing password',
+	invalid_mail                => 'Invalid e-mail.',
+	duplicate_mail              => 'This address is already registered.',
+	could_not_send_email        => 'Internal error. Could not send e-mail to <b>%s</b>.',
+	internal_error              => 'Internal error',
+	invalid_value_provided      => 'Invalid parameter',
+	no_email_provided           => 'No e-mail was provided.',
+	broken_email                => 'This does not look like a valid e-mail address.',
+	email_exists                => 'This e-mail already exists in our database.',
+	missing_verification_code   => 'Missing verification code.',
+	invalid_verification_code   => 'Invalid or expired verification code.',
+	internal_verification_error => 'Internal verification error',
 );
 
 use Exporter qw(import);

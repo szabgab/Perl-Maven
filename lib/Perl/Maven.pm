@@ -933,14 +933,14 @@ post '/change-email' => sub {
 		return _error( error => 'no_email_provided' );
 	}
 	if ( not Email::Valid->address($email) ) {
-		return template 'error', { broken_email => 1, };
+		return _error( error => 'broken_email' );
 	}
 
 	# check for uniqueness after lc
 	$email = lc $email;
 	my $other_user = $db->get_user_by_email($email);
 	if ($other_user) {
-		return template 'error', { email_exists => 1 };
+		return _error( error => 'email_exists' );
 	}
 
 	my $uid = session('uid');
@@ -1104,12 +1104,12 @@ get qr{^/pro/(.+)} => sub {
 get '/verify2/:code' => sub {
 	my $code = param('code');
 
-	return template 'error', { missing_verification_code => 1 } if not $code;
+	return _error( error => 'missing_verification_code' ) if not $code;
 
 	# TODO Shall we expect here the same user to be logged in already? Can we expect that?
 
 	my $verification = $db->get_verification($code);
-	return template 'error', { invalid_verification_code => 1 }
+	return _error( error => 'invalid_verification_code' )
 		if not $verification;
 
 	my $details = eval { from_json $verification->{details} };
@@ -1146,7 +1146,7 @@ get '/verify2/:code' => sub {
 		return template 'error', { whitelist_updated => 1, ip => $ip };
 	}
 
-	return template 'error', { internal_verification_error => 1 };
+	return _error( error => 'internal_verification_error' );
 };
 
 get '/verify/:id/:code' => sub {
