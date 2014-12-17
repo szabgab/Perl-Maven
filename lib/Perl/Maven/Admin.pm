@@ -40,13 +40,9 @@ get '/admin/sessions' => sub {
 };
 
 get '/admin/user_info.json' => sub {
-	if ( not logged_in() ) {
-		return to_json { error => 'not_logged_in' };
-	}
+	my $res = admin_check();
+	return $res if $res;
 
-	if ( not is_admin() ) {
-		return to_json { error => 'no_admin_rights' };
-	}
 	if ( not param('email') ) {
 		return to_json { error => 'no_email_provided' };
 	}
@@ -67,12 +63,11 @@ get '/admin/user_info.json' => sub {
 
 sub admin_check {
 	if ( not logged_in() ) {
-		session url => request->path;
-		return redirect '/login';
+		return _error( error => 'not_logged_in' );
 	}
 
 	if ( not is_admin() ) {
-		return template 'error', { no_admin_rights => 1 };
+		return _error( error => 'no_admin_rights' );
 	}
 
 	my $db = setting('db');
@@ -114,7 +109,7 @@ sub admin_check {
 			);
 		}
 
-		return template 'error', { invalid_ip => 1, ip => $ip };
+		return _error( error => 'invalid_ip', params => [$ip] );
 	}
 
 	return;

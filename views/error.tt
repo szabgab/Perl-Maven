@@ -1,23 +1,7 @@
 <div id="error">
 
-    <% IF invalid_ip %>
-      You are trying to access a protected page from <% ip %> which is not in the white-list.
-      We have sent an e-mail to your default e-mail address with a code that can be used to add this IP address to the white-list.
-<!--
-      <form action="/pm/whitelist-send-ip-verification" method="POST">
-      <input type="hidden" name="ip" value="<% ip %>">
-      <input type="submit" class="btn btn-default value="Send e-mail">
-      </form> 
--->
-    <% END %>
-
     <% IF no_such_article %>
     No such article
-    <% END %>
-    
-    
-    <% IF invalid_email %>
-    Could not find this e-mail address in our database.
     <% END %>
     
     <% IF not_verified_yet %>
@@ -26,20 +10,10 @@
     Please check your e-mail and follow the instructions there.
     <% END %>
     
-
     <% IF error %>
        <% error %>
     <% END %>
     
-    
-    <% IF old_password_code %>
-    The code you you've received to set your password has timed out. Please ask for a new code.
-    <% END %>
-
-    <% IF no_admin_rights %>
-    You dont have admin rights.
-    <% END %>
-
 </div>
 
 

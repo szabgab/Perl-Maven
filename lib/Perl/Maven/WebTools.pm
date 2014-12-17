@@ -28,6 +28,13 @@ my %RESOURCES = (
 	invalid_unsubscribe_code    => 'Invalid code',
 	could_not_find_registration => 'Could not find registration.',
 	invalid_code                => 'Invalid or missing code.',
+	old_password_code =>
+		'The code you you have received to set your password has timed out. Please ask for a new code.',
+	invalid_email   => 'Could not find this e-mail address in our database.',
+	no_admin_rights => 'You dont have admin rights.',
+	not_logged_in   => 'This area is only accessible to logged in users',
+	invalid_ip      => 'You are trying to access a protected page from %s which is not in the white-list.
+      We have sent an e-mail to your default e-mail address with a code that can be used to add this IP address to the white-list.',
 
 );
 

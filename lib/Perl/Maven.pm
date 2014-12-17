@@ -537,7 +537,7 @@ post '/send-reset-pw-code' => sub {
 	$email = lc $email;
 	my $user = $db->get_user_by_email($email);
 	if ( not $user ) {
-		return template 'error', { invalid_email => 1 };
+		return _error( error => 'invalid_email' );
 	}
 	if ( not $user->{verify_time} ) {
 
@@ -1375,7 +1375,7 @@ sub pw_form {
 		if not $user->{password_reset_code}
 		or $user->{password_reset_code} ne $code
 		or not $user->{password_reset_timeout};
-	return template 'error', { old_password_code => 1 }
+	return _error( error => 'old_password_code' )
 		if $user->{password_reset_timeout} < time;
 
 	return;
