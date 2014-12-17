@@ -1,3 +1,6 @@
+<% IF user_info.admin %>
+<a href="/admin" class="btn btn-danger">Admin</a>
+<% END %>
 
 <ul>
 <% FOR s IN subscriptions %>

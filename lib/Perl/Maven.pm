@@ -761,7 +761,12 @@ get '/pm/user-info' => sub {
 
 sub user_info {
 	my %data = ( logged_in => logged_in(), );
-	$data{perl_maven_pro} = $db->is_subscribed( session('uid'), 'perl_maven_pro' );
+	my $uid = session('uid');
+	if ($uid) {
+		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
+		my $user = $db->get_user_by_id($uid);
+		$data{admin} = $user->{admin};
+	}
 
 	# adding popups:
 
