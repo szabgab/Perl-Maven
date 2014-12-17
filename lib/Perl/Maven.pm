@@ -29,7 +29,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form _template read_tt _show_abstract _show authors pm_message);
+	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_message);
 use Perl::Maven::Sendmail qw(send_mail);
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
@@ -273,7 +273,7 @@ get '/foobar' => sub {
 		@names = sort $ams->name( $theme, 0 );
 	}
 
-	_show(
+	pm_show_page(
 		{ article => 'foobar', template => 'foobar' },
 		{
 			themes     => [ $ams->themes ],
@@ -297,7 +297,7 @@ get '/contributor/:name' => sub {
 	my $data = setting('tools')->read_meta('archive');
 	my @articles = grep { $_->{author} eq $name or ( $_->{translator} and $_->{translator} eq $name ) } @$data;
 
-	return _show(
+	return pm_show_page(
 		{
 			article  => 'contributor',
 			template => 'contributor',
@@ -400,7 +400,7 @@ get '/search' => sub {
 
 get '/' => sub {
 	if ( request->host =~ /^meta\./ ) {
-		return _show(
+		return pm_show_page(
 			{ article => 'index', template => 'meta', },
 			{
 				authors => authors(),
@@ -412,7 +412,7 @@ get '/' => sub {
 	my $pages = setting('tools')->read_meta_array( 'archive', limit => mymaven->{main_page_entries} );
 	_replace_tags($pages);
 
-	_show( { article => 'index', template => 'index', }, { pages => $pages } );
+	pm_show_page( { article => 'index', template => 'index', }, { pages => $pages } );
 };
 
 sub _replace_tags {
@@ -429,7 +429,7 @@ get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
 	delete $kw->{keys};    # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
 	                       #die Dumper $kw->{__WARN__};
-	_show( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
+	pm_show_page( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
 
 get '/about' => sub {
@@ -448,7 +448,7 @@ get '/about' => sub {
 		$contributors{$name} = authors->{$name};
 	}
 
-	_show(
+	pm_show_page(
 		{ article => 'about', template => 'about', },
 		{
 			contributors => \%contributors,
@@ -464,7 +464,7 @@ get '/archive' => sub {
 		: setting('tools')->read_meta_array('archive');
 	_replace_tags($pages);
 
-	_show(
+	pm_show_page(
 		{ article => 'archive', template => 'archive', },
 		{
 			pages    => $pages,
@@ -478,7 +478,7 @@ get '/consultants' => sub {
 };
 
 get '/perl-training-consulting' => sub {
-	_show(
+	pm_show_page(
 		{
 			article  => 'perl-training-consulting',
 			template => 'consultants',
@@ -1052,7 +1052,7 @@ get qr{^/pro/?$} => sub {
 	if ( logged_in() and $db->is_subscribed( session('uid'), $product ) ) {
 		$promo = 0;
 	}
-	return _show_abstract( { path => $path, promo => $promo } );
+	return pm_show_abstract( { path => $path, promo => $promo } );
 };
 
 get qr{^/pro/(.+)} => sub {
@@ -1071,13 +1071,13 @@ get qr{^/pro/(.+)} => sub {
 
 	session url => request->path;
 
-	_show_abstract( { path => $path } );
+	pm_show_abstract( { path => $path } );
 };
 
 get qr{^/pro/(.+)} => sub {
 	my ($article) = splat;
 
-	return _show(
+	return pm_show_page(
 		{
 			path     => mymaven->{dirs}{pro},
 			article  => $article,
@@ -1235,7 +1235,7 @@ get '/mail/:article' => sub {
 };
 
 get '/tv' => sub {
-	_show(
+	pm_show_page(
 		{ article => 'tv', template => 'archive' },
 		{
 			pages => setting('tools')->read_meta_array( 'archive', filter => 'interview' )
@@ -1340,7 +1340,7 @@ get '/jobs-employer' => sub {
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
-	return _show( { article => $article, template => 'page' } );
+	return pm_show_page( { article => $article, template => 'page' } );
 };
 
 ##########################################################################################

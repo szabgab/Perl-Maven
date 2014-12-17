@@ -67,7 +67,7 @@ my %RESOURCES = (
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code pm_error _registration_form _template read_tt _show_abstract _show authors pm_message);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_error pm_message);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -206,7 +206,7 @@ sub read_tt {
 	}
 }
 
-sub _show_abstract {
+sub pm_show_abstract {
 	my ($params) = @_;
 	my $tt = read_tt( $params->{path} );
 	$tt->{promo} = $params->{promo} // 1;
@@ -218,7 +218,7 @@ sub _show_abstract {
 	return template 'propage', $tt;
 }
 
-sub _show {
+sub pm_show_page {
 	my ( $params, $data ) = @_;
 	$data ||= {};
 
