@@ -26,22 +26,11 @@
     Please check your e-mail and follow the instructions there.
     <% END %>
     
-    <% IF missing_data %>
-    Some data is missing.
-    <% END %>
-
 
     <% IF error %>
        <% error %>
     <% END %>
     
-    <% IF invalid_uid %>
-    User not found
-    <% END %>
-    
-    <% IF invalid_code %>
-    Invalid or missing code
-    <% END %>
     
     <% IF old_password_code %>
     The code you you've received to set your password has timed out. Please ask for a new code.
@@ -49,14 +38,6 @@
 
     <% IF no_admin_rights %>
     You dont have admin rights.
-    <% END %>
-
-    <% IF could_not_find_registration %>
-		Could not find registration.
-    <% END %>
-
-    <% IF invalid_unsubscribe_code %>
-    Invalid code
     <% END %>
 
 </div>
@@ -78,10 +59,6 @@
     
     <% IF bad_password %>
     No or bad password was given.
-    <% END %>
-    
-    <% IF invalid_pw %>
-    Invalid password
     <% END %>
     
     <% IF user_updated %>

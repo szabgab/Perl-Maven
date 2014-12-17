@@ -656,7 +656,7 @@ post '/login' => sub {
 	my $email    = param('email');
 	my $password = param('password');
 
-	return template 'error', { missing_data => 1, }
+	return _error( error => 'missing_data' )
 		if not $password or not $email;
 
 	my $user = $db->get_user_by_email($email);
@@ -665,11 +665,11 @@ post '/login' => sub {
 	}
 
 	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
-		return template 'error', { invalid_pw => 1 }
+		return _error( error => 'invalid_pw' )
 			if not passphrase($password)->matches( $user->{password} );
 	}
 	else {
-		return template 'error', { invalid_pw => 1 }
+		return _error( error => 'invalid_pw' )
 			if $user->{password} ne Digest::SHA::sha1_base64($password);
 
 		# password is good, we need to update it
@@ -721,12 +721,12 @@ any '/pm/unsubscribe' => sub {
 	my $mymaven       = mymaven;
 	my $expected_code = Digest::SHA::sha1_hex("unsubscribe$mymaven->{unsubscribe_salt}$email");
 	if ( $code ne $expected_code ) {
-		return template 'error', { invalid_unsubscribe_code => 1 };
+		return _error( error => 'invalid_unsubscribe_code' );
 	}
 
 	my $user = $db->get_user_by_email($email);
 	if ( not $user ) {
-		return template 'error', { could_not_find_registration => 1 };
+		return _error( error => 'could_not_find_registration' );
 	}
 
 	# TODO maybe we will want some stonger checking for confirmation?
@@ -1156,14 +1156,14 @@ get '/verify/:id/:code' => sub {
 	my $user = $db->get_user_by_id($id);
 
 	if ( not $user ) {
-		return template 'error', { invalid_uid => 1 };
+		return _error( error => 'invalid_uid' );
 	}
 
 	if (   not $user->{verify_code}
 		or not $code
 		or $user->{verify_code} ne $code )
 	{
-		return template 'error', { invalid_code => 1 };
+		return _error( error => 'invalid_code' );
 	}
 
 	if ( $user->{verify_time} ) {
@@ -1365,13 +1365,13 @@ sub pw_form {
 
 	# if there is such userid with such code and it has not expired yet
 	# then show a form
-	return template 'error', { missing_data => 1 }
+	return _error( error => 'missing_data' )
 		if not $id or not $code;
 
 	my $user = $db->get_user_by_id($id);
-	return template 'error', { invalid_uid => 1 }
+	return _error( error => 'invalid_uid' )
 		if not $user;
-	return template 'error', { invalid_code => 1 }
+	return _error( error => 'invalid_code' )
 		if not $user->{password_reset_code}
 		or $user->{password_reset_code} ne $code
 		or not $user->{password_reset_timeout};

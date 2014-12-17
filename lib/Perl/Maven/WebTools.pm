@@ -22,6 +22,13 @@ my %RESOURCES = (
 	missing_verification_code   => 'Missing verification code.',
 	invalid_verification_code   => 'Invalid or expired verification code.',
 	internal_verification_error => 'Internal verification error',
+	invalid_uid                 => 'User not found',
+	missing_data                => 'Some data is missing.',
+	invalid_pw                  => 'Invalid password.',
+	invalid_unsubscribe_code    => 'Invalid code',
+	could_not_find_registration => 'Could not find registration.',
+	invalid_code                => 'Invalid or missing code.',
+
 );
 
 use Exporter qw(import);
