@@ -232,5 +232,6 @@ $(document).ready(function() {
 		$('#popup_logged_in').modal('show');
 	});
 
+	prettyPrint();
 });
 

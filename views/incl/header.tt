@@ -31,8 +31,7 @@
   	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
   <% END %>
 </head>
-<body onload="prettyPrint()" >
-
+<body>
 
 <% IF conf.show_social %>
 <!-- start facebook SDK ?? -->
