@@ -15,13 +15,6 @@
     No such article
     <% END %>
     
-    <% IF no_email %>
-    No e-mail was provided
-    <% END %>
-
-    <% IF invalid_value_provided %>
-      Invalid parameter.
-    <% END %>
     
     <% IF invalid_email %>
     Could not find this e-mail address in our database.
@@ -57,9 +50,6 @@
        Internal verification error
     <% END %>
 
-    <% IF internal_error %>
-       Internal error
-    <% END %>
 
     <% IF error %>
        <% error %>

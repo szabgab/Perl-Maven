@@ -338,7 +338,7 @@ post '/pm/whitelist' => sub {
 				return template 'error', { whitelist_enabled => 1 };
 			}
 			else {
-				return template 'error', { internal_error => 1 };
+				return _error( error => 'internal_error' );
 			}
 		}
 		elsif ( $do eq 'disable' ) {
@@ -346,9 +346,7 @@ post '/pm/whitelist' => sub {
 			return template 'error', { whitelist_disabled => 1 };
 		}
 		else {
-			return template 'error', { invalid_value_provided => 1 };
-
-			# TODO report error
+			return _error( error => 'invalid_value_provided' );
 		}
 	}
 	return 'parameter missing';
@@ -534,7 +532,7 @@ get '/tv/atom' => sub {
 post '/send-reset-pw-code' => sub {
 	my $email = param('email');
 	if ( not $email ) {
-		return template 'error', { no_email => 1 };
+		return _error( error => 'no_email_provided' );
 	}
 	$email = lc $email;
 	my $user = $db->get_user_by_email($email);
@@ -859,7 +857,7 @@ sub register {
 	}
 
 	if ( not $data{email} ) {
-		return _registration_form( %data, error => 'no_mail' );
+		return _registration_form( %data, error => 'no_email_provided' );
 	}
 	if ( not Email::Valid->address( $data{email} ) ) {
 		return _registration_form( %data, error => 'invalid_mail' );
@@ -932,7 +930,7 @@ post '/change-email' => sub {
 	}
 	my $email = param('email') || '';
 	if ( not $email ) {
-		return template 'error', { no_email => 1, };
+		return _error( error => 'no_email_provided' );
 	}
 	if ( not Email::Valid->address($email) ) {
 		return template 'error', { broken_email => 1, };
