@@ -224,15 +224,6 @@ get '/contributor/:name' => sub {
 	);
 };
 
-get qr{^/(.+)} => sub {
-	my ($article) = splat;
-
-	if ( mymaven->{redirect}{$article} ) {
-		return redirect mymaven->{redirect}{$article};
-	}
-	pass;
-};
-
 get '/search' => sub {
 	my $data = setting('tools')->read_meta_hash('keywords');
 
@@ -619,6 +610,15 @@ get '/account' => sub {
 			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
 	}
 	template 'account', \%params;
+};
+
+get qr{^/(.+)} => sub {
+	my ($article) = splat;
+
+	if ( mymaven->{redirect}{$article} ) {
+		return redirect mymaven->{redirect}{$article};
+	}
+	pass;
 };
 
 get '/download/:dir/:file' => sub {
