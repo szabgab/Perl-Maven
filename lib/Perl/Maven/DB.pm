@@ -93,7 +93,9 @@ sub get_people {
 	   FROM user WHERE email LIKE ?
 	}, undef, '%' . $email . '%'
 	);
-	my @users = map { { id => $_->[0], email => $_->[1], verify_time => $_[2], } } @$ar;
+	my @users = map {
+		{ id => $_->[0], email => $_->[1], verify_time => $_[2], subscriptions => $self->get_subscriptions( $_->[1] ) }
+	} @$ar;
 	return \@users;
 }
 
@@ -150,7 +152,7 @@ sub get_subscriptions {
 		push @products, $p;
 	}
 
-	return @products;
+	return \@products;
 }
 
 sub get_subscribers {

@@ -21,7 +21,8 @@ subtest users => sub {
 
 	my $id = $db->add_registration( { email => 'foo@bar.com' } );
 	$people = $db->get_people('');
-	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef } ], 'first person';
+	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef, subscriptions => [] } ],
+		'first person';
 
 	$db->add_registration( { email => 'buzz@nasa.com' } );
 	$people = $db->get_people('');
@@ -29,13 +30,13 @@ subtest users => sub {
 	#diag explain $people;
 	is_deeply $people,
 		[
-		{ id => 1, email => 'foo@bar.com',   verify_time => undef },
-		{ id => 2, email => 'buzz@nasa.com', verify_time => undef }
+		{ id => 1, email => 'foo@bar.com',   verify_time => undef, subscriptions => [] },
+		{ id => 2, email => 'buzz@nasa.com', verify_time => undef, subscriptions => [] }
 		],
 		'two people';
 
 	$people = $db->get_people('oo');
-	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef } ], 'one person';
+	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef, subscriptions => [] } ], 'one person';
 
 	my $p = $db->get_user_by_email('foo@bar');
 	is $p, undef, 'no such email';
@@ -140,37 +141,36 @@ subtest products => sub {
 subtest subscriptions => sub {
 	plan tests => 5;
 
-	my @subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, [];
+	my $users = $db->get_people('foo@bar.com');
+	is_deeply $users->[0]{subscriptions}, [];
 	$db->subscribe_to(
 		email => 'foo@bar.com',
 		code  => 'beginner_perl_maven_ebook'
 	);
 
-	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, ['beginner_perl_maven_ebook'], 'subscribed';
+	$users = $db->get_people('foo@bar.com');
+	is_deeply $users->[0]{subscriptions}, ['beginner_perl_maven_ebook'], 'subscribed';
 
 	$db->subscribe_to(
 		email => 'foo@bar.com',
 		code  => 'mars_landing_handbook'
 	);
-	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, [ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ], 'subscribed';
+	$users = $db->get_people('foo@bar.com');
+	is_deeply $users->[0]{subscriptions}, [ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ], 'subscribed';
 
 	$db->unsubscribe_from(
 		email => 'foo@bar.com',
 		code  => 'mars_landing_handbook'
 	);
-	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, ['beginner_perl_maven_ebook'], 'subscribed';
+	$users = $db->get_people('foo@bar.com');
+	is_deeply $users->[0]{subscriptions}, ['beginner_perl_maven_ebook'], 'subscribed';
 
 	$db->unsubscribe_from(
 		email => 'foo@bar.com',
 		code  => 'beginner_perl_maven_ebook'
 	);
-	@subs = $db->get_subscriptions('foo@bar.com');
-	is_deeply \@subs, [];
-
+	$users = $db->get_people('foo@bar.com');
+	is_deeply $users->[0]{subscriptions}, [], 'empty again';
 };
 
 subtest whitelist => sub {

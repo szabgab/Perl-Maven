@@ -55,8 +55,6 @@ get '/admin/user_info.json' => sub {
 
 	foreach my $p (@$people) {
 		$p->{verify_time} //= '';
-		my @subs = $db->get_subscriptions( $p->{email} );
-		$p->{subscriptions} = \@subs;
 	}
 	return to_json { people => $people };
 };

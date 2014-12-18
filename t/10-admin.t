@@ -72,8 +72,6 @@ subtest list_emails => sub {
 	my $people = $db->get_people('@');
 	is_deeply $people, [], 'no people';
 
-	#	my @subs = $db->get_subscriptions('email@address');
-
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --email \@";
 	};

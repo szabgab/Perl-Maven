@@ -158,9 +158,8 @@ sub show_people {
 	my $people = $db->get_people($email);
 	foreach my $p (@$people) {
 		$p->{verify_time} //= '-';
-		my @subs = $db->get_subscriptions( $p->{email} );
 		printf "%4s %30s  verify_time='%s'\n", @{$p}{qw(id email verify_time)};
-		foreach my $s (@subs) {
+		foreach my $s ( @{ $p->{subs} } ) {
 			printf "     %s\n", $s;
 		}
 	}
