@@ -19,11 +19,11 @@ subtest users => sub {
 	my $people = $db->get_people('');
 	is_deeply $people, [], 'no people';
 
-	my $id = $db->add_registration( { email => 'foo@bar.com', code => '123' } );
+	my $id = $db->add_registration( { email => 'foo@bar.com' } );
 	$people = $db->get_people('');
 	is_deeply $people, [ [ 1, 'foo@bar.com', undef ] ], 'first person';
 
-	$db->add_registration( { email => 'buzz@nasa.com', code => '456' } );
+	$db->add_registration( { email => 'buzz@nasa.com' } );
 	$people = $db->get_people('');
 
 	#diag explain $people;
@@ -46,7 +46,7 @@ subtest users => sub {
 		'password_reset_code'    => undef,
 		'password_reset_timeout' => undef,
 		'register_time'          => re('\d+'),
-		'verify_code'            => '123',
+		'verify_code'            => undef,
 		'verify_time'            => undef,
 		'admin'                  => undef,
 		'login_whitelist'        => undef,
@@ -67,7 +67,7 @@ subtest replace_email => sub {
 		'password_reset_code'    => undef,
 		'password_reset_timeout' => undef,
 		'register_time'          => re('\d+'),
-		'verify_code'            => '456',
+		'verify_code'            => undef,
 		'verify_time'            => undef,
 		'admin'                  => undef,
 		'login_whitelist'        => undef,
@@ -89,7 +89,7 @@ subtest replace_email => sub {
 		'password_reset_code'    => undef,
 		'password_reset_timeout' => undef,
 		'register_time'          => re('\d+'),
-		'verify_code'            => '456',
+		'verify_code'            => undef,
 		'verify_time'            => undef,
 		'admin'                  => undef,
 		'login_whitelist'        => undef,

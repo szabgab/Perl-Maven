@@ -209,7 +209,7 @@ subtest 'subscribe' => sub {
 };
 
 {
-	my $id = $db->add_registration( { email => $EMAIL3, code => '123' } );
+	my $id = $db->add_registration( { email => $EMAIL3 } );
 	$db->set_password( $id, $PASSWORD[2] );
 }
 
