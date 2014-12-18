@@ -4,8 +4,7 @@ use Dancer2;
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
 our $VERSION = '0.11';
-my $PM_VERSION         = 7;    # Version number to force JavaScript and CSS files reload
-my $CODE_EXPLAIN_LIMIT = 20;
+my $PM_VERSION = 7;    # Version number to force JavaScript and CSS files reload
 
 use Business::PayPal;
 use Cwd qw(abs_path);
@@ -36,6 +35,8 @@ use Perl::Maven::Account;
 prefix '/foobar';
 require Perl::Maven::MetaSyntactic;
 prefix '/';
+
+require Perl::Maven::CodeExplain;
 
 # delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
 require Perl::Maven::Admin;
@@ -766,52 +767,6 @@ get qr{^/media/(.+)} => sub {
 	return 'media error';
 };
 
-get '/explain' => sub {
-	require Code::Explain;
-	my %data = (
-		code_explain_version => $Code::Explain::VERSION,
-		limit                => $CODE_EXPLAIN_LIMIT,
-	);
-	return template 'explain', \%data;
-};
-
-post '/explain' => sub {
-	my $code = params->{'code'};
-	$code = '' if not defined $code;
-	$code =~ s/^\s+|\s+$//g;
-
-	my %data = (
-		code_explain_version => $Code::Explain::VERSION,
-		limit                => $CODE_EXPLAIN_LIMIT,
-		code                 => $code,
-	);
-	if ($code) {
-		$data{html_code} = _escape($code);
-		if ( length $code > $CODE_EXPLAIN_LIMIT ) {
-			$data{too_long} = length $code;
-		}
-		else {
-			require Code::Explain;
-			my $ce = Code::Explain->new( code => $code );
-			$data{explanation} = $ce->explain();
-			$data{ppi_dump} = [ map { _escape($_) } $ce->ppi_dump ];
-			$data{ppi_explain}
-				= [ map { $_->{code} = _escape( $_->{code} ); $_ } $ce->ppi_explain ];
-		}
-
-		my $time = time;
-		my $log_file
-			= path( config->{appdir}, 'logs', 'code_' . POSIX::strftime( '%Y%m', gmtime($time) ) );
-		if ( open my $fh, '>>', $log_file ) {
-			print $fh '-' x 20, "\n";
-			print $fh scalar( gmtime $time ) . "\n";
-			print $fh "$code\n\n";
-			close $fh;
-		}
-	}
-	return to_json \%data;
-};
-
 get '/jobs-employer' => sub {
 	template 'jobs_employer', { a => 1, };
 };
@@ -823,13 +778,6 @@ get qr{^/(.+)} => sub {
 };
 
 ##########################################################################################
-sub _escape {
-	my $txt = shift;
-	$txt =~ s/</&lt;/g;
-	$txt =~ s/>/&gt;/g;
-	return $txt;
-}
-
 sub get_download_files {
 	my ($subdir) = @_;
 
