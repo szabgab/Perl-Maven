@@ -5,6 +5,7 @@ use warnings;
 use Data::Dumper qw(Dumper);
 use DBI;
 use MongoDB;
+use DateTime::Tiny;
 
 our $VERSION = '0.11';
 
@@ -19,26 +20,25 @@ sub new {
 
 	return $instance if $instance;
 
-	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $database   = $client->get_database('PerlMaven');
+	my $dbname = $ENV{PERL_MAVEN_MONGO_DB} || 'PerlMaven';
+
+	my $client = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database = $client->get_database($dbname);
 
 	$instance = bless { db => $database }, $class;
 
 	return $instance;
 }
 
+sub instance {
+	return $instance;
+}
+
 sub add_registration {
 	my ( $self, $args ) = @_;
 
-	$self->{dbh}->do(
-		'INSERT INTO user (email, verify_code, register_time)
-		VALUES (?, ?, ?)',
-		undef,
-		@{$args}{qw(email code)}, time
-	);
-	my $id = $self->{dbh}->last_insert_id( '', '', '', '' );
-
-	return $id;
+	$args->{register_time} = DateTime::Tiny->now;
+	$self->{db}->get_collection('user')->insert($args);
 }
 
 sub update_user {
@@ -84,7 +84,7 @@ sub get_user_by_email {
 sub get_people {
 	my ( $self, $email ) = @_;
 
-	return [ $self->{db}->get_collection('user')->find({ email => qr/$email/ })->all ];
+	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->all ];
 }
 
 sub get_user_by_id {
