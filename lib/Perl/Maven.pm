@@ -6,14 +6,12 @@ use Dancer2::Plugin::Passphrase qw(passphrase);
 our $VERSION = '0.11';
 my $PM_VERSION = 7;    # Version number to force JavaScript and CSS files reload
 
-use Business::PayPal;
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use DateTime;
 use Digest::SHA;
 use Email::Valid;
 use Fcntl qw(:flock SEEK_END);
-use File::Basename qw(fileparse);
 use List::MoreUtils qw(uniq);
 use POSIX       ();
 use Time::HiRes ();

@@ -7,6 +7,7 @@ use Perl::Maven::WebTools qw(logged_in pm_error pm_message);
 use POSIX;
 use Data::Dumper qw(Dumper);
 use LWP::UserAgent;
+use Business::PayPal;
 
 our $VERSION = '0.11';
 
