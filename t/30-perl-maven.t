@@ -108,7 +108,7 @@ subtest pages => sub {
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 subtest 'subscribe' => sub {
-	plan tests => 35;
+	plan tests => 34;
 	$w->get_ok("$url/register");
 	$w->content_like(qr/Perl Maven/);
 
@@ -145,18 +145,18 @@ subtest 'subscribe' => sub {
 	#diag $mail;
 
 	#my $mail_regex = qr{<a href="($url/verify/1/\w+)">verify</a>};
-	my $mail_regex = qr{verify\s+\[\s+($url/verify/1/\w+)=};
+	my $mail_regex = qr{verify\s+\[\s+($url/verify2/\w+)};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
 
 	#diag $set_url;
 	#diag explain $db->{dbh}->selectall_arrayref('SELECT * FROM user');
-	$w->get_ok("$url/verify/20/1234567");
-	$w->content_like( qr{User not found}, 'no such user' );
+	$w->get_ok("$url/verify2/1234567");
+	$w->content_like( qr{Invalid or expired verification code.}, 'no such code' );
 
-	$w->get_ok("$url/verify/1/1234567");
-	$w->content_like( qr{Invalid or missing code}, 'incorrect code' );
 	$w->get_ok($set_url);
+
+	$w->content_unlike(qr{Internal verification error});
 
 	#diag $w->content;
 	# the new page does not contain a link to the cookbook.

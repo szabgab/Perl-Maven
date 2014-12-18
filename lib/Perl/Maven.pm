@@ -592,6 +592,11 @@ get '/verify2/:code' => sub {
 	my $uid     = $verification->{uid};
 	my $user    = $db->get_user_by_id($uid);
 
+	if ( $verification->{action} eq 'verify_email' ) {
+		$db->delete_verification_code($code);
+		return verify_registration( $uid, $user->{email} );
+	}
+
 	if ( $verification->{action} eq 'change_email' ) {
 		$db->replace_email( $user->{email}, $details->{new_email} );
 
@@ -626,10 +631,11 @@ get '/verify2/:code' => sub {
 };
 
 get '/verify/:id/:code' => sub {
-	my $id   = param('id');
+	my $uid  = param('id');
 	my $code = param('code');
 
-	my $user = $db->get_user_by_id($id);
+	my $db   = setting('db');
+	my $user = $db->get_user_by_id($uid);
 
 	if ( not $user ) {
 		return pm_error('invalid_uid');
@@ -646,13 +652,20 @@ get '/verify/:id/:code' => sub {
 		return template 'thank_you';
 	}
 
-	if ( not $db->verify_registration( $id, $code ) ) {
+	verify_registration( $uid, $user->{email} );
+};
+
+sub verify_registration {
+	my ( $uid, $email ) = @_;
+	my $db = setting('db');
+
+	if ( not $db->verify_registration($uid) ) {
 		return template 'verify_form', { error => 1, };
 	}
 
-	$db->subscribe_to( uid => $user->{id}, code => 'perl_maven_cookbook' );
+	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
 
-	session uid       => $user->{id};
+	session uid       => $uid;
 	session logged_in => 1;
 	session last_seen => time;
 
@@ -663,7 +676,7 @@ get '/verify/:id/:code' => sub {
 	my $err     = send_mail(
 		{
 			From    => $mymaven->{from},
-			To      => $user->{email},
+			To      => $email,
 			Subject => 'Thank you for registering',
 		},
 		{
@@ -684,12 +697,12 @@ get '/verify/:id/:code' => sub {
 			Subject => "New $mymaven->{title} newsletter registration",
 		},
 		{
-			html => "$user->{email} has registered",
+			html => "$email has registered",
 		}
 	);
 
 	template 'thank_you';
-};
+}
 
 get '/img/:file' => sub {
 	my $file = param('file');
@@ -973,15 +986,23 @@ sub register {
 	}
 
 	my $code = _generate_code();
-	my $id = $db->add_registration( { email => $data{email}, code => $code } );
+	my $uid = $db->add_registration( { email => $data{email} } );
+	$db->save_verification(
+		code      => $code,
+		action    => 'verify_email',
+		timestamp => time,
+		uid       => $uid,
+		details   => to_json {
+			new_email => $data{email},
+		},
+	);
 
 	my $err = send_verification_mail(
 		'email_first_verification_code',
 		$data{email},
 		"Please finish the $mymaven->{title} registration",
 		{
-			url  => uri_for('/verify'),
-			id   => $id,
+			url  => uri_for('/verify2'),
 			code => $code,
 		},
 	);
@@ -994,6 +1015,7 @@ sub register {
 	return _template 'response', { from => $html_from };
 }
 post '/pm/change-email' => sub {
+	my $mymaven = mymaven;
 	if ( not logged_in() ) {
 		return redirect '/login';
 	}
@@ -1025,9 +1047,7 @@ post '/pm/change-email' => sub {
 			new_email => $email,
 		},
 	);
-
-	my $mymaven = mymaven;
-	my $err     = send_verification_mail(
+	my $err = send_verification_mail(
 		'email_verification_code',
 		$email,
 		"Please verify your new e-mail address for $mymaven->{title}",
