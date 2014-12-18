@@ -35,13 +35,10 @@ require Perl::Maven::MetaSyntactic;
 prefix '/';
 
 require Perl::Maven::CodeExplain;
-
-# delayed load, I think in order to allow the before hook to instantiate the Perl::Maven::DB singleton
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
 
 ## configure relative pathes
-my $db;
 
 hook before => sub {
 	set start_time => Time::HiRes::time;
@@ -56,7 +53,7 @@ hook before => sub {
 
 	my $appdir = abs_path config->{appdir};
 
-	$db ||= Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
+	my $db = Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
 	set db => $db;
 
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
@@ -94,6 +91,7 @@ hook before_template => sub {
 	$t->{title} ||= '';
 	if ( logged_in() ) {
 		my $uid   = session('uid');
+		my $db    = setting('db');
 		my $user  = $db->get_user_by_id($uid);
 		my $email = $user->{email};
 		( $t->{username} ) = split /@/, $email;
@@ -378,6 +376,7 @@ post '/login' => sub {
 	return pm_error('missing_data')
 		if not $password or not $email;
 
+	my $db   = setting('db');
 	my $user = $db->get_user_by_email($email);
 	if ( not $user->{password} ) {
 		return template 'login', { no_password => 1 };
@@ -412,6 +411,7 @@ post '/pm/whitelist-delete' => sub {
 
 	my $uid = session('uid');
 	my $id  = param('id');
+	my $db  = setting('db');
 	$db->delete_from_whitelist( $uid, $id );
 	pm_message('whitelist_entry_deleted');
 };
@@ -508,6 +508,7 @@ get '/download/:dir/:file' => sub {
 	return redirect '/' if not setting('products')->{$dir};    # no such product
 
 	# check if the user is really subscribed to the newsletter?
+	my $db = setting('db');
 	return redirect '/' if not $db->is_subscribed( session('uid'), $dir );
 
 	send_file( path( mymaven->{dirs}{download}, $dir, $file ), system_path => 1 );
@@ -524,6 +525,7 @@ get qr{^/pro/?$} => sub {
 	my $product = 'perl_maven_pro';
 	my $path    = mymaven->{site} . '/pages/pro.tt';
 	my $promo   = 1;
+	my $db      = setting('db');
 	if ( logged_in() and $db->is_subscribed( session('uid'), $product ) ) {
 		$promo = 0;
 	}
@@ -539,6 +541,7 @@ get qr{^/pro/(.+)} => sub {
 	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
 	pass if not -e $path;    # will show invalid page
 
+	my $db = setting('db');
 	pass if is_free("/pro/$article");
 	pass
 		if logged_in()
@@ -591,6 +594,7 @@ get '/verify2/:code' => sub {
 
 	# TODO Shall we expect here the same user to be logged in already? Can we expect that?
 
+	my $db           = setting('db');
 	my $verification = $db->get_verification($code);
 	return pm_error('invalid_verification_code')
 		if not $verification;
@@ -736,6 +740,7 @@ get qr{^/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
+	my $db = setting('db');
 	if ( $item =~ m{^pro/} and not is_free("/$item") ) {
 		my $product = 'perl_maven_pro';
 		return 'error: not logged in' if not logged_in();
@@ -952,6 +957,7 @@ sub register {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
 
+	my $db   = setting('db');
 	my $user = $db->get_user_by_email( $data{email} );
 
 	#debug Dumper $user;
@@ -1146,6 +1152,7 @@ sub user_info {
 	my %data = ( logged_in => logged_in(), );
 	my $uid = session('uid');
 	if ($uid) {
+		my $db = setting('db');
 		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
 		my $user = $db->get_user_by_id($uid);
 		$data{admin} = $user->{admin} ? 1 : 0;
