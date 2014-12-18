@@ -438,9 +438,8 @@ get '/account' => sub {
 	my $uid  = session('uid');
 	my $user = $db->get_user_by_id($uid);
 
-	my $subscriptions = $db->get_subscriptions( $user->{email} );
 	my @owned_products;
-	foreach my $code (@$subscriptions) {
+	foreach my $code ( @{ $user->{subscriptions} } ) {
 
 		# TODO remove the hard-coded special case of the perl_maven_pro
 		if ( $code eq 'perl_maven_pro' ) {
