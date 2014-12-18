@@ -94,7 +94,7 @@ sub get_people {
 	}, undef, '%' . $email . '%'
 	);
 	my @users = map {
-		{ id => $_->[0], email => $_->[1], verify_time => $_[2], subscriptions => $self->get_subscriptions( $_->[1] ) }
+		{ id => $_->[0], email => $_->[1], verify_time => $_->[2], subscriptions => $self->get_subscriptions( $_->[1] ) }
 	} @$ar;
 	return \@users;
 }
