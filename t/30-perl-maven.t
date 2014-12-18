@@ -99,7 +99,7 @@ subtest pages => sub {
 	is $visitor->base, "$url/login", 'redirected to login page';
 
 	# strangely for this post() request I had to supply the full URL or it would go to http://localhost/
-	$visitor->post_ok("$url/change-email");
+	$visitor->post_ok("$url/pm/change-email");
 	is $visitor->base, "$url/login", 'redirected to login page';
 
 	#diag $visitor->content;

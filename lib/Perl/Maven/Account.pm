@@ -171,6 +171,67 @@ post '/pm/update-user' => sub {
 	pm_message('user_updated');
 };
 
+get '/pm/subscribe' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $uid = session('uid');
+	my $db  = setting('db');
+	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
+	pm_message('subscribed');
+};
+
+get '/pm/un-subscribe' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $uid = session('uid');
+
+	my $db = setting('db');
+	$db->unsubscribe_from( uid => $uid, code => 'perl_maven_cookbook' );
+	pm_message('unsubscribed');
+};
+
+any '/pm/unsubscribe' => sub {
+	my $code  = param('code');
+	my $email = param('email');
+
+	my $mymaven       = mymaven;
+	my $expected_code = Digest::SHA::sha1_hex("unsubscribe$mymaven->{unsubscribe_salt}$email");
+	if ( $code ne $expected_code ) {
+		return pm_error('invalid_unsubscribe_code');
+	}
+
+	my $db   = setting('db');
+	my $user = $db->get_user_by_email($email);
+	if ( not $user ) {
+		return pm_error('could_not_find_registration');
+	}
+
+	# TODO maybe we will want some stonger checking for confirmation?
+	if ( param('confirm') ) {
+		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
+		my $html    = template 'email_after_unsubscribe', { url => uri_for('/'), }, { layout => 'email' };
+		my $mymaven = mymaven;
+		my $err     = send_mail(
+			{
+				From    => $mymaven->{from},
+				To      => $email,
+				Subject => 'You were unsubscribed from the Perl Maven newsletter',
+			},
+			{
+				html => $html,
+			}
+		);
+
+		pm_message('unsubscribed');
+	}
+
+	return template 'confirm_unsubscribe',
+		{
+		code  => $code,
+		email => $email,
+		};
+};
+
 ##########################################################################################
 sub pw_form {
 	my $id   = param('id');

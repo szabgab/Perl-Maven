@@ -424,23 +424,6 @@ post '/login' => sub {
 	redirect $url;
 };
 
-get '/unsubscribe' => sub {
-	return redirect '/login' if not logged_in();
-
-	my $uid = session('uid');
-
-	$db->unsubscribe_from( uid => $uid, code => 'perl_maven_cookbook' );
-	pm_message('unsubscribed');
-};
-
-get '/subscribe' => sub {
-	return redirect '/login' if not logged_in();
-
-	my $uid = session('uid');
-	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
-	pm_message('subscribed');
-};
-
 post '/pm/whitelist-delete' => sub {
 	return redirect '/login' if not logged_in();
 
@@ -448,47 +431,6 @@ post '/pm/whitelist-delete' => sub {
 	my $id  = param('id');
 	$db->delete_from_whitelist( $uid, $id );
 	pm_message('whitelist_entry_deleted');
-};
-
-any '/pm/unsubscribe' => sub {
-	my $code  = param('code');
-	my $email = param('email');
-
-	my $mymaven       = mymaven;
-	my $expected_code = Digest::SHA::sha1_hex("unsubscribe$mymaven->{unsubscribe_salt}$email");
-	if ( $code ne $expected_code ) {
-		return pm_error('invalid_unsubscribe_code');
-	}
-
-	my $user = $db->get_user_by_email($email);
-	if ( not $user ) {
-		return pm_error('could_not_find_registration');
-	}
-
-	# TODO maybe we will want some stonger checking for confirmation?
-	if ( param('confirm') ) {
-		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
-		my $html    = template 'email_after_unsubscribe', { url => uri_for('/'), }, { layout => 'email' };
-		my $mymaven = mymaven;
-		my $err     = send_mail(
-			{
-				From    => $mymaven->{from},
-				To      => $email,
-				Subject => 'You were unsubscribed from the Perl Maven newsletter',
-			},
-			{
-				html => $html,
-			}
-		);
-
-		pm_message('unsubscribed');
-	}
-
-	return template 'confirm_unsubscribe',
-		{
-		code  => $code,
-		email => $email,
-		};
 };
 
 get '/pm/user-info' => sub {
@@ -507,55 +449,6 @@ post '/pm/register.json' => sub {
 post '/register' => sub {
 	register();
 };
-post '/change-email' => sub {
-	if ( not logged_in() ) {
-		return redirect '/login';
-	}
-	my $email = param('email') || '';
-	if ( not $email ) {
-		return pm_error('no_email_provided');
-	}
-	if ( not Email::Valid->address($email) ) {
-		return pm_error('broken_email');
-	}
-
-	# check for uniqueness after lc
-	$email = lc $email;
-	my $other_user = $db->get_user_by_email($email);
-	if ($other_user) {
-		return pm_error('email_exists');
-	}
-
-	my $uid = session('uid');
-
-	my $code = _generate_code();
-	$db->save_verification(
-		code      => $code,
-		action    => 'change_email',
-		timestamp => time,
-		uid       => $uid,
-		details   => to_json {
-			new_email => $email,
-		},
-	);
-
-	my $mymaven = mymaven;
-	my $err     = send_verification_mail(
-		'email_verification_code',
-		$email,
-		"Please verify your new e-mail address for $mymaven->{title}",
-		{
-			url  => uri_for('/verify2'),
-			code => $code,
-		},
-	);
-	if ($err) {
-		return pm_error( 'could_not_send_email', params => [$email], );
-	}
-
-	pm_message('verification_email_sent');
-};
-
 get '/logout' => sub {
 	session logged_in => 0;
 	redirect '/';
@@ -564,6 +457,7 @@ get '/logout' => sub {
 get '/account' => sub {
 	return redirect '/login' if not logged_in();
 
+	my $db   = setting('db');
 	my $uid  = session('uid');
 	my $user = $db->get_user_by_id($uid);
 
@@ -1164,6 +1058,55 @@ sub register {
 	$html_from =~ s/</&lt;/g;
 	return _template 'response', { from => $html_from };
 }
+post '/pm/change-email' => sub {
+	if ( not logged_in() ) {
+		return redirect '/login';
+	}
+	my $email = param('email') || '';
+	if ( not $email ) {
+		return pm_error('no_email_provided');
+	}
+	if ( not Email::Valid->address($email) ) {
+		return pm_error('broken_email');
+	}
+
+	# check for uniqueness after lc
+	$email = lc $email;
+	my $db         = setting('db');
+	my $other_user = $db->get_user_by_email($email);
+	if ($other_user) {
+		return pm_error('email_exists');
+	}
+
+	my $uid = session('uid');
+
+	my $code = _generate_code();
+	$db->save_verification(
+		code      => $code,
+		action    => 'change_email',
+		timestamp => time,
+		uid       => $uid,
+		details   => to_json {
+			new_email => $email,
+		},
+	);
+
+	my $mymaven = mymaven;
+	my $err     = send_verification_mail(
+		'email_verification_code',
+		$email,
+		"Please verify your new e-mail address for $mymaven->{title}",
+		{
+			url  => uri_for('/verify2'),
+			code => $code,
+		},
+	);
+	if ($err) {
+		return pm_error( 'could_not_send_email', params => [$email], );
+	}
+
+	pm_message('verification_email_sent');
+};
 
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
