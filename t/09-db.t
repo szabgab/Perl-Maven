@@ -38,7 +38,8 @@ subtest users => sub {
 		'password_reset_timeout' => undef,
 		'register_time'          => $TIMESTAMP,
 		'verify_code'            => undef,
-		'verify_time'            => undef
+		'verify_time'            => undef,
+		subscriptions            => [],
 		},
 		'get_user_by_id';
 

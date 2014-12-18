@@ -94,7 +94,12 @@ sub get_people {
 	}, undef, '%' . $email . '%'
 	);
 	my @users = map {
-		{ id => $_->[0], email => $_->[1], verify_time => $_->[2], subscriptions => $self->get_subscriptions( $_->[1] ) }
+		{
+			id            => $_->[0],
+			email         => $_->[1],
+			verify_time   => $_->[2],
+			subscriptions => $self->get_subscriptions( $_->[1] )
+		}
 	} @$ar;
 	return \@users;
 }
@@ -103,6 +108,9 @@ sub get_user_by_id {
 	my ( $self, $id ) = @_;
 
 	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
+	if ($hr) {
+		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
+	}
 
 	return $hr;
 }
