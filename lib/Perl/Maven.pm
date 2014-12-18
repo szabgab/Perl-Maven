@@ -38,8 +38,6 @@ require Perl::Maven::CodeExplain;
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
 
-## configure relative pathes
-
 hook before => sub {
 	set start_time => Time::HiRes::time;
 
@@ -80,6 +78,7 @@ hook before => sub {
 
 	return;
 };
+
 hook after => sub {
 	my ($response) = @_;
 	log_request($response);
@@ -224,9 +223,6 @@ get '/contributor/:name' => sub {
 get '/search' => sub {
 	my $data = setting('tools')->read_meta_hash('keywords');
 
-	#TODO: I thin this is only needed if we want to allow other sites to search here.
-	#push_header 'Access-Control-Allow-Origin' => '*';
-
 	my ($keyword) = param('keyword');
 	if ( defined $keyword ) {
 		my $result = $data->{$keyword};
@@ -364,8 +360,6 @@ get '/tv/atom' => sub {
 };
 
 get '/login' => sub {
-
-	#session referer => request->referer;
 	template 'login';
 };
 
