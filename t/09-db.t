@@ -12,9 +12,10 @@ t::lib::Test::setup();
 
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new('pm.db');
+my $TIMESTAMP = re('^\d{10}$');
 
 subtest users => sub {
-	plan tests => 6;
+	plan tests => 8;
 
 	my $people = $db->get_people('');
 	is_deeply $people, [], 'no people';
@@ -23,6 +24,25 @@ subtest users => sub {
 	$people = $db->get_people('');
 	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef, subscriptions => [] } ],
 		'first person';
+
+	my $user = $db->get_user_by_id(1);
+	cmp_deeply $user, {
+       'admin' => undef,
+       'email' => 'foo@bar.com',
+       'id' => 1,
+       'login_whitelist' => undef,
+       'name' => undef,
+       'password' => undef,
+       'password_reset_code' => undef,
+       'password_reset_timeout' => undef,
+       'register_time' => $TIMESTAMP,
+       'verify_code' => undef,
+       'verify_time' => undef
+     }, 'get_user_by_id';
+
+	my $no_user = $db->get_user_by_id(2);
+	is $no_user, undef, 'get_user_by_id no such user';
+	#diag explain $no_user;
 
 	$db->add_registration( { email => 'buzz@nasa.com' } );
 	$people = $db->get_people('');
@@ -51,7 +71,7 @@ subtest users => sub {
 		'password'               => undef,
 		'password_reset_code'    => undef,
 		'password_reset_timeout' => undef,
-		'register_time'          => re('\d+'),
+		'register_time'          => $TIMESTAMP,
 		'verify_code'            => undef,
 		'verify_time'            => undef,
 		'admin'                  => undef,
