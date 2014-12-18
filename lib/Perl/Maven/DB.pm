@@ -87,12 +87,14 @@ sub get_user_by_email {
 sub get_people {
 	my ( $self, $email ) = @_;
 
-	return $self->{dbh}->selectall_arrayref(
+	my $ar = $self->{dbh}->selectall_arrayref(
 		q{
 	   SELECT id, email, verify_time
 	   FROM user WHERE email LIKE ?
 	}, undef, '%' . $email . '%'
 	);
+	my @users = map { { id => $_->[0], email => $_->[1], verify_time => $_[2], } } @$ar;
+	return \@users;
 }
 
 sub get_user_by_id {

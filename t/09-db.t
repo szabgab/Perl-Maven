@@ -21,16 +21,21 @@ subtest users => sub {
 
 	my $id = $db->add_registration( { email => 'foo@bar.com' } );
 	$people = $db->get_people('');
-	is_deeply $people, [ [ 1, 'foo@bar.com', undef ] ], 'first person';
+	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef } ], 'first person';
 
 	$db->add_registration( { email => 'buzz@nasa.com' } );
 	$people = $db->get_people('');
 
 	#diag explain $people;
-	is_deeply $people, [ [ 1, 'foo@bar.com', undef ], [ 2, 'buzz@nasa.com', undef ] ], 'two people';
+	is_deeply $people,
+		[
+		{ id => 1, email => 'foo@bar.com',   verify_time => undef },
+		{ id => 2, email => 'buzz@nasa.com', verify_time => undef }
+		],
+		'two people';
 
 	$people = $db->get_people('oo');
-	is_deeply $people, [ [ 1, 'foo@bar.com', undef ] ], 'one person';
+	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef } ], 'one person';
 
 	my $p = $db->get_user_by_email('foo@bar');
 	is $p, undef, 'no such email';
