@@ -90,72 +90,6 @@ hook after => sub {
 	return;
 };
 
-sub log_request {
-	my ($response) = @_;
-
-	# It seems uri is not set when accessing images on the development server
-	my $uri = request->uri;
-	return if not defined $uri;
-	return if $uri =~ m{^/img/};
-	return if $uri =~ m{^/download/};
-
-	my $time = time;
-	my $dir = path( config->{appdir}, 'logs' );
-	mkdir $dir if not -e $dir;
-	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
-
-	my $ip = get_ip();
-
-	my %details = (
-		sid        => setting('sid'),
-		time       => $time,
-		host       => request->host,
-		page       => request->uri,
-		referrer   => scalar( request->referer ),
-		ip         => $ip,
-		user_agent => scalar( request->user_agent ),
-		status     => response->status,
-	);
-	my $start_time = setting('start_time');
-
-	if ($start_time) {
-		$details{elapsed_time} = Time::HiRes::time - $start_time;
-	}
-
-	# TODO if there are entries in the session, move them to the database
-	if (logged_in) {
-		$details{uid} = session('uid');
-	}
-
-	log_to_mongodb( \%details );
-
-	return if $response->status != 200;
-	return if $uri =~ m{^/atom};
-	return if $uri =~ m{^/robots.txt};
-	return if $uri =~ m{^/search};
-
-	return if is_bot();
-
-	#my %SKIP = map { $_ => 1 } qw(/pm/user-info);
-	#return if $SKIP{$uri};
-
-	if ( open my $fh, '>>', $file ) {
-		flock( $fh, LOCK_EX ) or return;
-		seek( $fh, 0, SEEK_END ) or return;
-		say $fh to_json \%details, { pretty => 0, canonical => 1 };
-		close $fh;
-	}
-	return;
-}
-
-sub log_to_mongodb {
-	my ($data) = @_;
-
-	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $database   = $client->get_database('PerlMaven');
-	my $collection = $database->get_collection('logging');
-	$collection->insert($data);
-}
 hook before_template => sub {
 	my $t = shift;
 	$t->{title} ||= '';
@@ -251,10 +185,6 @@ hook before_template => sub {
 
 	return;
 };
-
-sub in_development {
-	return request->host =~ /local(:\d+)?$/;
-}
 
 # Dynamic robots.txt generation to allow dynamic Sitemap URL
 get '/robots.txt' => sub {
@@ -356,16 +286,6 @@ get '/' => sub {
 
 	pm_show_page( { article => 'index', template => 'index', }, { pages => $pages } );
 };
-
-sub _replace_tags {
-	my ($pages) = @_;
-
-	foreach my $p (@$pages) {
-		$p->{tags} ||= [];
-		$p->{tags} = { map { $_ => 1 } @{ $p->{tags} } };
-	}
-	return;
-}
 
 get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
@@ -584,67 +504,6 @@ get '/pm/user-info' => sub {
 	to_json user_info();
 };
 
-sub user_info {
-	my %data = ( logged_in => logged_in(), );
-	my $uid = session('uid');
-	if ($uid) {
-		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
-		my $user = $db->get_user_by_id($uid);
-		$data{admin} = $user->{admin} ? 1 : 0;
-	}
-
-	# adding popups:
-
-	#my @popups = (
-	#	{
-	#		logged_in => 1,
-	#		what => 'popup_logged_in',
-	#		when => 1000,
-	#	 	frequency => 60*60*24,   # not more than
-	# } );
-	my $referrer = request->referer || '';
-	my $url      = request->base    || '';
-	my $path     = request->path    || '';
-
-	$referrer =~ s{^(https?://[^/]*/).*}{$1};
-
-	#debug("referrer = '$referrer'");
-	#debug("url = '$url'");
-	return \%data if $path =~ m{^(/pm/|/account|/login)};
-
-	if ( $url ne $referrer ) {
-		if ( logged_in() ) {
-
-			# if not a pro subscriber yet
-			if ( not $data{perl_maven_pro} ) {
-				my $seen = session('popup_logged_in');
-
-				if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-
-					#if ( not $seen or $seen < time - 10 ) {}
-					session( 'popup_logged_in' => time );
-					$data{delayed} = {
-						what => 'popup_logged_in',
-						when => 1000,
-					};
-				}
-			}
-		}
-		else {
-			my $seen = session('popup_logged_in');
-			if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-				session( 'popup_logged_in' => time );
-				$data{delayed} = {
-					what => 'popup_visitor',
-					when => 1000,
-				};
-			}
-		}
-	}
-
-	return \%data;
-}
-
 # TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
 get '/register' => sub {
 	return template 'registration_form', { show_right => 0, };
@@ -657,95 +516,6 @@ post '/pm/register.json' => sub {
 post '/register' => sub {
 	register();
 };
-
-sub register {
-	my $mymaven = mymaven;
-
-	my %data = (
-		password => param('password'),
-		email    => param('email'),
-		name     => param('name'),
-	);
-	if ( $mymaven->{require_password} ) {
-		$data{password} //= '';
-		$data{password} =~ s/^\s+|\s+$//g;
-		if ( not $data{password} ) {
-			return _registration_form( %data, error => 'missing_password' );
-		}
-		if ( length $data{password} < $mymaven->{require_password} ) {
-			return _registration_form(
-				%data,
-				error  => 'password_short',
-				params => [ $mymaven->{require_password} ]
-			);
-		}
-	}
-
-	if ( not $data{email} ) {
-		return _registration_form( %data, error => 'no_email_provided' );
-	}
-	if ( not Email::Valid->address( $data{email} ) ) {
-		return _registration_form( %data, error => 'invalid_mail' );
-	}
-
-	# check for uniqueness after lc
-	$data{email} = lc $data{email};
-
-	my $user = $db->get_user_by_email( $data{email} );
-
-	#debug Dumper $user;
-	if ( $user and $user->{verify_time} ) {
-		return _registration_form( %data, error => 'duplicate_mail' );
-	}
-
-	my $code = _generate_code();
-
-	# basically resend the old code
-	my $id;
-	if ($user) {
-		$code = $user->{verify_code};
-		$id   = $user->{id};
-	}
-	else {
-		$id = $db->add_registration( { email => $data{email}, code => $code } );
-	}
-
-	my $err = send_verification_mail(
-		'email_first_verification_code',
-		$data{email},
-		"Please finish the $mymaven->{title} registration",
-		{
-			url  => uri_for('/verify'),
-			id   => $id,
-			code => $code,
-		},
-	);
-	if ($err) {
-		return pm_error( 'could_not_send_email', params => [ $data{email} ], );
-	}
-
-	my $html_from = $mymaven->{from};
-	$html_from =~ s/</&lt;/g;
-	return _template 'response', { from => $html_from };
-}
-
-sub send_verification_mail {
-	my ( $template, $email, $subject, $params ) = @_;
-
-	my $html = template $template, $params, { layout => 'email', };
-	my $mymaven = mymaven;
-	return send_mail(
-		{
-			From    => $mymaven->{from},
-			To      => $email,
-			Subject => $subject,
-		},
-		{
-			html => $html,
-		}
-	);
-}
-
 post '/change-email' => sub {
 	if ( not logged_in() ) {
 		return redirect '/login';
@@ -1117,6 +887,7 @@ get '/explain' => sub {
 	);
 	return template 'explain', \%data;
 };
+
 post '/explain' => sub {
 	my $code = params->{'code'};
 	$code = '' if not defined $code;
@@ -1154,13 +925,6 @@ post '/explain' => sub {
 	return to_json \%data;
 };
 
-sub _escape {
-	my $txt = shift;
-	$txt =~ s/</&lt;/g;
-	$txt =~ s/>/&gt;/g;
-	return $txt;
-}
-
 get '/jobs-employer' => sub {
 	template 'jobs_employer', { a => 1, };
 };
@@ -1172,6 +936,13 @@ get qr{^/(.+)} => sub {
 };
 
 ##########################################################################################
+sub _escape {
+	my $txt = shift;
+	$txt =~ s/</&lt;/g;
+	$txt =~ s/>/&gt;/g;
+	return $txt;
+}
+
 sub get_download_files {
 	my ($subdir) = @_;
 
@@ -1321,6 +1092,236 @@ sub is_bot {
 	return $user_agent
 		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider|Spinn3r|robots|thumboweb_bot|Blekkobot|Exabot|LWP::Simple/;
 
+}
+
+sub register {
+	my $mymaven = mymaven;
+
+	my %data = (
+		password => param('password'),
+		email    => param('email'),
+		name     => param('name'),
+	);
+	if ( $mymaven->{require_password} ) {
+		$data{password} //= '';
+		$data{password} =~ s/^\s+|\s+$//g;
+		if ( not $data{password} ) {
+			return _registration_form( %data, error => 'missing_password' );
+		}
+		if ( length $data{password} < $mymaven->{require_password} ) {
+			return _registration_form(
+				%data,
+				error  => 'password_short',
+				params => [ $mymaven->{require_password} ]
+			);
+		}
+	}
+
+	if ( not $data{email} ) {
+		return _registration_form( %data, error => 'no_email_provided' );
+	}
+	if ( not Email::Valid->address( $data{email} ) ) {
+		return _registration_form( %data, error => 'invalid_mail' );
+	}
+
+	# check for uniqueness after lc
+	$data{email} = lc $data{email};
+
+	my $user = $db->get_user_by_email( $data{email} );
+
+	#debug Dumper $user;
+	if ( $user and $user->{verify_time} ) {
+		return _registration_form( %data, error => 'duplicate_mail' );
+	}
+
+	my $code = _generate_code();
+
+	# basically resend the old code
+	my $id;
+	if ($user) {
+		$code = $user->{verify_code};
+		$id   = $user->{id};
+	}
+	else {
+		$id = $db->add_registration( { email => $data{email}, code => $code } );
+	}
+
+	my $err = send_verification_mail(
+		'email_first_verification_code',
+		$data{email},
+		"Please finish the $mymaven->{title} registration",
+		{
+			url  => uri_for('/verify'),
+			id   => $id,
+			code => $code,
+		},
+	);
+	if ($err) {
+		return pm_error( 'could_not_send_email', params => [ $data{email} ], );
+	}
+
+	my $html_from = $mymaven->{from};
+	$html_from =~ s/</&lt;/g;
+	return _template 'response', { from => $html_from };
+}
+
+sub send_verification_mail {
+	my ( $template, $email, $subject, $params ) = @_;
+
+	my $html = template $template, $params, { layout => 'email', };
+	my $mymaven = mymaven;
+	return send_mail(
+		{
+			From    => $mymaven->{from},
+			To      => $email,
+			Subject => $subject,
+		},
+		{
+			html => $html,
+		}
+	);
+}
+
+sub log_request {
+	my ($response) = @_;
+
+	# It seems uri is not set when accessing images on the development server
+	my $uri = request->uri;
+	return if not defined $uri;
+	return if $uri =~ m{^/img/};
+	return if $uri =~ m{^/download/};
+
+	my $time = time;
+	my $dir = path( config->{appdir}, 'logs' );
+	mkdir $dir if not -e $dir;
+	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
+
+	my $ip = get_ip();
+
+	my %details = (
+		sid        => setting('sid'),
+		time       => $time,
+		host       => request->host,
+		page       => request->uri,
+		referrer   => scalar( request->referer ),
+		ip         => $ip,
+		user_agent => scalar( request->user_agent ),
+		status     => response->status,
+	);
+	my $start_time = setting('start_time');
+
+	if ($start_time) {
+		$details{elapsed_time} = Time::HiRes::time - $start_time;
+	}
+
+	# TODO if there are entries in the session, move them to the database
+	if (logged_in) {
+		$details{uid} = session('uid');
+	}
+
+	log_to_mongodb( \%details );
+
+	return if $response->status != 200;
+	return if $uri =~ m{^/atom};
+	return if $uri =~ m{^/robots.txt};
+	return if $uri =~ m{^/search};
+
+	return if is_bot();
+
+	#my %SKIP = map { $_ => 1 } qw(/pm/user-info);
+	#return if $SKIP{$uri};
+
+	if ( open my $fh, '>>', $file ) {
+		flock( $fh, LOCK_EX ) or return;
+		seek( $fh, 0, SEEK_END ) or return;
+		say $fh to_json \%details, { pretty => 0, canonical => 1 };
+		close $fh;
+	}
+	return;
+}
+
+sub log_to_mongodb {
+	my ($data) = @_;
+
+	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database   = $client->get_database('PerlMaven');
+	my $collection = $database->get_collection('logging');
+	$collection->insert($data);
+}
+
+sub in_development {
+	return request->host =~ /local(:\d+)?$/;
+}
+
+sub _replace_tags {
+	my ($pages) = @_;
+
+	foreach my $p (@$pages) {
+		$p->{tags} ||= [];
+		$p->{tags} = { map { $_ => 1 } @{ $p->{tags} } };
+	}
+	return;
+}
+
+sub user_info {
+	my %data = ( logged_in => logged_in(), );
+	my $uid = session('uid');
+	if ($uid) {
+		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
+		my $user = $db->get_user_by_id($uid);
+		$data{admin} = $user->{admin} ? 1 : 0;
+	}
+
+	# adding popups:
+
+	#my @popups = (
+	#	{
+	#		logged_in => 1,
+	#		what => 'popup_logged_in',
+	#		when => 1000,
+	#	 	frequency => 60*60*24,   # not more than
+	# } );
+	my $referrer = request->referer || '';
+	my $url      = request->base    || '';
+	my $path     = request->path    || '';
+
+	$referrer =~ s{^(https?://[^/]*/).*}{$1};
+
+	#debug("referrer = '$referrer'");
+	#debug("url = '$url'");
+	return \%data if $path =~ m{^(/pm/|/account|/login)};
+
+	if ( $url ne $referrer ) {
+		if ( logged_in() ) {
+
+			# if not a pro subscriber yet
+			if ( not $data{perl_maven_pro} ) {
+				my $seen = session('popup_logged_in');
+
+				if ( not $seen or $seen < time - 60 * 60 * 24 ) {
+
+					#if ( not $seen or $seen < time - 10 ) {}
+					session( 'popup_logged_in' => time );
+					$data{delayed} = {
+						what => 'popup_logged_in',
+						when => 1000,
+					};
+				}
+			}
+		}
+		else {
+			my $seen = session('popup_logged_in');
+			if ( not $seen or $seen < time - 60 * 60 * 24 ) {
+				session( 'popup_logged_in' => time );
+				$data{delayed} = {
+					what => 'popup_visitor',
+					when => 1000,
+				};
+			}
+		}
+	}
+
+	return \%data;
 }
 
 true;
