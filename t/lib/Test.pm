@@ -25,12 +25,20 @@ sub setup {
 
 	my $dbfile = "$dir/pm.db";
 	$ENV{PERL_MAVEN_DB} = $dbfile;
-
 	system "$^X bin/setup.pl $dbfile" and die;
+
+	$ENV{PERL_MAVEN_MONGO_DB} = 'PerlMaven_Test_' . time;
+
 	my $db = Perl::Maven::DB->new($dbfile);
 
 	$db->add_product( { code => 'perl_maven_cookbook',       name => 'Perl Maven Cookbook',        price => 0 } );
 	$db->add_product( { code => 'beginner_perl_maven_ebook', name => 'Beginner Perl Maven e-book', price => 0.01 } );
+}
+
+END {
+	if ( $ENV{PERL_MAVEN_MONGO_DB} ) {
+		Perl::Maven::DB->instance->{db}->drop;
+	}
 }
 
 sub read_file {
