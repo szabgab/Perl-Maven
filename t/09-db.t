@@ -80,6 +80,7 @@ subtest users => sub {
 		'verify_time'            => undef,
 		'admin'                  => undef,
 		'login_whitelist'        => undef,
+		subscriptions            => [],
 		};
 };
 
@@ -101,6 +102,7 @@ subtest replace_email => sub {
 		'verify_time'            => undef,
 		'admin'                  => undef,
 		'login_whitelist'        => undef,
+		subscriptions            => [],
 		};
 
 	$db->replace_email( 'buzz@nasa.com', 'buzz@buzzaldrin.com' );
@@ -123,6 +125,7 @@ subtest replace_email => sub {
 		'verify_time'            => undef,
 		'admin'                  => undef,
 		'login_whitelist'        => undef,
+		subscriptions            => [],
 		};
 
 };

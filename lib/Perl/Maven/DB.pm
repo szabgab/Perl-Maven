@@ -80,6 +80,20 @@ sub get_user_by_email {
 	my ( $self, $email ) = @_;
 
 	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE email=?', undef, $email );
+	if ($hr) {
+		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
+	}
+
+	return $hr;
+}
+
+sub get_user_by_id {
+	my ( $self, $id ) = @_;
+
+	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
+	if ($hr) {
+		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
+	}
 
 	return $hr;
 }
@@ -102,17 +116,6 @@ sub get_people {
 		}
 	} @$ar;
 	return \@users;
-}
-
-sub get_user_by_id {
-	my ( $self, $id ) = @_;
-
-	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
-	if ($hr) {
-		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
-	}
-
-	return $hr;
 }
 
 sub verify_registration {
