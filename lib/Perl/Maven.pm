@@ -577,6 +577,29 @@ get qr{^/pro/(.+)} => sub {
 	);
 };
 
+get '/mail/:article' => sub {
+	my $article = param('article');
+	my $code    = param('code') || '';
+	my $email   = param('email') || '';
+
+	my $path = mymaven->{dirs}{mail} . "/$article.tt";
+	return 'NO path' if not -e $path;
+
+	my $tt = read_tt($path);
+	return template 'error', { 'no_such_article' => 1 }
+		if not $tt->{status}
+		or $tt->{status} ne 'show';
+
+	$tt->{code}  = $code;
+	$tt->{email} = $email;
+	my $url = request->base;
+
+	$tt->{url}          = $url;
+	$tt->{email_footer} = 1;
+
+	return template 'email_newsletter', $tt, { layout => 'email' };
+};
+
 get '/verify2/:code' => sub {
 	my $code = param('code');
 
@@ -714,29 +737,6 @@ get '/img/:file' => sub {
 		content_type => ( $map{$ext} // $ext ),
 		system_path => 1,
 	);
-};
-
-get '/mail/:article' => sub {
-	my $article = param('article');
-	my $code    = param('code') || '';
-	my $email   = param('email') || '';
-
-	my $path = mymaven->{dirs}{mail} . "/$article.tt";
-	return 'NO path' if not -e $path;
-
-	my $tt = read_tt($path);
-	return template 'error', { 'no_such_article' => 1 }
-		if not $tt->{status}
-		or $tt->{status} ne 'show';
-
-	$tt->{code}  = $code;
-	$tt->{email} = $email;
-	my $url = request->base;
-
-	$tt->{url}          = $url;
-	$tt->{email_footer} = 1;
-
-	return template 'email_newsletter', $tt, { layout => 'email' };
 };
 
 get '/tv' => sub {
