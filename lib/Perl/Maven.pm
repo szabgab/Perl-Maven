@@ -953,12 +953,11 @@ sub register {
 	if ( not $data{email} ) {
 		return _registration_form( %data, error => 'no_email_provided' );
 	}
+	$data{email} = lc $data{email};
+	$data{email} =~ s/^\s+|\s+$//;
 	if ( not Email::Valid->address( $data{email} ) ) {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
-
-	# check for uniqueness after lc
-	$data{email} = lc $data{email};
 
 	my $user = $db->get_user_by_email( $data{email} );
 
