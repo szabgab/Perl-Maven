@@ -962,21 +962,18 @@ sub register {
 	my $user = $db->get_user_by_email( $data{email} );
 
 	#debug Dumper $user;
-	if ( $user and $user->{verify_time} ) {
-		return _registration_form( %data, error => 'duplicate_mail' );
+	if ($user) {
+		if ( $user->{verify_time} ) {
+			return _registration_form( %data, error => 'already_registered_and_verified' );
+		}
+		else {
+			return _registration_form( %data, error => 'already_registered_not_verified' );
+		}
+
 	}
 
 	my $code = _generate_code();
-
-	# basically resend the old code
-	my $id;
-	if ($user) {
-		$code = $user->{verify_code};
-		$id   = $user->{id};
-	}
-	else {
-		$id = $db->add_registration( { email => $data{email}, code => $code } );
-	}
+	my $id = $db->add_registration( { email => $data{email}, code => $code } );
 
 	my $err = send_verification_mail(
 		'email_first_verification_code',

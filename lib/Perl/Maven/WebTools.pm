@@ -10,9 +10,11 @@ my %authors;
 my %RESOURCES = (
 	password_short =>
 		'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
-	missing_password            => 'Missing password',
-	invalid_mail                => 'Invalid e-mail.',
-	duplicate_mail              => 'This address is already registered.',
+	missing_password                => 'Missing password',
+	invalid_mail                    => 'Invalid e-mail.',
+	already_registered_and_verified => 'This address is already registered. Please <a href="/login">log in</a>.',
+	already_registered_not_verified =>
+		'This address is already registered, but the e-mail has not been verified yet. Please ask for a new verification code <a href="/login">here</a>.',
 	could_not_send_email        => 'Internal error. Could not send e-mail to <b>%s</b>.',
 	internal_error              => 'Internal error',
 	invalid_value_provided      => 'Invalid parameter',
