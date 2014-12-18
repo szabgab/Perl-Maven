@@ -696,9 +696,12 @@ get '/img/:file' => sub {
 	my $file = param('file');
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
+	my %map = (
+		svg => 'image/svg+xml',
+	);
 	send_file(
 		path( mymaven->{dirs}{img}, $file ),
-		content_type => $ext,
+		content_type => ($map{$ext} // $ext),
 		system_path  => 1,
 	);
 };
