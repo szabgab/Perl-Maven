@@ -20,6 +20,7 @@ WriteMakefile(
 
 		'Dancer2::Plugin::Passphrase' => '2.0.5',
 		'DateTime'                    => 1.12,
+		'DateTime::Tiny'              => 1.04,
 		'Email::Valid'                => 1.193,
 		'File::Find::Rule'            => 0.33,
 		'Hash::Merge::Simple'         => 0.051,
