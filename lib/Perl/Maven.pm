@@ -325,22 +325,6 @@ get '/archive' => sub {
 	);
 };
 
-get '/consultants' => sub {
-	return redirect '/perl-training-consulting';
-};
-
-get '/perl-training-consulting' => sub {
-	pm_show_page(
-		{
-			article  => 'perl-training-consulting',
-			template => 'consultants',
-		},
-		{
-			people => setting('tools')->read_meta_meta('consultants'),
-		}
-	);
-};
-
 get '/sitemap.xml' => sub {
 	my $pages = setting('tools')->read_meta_array('sitemap');
 	my $url   = request->base;
