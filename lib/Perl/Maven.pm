@@ -696,13 +696,11 @@ get '/img/:file' => sub {
 	my $file = param('file');
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
-	my %map = (
-		svg => 'image/svg+xml',
-	);
+	my %map = ( svg => 'image/svg+xml', );
 	send_file(
 		path( mymaven->{dirs}{img}, $file ),
-		content_type => ($map{$ext} // $ext),
-		system_path  => 1,
+		content_type => ( $map{$ext} // $ext ),
+		system_path => 1,
 	);
 };
 
@@ -736,14 +734,6 @@ get '/tv' => sub {
 			pages => setting('tools')->read_meta_array( 'archive', filter => 'interview' )
 		}
 	);
-};
-
-# TODO move this to a plugin
-get '/svg.xml' => sub {
-	my %query = params();
-	require Perl::Maven::SVG;
-	my $xml = Perl::Maven::SVG::circle( \%query );
-	return $xml;
 };
 
 get qr{^/media/(.+)} => sub {

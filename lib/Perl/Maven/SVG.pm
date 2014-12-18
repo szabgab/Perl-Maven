@@ -1,12 +1,16 @@
 package Perl::Maven::SVG;
-use strict;
-use warnings;
-
-use SVG;
+use Dancer2 appname => 'Perl::Maven';
 
 use Data::Dumper qw(Dumper);
 
 our $VERSION = '0.11';
+
+get '/svg.xml' => sub {
+	require SVG;
+	my %query = params();
+	my $xml   = circle( \%query );
+	return $xml;
+};
 
 sub circle {
 	my ($data) = @_;
@@ -35,5 +39,5 @@ sub circle {
 	return $svg->xmlify;
 }
 
-1;
+true;
 

@@ -45,8 +45,6 @@
 <script src="/bootstrap/js/bootstrap-carousel.js"></script>
 <script src="/bootstrap/js/bootstrap-typeahead.js"></script>
 
-<script src="/javascripts/svg.js"></script>
-
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
 
 <% IF conf.google_analytics %>
