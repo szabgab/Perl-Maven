@@ -778,10 +778,6 @@ get qr{^/media/(.+)} => sub {
 	return 'media error';
 };
 
-get '/jobs-employer' => sub {
-	template 'jobs_employer', { a => 1, };
-};
-
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
@@ -1014,6 +1010,7 @@ sub register {
 	$html_from =~ s/</&lt;/g;
 	return _template 'response', { from => $html_from };
 }
+
 post '/pm/change-email' => sub {
 	my $mymaven = mymaven;
 	if ( not logged_in() ) {
