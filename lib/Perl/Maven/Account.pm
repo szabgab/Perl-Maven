@@ -4,7 +4,7 @@ use Dancer2 appname => 'Perl::Maven';
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
 use Perl::Maven::WebTools
-	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template);
+	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template pm_user_info);
 use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';
@@ -295,6 +295,117 @@ post '/pm/change-email' => sub {
 	pm_message('verification_email_sent');
 };
 
+get '/pm/login' => sub {
+	template 'login';
+};
+
+post '/pm/login' => sub {
+	my $email    = param('email');
+	my $password = param('password');
+
+	return pm_error('missing_data')
+		if not $password or not $email;
+
+	my $db   = setting('db');
+	my $user = $db->get_user_by_email($email);
+	if ( not $user->{password} ) {
+		return pm_template 'login', { no_password => 1 };
+	}
+
+	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
+		return pm_error('invalid_pw')
+			if not passphrase($password)->matches( $user->{password} );
+	}
+	else {
+		return pm_error('invalid_pw')
+			if $user->{password} ne Digest::SHA::sha1_base64($password);
+
+		# password is good, we need to update it
+		$db->set_password( $user->{id}, passphrase($password)->generate->rfc2307 );
+	}
+
+	session uid       => $user->{id};
+	session logged_in => 1;
+	session last_seen => time;
+
+	#my $url = session('referer') // '/account';
+	#session referer => undef;
+	my $url = session('url') // '/account';
+	session url => undef;
+
+	redirect $url;
+};
+
+post '/pm/whitelist-delete' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $uid = session('uid');
+	my $id  = param('id');
+	my $db  = setting('db');
+	$db->delete_from_whitelist( $uid, $id );
+	pm_message('whitelist_entry_deleted');
+};
+
+get '/pm/user-info' => sub {
+	to_json pm_user_info();
+};
+
+get '/pm/logout' => sub {
+	session logged_in => 0;
+	redirect '/';
+};
+
+get '/pm/account' => sub {
+	return redirect '/login' if not logged_in();
+
+	my $db   = setting('db');
+	my $uid  = session('uid');
+	my $user = $db->get_user_by_id($uid);
+
+	my @owned_products;
+	foreach my $code ( @{ $user->{subscriptions} } ) {
+
+		# TODO remove the hard-coded special case of the perl_maven_pro
+		if ( $code eq 'perl_maven_pro' ) {
+			push @owned_products,
+				{
+				name     => 'Perl Maven Pro',
+				filename => '/archive?tag=pro',
+				linkname => 'List of pro articles',
+				};
+		}
+		else {
+			my @files = get_download_files($code);
+			foreach my $f (@files) {
+
+				#debug "$code -  $f->{file}";
+				push @owned_products,
+					{
+					name     => ( setting('products')->{$code}{name} . " $f->{title}" ),
+					filename => "/download/$code/$f->{file}",
+					linkname => $f->{file},
+					};
+			}
+		}
+	}
+
+	my %params = (
+		subscriptions   => \@owned_products,
+		subscribed      => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
+		name            => $user->{name},
+		email           => $user->{email},
+		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
+	);
+	if ( $user->{login_whitelist} ) {
+		$params{whitelist} = $db->get_whitelist($uid);
+	}
+	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
+		$params{perl_maven_pro_buy_button}
+			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
+	}
+	template 'account', \%params;
+};
+
 ##########################################################################################
 
 sub register {
@@ -411,6 +522,31 @@ sub send_verification_mail {
 			html => $html,
 		}
 	);
+}
+
+sub get_download_files {
+	my ($subdir) = @_;
+
+	my $manifest = path( mymaven->{dirs}{download}, $subdir, 'manifest.csv' );
+
+	#debug $manifest;
+	my @files;
+	eval {
+		foreach my $line ( Path::Tiny::path($manifest)->lines ) {
+			chomp $line;
+			my ( $file, $title ) = split /;/, $line;
+			push @files,
+				{
+				file  => $file,
+				title => $title,
+				};
+		}
+		1;
+	} or do {
+		my $err = $@ // 'Unknown error';
+		error "Could not open $manifest : $err";
+	};
+	return @files;
 }
 
 true;
