@@ -26,7 +26,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form  read_tt pm_show_abstract pm_show_page authors pm_message);
+	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_message);
 use Perl::Maven::Sendmail qw(send_mail);
 use Perl::Maven::Account;
 
@@ -374,7 +374,7 @@ post '/login' => sub {
 	my $db   = setting('db');
 	my $user = $db->get_user_by_email($email);
 	if ( not $user->{password} ) {
-		return template 'login', { no_password => 1 };
+		return _template 'login', { no_password => 1 };
 	}
 
 	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
@@ -555,7 +555,7 @@ get '/mail/:article' => sub {
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
-	return template 'error', { 'no_such_article' => 1 }
+	return _template 'error', { 'no_such_article' => 1 }
 		if not $tt->{status}
 		or $tt->{status} ne 'show';
 
@@ -566,7 +566,7 @@ get '/mail/:article' => sub {
 	$tt->{url}          = $url;
 	$tt->{email_footer} = 1;
 
-	return template 'email_newsletter', $tt, { layout => 'email' };
+	return _template 'email_newsletter', $tt, { layout => 'email' };
 };
 
 get '/verify2/:code' => sub {
@@ -642,7 +642,7 @@ get '/verify/:id/:code' => sub {
 	}
 
 	if ( $user->{verify_time} ) {
-		return template 'thank_you';
+		return _template 'thank_you';
 	}
 
 	verify_registration( $uid, $user->{email} );
@@ -653,7 +653,7 @@ sub verify_registration {
 	my $db = setting('db');
 
 	if ( not $db->verify_registration($uid) ) {
-		return template 'verify_form', { error => 1, };
+		return _template 'verify_form', { error => 1, };
 	}
 
 	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );

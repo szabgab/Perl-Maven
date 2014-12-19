@@ -1,7 +1,7 @@
 package Perl::Maven::Admin;
 use Dancer2 appname => 'Perl::Maven';
 
-use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code pm_error);
+use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code pm_error _template);
 use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';
@@ -11,7 +11,7 @@ get '/admin' => sub {
 	return $res if $res;
 
 	my $db = setting('db');
-	return template 'admin', { stats => $db->stats };
+	return _template 'admin', { stats => $db->stats };
 };
 
 get '/admin/sessions' => sub {
@@ -36,7 +36,7 @@ get '/admin/sessions' => sub {
 		push @hits, $c;
 	}
 
-	return template 'admin_sessions', { count => $count, hits => \@hits };
+	return _template 'admin_sessions', { count => $count, hits => \@hits };
 };
 
 get '/admin/user_info.json' => sub {
