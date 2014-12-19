@@ -34,6 +34,7 @@ prefix '/foobar';
 require Perl::Maven::MetaSyntactic;
 prefix '/';
 
+require Perl::Maven::Consultants;
 require Perl::Maven::CodeExplain;
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
