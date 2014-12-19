@@ -3,7 +3,7 @@ use Dancer2 appname => 'Perl::Maven';
 
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
-use Perl::Maven::WebTools qw(mymaven logged_in get_ip _generate_code pm_error pm_message _template);
+use Perl::Maven::WebTools qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form _template);
 use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';

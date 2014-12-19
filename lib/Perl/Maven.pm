@@ -26,7 +26,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(logged_in get_ip mymaven _generate_code pm_error _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_message);
+	qw(logged_in get_ip mymaven _generate_code pm_error  _template read_tt pm_show_abstract pm_show_page authors pm_message pm_user_info);
 use Perl::Maven::Sendmail qw(send_mail);
 use Perl::Maven::Account;
 
@@ -175,7 +175,7 @@ hook before_template => sub {
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
 
-	$t->{user_info}      = user_info();
+	$t->{user_info}      = pm_user_info();
 	$t->{user_info_json} = to_json $t->{user_info};
 
 	#die Dumper $t;
@@ -412,7 +412,7 @@ post '/pm/whitelist-delete' => sub {
 };
 
 get '/pm/user-info' => sub {
-	to_json user_info();
+	to_json pm_user_info();
 };
 
 get '/logout' => sub {
@@ -986,68 +986,6 @@ sub _replace_tags {
 		$p->{tags} = { map { $_ => 1 } @{ $p->{tags} } };
 	}
 	return;
-}
-
-sub user_info {
-	my %data = ( logged_in => logged_in(), );
-	my $uid = session('uid');
-	if ($uid) {
-		my $db = setting('db');
-		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
-		my $user = $db->get_user_by_id($uid);
-		$data{admin} = $user->{admin} ? 1 : 0;
-	}
-
-	# adding popups:
-
-	#my @popups = (
-	#	{
-	#		logged_in => 1,
-	#		what => 'popup_logged_in',
-	#		when => 1000,
-	#	 	frequency => 60*60*24,   # not more than
-	# } );
-	my $referrer = request->referer || '';
-	my $url      = request->base    || '';
-	my $path     = request->path    || '';
-
-	$referrer =~ s{^(https?://[^/]*/).*}{$1};
-
-	#debug("referrer = '$referrer'");
-	#debug("url = '$url'");
-	return \%data if $path =~ m{^(/pm/|/account|/login)};
-
-	if ( $url ne $referrer ) {
-		if ( logged_in() ) {
-
-			# if not a pro subscriber yet
-			if ( not $data{perl_maven_pro} ) {
-				my $seen = session('popup_logged_in');
-
-				if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-
-					#if ( not $seen or $seen < time - 10 ) {}
-					session( 'popup_logged_in' => time );
-					$data{delayed} = {
-						what => 'popup_logged_in',
-						when => 1000,
-					};
-				}
-			}
-		}
-		else {
-			my $seen = session('popup_logged_in');
-			if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-				session( 'popup_logged_in' => time );
-				$data{delayed} = {
-					what => 'popup_visitor',
-					when => 1000,
-				};
-			}
-		}
-	}
-
-	return \%data;
 }
 
 true;

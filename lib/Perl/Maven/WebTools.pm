@@ -69,7 +69,7 @@ my %RESOURCES = (
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_error pm_message);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_error pm_message pm_user_info);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -305,6 +305,68 @@ sub read_authors {
 		}
 	};
 	return;
+}
+
+sub pm_user_info {
+	my %data = ( logged_in => logged_in(), );
+	my $uid = session('uid');
+	if ($uid) {
+		my $db = setting('db');
+		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
+		my $user = $db->get_user_by_id($uid);
+		$data{admin} = $user->{admin} ? 1 : 0;
+	}
+
+	# adding popups:
+
+	#my @popups = (
+	#	{
+	#		logged_in => 1,
+	#		what => 'popup_logged_in',
+	#		when => 1000,
+	#	 	frequency => 60*60*24,   # not more than
+	# } );
+	my $referrer = request->referer || '';
+	my $url      = request->base    || '';
+	my $path     = request->path    || '';
+
+	$referrer =~ s{^(https?://[^/]*/).*}{$1};
+
+	#debug("referrer = '$referrer'");
+	#debug("url = '$url'");
+	return \%data if $path =~ m{^(/pm/|/account|/login)};
+
+	if ( $url ne $referrer ) {
+		if ( logged_in() ) {
+
+			# if not a pro subscriber yet
+			if ( not $data{perl_maven_pro} ) {
+				my $seen = session('popup_logged_in');
+
+				if ( not $seen or $seen < time - 60 * 60 * 24 ) {
+
+					#if ( not $seen or $seen < time - 10 ) {}
+					session( 'popup_logged_in' => time );
+					$data{delayed} = {
+						what => 'popup_logged_in',
+						when => 1000,
+					};
+				}
+			}
+		}
+		else {
+			my $seen = session('popup_logged_in');
+			if ( not $seen or $seen < time - 60 * 60 * 24 ) {
+				session( 'popup_logged_in' => time );
+				$data{delayed} = {
+					what => 'popup_visitor',
+					when => 1000,
+				};
+			}
+		}
+	}
+
+	return \%data;
 }
 
 true;
