@@ -27,4 +27,4 @@ Email: <input name="email" />
 
 <h2>No account yet?</h2>
 
-Please <a href="/register">register</a> first!
+Please <a href="/pm/register">register</a> first!

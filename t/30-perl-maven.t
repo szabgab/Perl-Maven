@@ -109,7 +109,7 @@ subtest pages => sub {
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 subtest 'subscribe' => sub {
 	plan tests => 34;
-	$w->get_ok("$url/register");
+	$w->get_ok("$url/pm/register");
 	$w->content_like(qr/Perl Maven/);
 
 	$w->submit_form_ok(

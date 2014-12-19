@@ -416,7 +416,7 @@ get '/pm/user-info' => sub {
 };
 
 # TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
-get '/register' => sub {
+get '/pm/register' => sub {
 	return template 'registration_form', { show_right => 0, };
 };
 
@@ -424,7 +424,7 @@ post '/pm/register.json' => sub {
 	register();
 };
 
-post '/register' => sub {
+post '/pm/register' => sub {
 	register();
 };
 get '/logout' => sub {
