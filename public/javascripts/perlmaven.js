@@ -107,11 +107,11 @@ function admin_show_user_details(data, status, jqXHR) {
 	html += '<tr><td>email</td><td>timestamp</td><td>products</td></tr>';
 	for (var i = 0; i < data['people'].length; i++) { 
 		html += '<tr>';
-        html += '<td>' + data['people'][i][1] + '</td>';
-        html += '<td>' + new Date(data['people'][i][2] * 1000) + '</td>';
+        html += '<td>' + data['people'][i]['email'] + '</td>';
+        html += '<td>' + new Date(data['people'][i]['verify_time'] * 1000) + '</td>';
 		html += '<td>';
-			for (var j=0; j < data['people'][i][3].length; j++) {
-				html += data['people'][i][3][j] + '<br>';
+			for (var j=0; j < data['people'][i]['subscriptions'].length; j++) {
+				html += data['people'][i]['subscriptions'][j] + '<br>';
 			}
 		html += '</td>'
 		html += '</tr>';
@@ -188,7 +188,7 @@ $(document).ready(function() {
 
 	$('#admin-show-details').on('click', function(e) {
 		var email = $('#email').val();
-		console.log(email);
+		//console.log(email);
 		if (! email) {
 			//console.log('alert');
 			$("#need-email").show();
