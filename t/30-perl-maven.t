@@ -96,11 +96,11 @@ subtest pages => sub {
 	is $visitor->base, "$url/", 'redirected to root';
 
 	$visitor->get_ok('/account');
-	is $visitor->base, "$url/login", 'redirected to login page';
+	is $visitor->base, "$url/pm/login", 'redirected to login page';
 
 	# strangely for this post() request I had to supply the full URL or it would go to http://localhost/
 	$visitor->post_ok("$url/pm/change-email");
-	is $visitor->base, "$url/login", 'redirected to login page';
+	is $visitor->base, "$url/pm/login", 'redirected to login page';
 
 	#diag $visitor->content;
 };
@@ -217,7 +217,7 @@ subtest 'subscribe' => sub {
 # log out and then login again
 subtest 'ask for password reset, then login' => sub {
 
-	plan tests => 21;
+	plan tests => 23;
 	$w->get_ok('/account');
 	$w->content_like(qr{Login});
 	$w->content_like(qr{Forgot your password or don't have one yet});
@@ -297,6 +297,8 @@ subtest 'ask for password reset, then login' => sub {
 		'login'
 	);
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
+	$w->get_ok("$url/pm/user-info");
+	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
 
 	#diag $w->content;
 
@@ -417,7 +419,7 @@ subtest 'upgrade_pw' => sub {
 
 	$w->get_ok('/logout');
 	$w->get_ok('/account');
-	is $w->base, "$url/login", 'redirected to login page';
+	is $w->base, "$url/pm/login", 'redirected to login page';
 
 	# white-box:
 	my $user_before = $db->get_user_by_email($EMAIL);

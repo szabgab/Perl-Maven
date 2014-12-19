@@ -360,11 +360,11 @@ get '/tv/atom' => sub {
 	return atom( 'archive', 'interview', ' - Interviews' );
 };
 
-get '/login' => sub {
+get '/pm/login' => sub {
 	template 'login';
 };
 
-post '/login' => sub {
+post '/pm/login' => sub {
 	my $email    = param('email');
 	my $password = param('password');
 
@@ -415,12 +415,12 @@ get '/pm/user-info' => sub {
 	to_json pm_user_info();
 };
 
-get '/logout' => sub {
+get '/pm/logout' => sub {
 	session logged_in => 0;
 	redirect '/';
 };
 
-get '/account' => sub {
+get '/pm/account' => sub {
 	return redirect '/login' if not logged_in();
 
 	my $db   = setting('db');
@@ -569,7 +569,24 @@ get '/mail/:article' => sub {
 	return pm_template 'email_newsletter', $tt, { layout => 'email' };
 };
 
+# temporary solution
 get '/verify2/:code' => sub {
+	return redirect '/pm/verify2/' . param('code');
+};
+get '/verify/:id/:code' => sub {
+	return redirect '/pm/verify/' . param('id') . '/' . param('code');
+};
+get '/account' => sub {
+	redirect '/pm/account';
+};
+any '/login' => sub {
+	redirect '/pm/login';
+};
+any '/logout' => sub {
+	redirect '/pm/logout';
+};
+
+get '/pm/verify2/:code' => sub {
 	my $code = param('code');
 
 	return pm_error('missing_verification_code') if not $code;
@@ -623,7 +640,7 @@ get '/verify2/:code' => sub {
 	return pm_error('internal_verification_error');
 };
 
-get '/verify/:id/:code' => sub {
+get '/pm/verify/:id/:code' => sub {
 	my $uid  = param('id');
 	my $code = param('code');
 

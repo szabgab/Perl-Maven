@@ -1,6 +1,6 @@
 
 <h2>Login</h2>
-<form method="POST" action="/login" name="login" role="form">
+<form method="POST" action="/pm/login" name="login" role="form">
   <div class="form-group">
     <label for="email">Email address</label>
     <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
