@@ -69,7 +69,7 @@ my %RESOURCES = (
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form _template read_tt pm_show_abstract pm_show_page authors pm_error pm_message pm_user_info);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors pm_error pm_message pm_user_info);
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
@@ -180,10 +180,10 @@ sub _resources {
 	}
 
 	$args{show_right} = 0;
-	return _template( $template, \%args );
+	return pm_template( $template, \%args );
 }
 
-sub _template {
+sub pm_template {
 	my ( $template, $params ) = @_;
 	delete $params->{password};
 	if ( request->path =~ /\.json$/ ) {

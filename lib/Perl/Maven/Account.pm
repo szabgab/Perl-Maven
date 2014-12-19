@@ -3,7 +3,8 @@ use Dancer2 appname => 'Perl::Maven';
 
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
-use Perl::Maven::WebTools qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form _template);
+use Perl::Maven::WebTools
+	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template);
 use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';
@@ -369,7 +370,7 @@ sub register {
 
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
-	return _template 'response', { from => $html_from };
+	return pm_template 'response', { from => $html_from };
 }
 
 sub pw_form {
