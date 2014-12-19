@@ -3,7 +3,7 @@ use Dancer2 appname => 'Perl::Maven';
 
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
-use Perl::Maven::WebTools qw(mymaven logged_in get_ip _generate_code pm_error pm_message);
+use Perl::Maven::WebTools qw(mymaven logged_in get_ip _generate_code pm_error pm_message _template);
 use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';
@@ -232,7 +232,146 @@ any '/pm/unsubscribe' => sub {
 		};
 };
 
+# TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
+get '/pm/register' => sub {
+	return template 'registration_form', { show_right => 0, };
+};
+
+post '/pm/register.json' => sub {
+	register();
+};
+
+post '/pm/register' => sub {
+	register();
+};
+
+post '/pm/change-email' => sub {
+	my $mymaven = mymaven;
+	if ( not logged_in() ) {
+		return redirect '/login';
+	}
+	my $email = param('email') || '';
+	if ( not $email ) {
+		return pm_error('no_email_provided');
+	}
+	if ( not Email::Valid->address($email) ) {
+		return pm_error('broken_email');
+	}
+
+	# check for uniqueness after lc
+	$email = lc $email;
+	my $db         = setting('db');
+	my $other_user = $db->get_user_by_email($email);
+	if ($other_user) {
+		return pm_error('email_exists');
+	}
+
+	my $uid = session('uid');
+
+	my $code = _generate_code();
+	$db->save_verification(
+		code      => $code,
+		action    => 'change_email',
+		timestamp => time,
+		uid       => $uid,
+		details   => to_json {
+			new_email => $email,
+		},
+	);
+	my $err = send_verification_mail(
+		'email_verification_code',
+		$email,
+		"Please verify your new e-mail address for $mymaven->{title}",
+		{
+			url  => uri_for('/verify2'),
+			code => $code,
+		},
+	);
+	if ($err) {
+		return pm_error( 'could_not_send_email', params => [$email], );
+	}
+
+	pm_message('verification_email_sent');
+};
+
 ##########################################################################################
+
+sub register {
+	my $mymaven = mymaven;
+
+	my %data = (
+		password => param('password'),
+		email    => param('email'),
+		name     => param('name'),
+	);
+	if ( $mymaven->{require_password} ) {
+		$data{password} //= '';
+		$data{password} =~ s/^\s+|\s+$//g;
+		if ( not $data{password} ) {
+			return _registration_form( %data, error => 'missing_password' );
+		}
+		if ( length $data{password} < $mymaven->{require_password} ) {
+			return _registration_form(
+				%data,
+				error  => 'password_short',
+				params => [ $mymaven->{require_password} ]
+			);
+		}
+	}
+
+	if ( not $data{email} ) {
+		return _registration_form( %data, error => 'no_email_provided' );
+	}
+	$data{email} = lc $data{email};
+	$data{email} =~ s/^\s+|\s+$//;
+	if ( not Email::Valid->address( $data{email} ) ) {
+		return _registration_form( %data, error => 'invalid_mail' );
+	}
+
+	my $db   = setting('db');
+	my $user = $db->get_user_by_email( $data{email} );
+
+	#debug Dumper $user;
+	if ($user) {
+		if ( $user->{verify_time} ) {
+			return _registration_form( %data, error => 'already_registered_and_verified' );
+		}
+		else {
+			return _registration_form( %data, error => 'already_registered_not_verified' );
+		}
+
+	}
+
+	my $code = _generate_code();
+	my $uid = $db->add_registration( { email => $data{email} } );
+	$db->save_verification(
+		code      => $code,
+		action    => 'verify_email',
+		timestamp => time,
+		uid       => $uid,
+		details   => to_json {
+			new_email => $data{email},
+		},
+	);
+
+	my $err = send_verification_mail(
+		'email_first_verification_code',
+		$data{email},
+		"Please finish the $mymaven->{title} registration",
+		{
+			url  => uri_for('/verify2'),
+			code => $code,
+		},
+	);
+	if ($err) {
+		return pm_error( 'could_not_send_email', params => [ $data{email} ], );
+	}
+
+	my $html_from = $mymaven->{from};
+	$html_from =~ s/</&lt;/g;
+	return _template 'response', { from => $html_from };
+}
+
 sub pw_form {
 	my $id   = param('id');
 	my $code = param('code');
@@ -254,6 +393,23 @@ sub pw_form {
 		if $user->{password_reset_timeout} < time;
 
 	return;
+}
+
+sub send_verification_mail {
+	my ( $template, $email, $subject, $params ) = @_;
+
+	my $html = template $template, $params, { layout => 'email', };
+	my $mymaven = mymaven;
+	return send_mail(
+		{
+			From    => $mymaven->{from},
+			To      => $email,
+			Subject => $subject,
+		},
+		{
+			html => $html,
+		}
+	);
 }
 
 true;
