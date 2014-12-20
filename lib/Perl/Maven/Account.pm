@@ -79,9 +79,7 @@ post '/pm/send-reset-pw-code' => sub {
 		details   => to_json {},
 	);
 
-	my $html = template 'email_to_reset_password',
-		{ code   => $code, },
-		{ layout => 'email', };
+	my $html = template 'email_to_reset_password', { code => $code, }, { layout => 'email', };
 
 	my $mymaven = mymaven;
 	my $err     = send_mail(
@@ -420,8 +418,7 @@ sub verify2 {
 			return pm_message('password_set');
 		}
 		else {
-			return template 'set_password',
-				{ code => param('code'), };
+			return template 'set_password', { code => param('code'), };
 		}
 	}
 
