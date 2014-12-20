@@ -24,7 +24,7 @@ use Perl::Maven;
 my $app = Dancer2->psgi_app;
 is( ref $app, 'CODE', 'Got app' );
 
-my $url = 'http://test-perl-maven.com';
+my $url = "http://$t::lib::Test::DOMAIN";
 
 test_psgi $app, sub {
 	my $cb  = shift;

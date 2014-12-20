@@ -10,6 +10,13 @@ use File::Temp qw(tempdir);
 
 use Perl::Maven::DB;
 
+# this needs to match what we have in
+#    t/files/test/sites.yml
+# and in
+#    t/files/config/test.yml
+our $DOMAIN = 'test-perl-maven.com';
+our $URL    = "http://$DOMAIN/";
+
 sub setup {
 	my $dir = tempdir( CLEANUP => 1 );
 	$ENV{MYMAVEN_YML} = 't/files/config/test.yml';

@@ -15,7 +15,7 @@ t::lib::Test::setup();
 
 my $articles = '../articles';
 
-my $url = 'http://test-perl-maven.com';
+my $url = "http://$t::lib::Test::DOMAIN";
 
 plan( tests => 4 );
 

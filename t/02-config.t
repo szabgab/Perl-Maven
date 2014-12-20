@@ -4,6 +4,8 @@ use warnings;
 use Test::More;
 use Cwd qw(abs_path);
 
+use t::lib::Test;
+
 plan tests => 2;
 
 my $root = abs_path('.');
@@ -84,7 +86,7 @@ subtest testmaven => sub {
 	plan tests => 1;
 
 	my $mymaven = Perl::Maven::Config->new('t/files/config/test.yml');
-	my $main    = $mymaven->config('test-perl-maven.com');
+	my $main    = $mymaven->config($t::lib::Test::DOMAIN);
 
 	#diag explain $main;
 	is_deeply $main,
@@ -97,7 +99,7 @@ subtest testmaven => sub {
 			'pro'      => "$root/t/files/pro",
 			'img'      => "$root/t/files/images",
 		},
-		'domain'    => 'test-perl-maven.com',
+		'domain'    => $t::lib::Test::DOMAIN,
 		'main_site' => 'en',
 		'from'      => '<test@perlmaven.com>',
 		'lang'      => 'en',
@@ -110,7 +112,7 @@ subtest testmaven => sub {
 			'email' => 'Test Maven <admin-test@perlmaven.com>'
 		},
 		'www' => {
-			'redirect' => 'http://test-perl-maven.com/'
+			'redirect' => "http://$t::lib::Test::DOMAIN/"
 		}
 		};
 

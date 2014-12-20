@@ -14,7 +14,7 @@ use Test::WWW::Mechanize::PSGI;
 
 t::lib::Test::setup();
 
-my $url            = 'http://test-perl-maven.com';
+my $url            = "http://$t::lib::Test::DOMAIN";
 my $EMAIL          = 'gabor@perlmaven.com';
 my $EMAIL2         = 'other@perlmaven.com';
 my $EMAIL3         = 'zorg@perlmaven.com';
