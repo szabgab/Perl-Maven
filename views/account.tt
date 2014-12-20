@@ -97,6 +97,6 @@ to the white-list.
 
 <h2>Logout:</h2>
 <p>
-<a href="/logout">logout</a>
+<a href="/pm/logout">logout</a>
 </p>
 

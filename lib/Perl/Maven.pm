@@ -374,9 +374,10 @@ get '/account' => sub {
 any '/login' => sub {
 	redirect '/pm/login';
 };
-any '/logout' => sub {
-	redirect '/pm/logout';
-};
+
+#any '/logout' => sub {
+#	redirect '/pm/logout';
+#};
 
 get qr{^/(.+)} => sub {
 	my ($article) = splat;

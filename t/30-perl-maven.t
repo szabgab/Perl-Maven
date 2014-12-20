@@ -200,8 +200,8 @@ subtest 'subscribe' => sub {
 
 	$w->get_ok('/account');
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
-	$w->content_like( qr{<a href="/logout">logout</a>},               'logout link' );
-	$w->get_ok('/logout');
+	$w->content_like( qr{<a href="/pm/logout">logout</a>},            'logout link' );
+	$w->get_ok('/pm/logout');
 	$w->get_ok('/account');
 	$w->content_unlike( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
@@ -280,7 +280,7 @@ subtest 'ask for password reset, then login' => sub {
 	is substr( $user->{password}, 0, 7 ), '{CRYPT}';
 
 	#diag('now logout');
-	$w->get_ok("$url/logout");
+	$w->get_ok("$url/pm/logout");
 	$w->get_ok("$url/pm/user-info");
 	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
 
@@ -345,7 +345,7 @@ subtest 'change password while logged in' => sub {
 
 	#diag($w->content);
 	$w->content_like( qr{The password was set successfully}, 'password was reset' );
-	$w->get_ok("$url/logout");
+	$w->get_ok("$url/pm/logout");
 	$w->get_ok("$url/pm/user-info");
 	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
 
@@ -417,7 +417,7 @@ subtest 'name' => sub {
 subtest 'upgrade_pw' => sub {
 	plan tests => 7;
 
-	$w->get_ok('/logout');
+	$w->get_ok('/pm/logout');
 	$w->get_ok('/account');
 	is $w->base, "$url/pm/login", 'redirected to login page';
 
