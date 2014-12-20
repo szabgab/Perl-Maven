@@ -43,6 +43,8 @@ my %RESOURCES = (
 	not_verified_yet => 'This e-mail address has not been verified yet.
     We have sent you a verification code.
     Please check your e-mail and follow the instructions there.',
+	already_registered => 'Why would you want to register if you are already logged in',
+	already_logged_in  => 'You are already logged in. Go to your <a href="/pm/account">account</a>',
 
 	whitelist_enabled       => 'Whitelist enabled. See your <a href="/pm/account">account</a> and add IP addresses.',
 	whitelist_disabled      => 'Whitelist disabled. See your <a href="/pm/account">account</a>.',

@@ -234,6 +234,7 @@ any '/pm/unsubscribe' => sub {
 
 # TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
 get '/pm/register' => sub {
+	return pm_error('already_registered') if logged_in();
 	return template 'registration_form', { show_right => 0, };
 };
 
@@ -294,6 +295,7 @@ post '/pm/change-email' => sub {
 };
 
 get '/pm/login' => sub {
+	return pm_error('already_logged_in') if logged_in();
 	template 'login';
 };
 

@@ -110,7 +110,7 @@ subtest pages => sub {
 subtest 'subscribe' => sub {
 	plan tests => 34;
 	$w->get_ok("$url/pm/register");
-	$w->content_like(qr/Perl Maven/);
+	$w->content_like(qr/register to our web site/);
 
 	$w->submit_form_ok(
 		{
@@ -217,7 +217,7 @@ subtest 'subscribe' => sub {
 # log out and then login again
 subtest 'ask for password reset, then login' => sub {
 
-	plan tests => 23;
+	plan tests => 28;
 	$w->get_ok('/pm/account');
 	$w->content_like(qr{Login});
 	$w->content_like(qr{Forgot your password or don't have one yet});
@@ -301,6 +301,14 @@ subtest 'ask for password reset, then login' => sub {
 	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
 
 	#diag $w->content;
+	$w->get_ok("$url/pm/register");
+	$w->content_like( qr{Why would you want to register if you are already logged in},
+		'register form when already logged in' );
+	$w->content_unlike(qr/register to our web site/);
+
+	$w->get_ok("$url/pm/login");
+	$w->content_like( qr{You are already logged in. Go to your <a href="/pm/account">account</a>},
+		'/pm/login when already logged in' );
 
 	$w->get_ok("$url/pm/user-info");
 	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
