@@ -124,16 +124,6 @@ sub verify_registration {
 	$self->{dbh}->do( 'UPDATE user SET verify_time=? WHERE id=?', undef, time, $id );
 }
 
-sub set_password_code {
-	my ( $self, $email, $code ) = @_;
-	$self->{dbh}->do(
-		'UPDATE user
-		SET password_reset_code=?, password_reset_timeout=?
-		WHERE email=?',
-		undef, $code, time + 60 * 60, $email
-	);
-}
-
 sub set_password {
 	my ( $self, $id, $password ) = @_;
 

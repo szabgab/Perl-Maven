@@ -251,9 +251,7 @@ subtest 'ask for password reset, then login' => sub {
 	my $mail  = $mails[3]{email}->as_string;
 
 	#diag $mail;
-	#my $mail_regex
-	#	= qr{<a href="($url/pm/set-password/1/(\w+))">set new password</a>};
-	my $mail_regex = qr{set new password \[ ($url/pm/set-password/1/(?:\w+))=\s*(\w+) \]};
+	my $mail_regex = qr{set new password \[ ($url/pm/verify2/(?:\w+))=\s*(\w+) \]};
 	my ( $url1, $url2 ) = $mail =~ $mail_regex;
 	my $set_url = "$url1$url2";
 	ok $set_url, 'mail with set url address';

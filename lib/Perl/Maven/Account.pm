@@ -64,20 +64,23 @@ post '/pm/send-reset-pw-code' => sub {
 	if ( not $user ) {
 		return pm_error('invalid_email');
 	}
-	if ( not $user->{verify_time} ) {
 
-		# TODO: send e-mail with verification code
-		return pm_error('not_verified_yet');
-	}
+	#if ( not $user->{verify_time} ) {
+	# TODO: send e-mail with verification code
+	#	return pm_error('not_verified_yet');
+	#}
 
 	my $code = _generate_code();
-	$db->set_password_code( $user->{email}, $code );
+	$db->save_verification(
+		code      => $code,
+		action    => 'reset_password',
+		timestamp => time,
+		uid       => $user->{id},
+		details   => to_json {},
+	);
 
 	my $html = template 'email_to_reset_password',
-		{
-		id   => $user->{id},
-		code => $code,
-		},
+		{ code   => $code, },
 		{ layout => 'email', };
 
 	my $mymaven = mymaven;
@@ -96,16 +99,6 @@ post '/pm/send-reset-pw-code' => sub {
 	}
 
 	pm_message('reset_password_sent');
-};
-
-get '/pm/set-password/:id/:code' => sub {
-	my $error = pw_form();
-	return $error if $error;
-	template 'set_password',
-		{
-		id   => param('id'),
-		code => param('code'),
-		};
 };
 
 post '/pm/change-password' => sub {
@@ -129,29 +122,6 @@ post '/pm/change-password' => sub {
 	my $uid = session('uid');
 	my $db  = setting('db');
 	$db->set_password( $uid, passphrase($password)->generate->rfc2307 );
-
-	pm_message('password_set');
-};
-
-post '/pm/set-password' => sub {
-	my $error = pw_form();
-	return $error if $error;
-
-	my $db = setting('db');
-
-	my $password = param('password');
-	my $id       = param('id');
-	my $user     = $db->get_user_by_id($id);
-
-	return pm_error('bad_password')
-		if not $password
-		or length($password) < 6;
-
-	session uid       => $user->{id};
-	session logged_in => 1;
-	session last_seen => time;
-
-	$db->set_password( $id, passphrase($password)->generate->rfc2307 );
 
 	pm_message('password_set');
 };
@@ -406,7 +376,10 @@ get '/pm/account' => sub {
 	template 'account', \%params;
 };
 
-get '/pm/verify2/:code' => sub {
+get '/pm/verify2/:code' => \&verify2;
+post '/pm/verify2'      => \&verify2;
+
+sub verify2 {
 	my $code = param('code');
 
 	return pm_error('missing_verification_code') if not $code;
@@ -418,9 +391,39 @@ get '/pm/verify2/:code' => sub {
 	return pm_error('invalid_verification_code')
 		if not $verification;
 
+	# TODO check if verification code is expired!
+
 	my $details = eval { from_json $verification->{details} };
 	my $uid     = $verification->{uid};
 	my $user    = $db->get_user_by_id($uid);
+
+	if ( $verification->{action} eq 'reset_password' ) {
+		my $set = param('set');
+		if ($set) {
+			my $password = param('password');
+
+			# unite with the require_password configuration field
+			if ( not $password or length($password) < 5 ) {
+				return template 'set_password',
+					{
+					code        => param('code'),
+					no_password => 1,
+					};
+			}
+			$db->set_password( $uid, passphrase($password)->generate->rfc2307 );
+			session uid       => $uid;
+			session logged_in => 1;
+			session last_seen => time;
+
+			# TODO set e-mail to be verified (if it is not yet)
+			$db->delete_verification_code($code);
+			return pm_message('password_set');
+		}
+		else {
+			return template 'set_password',
+				{ code => param('code'), };
+		}
+	}
 
 	if ( $verification->{action} eq 'verify_email' ) {
 		$db->delete_verification_code($code);
@@ -458,7 +461,7 @@ get '/pm/verify2/:code' => sub {
 	}
 
 	return pm_error('internal_verification_error');
-};
+}
 
 get '/pm/verify/:id/:code' => sub {
 	my $uid  = param('id');
@@ -560,29 +563,6 @@ sub register {
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
 	return pm_template 'response', { from => $html_from };
-}
-
-sub pw_form {
-	my $id   = param('id');
-	my $code = param('code');
-
-	# if there is such userid with such code and it has not expired yet
-	# then show a form
-	return pm_error('missing_data')
-		if not $id or not $code;
-
-	my $db   = setting('db');
-	my $user = $db->get_user_by_id($id);
-	return pm_error('invalid_uid')
-		if not $user;
-	return pm_error('invalid_code')
-		if not $user->{password_reset_code}
-		or $user->{password_reset_code} ne $code
-		or not $user->{password_reset_timeout};
-	return pm_error('old_password_code')
-		if $user->{password_reset_timeout} < time;
-
-	return;
 }
 
 sub send_verification_mail {
