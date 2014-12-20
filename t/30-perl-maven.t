@@ -285,7 +285,7 @@ subtest 'ask for password reset, then login' => sub {
 	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
 
 	#diag('login now that we have a password');
-	$w->get_ok("$url/login");
+	$w->get_ok("$url/pm/login");
 	$w->submit_form_ok(
 		{
 			form_name => 'login',
@@ -349,7 +349,7 @@ subtest 'change password while logged in' => sub {
 	$w->get_ok("$url/pm/user-info");
 	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
 
-	$w->get_ok("$url/login");
+	$w->get_ok("$url/pm/login");
 	$w->submit_form_ok(
 		{
 			form_name => 'login',
@@ -365,7 +365,7 @@ subtest 'change password while logged in' => sub {
 	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
 
 	$w->back;
-	$w->get_ok("$url/login");
+	$w->get_ok("$url/pm/login");
 	$w->submit_form_ok(
 		{
 			form_name => 'login',

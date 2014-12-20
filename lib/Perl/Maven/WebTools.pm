@@ -12,9 +12,9 @@ my %RESOURCES = (
 		'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
 	missing_password                => 'Missing password',
 	invalid_mail                    => 'Invalid e-mail.',
-	already_registered_and_verified => 'This address is already registered. Please <a href="/login">log in</a>.',
+	already_registered_and_verified => 'This address is already registered. Please <a href="/pm/login">log in</a>.',
 	already_registered_not_verified =>
-		'This address is already registered, but the e-mail has not been verified yet. Please ask for a new verification code <a href="/login">here</a>.',
+		'This address is already registered, but the e-mail has not been verified yet. Please ask for a new verification code <a href="/pm/login">here</a>.',
 	could_not_send_email        => 'Internal error. Could not send e-mail to <b>%s</b>.',
 	internal_error              => 'Internal error',
 	invalid_value_provided      => 'Invalid parameter',
@@ -62,7 +62,7 @@ my %RESOURCES = (
 	no_product_specified      => 'No product was specified.',
 	invalid_product_specified => 'Invalid product was specified.',
 	please_log_in =>
-		'Before making a purchase, please <a href="/register">create an account</a> and  <a href="/login">login</a>, so we can associate your purchase with your account.',
+		'Before making a purchase, please <a href="/register">create an account</a> and  <a href="/pm/login">login</a>, so we can associate your purchase with your account.',
 	canceled => 'We are sorry that you canceled your purchase.',
 
 );
@@ -334,7 +334,7 @@ sub pm_user_info {
 
 	#debug("referrer = '$referrer'");
 	#debug("url = '$url'");
-	return \%data if $path =~ m{^(/pm/|/account|/login)};
+	return \%data if $path =~ m{^(/pm/|/account)};
 
 	if ( $url ne $referrer ) {
 		if ( logged_in() ) {

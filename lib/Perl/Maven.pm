@@ -371,9 +371,10 @@ get '/verify/:id/:code' => sub {
 get '/account' => sub {
 	redirect '/pm/account';
 };
-any '/login' => sub {
-	redirect '/pm/login';
-};
+
+#any '/login' => sub {
+#	redirect '/pm/login';
+#};
 
 #any '/logout' => sub {
 #	redirect '/pm/logout';

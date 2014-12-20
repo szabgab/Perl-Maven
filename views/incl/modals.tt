@@ -24,7 +24,7 @@
             </div>
             <button type="submit" id="register-button" class="btn btn-default">Register</button>
             <div>
-         <small>If you are already registered, then please <a href="/login">log in</a> and you won't see this pop-up any more.</small>
+         <small>If you are already registered, then please <a href="/pm/login">log in</a> and you won't see this pop-up any more.</small>
             <div id="register-message"></div>
             </div>
       </div>

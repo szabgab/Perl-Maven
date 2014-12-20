@@ -13,7 +13,7 @@ post '/pm/whitelist' => sub {
 	if ( not logged_in() ) {
 
 		#session url => request->path;
-		return redirect '/login';
+		return redirect '/pm/login';
 	}
 	my $do  = param('do');
 	my $uid = session('uid');
@@ -112,7 +112,7 @@ get '/pm/set-password/:id/:code' => sub {
 post '/pm/change-password' => sub {
 	if ( not logged_in() ) {
 		session url => request->path;
-		return redirect '/login';
+		return redirect '/pm/login';
 	}
 
 	my $password  = param('password')  || '';
@@ -160,7 +160,7 @@ post '/pm/set-password' => sub {
 post '/pm/update-user' => sub {
 	if ( not logged_in() ) {
 		session url => request->path;
-		return redirect '/login';
+		return redirect '/pm/login';
 	}
 
 	my $name = param('name') || '';
@@ -173,7 +173,7 @@ post '/pm/update-user' => sub {
 };
 
 get '/pm/subscribe' => sub {
-	return redirect '/login' if not logged_in();
+	return redirect '/pm/login' if not logged_in();
 
 	my $uid = session('uid');
 	my $db  = setting('db');
@@ -182,7 +182,7 @@ get '/pm/subscribe' => sub {
 };
 
 get '/pm/un-subscribe' => sub {
-	return redirect '/login' if not logged_in();
+	return redirect '/pm/login' if not logged_in();
 
 	my $uid = session('uid');
 
@@ -249,7 +249,7 @@ post '/pm/register' => sub {
 post '/pm/change-email' => sub {
 	my $mymaven = mymaven;
 	if ( not logged_in() ) {
-		return redirect '/login';
+		return redirect '/pm/login';
 	}
 	my $email = param('email') || '';
 	if ( not $email ) {
@@ -337,7 +337,7 @@ post '/pm/login' => sub {
 };
 
 post '/pm/whitelist-delete' => sub {
-	return redirect '/login' if not logged_in();
+	return redirect '/pm/login' if not logged_in();
 
 	my $uid = session('uid');
 	my $id  = param('id');
@@ -356,7 +356,7 @@ get '/pm/logout' => sub {
 };
 
 get '/pm/account' => sub {
-	return redirect '/login' if not logged_in();
+	return redirect '/pm/login' if not logged_in();
 
 	my $db   = setting('db');
 	my $uid  = session('uid');
