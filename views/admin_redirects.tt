@@ -1,0 +1,43 @@
+<h2>Redirects</h2>
+
+<% IF redirects && redirects.length > 0 %>
+  <table>
+    <tr>
+      <th>Host</th>
+      <th>Path</th>
+      <th>Redirect to</th>
+      <th></th>
+    </tr>
+  <% FOR r IN redirects %>
+    <tr>
+      <td><% r.host %></td>
+      <td><% r.path %></td>
+      <td><% r.redirect %></td>
+      <td>
+        <form>
+           <input type="hidden" name="host" value="<% r.host %>">
+           <input type="hidden" name="path" value="<% r.path %>">
+           <input type="submit" class="btn btn-danger" value="Delete">
+        </form>
+      </td>
+    </tr>
+  <% END %>
+  </table>
+<% ELSE %>
+No redirects found.
+<% END %>
+
+
+<h2>Add a new redirect</h2>
+
+<div id="redirect-add">
+    <div class="form-group">
+        <label for="redirect-path">Path on this site such as /foo/bar</label>
+        <input name="path" class="form-control" id="redirect-path" type="text" placeholder="Enter path" />
+    </div>
+    <div class="form-group">
+        <label for="redirect-to">Redriect to:</label>
+        <input name="to" class="form-control" id="redirect-to" type="text" placeholder="Enter the URL to redirect to" />
+    </div>
+    <button type="submit" id="add-redirect-button" class="btn btn-default">Add redirect</button>
+</div>

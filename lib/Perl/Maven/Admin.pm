@@ -14,6 +14,13 @@ get '/admin' => sub {
 	return pm_template 'admin', { stats => $db->stats };
 };
 
+get '/admin/redirects' => sub {
+	my $res = admin_check();
+	return $res if $res;
+
+	return pm_template 'admin_redirects';
+};
+
 get '/admin/sessions' => sub {
 	my $res = admin_check();
 	return $res if $res;

@@ -20,6 +20,7 @@ Admin page. For authorized users only.
 </table>
 
 <a href="/admin/sessions">Show recent sessions</a>
+<a href="/admin/redirects">Manage Redirects</a>
 
 <hr>
 <h2>Show user details</h2>
