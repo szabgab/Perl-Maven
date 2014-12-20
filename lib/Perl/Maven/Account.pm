@@ -330,7 +330,7 @@ post '/pm/login' => sub {
 
 	#my $url = session('referer') // '/account';
 	#session referer => undef;
-	my $url = session('url') // '/account';
+	my $url = session('url') // '/pm/account';
 	session url => undef;
 
 	redirect $url;

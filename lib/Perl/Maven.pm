@@ -368,14 +368,13 @@ get '/verify2/:code' => sub {
 get '/verify/:id/:code' => sub {
 	return redirect '/pm/verify/' . param('id') . '/' . param('code');
 };
-get '/account' => sub {
-	redirect '/pm/account';
-};
 
+#get '/account' => sub {
+#	redirect '/pm/account';
+#};
 #any '/login' => sub {
 #	redirect '/pm/login';
 #};
-
 #any '/logout' => sub {
 #	redirect '/pm/logout';
 #};

@@ -44,16 +44,16 @@ my %RESOURCES = (
     We have sent you a verification code.
     Please check your e-mail and follow the instructions there.',
 
-	whitelist_enabled       => 'Whitelist enabled. See your <a href="/account">account</a> and add IP addresses.',
-	whitelist_disabled      => 'Whitelist disabled. See your <a href="/account">account</a>.',
-	whitelist_entry_deleted => 'Whitelist entry was deleted. See your <a href="/account">account</a>.',
-	whitelist_updated       => 'Whitelist entry for %s was added. See your <a href="/account">account</a>.',
+	whitelist_enabled       => 'Whitelist enabled. See your <a href="/pm/account">account</a> and add IP addresses.',
+	whitelist_disabled      => 'Whitelist disabled. See your <a href="/pm/account">account</a>.',
+	whitelist_entry_deleted => 'Whitelist entry was deleted. See your <a href="/pm/account">account</a>.',
+	whitelist_updated       => 'Whitelist entry for %s was added. See your <a href="/pm/account">account</a>.',
 	reset_password_sent     => 'E-mail sent with code to reset password.',
-	password_set            => 'The password was set successfully. <a href="/account">account</a>',
-	user_updated            => 'Updated. <a href="/account">account</a>',
+	password_set            => 'The password was set successfully. <a href="/pm/account">account</a>',
+	user_updated            => 'Updated. <a href="/pm/account">account</a>',
 	unsubscribed            => 'Unsubscribed from the Perl Maven newsletter.',
 	subscribed =>
-		'Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/account">account</a>.',
+		'Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/pm/account">account</a>.',
 	verification_email_sent =>
 		'We have sent you an e-mail with a verification code. Please check your e-mail account and click on the link inthe message to verify your new e-mail address.',
 	email_updated_successfully => 'Email updated successfully.',
@@ -334,7 +334,7 @@ sub pm_user_info {
 
 	#debug("referrer = '$referrer'");
 	#debug("url = '$url'");
-	return \%data if $path =~ m{^(/pm/|/account)};
+	return \%data if $path =~ m{^/pm/};
 
 	if ( $url ne $referrer ) {
 		if ( logged_in() ) {

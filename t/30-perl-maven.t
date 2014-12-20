@@ -95,7 +95,7 @@ subtest pages => sub {
 	$visitor->get_ok($prod1_download_url);
 	is $visitor->base, "$url/", 'redirected to root';
 
-	$visitor->get_ok('/account');
+	$visitor->get_ok('/pm/account');
 	is $visitor->base, "$url/pm/login", 'redirected to login page';
 
 	# strangely for this post() request I had to supply the full URL or it would go to http://localhost/
@@ -179,7 +179,7 @@ subtest 'subscribe' => sub {
 	@mails = Email::Sender::Simple->default_transport->deliveries;
 	is scalar @mails, 3;
 
-	$w->get_ok("$url/account");
+	$w->get_ok("$url/pm/account");
 	$w->follow_link_ok(
 		{
 			text => $cookbook_text,
@@ -198,11 +198,11 @@ subtest 'subscribe' => sub {
 	$w->get_ok($prod1_download_url);
 	is $w->base, "$url/", 'redirected to root';
 
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->content_like( qr{<a href="/pm/logout">logout</a>},            'logout link' );
 	$w->get_ok('/pm/logout');
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	$w->content_unlike( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
 	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
@@ -218,7 +218,7 @@ subtest 'subscribe' => sub {
 subtest 'ask for password reset, then login' => sub {
 
 	plan tests => 23;
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	$w->content_like(qr{Login});
 	$w->content_like(qr{Forgot your password or don't have one yet});
 
@@ -312,7 +312,7 @@ subtest 'ask for password reset, then login' => sub {
 subtest 'change password while logged in' => sub {
 	plan tests => 20;
 
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 
 	#diag('different passwords');
 	$w->submit_form_ok(
@@ -390,7 +390,7 @@ subtest 'change password while logged in' => sub {
 subtest 'name' => sub {
 	plan tests => 5;
 
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	my $form1 = $w->form_name('user');
 
 	#diag($form1->value('name'));
@@ -404,7 +404,7 @@ subtest 'name' => sub {
 		'user form'
 	);
 	$w->content_like(qr{Updated});
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	my $form2 = $w->form_name('user');
 
 	#diag($form2->value('name'));
@@ -418,7 +418,7 @@ subtest 'upgrade_pw' => sub {
 	plan tests => 7;
 
 	$w->get_ok('/pm/logout');
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	is $w->base, "$url/pm/login", 'redirected to login page';
 
 	# white-box:
@@ -447,7 +447,7 @@ subtest 'upgrade_pw' => sub {
 subtest change_email => sub {
 	plan tests => 12;
 
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	$w->submit_form_ok(
 		{
 			form_name => 'change_email',
@@ -490,7 +490,7 @@ subtest change_email => sub {
 subtest whitelist => sub {
 	plan tests => 9;
 
-	$w->get_ok('/account');
+	$w->get_ok('/pm/account');
 	my $form = $w->form_name('enable_white_list');
 	ok $form, 'form found';
 	$w->submit_form_ok(
