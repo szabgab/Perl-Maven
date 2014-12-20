@@ -14,7 +14,7 @@ use Perl::Maven::DB;
 #    t/files/test/sites.yml
 # and in
 #    t/files/config/test.yml
-our $DOMAIN = 'test-perl-maven.com';
+our $DOMAIN = 'test-pm.com';
 our $URL    = "http://$DOMAIN/";
 
 sub setup {

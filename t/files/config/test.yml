@@ -1,9 +1,9 @@
 installation:
-  domain: test-perl-maven.com
+  domain: test-pm.com
   main_site: en
     #redirect: 0
   www:
-    redirect: http://test-perl-maven.com/
+    redirect: http://test-pm.com/
   root: 'test'
   meta: 'meta'
   conf:
@@ -15,7 +15,7 @@ installation:
   dirs:
     img: 'images'
   sites:
-    test-perl-maven.com:
+    test-pm.com:
       conf:
         show_newsletter_form: 1
       dirs:
