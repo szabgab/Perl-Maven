@@ -43,9 +43,9 @@
 
               <% IF e.login %>
                 <% IF username %>
-                  <li><a href="/account"><% username %></a></li>
+                  <li><a href="/pm/account"><% username %></a></li>
                 <% ELSE %>
-                  <li><a href="/login"><% e.title %></a></li>
+                  <li><a href="/pm/login"><% e.title %></a></li>
                 <% END %>
               <% END %>
 
