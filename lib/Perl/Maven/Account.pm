@@ -75,7 +75,6 @@ post '/pm/send-reset-pw-code' => sub {
 
 	my $html = template 'email_to_reset_password',
 		{
-		url  => uri_for('/pm/set-password'),
 		id   => $user->{id},
 		code => $code,
 		},
@@ -210,7 +209,7 @@ any '/pm/unsubscribe' => sub {
 	# TODO maybe we will want some stonger checking for confirmation?
 	if ( param('confirm') ) {
 		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
-		my $html    = template 'email_after_unsubscribe', { url => uri_for('/'), }, { layout => 'email' };
+		my $html    = template 'email_after_unsubscribe', {}, { layout => 'email' };
 		my $mymaven = mymaven;
 		my $err     = send_mail(
 			{
@@ -284,7 +283,6 @@ post '/pm/change-email' => sub {
 		$email,
 		"Please verify your new e-mail address for $mymaven->{title}",
 		{
-			url  => uri_for('/verify2'),
 			code => $code,
 		},
 	);
@@ -471,7 +469,6 @@ sub register {
 		$data{email},
 		"Please finish the $mymaven->{title} registration",
 		{
-			url  => uri_for('/verify2'),
 			code => $code,
 		},
 	);

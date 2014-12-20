@@ -1,4 +1,3 @@
-
 <% mycontent %>
 
 <h2><% resources.text.recent_articles %></h2>

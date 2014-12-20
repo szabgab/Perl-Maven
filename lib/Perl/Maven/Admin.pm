@@ -87,7 +87,7 @@ sub admin_check {
 			},
 		);
 
-		my $html = template 'email_to_whitelist_ip_address', { url => uri_for('/verify2'), ip => $ip, code => $code },
+		my $html = template 'email_to_whitelist_ip_address', { url => uri_for(''), ip => $ip, code => $code },
 			{ layout => 'email', };
 		my $err = send_mail(
 			{

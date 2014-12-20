@@ -142,16 +142,16 @@ subtest 'subscribe' => sub {
 	my $o    = $mails[0]{email}->object;
 	my $mail = $mails[0]{email}->as_string;
 
-	#diag $mail;
+	#	diag $mail;
 
-	#my $mail_regex = qr{<a href="($url/verify/1/\w+)">verify</a>};
-	my $mail_regex = qr{verify\s+\[\s+($url/verify2/\w+)};
+	#my $mail_regex = qr{<a href="($url/pm/verify/1/\w+)">verify</a>};
+	my $mail_regex = qr{verify\s+\[\s+($url/pm/verify2/\w+)};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
 
 	#diag $set_url;
 	#diag explain $db->{dbh}->selectall_arrayref('SELECT * FROM user');
-	$w->get_ok("$url/verify2/1234567");
+	$w->get_ok("$url/pm/verify2/1234567");
 	$w->content_like( qr{Invalid or expired verification code.}, 'no such code' );
 
 	$w->get_ok($set_url);
@@ -462,13 +462,13 @@ subtest change_email => sub {
 	my $mail  = $mails[4]{email}->as_string;
 
 	#diag $mail;
-	#my $mail_regex = qr{<a href="($url/verify2/\w+)">verify</a>};
-	my $mail_regex = qr{verify \[ ($url/verify2/\w+)};
+	#my $mail_regex = qr{<a href="($url/pm/verify2/\w+)">verify</a>};
+	my $mail_regex = qr{verify \[ ($url/pm/verify2/\w+)};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
 	diag $set_url;
 
-	$w->get_ok("$url/verify2/1234567");
+	$w->get_ok("$url/pm/verify2/1234567");
 	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
 	my $before = $db->get_user_by_id(1);

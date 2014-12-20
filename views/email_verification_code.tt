@@ -5,7 +5,7 @@ In order to verify your new e-mail address, please
 click on the following link:
 </p>
 <p>
-<a href="<% url %>/<% code %>">verify</a>.
+<a href="<% request.base %>pm/verify2/<% code %>">verify</a>.
 </p>
 <p>
 Thank you
