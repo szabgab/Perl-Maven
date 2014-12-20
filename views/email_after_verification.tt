@@ -3,14 +3,14 @@ Hi,
 <p>
 Thank you for registering!
 <p>
-You can now go to <a href="http://perlmaven.com/account">your account</a> and set your password.
+You can now go to <a href="<% url %>/account">your account</a> and set your password.
 </p>
 <p>
-You can also use the opportunity to subscribe to the <a href="http://perlmaven.com/pro">Perl Maven Pro</a>.
+You can also use the opportunity to subscribe to the <a href="<% url %>/pro">Perl Maven Pro</a>.
 For a modest monthly fee that will give you access to tons of videos and articles.
 <p>
-Among the videos you will find the full length <a href="http://perlmaven.com/beginner-perl-maven-video-course">Beginner Perl course</a>,
-the <a href="http://perlmaven.com/testing">Test Automation using Perl</a> course, and the <a href="http://perlmaven.com/search-cpan-org">search.cpan.org cloning project</a>.
+Among the videos you will find the full length <a href="<% url %>/beginner-perl-maven-video-course">Beginner Perl course</a>,
+the <a href="<% url %>/testing">Test Automation using Perl</a> course, and the <a href="<% url %>/search-cpan-org">search.cpan.org cloning project</a>.
 </p>
 <p>
 Thank you
