@@ -95,6 +95,10 @@ hook before_template => sub {
 		my $user  = $db->get_user_by_id($uid);
 		my $email = $user->{email};
 		( $t->{username} ) = split /@/, $email;
+
+		if ( grep { $_ eq 'perl_maven_pro' } @{ $user->{subscriptions} } ) {
+			$t->{conf}{show_ads} = 0;
+		}
 	}
 
 	# we assume that the whole complex is written in one leading language
