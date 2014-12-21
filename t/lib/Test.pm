@@ -25,7 +25,8 @@ sub setup {
 
 	unlink glob 'sessions/*';
 
-	my $db = Perl::Maven::DB->new( 'PerlMaven_Test_' . time );
+	$ENV{PERL_MAVEN_DB} = 'PerlMaven_Test_' . time;
+	my $db = Perl::Maven::DB->new();
 	$db_created = 1;
 
 	$db->add_product( { code => 'perl_maven_cookbook',       name => 'Perl Maven Cookbook',        price => 0 } );

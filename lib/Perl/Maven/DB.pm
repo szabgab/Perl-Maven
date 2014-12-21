@@ -15,6 +15,9 @@ my $instance;
 sub new {
 	my ( $class, $dbname ) = @_;
 	$dbname ||= 'PerlMaven';
+	if ( $ENV{PERL_MAVEN_DB} ) {
+		$dbname = $ENV{PERL_MAVEN_DB};
+	}
 
 	die 'Call ->instance instead' if $instance;
 

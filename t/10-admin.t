@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::Most tests => 9;
+use Test::Deep qw(cmp_deeply re);
 
 use File::Copy qw(move);
 use Capture::Tiny qw(capture);
@@ -13,6 +14,8 @@ use Perl::Maven::DB;
 my $db = Perl::Maven::DB->instance;
 
 my $admin = "$^X -Ilib bin/admin.pl";
+
+my $ID = re('^\w+$');
 
 subtest usage => sub {
 	plan tests => 2;
@@ -31,11 +34,11 @@ subtest dump_products => sub {
 		'perl_maven_cookbook' => {
 			'name'  => 'Perl Maven Cookbook',
 			'code'  => 'perl_maven_cookbook',
-			'id'    => 1,
+			'_id'   => $ID,
 			'price' => 0
 		},
 		'beginner_perl_maven_ebook' => {
-			'id'    => 2,
+			'_id'   => $ID,
 			'name'  => 'Beginner Perl Maven e-book',
 			'code'  => 'beginner_perl_maven_ebook',
 			'price' => '0.01'
@@ -43,12 +46,12 @@ subtest dump_products => sub {
 	};
 
 	my $products = $db->get_products;
-	is_deeply $products, $existing_products, 'get_products';
+	cmp_deeply $products, $existing_products, 'get_products';
 
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --products --perl";
 	};
-	is_deeply re_dump($stdout), $existing_products, '--products --perl';
+	cmp_deeply re_dump($stdout), $existing_products, '--products --perl';
 	is $stderr, '', 'stderr is empty';
 };
 
