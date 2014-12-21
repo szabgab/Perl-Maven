@@ -180,7 +180,7 @@ subtest products => sub {
 };
 
 subtest subscriptions => sub {
-	plan tests => 6;
+	plan tests => 8;
 
 	my $ret = $db->subscribe_to(
 		email => 'foo@bar.com',
@@ -192,10 +192,12 @@ subtest subscriptions => sub {
 
 	my $users = $db->get_people('foo@bar.com');
 	is_deeply $users->[0]{subscriptions}, [];
+	ok !$db->is_subscribed( $users->[0]{_id}, 'beginner_perl_maven_ebook' ), 'not subscribed';
 	$ret = $db->subscribe_to(
 		email => 'foo@bar.com',
 		code  => 'beginner_perl_maven_ebook'
 	);
+	ok $db->is_subscribed( $users->[0]{_id}, 'beginner_perl_maven_ebook' ), 'subscribed';
 
 	#diag explain $ret;
 

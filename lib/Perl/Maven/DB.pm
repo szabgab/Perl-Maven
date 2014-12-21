@@ -122,28 +122,6 @@ sub get_whitelist {
 	return $user->{whitelist} || [];
 }
 
-sub get_subscriptions {
-	my ( $self, $email ) = @_;
-
-	my $sth = $self->{dbh}->prepare(
-		q{
-		SELECT product.code
-		FROM product, user, subscription
-		WHERE user.id=subscription.uid
-			AND user.email=?
-			AND product.id=subscription.pid
-	}
-	);
-
-	$sth->execute($email);
-	my @products;
-	while ( my ($p) = $sth->fetchrow_array ) {
-		push @products, $p;
-	}
-
-	return \@products;
-}
-
 sub get_subscribers {
 	my ( $self, $code ) = @_;
 
@@ -162,18 +140,8 @@ sub get_subscribers {
 sub is_subscribed {
 	my ( $self, $id, $code ) = @_;
 
-	my ($subscribed) = $self->{dbh}->selectrow_array(
-		q{
-		SELECT COUNT(*)
-		FROM subscription, product, user
-		WHERE user.id=subscription.uid
-			AND user.id=?
-			AND product.code=?
-			AND product.id=subscription.pid
-	}, undef, $id, $code
-	);
-
-	return $subscribed;
+	my $user = $self->get_user_by_id($id);
+	return scalar grep { $_ eq $code } @{ $user->{subscriptions} };
 }
 
 sub subscribe_to {
