@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::Most tests => 5;
-use Test::Deep qw(cmp_deeply re);
+use Test::Deep qw(cmp_deeply re ignore isa);
 
 use File::Copy qw(move);
 use Capture::Tiny qw(capture);
@@ -12,7 +12,8 @@ t::lib::Test::setup();
 
 use Perl::Maven::DB;
 my $db        = Perl::Maven::DB->new('pm.db');
-my $TIMESTAMP = re('^\d{10}$');
+my $TIMESTAMP = isa('DateTime');
+my $ID        = re('^\w+$');
 
 subtest users => sub {
 	plan tests => 8;
@@ -22,24 +23,26 @@ subtest users => sub {
 
 	my $id = $db->add_registration( { email => 'foo@bar.com' } );
 	$people = $db->get_people('');
-	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef, subscriptions => [] } ],
+	cmp_deeply $people, [ { _id => $ID, email => 'foo@bar.com', subscriptions => [], register_time => $TIMESTAMP } ],
 		'first person';
 
-	my $user = $db->get_user_by_id(1);
-	cmp_deeply $user,
-		{
-		'admin'                  => undef,
-		'email'                  => 'foo@bar.com',
-		'id'                     => 1,
-		'login_whitelist'        => undef,
-		'name'                   => undef,
-		'password'               => undef,
-		'password_reset_code'    => undef,
-		'password_reset_timeout' => undef,
-		'register_time'          => $TIMESTAMP,
-		'verify_code'            => undef,
-		'verify_time'            => undef,
-		subscriptions            => [],
+	my $user = $db->get_user_by_id( $people->[0]{_id} );
+	cmp_deeply $user, {
+
+		#'admin'                  => undef,
+		'email' => 'foo@bar.com',
+		'_id'   => $ID,
+
+		#'login_whitelist'        => undef,
+		#'name'                   => undef,
+		#'password'               => undef,
+		#'password_reset_code'    => undef,
+		#'password_reset_timeout' => undef,
+		'register_time' => $TIMESTAMP,
+
+		#'verify_code'            => undef,
+		#'verify_time'            => undef,
+		subscriptions => [],
 		},
 		'get_user_by_id';
 
@@ -52,15 +55,16 @@ subtest users => sub {
 	$people = $db->get_people('');
 
 	#diag explain $people;
-	is_deeply $people,
+	cmp_deeply $people,
 		[
-		{ id => 1, email => 'foo@bar.com',   verify_time => undef, subscriptions => [] },
-		{ id => 2, email => 'buzz@nasa.com', verify_time => undef, subscriptions => [] }
+		{ _id => $ID, email => 'foo@bar.com',   register_time => $TIMESTAMP, subscriptions => [] },
+		{ _id => $ID, email => 'buzz@nasa.com', register_time => $TIMESTAMP, subscriptions => [] }
 		],
 		'two people';
 
 	$people = $db->get_people('oo');
-	is_deeply $people, [ { id => 1, email => 'foo@bar.com', verify_time => undef, subscriptions => [] } ], 'one person';
+	cmp_deeply $people, [ { _id => $ID, email => 'foo@bar.com', register_time => $TIMESTAMP, subscriptions => [] } ],
+		'one person';
 
 	my $p = $db->get_user_by_email('foo@bar');
 	is $p, undef, 'no such email';

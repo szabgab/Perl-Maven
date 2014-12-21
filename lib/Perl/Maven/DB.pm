@@ -38,6 +38,7 @@ sub add_registration {
 	my ( $self, $args ) = @_;
 
 	$args->{register_time} = DateTime::Tiny->now;
+	$args->{subscriptions} ||= [];
 	$self->{db}->get_collection('user')->insert($args);
 }
 
@@ -90,12 +91,7 @@ sub get_people {
 sub get_user_by_id {
 	my ( $self, $id ) = @_;
 
-	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
-	if ($hr) {
-		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
-	}
-
-	return $hr;
+	return $self->{db}->get_collection('user')->find_one( { _id => $id } );
 }
 
 sub verify_registration {
