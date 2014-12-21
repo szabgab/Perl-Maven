@@ -29,22 +29,12 @@ subtest users => sub {
 		'first person';
 
 	my $user = $db->get_user_by_id( $people->[0]{_id} );
-	cmp_deeply $user, {
-
-		#'admin'                  => undef,
-		'email' => 'foo@bar.com',
-		'_id'   => $ID,
-
-		#'login_whitelist'        => undef,
-		#'name'                   => undef,
-		#'password'               => undef,
-		#'password_reset_code'    => undef,
-		#'password_reset_timeout' => undef,
+	cmp_deeply $user,
+		{
+		'_id'           => $ID,
+		'email'         => 'foo@bar.com',
 		'register_time' => $TIMESTAMP,
-
-		#'verify_code'            => undef,
-		#'verify_time'            => undef,
-		subscriptions => [],
+		subscriptions   => [],
 		},
 		'get_user_by_id';
 
@@ -73,22 +63,13 @@ subtest users => sub {
 	$p = $db->get_user_by_email('foo@bar.com');
 
 	#diag explain $p;
-	cmp_deeply $p, {
-		'email' => 'foo@bar.com',
-		'_id'   => $ID,
-
-		#'name'                   => undef,
-		#'password'               => undef,
-		#'password_reset_code'    => undef,
-		#'password_reset_timeout' => undef,
+	cmp_deeply $p,
+		{
+		'_id'           => $ID,
+		'email'         => 'foo@bar.com',
 		'register_time' => $TIMESTAMP,
-
-		#'verify_code'            => undef,
-		#'verify_time'            => undef,
-		#'admin'                  => undef,
-		#'login_whitelist'        => undef,
-		subscriptions => [],
-	};
+		subscriptions   => [],
+		};
 };
 
 subtest replace_email => sub {
@@ -96,22 +77,13 @@ subtest replace_email => sub {
 
 	my $before = $db->get_user_by_email('buzz@nasa.com');
 
-	cmp_deeply $before, {
-		'email' => 'buzz@nasa.com',
-		'_id'   => $ID,
-
-		#'name'                   => undef,
-		#'password'               => undef,
-		#'password_reset_code'    => undef,
-		#'password_reset_timeout' => undef,
+	cmp_deeply $before,
+		{
+		'_id'           => $ID,
+		'email'         => 'buzz@nasa.com',
 		'register_time' => $TIMESTAMP,
-
-		#'verify_code'            => undef,
-		#'verify_time'            => undef,
-		#'admin'                  => undef,
-		#'login_whitelist'        => undef,
-		subscriptions => [],
-	};
+		subscriptions   => [],
+		};
 
 	$db->replace_email( 'buzz@nasa.com', 'buzz@buzzaldrin.com' );
 
@@ -120,22 +92,13 @@ subtest replace_email => sub {
 
 	my $after = $db->get_user_by_email('buzz@buzzaldrin.com');
 
-	cmp_deeply $after, {
-		'email' => 'buzz@buzzaldrin.com',
-		'_id'   => $ID,
-
-		#'name'                   => undef,
-		#'password'               => undef,
-		#'password_reset_code'    => undef,
-		#'password_reset_timeout' => undef,
+	cmp_deeply $after,
+		{
+		'_id'           => $ID,
+		'email'         => 'buzz@buzzaldrin.com',
 		'register_time' => $TIMESTAMP,
-
-		#'verify_code'            => undef,
-		#'verify_time'            => undef,
-		#'admin'                  => undef,
-		#'login_whitelist'        => undef,
-		subscriptions => [],
-	};
+		subscriptions   => [],
+		};
 
 };
 
