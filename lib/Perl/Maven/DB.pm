@@ -74,12 +74,7 @@ sub get_whitelist {
 sub get_user_by_email {
 	my ( $self, $email ) = @_;
 
-	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE email=?', undef, $email );
-	if ($hr) {
-		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
-	}
-
-	return $hr;
+	return $self->{db}->get_collection('user')->find_one( { email => $email } );
 }
 
 sub get_people {
@@ -214,7 +209,12 @@ sub get_transaction {
 
 sub get_products {
 	my ($self) = @_;
-	return $self->{dbh}->selectall_hashref( q{SELECT id, code, name, price FROM product}, 'code' );
+
+	#return [ $self->{db}->get_collection('products')->find()->all ];
+	my %products = map { $_->{code} => $_ } $self->{db}->get_collection('products')->find()->all;
+
+	#return $self->{dbh}->selectall_hashref( q{SELECT id, code, name, price FROM product}, 'code' );
+	return \%products;
 }
 
 sub get_product_by_code {
@@ -264,7 +264,7 @@ sub stats {
 
 sub replace_email {
 	my ( $self, $old, $new ) = @_;
-	return $self->{dbh}->do( q{UPDATE user SET email = ? WHERE email = ?}, undef, $new, $old );
+	return $self->{db}->get_collection('user')->update( { email => $old }, { '$set' => { email => $new } } );
 }
 
 sub delete_user {

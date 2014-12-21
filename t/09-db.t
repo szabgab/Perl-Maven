@@ -71,21 +71,22 @@ subtest users => sub {
 	$p = $db->get_user_by_email('foo@bar.com');
 
 	#diag explain $p;
-	cmp_deeply $p,
-		{
-		'email'                  => 'foo@bar.com',
-		'id'                     => 1,
-		'name'                   => undef,
-		'password'               => undef,
-		'password_reset_code'    => undef,
-		'password_reset_timeout' => undef,
-		'register_time'          => $TIMESTAMP,
-		'verify_code'            => undef,
-		'verify_time'            => undef,
-		'admin'                  => undef,
-		'login_whitelist'        => undef,
-		subscriptions            => [],
-		};
+	cmp_deeply $p, {
+		'email' => 'foo@bar.com',
+		'_id'   => $ID,
+
+		#'name'                   => undef,
+		#'password'               => undef,
+		#'password_reset_code'    => undef,
+		#'password_reset_timeout' => undef,
+		'register_time' => $TIMESTAMP,
+
+		#'verify_code'            => undef,
+		#'verify_time'            => undef,
+		#'admin'                  => undef,
+		#'login_whitelist'        => undef,
+		subscriptions => [],
+	};
 };
 
 subtest replace_email => sub {
@@ -93,21 +94,22 @@ subtest replace_email => sub {
 
 	my $before = $db->get_user_by_email('buzz@nasa.com');
 
-	cmp_deeply $before,
-		{
-		'email'                  => 'buzz@nasa.com',
-		'id'                     => 2,
-		'name'                   => undef,
-		'password'               => undef,
-		'password_reset_code'    => undef,
-		'password_reset_timeout' => undef,
-		'register_time'          => re('\d+'),
-		'verify_code'            => undef,
-		'verify_time'            => undef,
-		'admin'                  => undef,
-		'login_whitelist'        => undef,
-		subscriptions            => [],
-		};
+	cmp_deeply $before, {
+		'email' => 'buzz@nasa.com',
+		'_id'   => $ID,
+
+		#'name'                   => undef,
+		#'password'               => undef,
+		#'password_reset_code'    => undef,
+		#'password_reset_timeout' => undef,
+		'register_time' => $TIMESTAMP,
+
+		#'verify_code'            => undef,
+		#'verify_time'            => undef,
+		#'admin'                  => undef,
+		#'login_whitelist'        => undef,
+		subscriptions => [],
+	};
 
 	$db->replace_email( 'buzz@nasa.com', 'buzz@buzzaldrin.com' );
 
@@ -116,21 +118,22 @@ subtest replace_email => sub {
 
 	my $after = $db->get_user_by_email('buzz@buzzaldrin.com');
 
-	cmp_deeply $after,
-		{
-		'email'                  => 'buzz@buzzaldrin.com',
-		'id'                     => 2,
-		'name'                   => undef,
-		'password'               => undef,
-		'password_reset_code'    => undef,
-		'password_reset_timeout' => undef,
-		'register_time'          => re('\d+'),
-		'verify_code'            => undef,
-		'verify_time'            => undef,
-		'admin'                  => undef,
-		'login_whitelist'        => undef,
-		subscriptions            => [],
-		};
+	cmp_deeply $after, {
+		'email' => 'buzz@buzzaldrin.com',
+		'_id'   => $ID,
+
+		#'name'                   => undef,
+		#'password'               => undef,
+		#'password_reset_code'    => undef,
+		#'password_reset_timeout' => undef,
+		'register_time' => $TIMESTAMP,
+
+		#'verify_code'            => undef,
+		#'verify_time'            => undef,
+		#'admin'                  => undef,
+		#'login_whitelist'        => undef,
+		subscriptions => [],
+	};
 
 };
 
@@ -140,13 +143,13 @@ subtest products => sub {
 	my %products = (
 		'beginner_perl_maven_ebook' => {
 			'code'  => 'beginner_perl_maven_ebook',
-			'id'    => 2,
+			'_id'   => $ID,
 			'name'  => 'Beginner Perl Maven e-book',
 			'price' => '0.01'
 		},
 		'perl_maven_cookbook' => {
 			'code'  => 'perl_maven_cookbook',
-			'id'    => 1,
+			'_id'   => $ID,
 			'name'  => 'Perl Maven Cookbook',
 			'price' => 0
 		}
@@ -155,18 +158,18 @@ subtest products => sub {
 	my $prod = $db->get_products;
 
 	#diag explain $prod;
-	is_deeply $prod, \%products, 'products';
+	cmp_deeply $prod, \%products, 'products';
 
 	$db->add_product( { code => 'mars_landing_handbook', name => 'Mars Landing Handbook', price => 20.40 } );
 	$products{mars_landing_handbook} = {
 		code  => 'mars_landing_handbook',
 		name  => 'Mars Landing Handbook',
 		price => 20.40,
-		id    => 3,
+		_id   => $ID,
 	};
 
 	$prod = $db->get_products;
-	is_deeply $prod, \%products, '3rd product added';
+	cmp_deeply $prod, \%products, '3rd product added';
 };
 
 subtest subscriptions => sub {
