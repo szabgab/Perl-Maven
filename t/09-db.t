@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::Most tests => 6;
+use Test::Most tests => 7;
 use Test::Deep qw(cmp_deeply re ignore isa);
 
 use File::Copy qw(move);
@@ -277,5 +277,20 @@ subtest verification => sub {
 
 	$db->delete_verification_code($code);
 	is $db->get_verification($code), undef, 'verification code was removed';
+};
+
+subtest other => sub {
+	plan tests => 4;
+	my $people_before = $db->get_people('');
+	ok !exists $people_before->[0]{name}, 'no name yet';
+	ok !exists $people_before->[1]{name}, 'no name yet';
+
+	$db->update_user($people_before->[0]{_id}, name => 'Orgo Morgo');
+	my $user1 = $db->get_user_by_id($people_before->[0]{_id});
+	is $user1->{name}, 'Orgo Morgo', 'name updated';
+
+	my $user2 = $db->get_user_by_id($people_before->[1]{_id});
+	ok !exists $user2->{name}, 'no name yet';
+	#diag explain $people;
 };
 

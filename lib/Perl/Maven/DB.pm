@@ -43,8 +43,8 @@ sub add_registration {
 
 sub update_user {
 	my ( $self, $id, %fields ) = @_;
-
-	$self->{dbh}->do( 'UPDATE user SET name=? WHERE id=?', undef, $fields{name}, $id );
+	$self->{db}->get_collection('user')->update({ _id => $id }, {'$set' => \%fields });
+	return;
 }
 
 sub set_whitelist {
