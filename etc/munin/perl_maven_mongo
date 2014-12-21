@@ -13,7 +13,7 @@ if (@ARGV) {
 		if ( basename($0) eq 'perl_maven_mongo_hits' ) {
 			print <<"END_CONFIG";
 graph_title MongoDB hits (24 hours)
-graph_vlabel sec
+graph_vlabel cnt
 graph_category PerlMaven
 END_CONFIG
 			say 'total.label Total';
