@@ -227,7 +227,7 @@ subtest subscriptions => sub {
 };
 
 subtest whitelist => sub {
-	plan tests => 3;
+	plan tests => 5;
 
 	my @whitelist = (
 		{
@@ -235,23 +235,36 @@ subtest whitelist => sub {
 			mask => '255.255.255.255',
 			note => 'Some text',
 		},
+		{
+			ip   => '1.2.3.5',
+			mask => '255.255.255.255',
+			note => 'Some other text',
+		},
+		{
+			ip   => '12.2.3.5',
+			mask => '255.255.255.0',
+			note => 'Yet another text',
+		}
 	);
 	my $people = $db->get_people('');
 	my $uid    = $people->[0]{_id};
 
 	my $empty = $db->get_whitelist($uid);
 	is_deeply $empty, [];
+
 	$db->add_to_whitelist( $uid, $whitelist[0] );
 	my $list = $db->get_whitelist($uid);
+	is_deeply $list, [ $whitelist[0] ];
 
-	#$whitelist[0]{id} = 1;
-	is_deeply $list, \@whitelist;
+	$db->add_to_whitelist( $uid, $whitelist[1] );
+	is_deeply $db->get_whitelist($uid), [ @whitelist[ 0, 1 ] ];
 
-	$db->delete_from_whitelist( $uid, { ip => '1.2.3.4', mask => '255.255.255.255' } );
-	is_deeply $db->get_whitelist($uid), [];
+	$db->add_to_whitelist( $uid, $whitelist[2] );
+	is_deeply $db->get_whitelist($uid), [ @whitelist[ 0, 1, 2 ] ];
+
+	$db->delete_from_whitelist( $uid, { ip => '1.2.3.5', mask => '255.255.255.255' } );
+	is_deeply $db->get_whitelist($uid), [ @whitelist[ 0, 2 ] ];
 };
-
-# TODO add more entries to the whitelist and remove from the beginnig, middle and the end.
 
 subtest verification => sub {
 	plan tests => 2;
