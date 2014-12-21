@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::Most tests => 5;
+use Test::Most tests => 6;
 use Test::Deep qw(cmp_deeply re ignore isa);
 
 use File::Copy qw(move);
@@ -11,6 +11,8 @@ use t::lib::Test;
 t::lib::Test::setup();
 
 use Perl::Maven::DB;
+use Perl::Maven::WebTools qw(_generate_code);
+
 my $db        = Perl::Maven::DB->new('pm.db');
 my $TIMESTAMP = isa('DateTime');
 my $ID        = re('^\w+$');
@@ -245,5 +247,35 @@ subtest whitelist => sub {
 
 	$db->delete_from_whitelist( $uid, { ip => '1.2.3.4', mask => '255.255.255.255' } );
 	is_deeply $db->get_whitelist($uid), [];
+};
+
+# TODO add more entries to the whitelist and remove from the beginnig, middle and the end.
+
+subtest verification => sub {
+	plan tests => 2;
+
+	my $people = $db->get_people('');
+	my $code   = _generate_code();
+	$db->save_verification(
+		code    => $code,
+		action  => 'add_to_whitelist',
+		uid     => $people->[0]{_id},
+		details => q[{ 'ip' : '1.3.5.6' }],
+	);
+	my $verification = $db->get_verification($code);
+
+	#diag explain $verification;
+	cmp_deeply $verification,
+		{
+		_id       => $ID,
+		code      => $code,
+		action    => 'add_to_whitelist',
+		uid       => $ID,
+		details   => q[{ 'ip' : '1.3.5.6' }],
+		timestamp => $TIMESTAMP,
+		};
+
+	$db->delete_verification_code($code);
+	is $db->get_verification($code), undef, 'verification code was removed';
 };
 
