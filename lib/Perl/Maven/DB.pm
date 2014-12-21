@@ -5,6 +5,7 @@ use warnings;
 use Data::Dumper qw(Dumper);
 use DBI;
 use MongoDB;
+use boolean;
 use DateTime::Tiny;
 
 our $VERSION = '0.11';
@@ -51,24 +52,34 @@ sub update_user {
 sub set_whitelist {
 	my ( $self, $id, $value ) = @_;
 
-	return $self->{dbh}->do( 'UPDATE user SET login_whitelist=? WHERE id=?', undef, $value, $id );
+	$self->{db}->get_collection('user')
+		->update( { _id => $id }, { '$set' => { whitelist_on => ( $value ? boolean::true : boolean::false ) } } );
+	return;
 }
 
+# ip, mask, note
 sub add_to_whitelist {
-	my ( $self, $args ) = @_;
-	$self->{dbh}->do( 'INSERT INTO login_whitelist (uid, ip, mask, note) VALUES (?, ?, ?, ?)',
-		undef, @{$args}{qw(uid ip mask note)} );
+	my ( $self, $uid, $args ) = @_;
+
+	my $user = $self->get_user_by_id($uid);
+	return if not $user;
+	if ( not $user->{whitelist} ) {
+		$self->{db}->get_collection('user')->update( { _id => $uid }, { '$set' => { whitelist => [] } } );
+	}
+
+	$self->{db}->get_collection('user')->update( { _id => $uid }, { '$push' => { whitelist => $args } } );
 }
 
 sub delete_from_whitelist {
-	my ( $self, $uid, $id ) = @_;
-	$self->{dbh}->do( 'DELETE FROM login_whitelist WHERE id=? AND uid=?', undef, $id, $uid );
+	my ( $self, $uid, $args ) = @_;
+	$self->{db}->get_collection('user')->update( { _id => $uid }, { '$pull', { whitelist => $args } } );
 }
 
 sub get_whitelist {
 	my ( $self, $uid ) = @_;
 
-	$self->{dbh}->selectall_hashref( 'SELECT * FROM login_whitelist WHERE uid=?', 'id', undef, $uid );
+	my $user = $self->get_user_by_id($uid);
+	return $user->{whitelist} || [];
 }
 
 sub get_user_by_email {
@@ -162,16 +173,17 @@ sub is_subscribed {
 sub subscribe_to {
 	my ( $self, %args ) = @_;
 
-	my ($pid) = $self->{dbh}->selectrow_array( q{SELECT product.id FROM product WHERE code=?}, undef, $args{code} );
-	return 'no_such_code' if not $pid;
+	my $prod = $self->get_product_by_code( $args{code} );
+	return 'no_such_code' if not $prod;
 
 	my $uid = $args{uid};
 	if ( not $uid ) {
-		($uid) = $self->{dbh}->selectrow_array( q{SELECT user.id FROM user WHERE email=?}, undef, $args{email} );
+		my $user = $self->get_user_by_email( $args{email} );
+		$uid = $user->{_id};
 	}
 	return 'no_such_email' if not $uid;
 
-	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid) VALUES (?, ?)', undef, $uid, $pid );
+	$self->{db}->get_collection('user')->update( { _id => $uid }, { '$push' => { subscriptions => $args{code} } } );
 
 	return;
 }
@@ -179,16 +191,17 @@ sub subscribe_to {
 sub unsubscribe_from {
 	my ( $self, %args ) = @_;
 
-	my ($pid) = $self->{dbh}->selectrow_array( q{SELECT product.id FROM product WHERE code=?}, undef, $args{code} );
-	return 'no_such_code' if not $pid;
+	my $prod = $self->get_product_by_code( $args{code} );
+	return 'no_such_code' if not $prod;
 
 	my $uid = $args{uid};
 	if ( not $uid ) {
-		($uid) = $self->{dbh}->selectrow_array( q{SELECT user.id FROM user WHERE email=?}, undef, $args{email} );
-		return 'no_such_email' if not $uid;
+		my $user = $self->get_user_by_email( $args{email} );
+		$uid = $user->{_id};
 	}
+	return 'no_such_email' if not $uid;
 
-	$self->{dbh}->do( 'DELETE FROM subscription WHERE uid=? AND pid=?', undef, $uid, $pid );
+	$self->{db}->get_collection('user')->update( { _id => $uid }, { '$pull' => { subscriptions => $args{code} } } );
 
 	return;
 }
@@ -219,9 +232,7 @@ sub get_products {
 
 sub get_product_by_code {
 	my ( $self, $code ) = @_;
-	my ($data)
-		= $self->{dbh}->selectrow_array( q{SELECT * FROM product WHERE code=?}, undef, $code );
-	return $data;
+	return $self->{db}->get_collection('products')->find_one( { code => $code } );
 }
 
 sub add_product {

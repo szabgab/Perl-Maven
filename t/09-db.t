@@ -138,7 +138,7 @@ subtest replace_email => sub {
 };
 
 subtest products => sub {
-	plan tests => 2;
+	plan tests => 3;
 
 	my %products = (
 		'beginner_perl_maven_ebook' => {
@@ -155,10 +155,10 @@ subtest products => sub {
 		}
 	);
 
-	my $prod = $db->get_products;
+	my $prods = $db->get_products;
 
 	#diag explain $prod;
-	cmp_deeply $prod, \%products, 'products';
+	cmp_deeply $prods, \%products, 'products';
 
 	$db->add_product( { code => 'mars_landing_handbook', name => 'Mars Landing Handbook', price => 20.40 } );
 	$products{mars_landing_handbook} = {
@@ -168,19 +168,34 @@ subtest products => sub {
 		_id   => $ID,
 	};
 
-	$prod = $db->get_products;
-	cmp_deeply $prod, \%products, '3rd product added';
+	$prods = $db->get_products;
+	cmp_deeply $prods, \%products, '3rd product added';
+
+	my $prod = $db->get_product_by_code('mars_landing_handbook');
+
+	#diag explain $prod;
+	cmp_deeply $prod, $products{mars_landing_handbook};
 };
 
 subtest subscriptions => sub {
-	plan tests => 5;
+	plan tests => 6;
+
+	my $ret = $db->subscribe_to(
+		email => 'foo@bar.com',
+		code  => 'some_other_book'
+	);
+	is $ret, 'no_such_code';
+
+	#diag explain $ret;
 
 	my $users = $db->get_people('foo@bar.com');
 	is_deeply $users->[0]{subscriptions}, [];
-	$db->subscribe_to(
+	$ret = $db->subscribe_to(
 		email => 'foo@bar.com',
 		code  => 'beginner_perl_maven_ebook'
 	);
+
+	#diag explain $ret;
 
 	$users = $db->get_people('foo@bar.com');
 	is_deeply $users->[0]{subscriptions}, ['beginner_perl_maven_ebook'], 'subscribed';
@@ -212,21 +227,23 @@ subtest whitelist => sub {
 
 	my @whitelist = (
 		{
-			uid  => 1,
 			ip   => '1.2.3.4',
 			mask => '255.255.255.255',
 			note => 'Some text',
 		},
 	);
+	my $people = $db->get_people('');
+	my $uid    = $people->[0]{_id};
 
-	my $empty = $db->get_whitelist(1);
-	is_deeply $empty, {};
-	$db->add_to_whitelist( $whitelist[0] );
-	my $list = $db->get_whitelist(1);
-	$whitelist[0]{id} = 1;
-	is_deeply $list, { 1 => $whitelist[0] };
+	my $empty = $db->get_whitelist($uid);
+	is_deeply $empty, [];
+	$db->add_to_whitelist( $uid, $whitelist[0] );
+	my $list = $db->get_whitelist($uid);
 
-	$db->delete_from_whitelist( 1, 1 );
-	is_deeply $db->get_whitelist(1), {};
+	#$whitelist[0]{id} = 1;
+	is_deeply $list, \@whitelist;
+
+	$db->delete_from_whitelist( $uid, { ip => '1.2.3.4', mask => '255.255.255.255' } );
+	is_deeply $db->get_whitelist($uid), [];
 };
 
