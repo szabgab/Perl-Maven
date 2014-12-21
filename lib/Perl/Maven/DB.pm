@@ -25,6 +25,7 @@ sub new {
 	$client->dt_type('DateTime::Tiny');
 
 	my $database = $client->get_database($dbname);
+	$database->get_collection('user')->ensure_index( { email => 1 }, { unique => boolean::true } );
 
 	$instance = bless { db => $database }, $class;
 
@@ -38,9 +39,11 @@ sub instance {
 sub add_registration {
 	my ( $self, $args ) = @_;
 
+	return if $self->get_user_by_email($args->{email});
+
 	$args->{register_time} = DateTime::Tiny->now;
 	$args->{subscriptions} ||= [];
-	$self->{db}->get_collection('user')->insert($args);
+	return $self->{db}->get_collection('user')->insert($args);
 }
 
 sub delete_user {
@@ -51,7 +54,7 @@ sub delete_user {
 sub get_people {
 	my ( $self, $email ) = @_;
 
-	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->all ];
+	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->sort({ email => 1 })->all ];
 }
 
 sub get_user_by_email {

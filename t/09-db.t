@@ -18,7 +18,7 @@ my $TIMESTAMP = isa('DateTime::Tiny');
 my $ID        = re('^\w+$');
 
 subtest users => sub {
-	plan tests => 8;
+	plan tests => 12;
 
 	my $people = $db->get_people('');
 	is_deeply $people, [], 'no people';
@@ -49,8 +49,8 @@ subtest users => sub {
 	#diag explain $people;
 	cmp_deeply $people,
 		[
+		{ _id => $ID, email => 'buzz@nasa.com', register_time => $TIMESTAMP, subscriptions => [] },
 		{ _id => $ID, email => 'foo@bar.com',   register_time => $TIMESTAMP, subscriptions => [] },
-		{ _id => $ID, email => 'buzz@nasa.com', register_time => $TIMESTAMP, subscriptions => [] }
 		],
 		'two people';
 
@@ -70,6 +70,12 @@ subtest users => sub {
 		'register_time' => $TIMESTAMP,
 		subscriptions   => [],
 		};
+
+	ok $db->add_registration( { email => 'foo@perlmaven.com' } );
+	ok $db->add_registration( { email => 'bar@perlmaven.com' } );
+	ok !$db->add_registration( { email => 'bar@perlmaven.com' } ), 'cannot add the same e-mail twice';
+	my $all = $people = $db->get_people('');
+	is scalar @$all, 4;
 };
 
 subtest replace_email => sub {
@@ -288,9 +294,9 @@ subtest delete_user => sub {
 	plan tests => 2;
 
 	my $people_before = $db->get_people('');
-	is scalar @$people_before, 2;
+	is scalar @$people_before, 4;
 	$db->delete_user( $people_before->[0]{email} );
 	my $people_after = $db->get_people('');
-	is scalar @$people_after, 1;
+	is scalar @$people_after, 3;
 };
 
