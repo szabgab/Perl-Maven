@@ -468,7 +468,7 @@ get '/mail/:article' => sub {
 	$tt->{url}          = $url;
 	$tt->{email_footer} = 1;
 
-	return pm_template 'email_newsletter', $tt, { layout => 'email' };
+	return template 'email_newsletter', $tt, { layout => 'email' };
 };
 
 get '/img/:file' => sub {
