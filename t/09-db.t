@@ -14,7 +14,7 @@ use Perl::Maven::DB;
 use Perl::Maven::WebTools qw(_generate_code);
 
 my $db        = Perl::Maven::DB->instance;
-my $TIMESTAMP = isa('DateTime');
+my $TIMESTAMP = isa('DateTime::Tiny');
 my $ID        = re('^\w+$');
 
 subtest users => sub {
@@ -280,17 +280,25 @@ subtest verification => sub {
 };
 
 subtest other => sub {
-	plan tests => 4;
+	plan tests => 8;
+
 	my $people_before = $db->get_people('');
-	ok !exists $people_before->[0]{name}, 'no name yet';
-	ok !exists $people_before->[1]{name}, 'no name yet';
+	ok !exists $people_before->[0]{name},        'no name yet';
+	ok !exists $people_before->[1]{name},        'no name yet';
+	ok !exists $people_before->[0]{verify_time}, 'no verify_time yet';
+	ok !exists $people_before->[1]{verify_time}, 'no verify_time yet';
 
-	$db->update_user($people_before->[0]{_id}, name => 'Orgo Morgo');
-	my $user1 = $db->get_user_by_id($people_before->[0]{_id});
+	#diag explain $people_before;
+
+	$db->update_user( $people_before->[0]{_id}, name => 'Orgo Morgo' );
+	$db->verify_registration( $people_before->[1]{_id} );
+	my $user1 = $db->get_user_by_id( $people_before->[0]{_id} );
 	is $user1->{name}, 'Orgo Morgo', 'name updated';
+	ok !exists $user1->{verify_time}, 'still no verify_time';
 
-	my $user2 = $db->get_user_by_id($people_before->[1]{_id});
+	my $user2 = $db->get_user_by_id( $people_before->[1]{_id} );
 	ok !exists $user2->{name}, 'no name yet';
-	#diag explain $people;
+	isa_ok $user2->{verify_time}, 'DateTime::Tiny';
+
 };
 

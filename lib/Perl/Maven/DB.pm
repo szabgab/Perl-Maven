@@ -22,6 +22,8 @@ sub new {
 	die 'Call ->instance instead' if $instance;
 
 	my $client = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	$client->dt_type('DateTime::Tiny');
+
 	my $database = $client->get_database($dbname);
 
 	$instance = bless { db => $database }, $class;
@@ -43,7 +45,7 @@ sub add_registration {
 
 sub update_user {
 	my ( $self, $id, %fields ) = @_;
-	$self->{db}->get_collection('user')->update({ _id => $id }, {'$set' => \%fields });
+	$self->{db}->get_collection('user')->update( { _id => $id }, { '$set' => \%fields } );
 	return;
 }
 
@@ -99,9 +101,10 @@ sub get_user_by_id {
 }
 
 sub verify_registration {
-	my ( $self, $id, $code ) = @_;
+	my ( $self, $id ) = @_;
 
-	$self->{dbh}->do( 'UPDATE user SET verify_time=? WHERE id=?', undef, time, $id );
+	$self->{db}->get_collection('user')->update( { _id => $id }, { '$set' => { verify_time => DateTime::Tiny->now } } );
+	return;
 }
 
 sub set_password {
