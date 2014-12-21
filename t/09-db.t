@@ -174,7 +174,7 @@ subtest products => sub {
 };
 
 subtest subscriptions => sub {
-	plan tests => 8;
+	plan tests => 10;
 
 	my $ret = $db->subscribe_to(
 		email => 'foo@bar.com',
@@ -205,6 +205,34 @@ subtest subscriptions => sub {
 	$users = $db->get_people('foo@bar.com');
 	is_deeply $users->[0]{subscriptions}, [ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ], 'subscribed';
 
+	my $stats1 = $db->stats;
+	#diag explain $stats1;
+	cmp_deeply $stats1, {
+       'all_users' => '4',
+       'no_password' => '0',
+       'not_verified' => '4',
+       'products' => {
+         'beginner_perl_maven_ebook' => {
+           '_id' => $ID,
+           'code' => 'beginner_perl_maven_ebook',
+           'name' => 'Beginner Perl Maven e-book',
+           'price' => '0.01'
+         },
+         'mars_landing_handbook' => {
+           '_id' => $ID,
+           'code' => 'mars_landing_handbook',
+           'name' => 'Mars Landing Handbook',
+           'price' => '20.4'
+         },
+         'perl_maven_cookbook' => {
+           '_id' => $ID,
+           'code' => 'perl_maven_cookbook',
+           'name' => 'Perl Maven Cookbook',
+           'price' => 0
+         }
+       }
+     }, 'stats1';
+
 	$db->unsubscribe_from(
 		email => 'foo@bar.com',
 		code  => 'mars_landing_handbook'
@@ -218,6 +246,34 @@ subtest subscriptions => sub {
 	);
 	$users = $db->get_people('foo@bar.com');
 	is_deeply $users->[0]{subscriptions}, [], 'empty again';
+
+	my $stats2 = $db->stats;
+	#diag explain $stats;
+	cmp_deeply $stats2, {
+       'all_users' => '4',
+       'no_password' => '0',
+       'not_verified' => '4',
+       'products' => {
+         'beginner_perl_maven_ebook' => {
+           '_id' => $ID,
+           'code' => 'beginner_perl_maven_ebook',
+           'name' => 'Beginner Perl Maven e-book',
+           'price' => '0.01'
+         },
+         'mars_landing_handbook' => {
+           '_id' => $ID,
+           'code' => 'mars_landing_handbook',
+           'name' => 'Mars Landing Handbook',
+           'price' => '20.4'
+         },
+         'perl_maven_cookbook' => {
+           '_id' => $ID,
+           'code' => 'perl_maven_cookbook',
+           'name' => 'Perl Maven Cookbook',
+           'price' => 0
+         }
+       }
+     }, 'stats2';
 };
 
 subtest whitelist => sub {
