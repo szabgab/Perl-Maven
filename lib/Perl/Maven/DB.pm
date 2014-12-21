@@ -43,6 +43,11 @@ sub add_registration {
 	$self->{db}->get_collection('user')->insert($args);
 }
 
+sub delete_user {
+	my ( $self, $email ) = @_;
+	return $self->{db}->get_collection('user')->remove( { email => $email } );
+}
+
 sub get_people {
 	my ( $self, $email ) = @_;
 
@@ -77,6 +82,11 @@ sub verify_registration {
 sub set_password {
 	my ( $self, $id, $password ) = @_;
 	$self->update_user( $id, password => $password );
+}
+
+sub replace_email {
+	my ( $self, $old, $new ) = @_;
+	return $self->{db}->get_collection('user')->update( { email => $old }, { '$set' => { email => $new } } );
 }
 
 sub set_whitelist {
@@ -267,16 +277,6 @@ sub stats {
 		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password NOT LIKE '{CRYPT}%'});
 
 	return \%stats;
-}
-
-sub replace_email {
-	my ( $self, $old, $new ) = @_;
-	return $self->{db}->get_collection('user')->update( { email => $old }, { '$set' => { email => $new } } );
-}
-
-sub delete_user {
-	my ( $self, $email ) = @_;
-	return $self->{dbh}->do( 'DELETE FROM user WHERE email=?', undef, $email );
 }
 
 sub dump {

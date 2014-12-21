@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::Most tests => 7;
+use Test::Most tests => 8;
 use Test::Deep qw(cmp_deeply re ignore isa);
 
 use File::Copy qw(move);
@@ -304,5 +304,15 @@ subtest update_user => sub {
 	ok !exists $user2->{password}, 'no password yet';
 	isa_ok $user2->{verify_time}, 'DateTime::Tiny';
 
+};
+
+subtest delete_user => sub {
+	plan tests => 2;
+
+	my $people_before = $db->get_people('');
+	is scalar @$people_before, 2;
+	$db->delete_user( $people_before->[0]{email} );
+	my $people_after = $db->get_people('');
+	is scalar @$people_after, 1;
 };
 
