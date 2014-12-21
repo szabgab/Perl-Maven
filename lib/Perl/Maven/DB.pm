@@ -39,7 +39,7 @@ sub instance {
 sub add_registration {
 	my ( $self, $args ) = @_;
 
-	return if $self->get_user_by_email($args->{email});
+	return if $self->get_user_by_email( $args->{email} );
 
 	$args->{register_time} = DateTime::Tiny->now;
 	$args->{subscriptions} ||= [];
@@ -54,7 +54,7 @@ sub delete_user {
 sub get_people {
 	my ( $self, $email ) = @_;
 
-	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->sort({ email => 1 })->all ];
+	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->sort( { email => 1 } )->all ];
 }
 
 sub get_user_by_email {
@@ -223,29 +223,32 @@ sub stats {
 	my ($self) = @_;
 
 	my $products = $self->get_products;
-	my $subs = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
-	foreach my $code ( keys %$products ) {
-		my $pid = $products->{$code}{id};
-		$products->{$code}{cnt} = ( $subs->{$pid}{cnt} || 0 );
-	}
+
+	#my $subs = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
+	#foreach my $code ( keys %$products ) {
+	#	my $pid = $products->{$code}{id};
+	#	$products->{$code}{cnt} = ( $subs->{$pid}{cnt} || 0 );
+	#}
 
 	my %stats = ( products => $products );
-	$stats{all_subs}
-		= $self->{dbh}->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
-	$stats{distinct_subs}
-		= $self->{dbh}->selectrow_array(q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
+
+	#$stats{all_subs}
+	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
+	#$stats{distinct_subs}
+	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
 
 	$stats{all_users}
-		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user});
+		= $self->{db}->get_collection('user')->find()->count;
 	$stats{not_verified}
-		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NULL});
+		= $self->{db}->get_collection('user')->find( { verify_time => { '$exists' => boolean::false } } )->count;
 	$stats{no_password}
-		= $self->{dbh}
-		->selectrow_array(q{SELECT COUNT(*) FROM user WHERE verify_time is NOT NULL AND password is NULL});
-	$stats{has_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password IS NOT NULL});
-	$stats{new_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password LIKE '{CRYPT}%'});
-	$stats{old_password}
-		= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password NOT LIKE '{CRYPT}%'});
+		= $self->{db}->get_collection('user')
+		->find( { verify_time => { '$exists' => boolean::true }, passwod => { '$exists' => boolean::false } } )->count;
+
+	#$stats{has_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password IS NOT NULL});
+	#$stats{new_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password LIKE '{CRYPT}%'});
+	#$stats{old_password}
+	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password NOT LIKE '{CRYPT}%'});
 
 	return \%stats;
 }

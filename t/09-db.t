@@ -18,7 +18,7 @@ my $TIMESTAMP = isa('DateTime::Tiny');
 my $ID        = re('^\w+$');
 
 subtest users => sub {
-	plan tests => 12;
+	plan tests => 13;
 
 	my $people = $db->get_people('');
 	is_deeply $people, [], 'no people';
@@ -76,6 +76,31 @@ subtest users => sub {
 	ok !$db->add_registration( { email => 'bar@perlmaven.com' } ), 'cannot add the same e-mail twice';
 	my $all = $people = $db->get_people('');
 	is scalar @$all, 4;
+
+	my $stats = $db->stats;
+
+	#diag explain $stats;
+	cmp_deeply $stats,
+		{
+		'all_users'    => '4',
+		'no_password'  => '0',
+		'not_verified' => '4',
+		'products'     => {
+			'beginner_perl_maven_ebook' => {
+				'_id'   => $ID,
+				'code'  => 'beginner_perl_maven_ebook',
+				'name'  => 'Beginner Perl Maven e-book',
+				'price' => '0.01'
+			},
+			'perl_maven_cookbook' => {
+				'_id'   => $ID,
+				'code'  => 'perl_maven_cookbook',
+				'name'  => 'Perl Maven Cookbook',
+				'price' => 0
+			}
+		}
+		};
+
 };
 
 subtest replace_email => sub {
