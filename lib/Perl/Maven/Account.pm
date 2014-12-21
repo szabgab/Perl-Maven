@@ -435,7 +435,7 @@ sub verify2 {
 		my $ip        = $details->{ip};
 		my $whitelist = $db->get_whitelist($uid);
 		my $mask      = '255.255.255.255';
-		my $found     = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
+		my $found     = grep { $_->{ip} eq $ip and $_->{mask} eq $mask } @$whitelist;
 		if ( not $found ) {
 			$db->add_to_whitelist(
 				{
