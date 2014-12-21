@@ -82,7 +82,7 @@ sub send_messages {
 	my ( $mymaven, $header, $opt ) = @_;
 
 	my %todo;
-	my $db = Perl::Maven::DB->new('pm.db');
+	my $db = Perl::Maven::DB->new();
 
 	# TODO remove the hard coding here
 	my $unsubscribe_link = grep { $_ eq 'perl_maven_cookbook' } @{ $opt->{to} };
@@ -154,7 +154,7 @@ Usage: $0 --url http://url
 
 END_USAGE
 
-	my $db       = Perl::Maven::DB->new('pm.db');
+	my $db       = Perl::Maven::DB->new();
 	my $products = $db->get_products;
 	foreach my $code (
 		sort

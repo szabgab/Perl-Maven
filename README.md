@@ -101,6 +101,8 @@ Run the application using ```plackup -r```
 And visit the main page at ```http://example.com:5000/```
 
 
+Configure DNS name resolving of perlmaven.com.local to 127.0.0.1
+(On Linux/Unix add the following line to /etc/hosts :
 
 
 perlmaven.com

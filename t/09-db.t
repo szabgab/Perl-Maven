@@ -13,7 +13,7 @@ t::lib::Test::setup();
 use Perl::Maven::DB;
 use Perl::Maven::WebTools qw(_generate_code);
 
-my $db        = Perl::Maven::DB->new('pm.db');
+my $db        = Perl::Maven::DB->instance;
 my $TIMESTAMP = isa('DateTime');
 my $ID        = re('^\w+$');
 

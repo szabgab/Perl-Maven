@@ -10,7 +10,7 @@ use boolean;
 
 my $db = Perl::Maven::DB->new;
 
-my $dsn = "dbi:SQLite:dbname=pm.db";
+my $dsn = 'dbi:SQLite:dbname=pm.db';
 my $dbh = DBI->connect(
 	$dsn, '', '',
 	{

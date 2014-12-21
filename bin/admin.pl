@@ -9,7 +9,7 @@ use Getopt::Long qw(GetOptions);
 use lib 'lib';
 
 use Perl::Maven::DB;
-my $db = Perl::Maven::DB->new('pm.db');
+my $db = Perl::Maven::DB->new();
 
 my %opt;
 GetOptions(

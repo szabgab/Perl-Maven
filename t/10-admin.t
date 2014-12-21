@@ -7,12 +7,10 @@ use Capture::Tiny qw(capture);
 use Cwd qw(cwd);
 use t::lib::Test;
 
-BEGIN {
-	t::lib::Test::setup();
-}
+t::lib::Test::setup();
 
 use Perl::Maven::DB;
-my $db = Perl::Maven::DB->new('pm.db');
+my $db = Perl::Maven::DB->instance;
 
 my $admin = "$^X -Ilib bin/admin.pl";
 

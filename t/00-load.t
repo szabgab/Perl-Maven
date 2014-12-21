@@ -13,7 +13,6 @@ my @scripts = qw(
 	bin/create_meta.pl
 	bin/remove_sessions.pl
 	bin/sendmail.pl
-	bin/setup.pl
 	bin/update_sessions.pl
 );
 

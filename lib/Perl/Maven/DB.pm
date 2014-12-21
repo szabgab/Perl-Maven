@@ -16,7 +16,7 @@ sub new {
 	my ( $class, $dbname ) = @_;
 	$dbname ||= 'PerlMaven';
 
-	return $instance if $instance;
+	die 'Call ->instance instead' if $instance;
 
 	my $client = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 	my $database = $client->get_database($dbname);

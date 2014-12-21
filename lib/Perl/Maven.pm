@@ -45,7 +45,7 @@ hook before => sub {
 
 	my $appdir = abs_path config->{appdir};
 
-	my $db = Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
+	my $db = Perl::Maven::DB->new();
 	set db => $db;
 
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
