@@ -279,25 +279,29 @@ subtest verification => sub {
 	is $db->get_verification($code), undef, 'verification code was removed';
 };
 
-subtest other => sub {
-	plan tests => 8;
+subtest update_user => sub {
+	plan tests => 12;
 
 	my $people_before = $db->get_people('');
-	ok !exists $people_before->[0]{name},        'no name yet';
-	ok !exists $people_before->[1]{name},        'no name yet';
-	ok !exists $people_before->[0]{verify_time}, 'no verify_time yet';
-	ok !exists $people_before->[1]{verify_time}, 'no verify_time yet';
+	for my $i ( 0 .. 1 ) {
+		for my $field (qw(name verify_time password)) {
+			ok !exists $people_before->[$i]{$field}, "no $field yet";
+		}
+	}
 
 	#diag explain $people_before;
 
 	$db->update_user( $people_before->[0]{_id}, name => 'Orgo Morgo' );
 	$db->verify_registration( $people_before->[1]{_id} );
+	$db->set_password( $people_before->[0]{_id}, 'abcdef' );
 	my $user1 = $db->get_user_by_id( $people_before->[0]{_id} );
 	is $user1->{name}, 'Orgo Morgo', 'name updated';
 	ok !exists $user1->{verify_time}, 'still no verify_time';
+	is $user1->{password}, 'abcdef', 'password updated';
 
 	my $user2 = $db->get_user_by_id( $people_before->[1]{_id} );
-	ok !exists $user2->{name}, 'no name yet';
+	ok !exists $user2->{name},     'no name yet';
+	ok !exists $user2->{password}, 'no password yet';
 	isa_ok $user2->{verify_time}, 'DateTime::Tiny';
 
 };

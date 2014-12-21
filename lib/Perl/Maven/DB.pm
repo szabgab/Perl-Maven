@@ -43,10 +43,40 @@ sub add_registration {
 	$self->{db}->get_collection('user')->insert($args);
 }
 
+sub get_people {
+	my ( $self, $email ) = @_;
+
+	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->all ];
+}
+
+sub get_user_by_email {
+	my ( $self, $email ) = @_;
+
+	return $self->{db}->get_collection('user')->find_one( { email => $email } );
+}
+
+sub get_user_by_id {
+	my ( $self, $id ) = @_;
+
+	return $self->{db}->get_collection('user')->find_one( { _id => $id } );
+}
+
 sub update_user {
 	my ( $self, $id, %fields ) = @_;
 	$self->{db}->get_collection('user')->update( { _id => $id }, { '$set' => \%fields } );
 	return;
+}
+
+sub verify_registration {
+	my ( $self, $id ) = @_;
+
+	$self->{db}->get_collection('user')->update( { _id => $id }, { '$set' => { verify_time => DateTime::Tiny->now } } );
+	return;
+}
+
+sub set_password {
+	my ( $self, $id, $password ) = @_;
+	$self->update_user( $id, password => $password );
 }
 
 sub set_whitelist {
@@ -80,41 +110,6 @@ sub get_whitelist {
 
 	my $user = $self->get_user_by_id($uid);
 	return $user->{whitelist} || [];
-}
-
-sub get_user_by_email {
-	my ( $self, $email ) = @_;
-
-	return $self->{db}->get_collection('user')->find_one( { email => $email } );
-}
-
-sub get_people {
-	my ( $self, $email ) = @_;
-
-	return [ $self->{db}->get_collection('user')->find( { email => qr/$email/ } )->all ];
-}
-
-sub get_user_by_id {
-	my ( $self, $id ) = @_;
-
-	return $self->{db}->get_collection('user')->find_one( { _id => $id } );
-}
-
-sub verify_registration {
-	my ( $self, $id ) = @_;
-
-	$self->{db}->get_collection('user')->update( { _id => $id }, { '$set' => { verify_time => DateTime::Tiny->now } } );
-	return;
-}
-
-sub set_password {
-	my ( $self, $id, $password ) = @_;
-
-	$self->{dbh}->do(
-		'UPDATE user
-		SET password=?, password_reset_code="" WHERE id=?',
-		undef, $password, $id
-	);
 }
 
 sub get_subscriptions {
