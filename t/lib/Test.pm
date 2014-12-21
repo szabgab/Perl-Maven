@@ -17,20 +17,25 @@ use Perl::Maven::DB;
 our $DOMAIN = 'test-pm.com';
 our $URL    = "http://$DOMAIN/";
 
+my $db_created;
+
 sub setup {
 	my $dir = tempdir( CLEANUP => 1 );
 	$ENV{MYMAVEN_YML} = 't/files/config/test.yml';
 
 	unlink glob 'sessions/*';
 
-	my $db = Perl::Maven::DB->new('PerlMaven_Test_' . time);
+	my $db = Perl::Maven::DB->new( 'PerlMaven_Test_' . time );
+	$db_created = 1;
 
 	$db->add_product( { code => 'perl_maven_cookbook',       name => 'Perl Maven Cookbook',        price => 0 } );
 	$db->add_product( { code => 'beginner_perl_maven_ebook', name => 'Beginner Perl Maven e-book', price => 0.01 } );
 }
 
 END {
-	Perl::Maven::DB->instance->{db}->drop;
+	if ($db_created) {
+		Perl::Maven::DB->instance->{db}->drop;
+	}
 }
 
 sub read_file {
