@@ -19,7 +19,13 @@ sub new {
 		$dbname = $ENV{PERL_MAVEN_DB};
 	}
 
-	die 'Call ->instance instead' if $instance;
+	if ($instance) {
+		die "Trying to call ->new($dbname) while it has already been called using ->new($instance->{dbname})"
+			if $instance->{dbname} ne $dbname;
+		return $instance;
+	}
+
+	#die 'Call ->instance instead' if $instance;
 
 	my $client = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 	$client->dt_type('DateTime::Tiny');
@@ -28,7 +34,7 @@ sub new {
 	$database->get_collection('user')->ensure_index( { email => 1 }, { unique => boolean::true } );
 	$database->get_collection('paypal_transactions')->ensure_index( { paypal_id => 1 }, { unique => boolean::true } );
 
-	$instance = bless { db => $database }, $class;
+	$instance = bless { db => $database, dbname => $dbname }, $class;
 
 	return $instance;
 }
