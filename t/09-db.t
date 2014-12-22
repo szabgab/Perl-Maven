@@ -77,14 +77,20 @@ subtest users => sub {
 	my $all = $people = $db->get_people('');
 	is scalar @$all, 4;
 
+	#diag explain $all;
+
 	my $stats = $db->stats;
 
 	#diag explain $stats;
 	cmp_deeply $stats,
 		{
-		'all_users'    => '4',
-		'no_password'  => '0',
-		'not_verified' => '4',
+		'all_users'    => 4,
+		'no_password'  => 0,
+		'verified'     => 0,
+		'not_verified' => 4,
+		'has_password' => 0,
+		'new_password' => 0,
+		'old_password' => 0,
 		'products'     => {
 			'beginner_perl_maven_ebook' => {
 				'_id'   => $ID,
@@ -206,32 +212,39 @@ subtest subscriptions => sub {
 	is_deeply $users->[0]{subscriptions}, [ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ], 'subscribed';
 
 	my $stats1 = $db->stats;
+
 	#diag explain $stats1;
-	cmp_deeply $stats1, {
-       'all_users' => '4',
-       'no_password' => '0',
-       'not_verified' => '4',
-       'products' => {
-         'beginner_perl_maven_ebook' => {
-           '_id' => $ID,
-           'code' => 'beginner_perl_maven_ebook',
-           'name' => 'Beginner Perl Maven e-book',
-           'price' => '0.01'
-         },
-         'mars_landing_handbook' => {
-           '_id' => $ID,
-           'code' => 'mars_landing_handbook',
-           'name' => 'Mars Landing Handbook',
-           'price' => '20.4'
-         },
-         'perl_maven_cookbook' => {
-           '_id' => $ID,
-           'code' => 'perl_maven_cookbook',
-           'name' => 'Perl Maven Cookbook',
-           'price' => 0
-         }
-       }
-     }, 'stats1';
+	cmp_deeply $stats1,
+		{
+		'all_users'    => 4,
+		'no_password'  => 0,
+		'verified'     => 0,
+		'not_verified' => 4,
+		'has_password' => 0,
+		'new_password' => 0,
+		'old_password' => 0,
+		'products'     => {
+			'beginner_perl_maven_ebook' => {
+				'_id'   => $ID,
+				'code'  => 'beginner_perl_maven_ebook',
+				'name'  => 'Beginner Perl Maven e-book',
+				'price' => '0.01'
+			},
+			'mars_landing_handbook' => {
+				'_id'   => $ID,
+				'code'  => 'mars_landing_handbook',
+				'name'  => 'Mars Landing Handbook',
+				'price' => '20.4'
+			},
+			'perl_maven_cookbook' => {
+				'_id'   => $ID,
+				'code'  => 'perl_maven_cookbook',
+				'name'  => 'Perl Maven Cookbook',
+				'price' => 0
+			}
+		}
+		},
+		'stats1';
 
 	$db->unsubscribe_from(
 		email => 'foo@bar.com',
@@ -248,32 +261,39 @@ subtest subscriptions => sub {
 	is_deeply $users->[0]{subscriptions}, [], 'empty again';
 
 	my $stats2 = $db->stats;
+
 	#diag explain $stats;
-	cmp_deeply $stats2, {
-       'all_users' => '4',
-       'no_password' => '0',
-       'not_verified' => '4',
-       'products' => {
-         'beginner_perl_maven_ebook' => {
-           '_id' => $ID,
-           'code' => 'beginner_perl_maven_ebook',
-           'name' => 'Beginner Perl Maven e-book',
-           'price' => '0.01'
-         },
-         'mars_landing_handbook' => {
-           '_id' => $ID,
-           'code' => 'mars_landing_handbook',
-           'name' => 'Mars Landing Handbook',
-           'price' => '20.4'
-         },
-         'perl_maven_cookbook' => {
-           '_id' => $ID,
-           'code' => 'perl_maven_cookbook',
-           'name' => 'Perl Maven Cookbook',
-           'price' => 0
-         }
-       }
-     }, 'stats2';
+	cmp_deeply $stats2,
+		{
+		'all_users'    => 4,
+		'no_password'  => 0,
+		'verified'     => 0,
+		'not_verified' => 4,
+		'has_password' => 0,
+		'new_password' => 0,
+		'old_password' => 0,
+		'products'     => {
+			'beginner_perl_maven_ebook' => {
+				'_id'   => $ID,
+				'code'  => 'beginner_perl_maven_ebook',
+				'name'  => 'Beginner Perl Maven e-book',
+				'price' => '0.01'
+			},
+			'mars_landing_handbook' => {
+				'_id'   => $ID,
+				'code'  => 'mars_landing_handbook',
+				'name'  => 'Mars Landing Handbook',
+				'price' => '20.4'
+			},
+			'perl_maven_cookbook' => {
+				'_id'   => $ID,
+				'code'  => 'perl_maven_cookbook',
+				'name'  => 'Perl Maven Cookbook',
+				'price' => 0
+			}
+		}
+		},
+		'stats2';
 };
 
 subtest whitelist => sub {
@@ -345,7 +365,7 @@ subtest verification => sub {
 };
 
 subtest update_user => sub {
-	plan tests => 12;
+	plan tests => 13;
 
 	my $people_before = $db->get_people('');
 	for my $i ( 0 .. 1 ) {
@@ -368,6 +388,38 @@ subtest update_user => sub {
 	ok !exists $user2->{name},     'no name yet';
 	ok !exists $user2->{password}, 'no password yet';
 	isa_ok $user2->{verify_time}, 'DateTime::Tiny';
+
+	my $stats = $db->stats;
+	cmp_deeply $stats,
+		{
+		'all_users'    => '4',
+		'no_password'  => '1',
+		'not_verified' => '3',
+		'verified'     => 1,
+		'has_password' => 1,
+		'new_password' => 0,
+		'old_password' => 1,
+		'products'     => {
+			'beginner_perl_maven_ebook' => {
+				'_id'   => $ID,
+				'code'  => 'beginner_perl_maven_ebook',
+				'name'  => 'Beginner Perl Maven e-book',
+				'price' => '0.01'
+			},
+			'perl_maven_cookbook' => {
+				'_id'   => $ID,
+				'code'  => 'perl_maven_cookbook',
+				'name'  => 'Perl Maven Cookbook',
+				'price' => 0
+			},
+			'mars_landing_handbook' => {
+				'_id'   => $ID,
+				'code'  => 'mars_landing_handbook',
+				'name'  => 'Mars Landing Handbook',
+				'price' => '20.4'
+			},
+		}
+		};
 
 };
 

@@ -239,16 +239,26 @@ sub stats {
 
 	$stats{all_users}
 		= $self->{db}->get_collection('user')->find()->count;
+	$stats{verified}
+		= $self->{db}->get_collection('user')->find( { verify_time => { '$exists' => boolean::true } } )->count;
 	$stats{not_verified}
 		= $self->{db}->get_collection('user')->find( { verify_time => { '$exists' => boolean::false } } )->count;
-	$stats{no_password}
-		= $self->{db}->get_collection('user')
-		->find( { verify_time => { '$exists' => boolean::true }, passwod => { '$exists' => boolean::false } } )->count;
+	$stats{no_password} = $self->{db}->get_collection('user')->find(
+		{
+			'$and' =>
+				[ { verify_time => { '$exists' => boolean::true } }, { password => { '$exists' => boolean::false } } ]
+		}
+	)->count;
 
-	#$stats{has_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password IS NOT NULL});
-	#$stats{new_password} = $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password LIKE '{CRYPT}%'});
-	#$stats{old_password}
-	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(*) FROM user WHERE password NOT LIKE '{CRYPT}%'});
+	$stats{has_password}
+		= $self->{db}->get_collection('user')->find( { password => { '$exists' => boolean::true } } )->count;
+	$stats{new_password} = $self->{db}->get_collection('user')->find( { password => qr/{CRYPT}/ } )->count;
+
+	$stats{old_password}
+		= $self->{db}->get_collection('user')
+		->find(
+		{ '$and' => [ { password => { '$exists' => boolean::true } }, { password => { '$not' => qr/{CRYPT}/ } } ] } )
+		->count;
 
 	return \%stats;
 }
