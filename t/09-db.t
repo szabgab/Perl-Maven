@@ -327,7 +327,7 @@ subtest whitelist => sub {
 			ip   => '12.2.3.5',
 			mask => '255.255.255.0',
 			note => 'Yet another text',
-		}
+		},
 	);
 	my $people = $db->get_people('');
 	my $uid    = $people->[0]{_id};
