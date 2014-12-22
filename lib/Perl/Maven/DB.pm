@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use Data::Dumper qw(Dumper);
-use DBI;
 use MongoDB;
 use boolean;
 use DateTime::Tiny;
