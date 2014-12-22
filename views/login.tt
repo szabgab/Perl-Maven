@@ -12,10 +12,12 @@
  <button type="submit" class="btn btn-default">Login</button>
 </form>
 <div id="error">
-<% IF no_password %>
-Your account does not have a password yet.
-We have sent you a code that you can use to set your password.
-<% END %>
+  <% IF no_such_email %>
+    This e-mail is not in our system.
+  <% END %>
+  <% IF no_password %>
+    Your account does not have a password yet.
+  <% END %>
 </div>
 <hr />
 

@@ -162,7 +162,7 @@ subtest 'subscribe' => sub {
 	# the new page does not contain a link to the cookbook.
 	#$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 1 };
 
 	# check e-mails
 	@mails = Email::Sender::Simple->default_transport->deliveries;

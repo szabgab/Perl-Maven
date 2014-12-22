@@ -11,48 +11,118 @@ use Perl::Maven::Sendmail qw(send_mail);
 
 our $VERSION = '0.11';
 
-post '/pm/whitelist' => sub {
-	if ( not logged_in() ) {
+# TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
+get '/pm/register' => sub {
+	return pm_error('already_registered') if logged_in();
+	return template 'registration_form', { show_right => 0, };
+};
 
-		#session url => request->path;
-		return redirect '/pm/login';
+post '/pm/register.json' => sub {
+	register();
+};
+
+post '/pm/register' => sub {
+	register();
+};
+
+get '/pm/login' => sub {
+	return pm_error('already_logged_in') if logged_in();
+	template 'login';
+};
+
+post '/pm/login' => sub {
+	my $email    = param('email');
+	my $password = param('password');
+
+	return pm_error('missing_data')
+		if not $password or not $email;
+
+	my $db   = setting('db');
+	my $user = $db->get_user_by_email($email);
+	if ( not $user ) {
+		return pm_template 'login', { no_such_email => 1 };
 	}
-	my $do  = param('do');
-	my $uid = session('uid');
-	if ($do) {
-		my $db = setting('db');
-		if ( $do eq 'enable' ) {
-			if ( $db->set_whitelist( $uid, 1 ) ) {
-				my $ip   = get_ip();
-				my $mask = '255.255.255.255';
 
-				my $whitelist = $db->get_whitelist($uid);
-				my $found = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
-				if ( not $found ) {
-					$db->add_to_whitelist(
-						{
-							uid  => $uid,
-							ip   => $ip,
-							mask => $mask,
-							note => 'Added automatically when whitelist was enabled'
-						}
-					);
-				}
-				return pm_message('whitelist_enabled');
-			}
-			else {
-				return pm_error('internal_error');
-			}
-		}
-		elsif ( $do eq 'disable' ) {
-			$db->set_whitelist( $uid, 0 );
-			return pm_message('whitelist_disabled');
+	if ( not $user->{password} ) {
+		return pm_template 'login', { no_password => 1 };
+	}
+
+	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
+		return pm_error('invalid_pw')
+			if not passphrase($password)->matches( $user->{password} );
+	}
+	else {
+		return pm_error('invalid_pw')
+			if $user->{password} ne Digest::SHA::sha1_base64($password);
+
+		# password is good, we need to update it
+		$db->set_password( $user->{_id}, passphrase($password)->generate->rfc2307 );
+	}
+
+	session uid       => $user->{_id};
+	session logged_in => 1;
+	session last_seen => time;
+
+	my $url = session('url') // '/pm/account';
+	session url => undef;
+
+	redirect $url;
+};
+
+get '/pm/logout' => sub {
+	session logged_in => 0;
+	redirect '/';
+};
+
+get '/pm/account' => sub {
+	return redirect '/pm/login' if not logged_in();
+
+	my $db   = setting('db');
+	my $uid  = session('uid');
+	my $user = $db->get_user_by_id($uid);
+
+	my @owned_products;
+	foreach my $code ( @{ $user->{subscriptions} } ) {
+
+		# TODO remove the hard-coded special case of the perl_maven_pro
+		if ( $code eq 'perl_maven_pro' ) {
+			push @owned_products,
+				{
+				name     => 'Perl Maven Pro',
+				filename => '/archive?tag=pro',
+				linkname => 'List of pro articles',
+				};
 		}
 		else {
-			return pm_error('invalid_value_provided');
+			my @files = get_download_files($code);
+			foreach my $f (@files) {
+
+				#debug "$code -  $f->{file}";
+				push @owned_products,
+					{
+					name     => ( setting('products')->{$code}{name} . " $f->{title}" ),
+					filename => "/download/$code/$f->{file}",
+					linkname => $f->{file},
+					};
+			}
 		}
 	}
-	return 'parameter missing';
+
+	my %params = (
+		subscriptions   => \@owned_products,
+		subscribed      => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
+		name            => $user->{name},
+		email           => $user->{email},
+		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
+	);
+	if ( $user->{login_whitelist} ) {
+		$params{whitelist} = $db->get_whitelist($uid);
+	}
+	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
+		$params{perl_maven_pro_buy_button}
+			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
+	}
+	template 'account', \%params;
 };
 
 post '/pm/send-reset-pw-code' => sub {
@@ -202,20 +272,6 @@ any '/pm/unsubscribe' => sub {
 		};
 };
 
-# TODO probably we would want to move the show_right control from here to a template file (if we really need it here)
-get '/pm/register' => sub {
-	return pm_error('already_registered') if logged_in();
-	return template 'registration_form', { show_right => 0, };
-};
-
-post '/pm/register.json' => sub {
-	register();
-};
-
-post '/pm/register' => sub {
-	register();
-};
-
 post '/pm/change-email' => sub {
 	my $mymaven = mymaven;
 	if ( not logged_in() ) {
@@ -264,37 +320,48 @@ post '/pm/change-email' => sub {
 	pm_message('verification_email_sent');
 };
 
-get '/pm/login' => sub {
-	return pm_error('already_logged_in') if logged_in();
-	template 'login';
-};
+post '/pm/whitelist' => sub {
+	if ( not logged_in() ) {
 
-post '/pm/login' => sub {
-	my $email    = param('email');
-	my $password = param('password');
-
-	return pm_error('missing_data')
-		if not $password or not $email;
-
-	my $db   = setting('db');
-	my $user = $db->get_user_by_email($email);
-	if ( not $user->{password} ) {
-		return pm_template 'login', { no_password => 1 };
+		#session url => request->path;
+		return redirect '/pm/login';
 	}
+	my $do  = param('do');
+	my $uid = session('uid');
+	if ($do) {
+		my $db = setting('db');
+		if ( $do eq 'enable' ) {
+			if ( $db->set_whitelist( $uid, 1 ) ) {
+				my $ip   = get_ip();
+				my $mask = '255.255.255.255';
 
-	return pm_error('invalid_pw')
-		if not passphrase($password)->matches( $user->{password} );
-
-	session uid       => $user->{id};
-	session logged_in => 1;
-	session last_seen => time;
-
-	#my $url = session('referer') // '/account';
-	#session referer => undef;
-	my $url = session('url') // '/pm/account';
-	session url => undef;
-
-	redirect $url;
+				my $whitelist = $db->get_whitelist($uid);
+				my $found = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
+				if ( not $found ) {
+					$db->add_to_whitelist(
+						{
+							uid  => $uid,
+							ip   => $ip,
+							mask => $mask,
+							note => 'Added automatically when whitelist was enabled'
+						}
+					);
+				}
+				return pm_message('whitelist_enabled');
+			}
+			else {
+				return pm_error('internal_error');
+			}
+		}
+		elsif ( $do eq 'disable' ) {
+			$db->set_whitelist( $uid, 0 );
+			return pm_message('whitelist_disabled');
+		}
+		else {
+			return pm_error('invalid_value_provided');
+		}
+	}
+	return 'parameter missing';
 };
 
 post '/pm/whitelist-delete' => sub {
@@ -309,62 +376,6 @@ post '/pm/whitelist-delete' => sub {
 
 get '/pm/user-info' => sub {
 	to_json pm_user_info();
-};
-
-get '/pm/logout' => sub {
-	session logged_in => 0;
-	redirect '/';
-};
-
-get '/pm/account' => sub {
-	return redirect '/pm/login' if not logged_in();
-
-	my $db   = setting('db');
-	my $uid  = session('uid');
-	my $user = $db->get_user_by_id($uid);
-
-	my @owned_products;
-	foreach my $code ( @{ $user->{subscriptions} } ) {
-
-		# TODO remove the hard-coded special case of the perl_maven_pro
-		if ( $code eq 'perl_maven_pro' ) {
-			push @owned_products,
-				{
-				name     => 'Perl Maven Pro',
-				filename => '/archive?tag=pro',
-				linkname => 'List of pro articles',
-				};
-		}
-		else {
-			my @files = get_download_files($code);
-			foreach my $f (@files) {
-
-				#debug "$code -  $f->{file}";
-				push @owned_products,
-					{
-					name     => ( setting('products')->{$code}{name} . " $f->{title}" ),
-					filename => "/download/$code/$f->{file}",
-					linkname => $f->{file},
-					};
-			}
-		}
-	}
-
-	my %params = (
-		subscriptions   => \@owned_products,
-		subscribed      => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
-		name            => $user->{name},
-		email           => $user->{email},
-		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
-	);
-	if ( $user->{login_whitelist} ) {
-		$params{whitelist} = $db->get_whitelist($uid);
-	}
-	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
-		$params{perl_maven_pro_buy_button}
-			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
-	}
-	template 'account', \%params;
 };
 
 get '/pm/verify2/:code' => \&verify2;
