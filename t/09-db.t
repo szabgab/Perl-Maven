@@ -201,6 +201,8 @@ subtest subscriptions => sub {
 	ok $db->is_subscribed( $users->[0]{_id}, 'beginner_perl_maven_ebook' ), 'subscribed';
 	my $user0 = $db->get_user_by_id( $users->[0]{_id} );
 	is_deeply $db->get_subscribers('beginner_perl_maven_ebook'), [$user0];
+	diag $user0;
+	diag $db->get_subscribers('beginner_perl_maven_ebook');
 
 	#diag explain $ret;
 
