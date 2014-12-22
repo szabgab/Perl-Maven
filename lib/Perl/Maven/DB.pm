@@ -128,16 +128,8 @@ sub get_whitelist {
 sub get_subscribers {
 	my ( $self, $code ) = @_;
 
-	return $self->{dbh}->selectall_arrayref(
-		q{
-	   SELECT email, user.id
-	   FROM user, subscription, product
-	   WHERE user.id=subscription.uid
-	     AND user.verify_time is not null
-	     AND product.id=subscription.pid
-	     AND product.code=?
-	}, undef, $code
-	);
+	return [ $self->{db}->get_collection('user')->find( { subscriptions => { '$elemMatch' => { '$eq' => $code } } } )
+			->sort( { email => 1 } )->all ];
 }
 
 sub is_subscribed {

@@ -180,7 +180,7 @@ subtest products => sub {
 };
 
 subtest subscriptions => sub {
-	plan tests => 10;
+	plan tests => 14;
 
 	my $ret = $db->subscribe_to(
 		email => 'foo@bar.com',
@@ -190,6 +190,7 @@ subtest subscriptions => sub {
 
 	#diag explain $ret;
 
+	is_deeply $db->get_subscribers('beginner_perl_maven_ebook'), [], 'no subscriber';
 	my $users = $db->get_people('foo@bar.com');
 	is_deeply $users->[0]{subscriptions}, [];
 	ok !$db->is_subscribed( $users->[0]{_id}, 'beginner_perl_maven_ebook' ), 'not subscribed';
@@ -198,6 +199,8 @@ subtest subscriptions => sub {
 		code  => 'beginner_perl_maven_ebook'
 	);
 	ok $db->is_subscribed( $users->[0]{_id}, 'beginner_perl_maven_ebook' ), 'subscribed';
+	my $user0 = $db->get_user_by_id( $users->[0]{_id} );
+	is_deeply $db->get_subscribers('beginner_perl_maven_ebook'), [$user0];
 
 	#diag explain $ret;
 
@@ -245,6 +248,16 @@ subtest subscriptions => sub {
 		}
 		},
 		'stats1';
+	is_deeply $db->get_subscribers('beginner_perl_maven_ebook'), $db->get_people('foo@bar.com');
+
+	$db->subscribe_to(
+		email => 'foo@perlmaven.com',
+		code  => 'beginner_perl_maven_ebook'
+	);
+
+	#diag explain $db->get_subscribers('beginner_perl_maven_ebook');
+	is_deeply $db->get_subscribers('beginner_perl_maven_ebook'),
+		[ $db->get_people('foo@bar.com')->[0], $db->get_people('foo@perlmaven.com')->[0], ];
 
 	$db->unsubscribe_from(
 		email => 'foo@bar.com',
