@@ -969,7 +969,8 @@ sub log_request {
 		$details{uid} = session('uid');
 	}
 
-	log_to_mongodb( \%details );
+	my $db = setting('db');
+	$db->add_log( \%details );
 
 	return if response->status != 200;
 	return if $uri =~ m{^/atom};

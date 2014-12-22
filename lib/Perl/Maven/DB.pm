@@ -279,5 +279,13 @@ sub delete_verification_code {
 	return $self->{db}->get_collection('verification')->remove( { code => $code } );
 }
 
+sub add_log {
+	my ($self, $data) = @_;
+
+	$self->{db}->get_collection('logging')->insert($data);
+	return;
+}
+
+
 1;
 
