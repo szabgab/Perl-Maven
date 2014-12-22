@@ -45,7 +45,7 @@ if ( $opt{products} ) {
 	else {
 		foreach my $p ( sort keys %$products ) {
 			my %h = %{ $products->{$p} };
-			printf "%2s %-35s %-33s %3s\n", @h{qw(id code name price)};
+			printf "%-35s %-33s %3s\n", @h{qw(code name price)};
 		}
 	}
 }
@@ -54,12 +54,14 @@ elsif ( $opt{stats} ) {
 
 	my $format = "%-35s %5s\n";
 	printf $format, 'Product code', 'Number of subscribers';
-	foreach my $code ( sort keys %{ $stats->{products} } ) {
-		printf $format, $stats->{products}{$code}{code}, $stats->{products}{$code}{cnt},;
-	}
+
+	#foreach my $code ( sort keys %{ $stats->{products} } ) {
+	#	printf $format, $stats->{products}{$code}{code}, $stats->{products}{$code}{cnt},;
+	#}
 	say '-' x 45;
-	printf $format, q{Total 'purchases':},     $stats->{all_subs};
-	printf $format, q{Distinct # of clients:}, $stats->{distinct_subs};
+
+	#printf $format, q{Total 'purchases':},     $stats->{all_subs};
+	#printf $format, q{Distinct # of clients:}, $stats->{distinct_subs};
 	print "\n";
 	printf $format, 'All the users', $stats->{all_users};
 	printf $format, 'Verified', ( $stats->{all_users} - $stats->{not_verified} );
