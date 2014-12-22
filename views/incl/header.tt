@@ -59,6 +59,5 @@
 
     </div>
     <div class="span8">
-<% INCLUDE incl/adsense_wide_top.tt %>
 
 

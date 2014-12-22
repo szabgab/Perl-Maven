@@ -1,3 +1,5 @@
+<% INCLUDE incl/adsense_wide_top.tt %>
+
 <% mycontent %>
 
 <h2><% resources.text.recent_articles %></h2>
