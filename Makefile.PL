@@ -59,6 +59,7 @@ WriteMakefile(
 		'Perl::PrereqScanner' => 0,
 
 		# For testing
+		'Test::Most'                 => 0.34,
 		'Test::WWW::Mechanize'       => 1.44,
 		'Test::WWW::Mechanize::PSGI' => 0.35,
 		'Test::More'                 => 1,
