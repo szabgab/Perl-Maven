@@ -109,13 +109,13 @@ get '/pm/account' => sub {
 	}
 
 	my %params = (
-		subscriptions   => \@owned_products,
-		subscribed      => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
-		name            => $user->{name},
-		email           => $user->{email},
-		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
+		subscriptions => \@owned_products,
+		subscribed    => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
+		name          => $user->{name},
+		email         => $user->{email},
+		whitelist_on  => ( $user->{whitelist_on} ? 1 : 0 ),
 	);
-	if ( $user->{login_whitelist} ) {
+	if ( $user->{whitelist_on} ) {
 		$params{whitelist} = $db->get_whitelist($uid);
 	}
 	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {

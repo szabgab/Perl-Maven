@@ -67,7 +67,7 @@ send you an e-mail to the address listed in your account with a link that you ca
 to the white-list.
 </p>
 
-<% IF login_whitelist %>
+<% IF whitelist_on %>
   <form method="POST" action="/pm/whitelist" name="disable_white_list">
   <input type="hidden" name="do" value="disable" />
   <input type="submit" value="Disable" />

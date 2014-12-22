@@ -136,7 +136,7 @@ sub valid_ip {
 	my $user = setting('db')->get_user_by_id($uid);
 
 	# if white-listing is not turned on, then every IP is valid
-	return 1 if not $user->{login_whitelist};
+	return 1 if not $user->{whitelist_on};
 
 	my $ip        = get_ip();
 	my $whitelist = setting('db')->get_whitelist($uid);

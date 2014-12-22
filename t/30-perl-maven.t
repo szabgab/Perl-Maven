@@ -512,9 +512,13 @@ subtest whitelist => sub {
 		'enable whitelist'
 	);
 
-	diag $w->content;
 	$w->content_like(qr{Whitelist enabled});
 	$w->follow_link_ok( { text => 'account' }, 'back to account' );
+
+	#$w->get_ok("$url/pm/user-info");
+	#diag $w->content;
+	#$w->get_ok("$url/pm/account", 'back to account' );
+	#diag $w->content;
 	my $form2 = $w->form_name('enable_white_list');
 	ok !$form2, 'form not found';
 
