@@ -329,27 +329,23 @@ post '/pm/whitelist' => sub {
 	if ($do) {
 		my $db = setting('db');
 		if ( $do eq 'enable' ) {
-			if ( $db->set_whitelist( $uid, 1 ) ) {
-				my $ip   = get_ip();
-				my $mask = '255.255.255.255';
+			$db->set_whitelist( $uid, 1 );
+			my $ip   = get_ip();
+			my $mask = '255.255.255.255';
 
-				my $whitelist = $db->get_whitelist($uid);
-				my $found = grep { $whitelist->{$_}{ip} eq $ip and $whitelist->{$_}{mask} eq $mask } keys %$whitelist;
-				if ( not $found ) {
-					$db->add_to_whitelist(
-						{
-							uid  => $uid,
-							ip   => $ip,
-							mask => $mask,
-							note => 'Added automatically when whitelist was enabled'
-						}
-					);
-				}
-				return pm_message('whitelist_enabled');
+			my $whitelist = $db->get_whitelist($uid);
+			my $found = grep { $_->{ip} eq $ip and $_->{mask} eq $mask } keys @$whitelist;
+			if ( not $found ) {
+				$db->add_to_whitelist(
+					{
+						uid  => $uid,
+						ip   => $ip,
+						mask => $mask,
+						note => 'Added automatically when whitelist was enabled'
+					}
+				);
 			}
-			else {
-				return pm_error('internal_error');
-			}
+			return pm_message('whitelist_enabled');
 		}
 		elsif ( $do eq 'disable' ) {
 			$db->set_whitelist( $uid, 0 );
