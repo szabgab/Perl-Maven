@@ -42,8 +42,18 @@ sub add_users {
 	while ( my $h = $sth->fetchrow_hashref ) {
 
 		#print Dumper $h;
-		$h->{admin} = $h->{admin} ? boolean::true : boolean::false;
-		$h->{whitelist_enabled} = delete( $h->{login_whitelist} ) ? boolean::true : boolean::false;
+		if  (delete $h->{admin}) {
+			$h->{admin} =  boolean::true;
+		}
+		if (delete $h->{login_whitelist} ) {
+			$h->{whitelist_enabled} = boolean::true;
+		}
+		if (not defined $h->{name}) {
+			delete $h->{name};
+		}
+		if (not defined $h->{password}) {
+			delete $h->{password};
+		}
 		delete $h->{verify_code};
 		delete $h->{password_reset_code};
 		delete $h->{password_reset_timeout};
