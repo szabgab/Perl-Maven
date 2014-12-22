@@ -251,14 +251,15 @@ sub paypal_buy {
 
 	my $uid = logged_in() ? session('uid') : '';
 	my %data = (
-		what     => $what,
-		quantity => $quantity,
-		usd      => $usd,
-		uid      => $uid,
+		what      => $what,
+		quantity  => $quantity,
+		usd       => $usd,
+		uid       => $uid,
+		paypal_id => $id,
 	);
 	$paypal_data->{$id} = \%data;
 	session paypal => $paypal_data;
-	setting('db')->save_transaction( $id, to_yaml \%data );
+	setting('db')->save_transaction(%data);
 
 	log_paypal( 'buy_button', { id => $id, %data } );
 

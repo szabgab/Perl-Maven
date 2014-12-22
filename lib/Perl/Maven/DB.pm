@@ -26,6 +26,7 @@ sub new {
 
 	my $database = $client->get_database($dbname);
 	$database->get_collection('user')->ensure_index( { email => 1 }, { unique => boolean::true } );
+	$database->get_collection('paypal_transactions')->ensure_index( { paypal_id => 1 }, { unique => boolean::true } );
 
 	$instance = bless { db => $database }, $class;
 
@@ -176,17 +177,14 @@ sub unsubscribe_from {
 }
 
 sub save_transaction {
-	my ( $self, $id, $data ) = @_;
-	$self->{dbh}
-		->do( q{INSERT INTO transactions (id, ts, sys, data) VALUES(?, ?, ?, ?)}, {}, $id, time, 'paypal', $data );
-	return;
+	my ( $self, %data ) = @_;
+	$data{ts} = DateTime::Tiny->now;
+	return $self->{db}->get_collection('paypal_transactions')->insert( \%data );
 }
 
 sub get_transaction {
 	my ( $self, $id ) = @_;
-	my ($data)
-		= $self->{dbh}->selectrow_array( q{SELECT data FROM transactions WHERE id=?}, undef, $id );
-	return $data;
+	return $self->{db}->get_collection('paypal_transactions')->find_one( { paypal_id => $id } );
 }
 
 sub get_products {

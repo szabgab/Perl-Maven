@@ -121,7 +121,8 @@ sub add_transactions {
 				second => $time[0],
 			);
 		}
-		$db->{db}->get_collection('transactions')->insert($h);
+		$t->{paypal_id} = delete $t->{id};
+		$db->{db}->get_collection('paypal_transactions')->insert($h);
 	}
 }
 
