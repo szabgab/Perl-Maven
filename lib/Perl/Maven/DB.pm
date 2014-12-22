@@ -84,8 +84,11 @@ sub update_user {
 sub verify_registration {
 	my ( $self, $id ) = @_;
 
-	$self->{db}->get_collection('user')->update( { _id => $id }, { '$set' => { verify_time => DateTime::Tiny->now } } );
-	return;
+	my $user = $self->get_user_by_id($id);
+	return 0 if not $user;
+	return 0 if $user->{verify_time};
+	return $self->{db}->get_collection('user')
+		->update( { _id => $id }, { '$set' => { verify_time => DateTime::Tiny->now } } );
 }
 
 sub set_password {

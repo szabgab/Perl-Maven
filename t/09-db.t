@@ -380,7 +380,7 @@ subtest verification => sub {
 };
 
 subtest update_user => sub {
-	plan tests => 13;
+	plan tests => 16;
 
 	my $people_before = $db->get_people('');
 	for my $i ( 0 .. 1 ) {
@@ -392,7 +392,9 @@ subtest update_user => sub {
 	#diag explain $people_before;
 
 	$db->update_user( $people_before->[0]{_id}, name => 'Orgo Morgo' );
-	$db->verify_registration( $people_before->[1]{_id} );
+	ok !$db->verify_registration('random string'), 'verify_registration for not existing user id';
+	ok $db->verify_registration( $people_before->[1]{_id} ), 'verify_registration';
+	ok !$db->verify_registration( $people_before->[1]{_id} ), 'verify_registration cannot use same code again';
 	$db->set_password( $people_before->[0]{_id}, 'abcdef' );
 	my $user1 = $db->get_user_by_id( $people_before->[0]{_id} );
 	is $user1->{name}, 'Orgo Morgo', 'name updated';
