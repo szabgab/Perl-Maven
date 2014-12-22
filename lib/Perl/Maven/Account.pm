@@ -144,11 +144,10 @@ post '/pm/send-reset-pw-code' => sub {
 
 	my $code = _generate_code();
 	$db->save_verification(
-		code      => $code,
-		action    => 'reset_password',
-		timestamp => time,
-		uid       => $user->{id},
-		details   => to_json {},
+		code    => $code,
+		action  => 'reset_password',
+		uid     => $user->{_id},
+		details => to_json {},
 	);
 
 	my $html = template 'email_to_reset_password', { code => $code, }, { layout => 'email', };
@@ -248,7 +247,7 @@ any '/pm/unsubscribe' => sub {
 
 	# TODO maybe we will want some stonger checking for confirmation?
 	if ( param('confirm') ) {
-		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
+		$db->unsubscribe_from( uid => $user->{_id}, code => 'perl_maven_cookbook' );
 		my $html    = template 'email_after_unsubscribe', {}, { layout => 'email' };
 		my $mymaven = mymaven;
 		my $err     = send_mail(
@@ -297,11 +296,10 @@ post '/pm/change-email' => sub {
 
 	my $code = _generate_code();
 	$db->save_verification(
-		code      => $code,
-		action    => 'change_email',
-		timestamp => time,
-		uid       => $uid,
-		details   => to_json {
+		code    => $code,
+		action  => 'change_email',
+		uid     => $uid,
+		details => to_json {
 			new_email => $email,
 		},
 	);
@@ -541,11 +539,10 @@ sub register {
 	my $code = _generate_code();
 	my $uid = $db->add_registration( { email => $data{email} } );
 	$db->save_verification(
-		code      => $code,
-		action    => 'verify_email',
-		timestamp => time,
-		uid       => $uid,
-		details   => to_json {
+		code    => $code,
+		action  => 'verify_email',
+		uid     => $uid,
+		details => to_json {
 			new_email => $data{email},
 		},
 	);

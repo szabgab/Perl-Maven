@@ -150,7 +150,7 @@ subtest 'subscribe' => sub {
 	ok $set_url, 'mail with set url address';
 
 	#diag $set_url;
-	#diag explain $db->{dbh}->selectall_arrayref('SELECT * FROM user');
+
 	$w->get_ok("$url/pm/verify2/1234567");
 	$w->content_like( qr{Invalid or expired verification code.}, 'no such code' );
 
@@ -162,7 +162,9 @@ subtest 'subscribe' => sub {
 	# the new page does not contain a link to the cookbook.
 	#$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1 };
+
+	#diag $w->content;
+	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
 
 	# check e-mails
 	@mails = Email::Sender::Simple->default_transport->deliveries;
@@ -255,7 +257,8 @@ subtest 'ask for password reset, then login' => sub {
 	my ( $url1, $url2 ) = $mail =~ $mail_regex;
 	my $set_url = "$url1$url2";
 	ok $set_url, 'mail with set url address';
-	diag $set_url;
+
+	#diag $set_url;
 
 	#diag 'click on the link received in the e-mail';
 	$w->get_ok($set_url);
@@ -271,6 +274,8 @@ subtest 'ask for password reset, then login' => sub {
 
 	#diag($w->content);
 	$w->get_ok("$url/pm/user-info");
+
+	#diag($w->content);
 	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
 
 	# white-box:
@@ -389,7 +394,7 @@ subtest 'change password while logged in' => sub {
 
 	#diag($w->content);
 
-	my $other_user = $db->get_user_by_id(2);
+	my $other_user = $db->get_user_by_email($EMAIL3);
 	is $other_user->{password}, $PASSWORD[2], 'other use still exists with old password';
 };
 
@@ -419,6 +424,37 @@ subtest 'name' => sub {
 	#diag(explain($form));
 };
 
+# we inject an old-style password and check if after the first login it is upgraded
+subtest 'upgrade_pw' => sub {
+	plan tests => 7;
+
+	$w->get_ok('/pm/logout');
+	$w->get_ok('/pm/account');
+	is $w->base, "$url/pm/login", 'redirected to login page';
+
+	# white-box:
+	my $user_before = $db->get_user_by_email($EMAIL);
+	$db->set_password( $user_before->{_id}, $sha1_of_abcdef );
+	my $user_midi = $db->get_user_by_email($EMAIL);
+	is $user_midi->{password}, $sha1_of_abcdef, 'just making sure we set the old pw';
+
+	$w->submit_form_ok(
+		{
+			form_name => 'login',
+			fields    => {
+				email    => $EMAIL,
+				password => $PASSWORD[1],
+			},
+		},
+		'login'
+	);
+	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
+
+	# white-box:
+	my $user_after = $db->get_user_by_email($EMAIL);
+	is substr( $user_after->{password}, 0, 7 ), '{CRYPT}';
+};
+
 subtest change_email => sub {
 	plan tests => 12;
 
@@ -441,24 +477,25 @@ subtest change_email => sub {
 	my $mail_regex = qr{verify \[ ($url/pm/verify2/\w+)};
 	my ($set_url) = $mail =~ $mail_regex;
 	ok $set_url, 'mail with set url address';
-	diag $set_url;
+
+	#diag $set_url;
 
 	$w->get_ok("$url/pm/verify2/1234567");
 	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
-	my $before = $db->get_user_by_id(1);
+	my $before = $db->get_user_by_email($EMAIL);
 	is $before->{email}, $EMAIL, 'old email';
 
 	$w->get_ok($set_url);
 	$w->content_like( qr{Email updated successfully.}, 'updated successfully mesage' );
 
-	my $after = $db->get_user_by_id(1);
+	my $after = $db->get_user_by_email($EMAIL2);
 	is $after->{email}, $EMAIL2, 'old email';
 
 	$w->get_ok($set_url);
 	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
-	my $other_user = $db->get_user_by_id(2);
+	my $other_user = $db->get_user_by_email($EMAIL3);
 	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';
 };
 
@@ -475,6 +512,7 @@ subtest whitelist => sub {
 		'enable whitelist'
 	);
 
+	diag $w->content;
 	$w->content_like(qr{Whitelist enabled});
 	$w->follow_link_ok( { text => 'account' }, 'back to account' );
 	my $form2 = $w->form_name('enable_white_list');
