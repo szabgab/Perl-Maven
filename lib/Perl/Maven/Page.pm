@@ -118,6 +118,28 @@ Download:
 SCREENCAST
 			}
 
+			# the older format that supplied ogv and avi files (otherwise the code shoud be the same)
+			if ( $line =~ m{^\s*<slidecast\s+file="(.*)"\s+/>\s*$} ) {
+				my $file = $1;
+				$line = <<"SCREENCAST";
+<link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.6/video.js"></script>
+
+<video id="video_1" class="video-js vjs-default-skin"
+  controls preload="auto"
+  data-setup='{"controls":true}'>
+ <source src="$file.ogv" type='video/ogg' />
+ <source src="$file.avi" type='video/avi' />
+</video>
+
+<div id="download">
+Download:
+<a href="$file.ogv">ogv</a>
+<a href="$file.avi">avi</a>
+</div>
+
+SCREENCAST
+			}
 			$line =~ s{<hl>}{<span class="inline_code">}g;
 			$line =~ s{</hl>}{</span>}g;
 			if ( $line =~ /^=abstract (start|end)/ ) {
