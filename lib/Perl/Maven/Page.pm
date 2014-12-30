@@ -114,8 +114,8 @@ sub read {
 				my @downloads = map {qq{<a href="$file.$_">@_</a>}} @ext;
 
 				$line = <<"SCREENCAST";
-<link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
-<script src="//vjs.zencdn.net/4.6/video.js"></script>
+<link href="//vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.11/video.js"></script>
 
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
