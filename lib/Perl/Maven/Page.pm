@@ -111,7 +111,7 @@ sub read {
 					avi  => 'avi',
 				);
 				my @sources   = map {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
-				my @downloads = map {qq{<a href="$file.$_">@_</a>}} @ext;
+				my @downloads = map {qq{<a href="$file.$_">$_</a>}} @ext;
 
 				$line = <<"SCREENCAST";
 <link href="//vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
