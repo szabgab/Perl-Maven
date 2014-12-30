@@ -95,8 +95,24 @@ sub read {
 		}
 
 		while ( my $line = <$fh> ) {
-			if ( $line =~ m{^\s*<screencast\s+file="(.*)"\s+/>\s*$} ) {
-				my $file = $1;
+			if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
+				my ( $type, $file ) = ( $1, $2 );
+				my @ext;
+				if ( $type eq 'screencast' ) {
+					@ext = ( 'mp4', 'webm' );
+				}
+				elsif ( $type eq 'slidecast' ) {
+					@ext = ( 'ogv', 'avi' );
+				}
+				my %types = (
+					mp4  => 'mp4',
+					webm => 'webm',
+					ogv  => 'ogg',
+					avi  => 'avi',
+				);
+				my @sources   = map {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
+				my @downloads = map {qq{<a href="$file.$_">@_</a>}} @ext;
+
 				$line = <<"SCREENCAST";
 <link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
 <script src="//vjs.zencdn.net/4.6/video.js"></script>
@@ -104,42 +120,16 @@ sub read {
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
   data-setup='{"controls":true}'>
- <source src="$file.mp4" type='video/mp4' />
- <source src="$file.webm" type='video/webm' />
+  @sources
 </video>
 
 <div id="download">
 Download:
-<a href="$file.mp4">mp4</a>
-<a href="$file.webm">webm</a>
+@downloads
 </div>
-
-
 SCREENCAST
 			}
 
-			# the older format that supplied ogv and avi files (otherwise the code shoud be the same)
-			if ( $line =~ m{^\s*<slidecast\s+file="(.*)"\s+/>\s*$} ) {
-				my $file = $1;
-				$line = <<"SCREENCAST";
-<link href="//vjs.zencdn.net/4.6/video-js.css" rel="stylesheet">
-<script src="//vjs.zencdn.net/4.6/video.js"></script>
-
-<video id="video_1" class="video-js vjs-default-skin"
-  controls preload="auto"
-  data-setup='{"controls":true}'>
- <source src="$file.ogv" type='video/ogg' />
- <source src="$file.avi" type='video/avi' />
-</video>
-
-<div id="download">
-Download:
-<a href="$file.ogv">ogv</a>
-<a href="$file.avi">avi</a>
-</div>
-
-SCREENCAST
-			}
 			$line =~ s{<hl>}{<span class="inline_code">}g;
 			$line =~ s{</hl>}{</span>}g;
 			if ( $line =~ /^=abstract (start|end)/ ) {
