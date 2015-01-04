@@ -194,8 +194,13 @@ SCREENCAST
 
 	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
 	foreach my $url ( keys %links ) {
+		if ($url =~ /\.(avi|ogv|mp4|webm|mp3)$/) {
+			delete $links{$url};
+			next;
+		}
 		if ( $url !~ m{^/} ) {
 			delete $links{$url};
+			next;
 		}
 	}
 
