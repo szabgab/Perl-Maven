@@ -5,8 +5,8 @@
 <% FOR k IN kw.keys.sort %>
   <li><% k %>
     <ul>
-      <% FOR page IN kw.$k.keys %>
-         <li><a href="/<% page %>"><% kw.$k.$page %></a></li>
+      <% FOR page IN kw.$k %>
+         <li><a href="<% page.url %>"><% page.title %></a> <% IF page.source %>(<% page.source %>)<% END %></li>
       <% END %>
     </ul>
   </li>

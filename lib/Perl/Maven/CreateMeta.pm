@@ -15,7 +15,7 @@ has latest       => ( is => 'ro', default => sub { {} } );
 use Data::Dumper qw(Dumper);
 use File::Find::Rule;
 use File::Path qw(mkpath);
-use JSON qw(to_json);
+use JSON qw(from_json to_json);
 use YAML qw(LoadFile);
 
 use Perl::Maven::Page;
@@ -92,7 +92,7 @@ sub process_site {
 
 	my $pages = $self->get_pages( $config, @sources );
 
-	my ( $keywords, $archive, $sitemap ) = $self->process_files( $pages, $lang );
+	my ( $keywords, $archive, $sitemap ) = $self->process_files( $pages, $config->{extra_index}, $lang );
 	save( 'archive',  $dest, $archive );
 	save( 'keywords', $dest, $keywords );
 	save( 'sitemap',  $dest, $sitemap );
@@ -102,7 +102,7 @@ sub process_site {
 }
 
 sub process_files {
-	my ( $self, $pages, $lang ) = @_;
+	my ( $self, $pages, $extra_index, $lang ) = @_;
 
 	# TODO:
 	# =indexes are supposed to be mostly Perl keywords and other concepts
@@ -111,6 +111,17 @@ sub process_files {
 
 	my %keywords;    # =indexes and =tags are united here
 	my ( @archive, @sitemap );
+
+	if ($extra_index) {
+		#die Dumper $extra_index;
+		foreach my $path (@$extra_index) {
+			my $data = from_json Path::Tiny::path($path)->slurp_utf8;
+			#die Dumper $data;
+			foreach my $key (keys %$data) {
+				push @{ $keywords{$key} }, @{ $data->{$key} }
+			}
+		}
+	}
 
 	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
 
@@ -135,8 +146,12 @@ sub process_files {
 
 				#$keywords{$w} ||= {};
 				warn "Duplicate '$w' in '$filename'\n"
-					if $keywords{$w}{$filename};
-				$keywords{$w}{$filename} = $p->{title};
+					if $keywords{$w} and
+						grep {$_->{url} eq "/$filename" } @{ $keywords{$w} };
+				push @{ $keywords{$w} }, {
+					url => "/$filename",
+					title => $p->{title},
+				};
 			}
 		}
 
@@ -181,6 +196,9 @@ sub process_files {
 		$self->latest->{$lang} = $archive[0];
 	}
 
+	foreach my $k (keys %keywords) {
+		$keywords{$k} = [ sort { $a->{title} cmp $b->{title} } @{ $keywords{$k} } ];
+	}
 	return ( \%keywords, \@archive, \@sitemap );
 }
 

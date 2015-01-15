@@ -1,9 +1,9 @@
 
 <h2>Searching for <% keyword %></h2>
 
-<% FOR r IN results.keys.sort %>
+<% FOR r IN results %>
 <div>
-<a href="/<% r %>"><% results.$r %></a>
+  <a href="<% r.url %>"><% r.title %></a>
 </div>
 <% END %>
 

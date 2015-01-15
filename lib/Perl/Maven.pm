@@ -238,16 +238,22 @@ sub _search {
 
 	my ($keyword) = param('keyword');
 	if ( defined $keyword ) {
+
+		# check if there is an exact keyword match
 		my $result = $data->{$keyword};
 		if ($result) {
 			return $result;
 		}
+
+		# check if search was for the exact title:
 		foreach my $kw ( keys %$data ) {
-			my ($url) = grep { $data->{$kw}{$_} eq $keyword } keys %{ $data->{$kw} };
-			if ($url) {
-				return { $url => $keyword };
+			my ($entry) = grep { $_->{title} eq $keyword } @{ $data->{$kw} };
+			if ($entry) {
+				return { $entry->{url} => $keyword };
 			}
 		}
+
+		# TODO we should do better here for no exact matches
 		return {};
 	}
 
@@ -255,7 +261,10 @@ sub _search {
 	if ( defined $query ) {
 
 		$query = quotemeta $query;
-		my @titles = map { values %$_ } values %$data;
+		my @titles;
+		foreach my $v (values %$data) {
+			push @titles, map { $_->{title} } @$v
+		}
 		my @hits = uniq sort grep {/$query/i} ( @titles, keys %$data );
 		my $LIMIT = 20;
 		if ( @hits > $LIMIT ) {
