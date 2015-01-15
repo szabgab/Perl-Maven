@@ -225,6 +225,7 @@ get '/search' => sub {
 	my ($keyword) = param('keyword');
 	return pm_template 'search',
 		{
+		title   => $keyword,
 		results => _search(),
 		keyword => $keyword,
 		};
