@@ -223,7 +223,7 @@ get '/contributor/:name' => sub {
 
 get '/search' => sub {
 	my ($keyword) = param('keyword');
-	return pm_template 'search',
+	return pm_show_page { article => 'search', template => 'search', },
 		{
 		title   => $keyword,
 		results => _search(),
