@@ -2,7 +2,7 @@
 var show_automatically = false;
 
 function mysearch(keyword, auto) {
-    var url = '/search';
+    var url = '/search.json';
     show_automatically = auto;
     var data = {
         "keyword" : keyword,
@@ -124,7 +124,7 @@ function setup_search (query, process) {
 	//console.log('setup');
 
     $.ajax({
-        url: '/search',
+        url: '/search.json',
         data: { 'query' :  query},
         dataType: "json",
         success: function(data, status, jqXHR) {

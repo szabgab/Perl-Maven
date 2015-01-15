@@ -226,6 +226,9 @@ get '/contributor/:name' => sub {
 };
 
 get '/search' => sub {
+};
+
+get '/search.json' => sub {
 	my $data = setting('tools')->read_meta_hash('keywords');
 
 	my ($keyword) = param('keyword');
@@ -698,7 +701,7 @@ sub log_request {
 	return if $response->status != 200;
 	return if $uri =~ m{^/atom};
 	return if $uri =~ m{^/robots.txt};
-	return if $uri =~ m{^/search};
+	return if $uri =~ m{^/search.json};
 
 	return if is_bot();
 
