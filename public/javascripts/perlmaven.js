@@ -2,8 +2,10 @@
 var show_automatically = false;
 
 function mysearch(keyword, auto) {
-    window.location = '/search?keyword=' + keyword;
-	return;
+    if (keyword) {
+        window.location = '/search/' + keyword;
+    }
+    return;
 
     var url = '/search.json';
     show_automatically = auto;
