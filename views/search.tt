@@ -1,4 +1,6 @@
 
+<h2>Searching for <% keyword %></h2>
+
 <% FOR r IN results.keys.sort %>
 <div>
 <a href="/<% r %>"><% results.$r %></a>

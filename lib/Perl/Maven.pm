@@ -226,7 +226,11 @@ get '/contributor/:name' => sub {
 };
 
 get '/search' => sub {
-	return pm_template 'search', { results => _search() };
+	my ($keyword) = param('keyword');
+	return pm_template 'search', {
+		results => _search(),
+		keyword => $keyword,
+	};
 };
 
 get '/search.json' => sub {
