@@ -223,10 +223,11 @@ get '/contributor/:name' => sub {
 
 get '/search' => sub {
 	my ($keyword) = param('keyword');
-	return pm_template 'search', {
+	return pm_template 'search',
+		{
 		results => _search(),
 		keyword => $keyword,
-	};
+		};
 };
 
 get '/search.json' => sub {
@@ -262,8 +263,8 @@ sub _search {
 
 		$query = quotemeta $query;
 		my @titles;
-		foreach my $v (values %$data) {
-			push @titles, map { $_->{title} } @$v
+		foreach my $v ( values %$data ) {
+			push @titles, map { $_->{title} } @$v;
 		}
 		my @hits = uniq sort grep {/$query/i} ( @titles, keys %$data );
 		my $LIMIT = 20;

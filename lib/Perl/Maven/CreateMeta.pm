@@ -113,12 +113,14 @@ sub process_files {
 	my ( @archive, @sitemap );
 
 	if ($extra_index) {
+
 		#die Dumper $extra_index;
 		foreach my $path (@$extra_index) {
 			my $data = from_json Path::Tiny::path($path)->slurp_utf8;
+
 			#die Dumper $data;
-			foreach my $key (keys %$data) {
-				push @{ $keywords{$key} }, @{ $data->{$key} }
+			foreach my $key ( keys %$data ) {
+				push @{ $keywords{$key} }, @{ $data->{$key} };
 			}
 		}
 	}
@@ -146,12 +148,13 @@ sub process_files {
 
 				#$keywords{$w} ||= {};
 				warn "Duplicate '$w' in '$filename'\n"
-					if $keywords{$w} and
-						grep {$_->{url} eq "/$filename" } @{ $keywords{$w} };
-				push @{ $keywords{$w} }, {
-					url => "/$filename",
+					if $keywords{$w}
+					and grep { $_->{url} eq "/$filename" } @{ $keywords{$w} };
+				push @{ $keywords{$w} },
+					{
+					url   => "/$filename",
 					title => $p->{title},
-				};
+					};
 			}
 		}
 
@@ -196,7 +199,7 @@ sub process_files {
 		$self->latest->{$lang} = $archive[0];
 	}
 
-	foreach my $k (keys %keywords) {
+	foreach my $k ( keys %keywords ) {
 		$keywords{$k} = [ sort { $a->{title} cmp $b->{title} } @{ $keywords{$k} } ];
 	}
 	return ( \%keywords, \@archive, \@sitemap );
