@@ -226,24 +226,29 @@ get '/contributor/:name' => sub {
 };
 
 get '/search' => sub {
+	return pm_template 'search', { results => _search() };
 };
 
 get '/search.json' => sub {
+	return to_json _search();
+};
+
+sub _search {
 	my $data = setting('tools')->read_meta_hash('keywords');
 
 	my ($keyword) = param('keyword');
 	if ( defined $keyword ) {
 		my $result = $data->{$keyword};
 		if ($result) {
-			return to_json($result);
+			return $result;
 		}
 		foreach my $kw ( keys %$data ) {
 			my ($url) = grep { $data->{$kw}{$_} eq $keyword } keys %{ $data->{$kw} };
 			if ($url) {
-				return to_json { $url => $keyword };
+				return { $url => $keyword };
 			}
 		}
-		return to_json {};
+		return {};
 	}
 
 	my ($query) = param('query');
@@ -256,11 +261,11 @@ get '/search.json' => sub {
 		if ( @hits > $LIMIT ) {
 			@hits = @hits[ 0 .. $LIMIT - 1 ];
 		}
-		return to_json( \@hits );
+		return \@hits;
 	}
 
-	return to_json( {} );
-};
+	return {};
+}
 
 get '/' => sub {
 	if ( request->host =~ /^meta\./ ) {
