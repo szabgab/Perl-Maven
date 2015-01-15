@@ -1,6 +1,8 @@
 
 <h2>Searching for <% keyword %></h2>
 
+<% INCLUDE incl/adsense_wide_top.tt %>
+
 <% FOR r IN results %>
 <div>
   <a href="<% r.url %>"><% r.title %></a>
