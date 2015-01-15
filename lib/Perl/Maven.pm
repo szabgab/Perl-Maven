@@ -109,10 +109,6 @@ hook before_template => sub {
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
 
-	#my $data = setting('tools')->read_meta_hash('keywords');
-	#$t->{keywords} = to_json( [ sort keys %$data ] );
-	#$t->{keywords} =  '{}';
-
 	$t->{resources} = read_resources();
 
 	# linking to translations
