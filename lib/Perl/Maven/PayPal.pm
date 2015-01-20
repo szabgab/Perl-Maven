@@ -160,6 +160,7 @@ sub paypal_buy {
 			$usd        = 90;
 			$params{a3} = $usd;
 			$params{t3} = 'Y';          # yearly
+			$button_text = qq{$usd USD per year};
 		}
 		if ( $type eq 'annual' ) {      # TODO remove hardcoding
 			                            #$params{a1} = 60;
@@ -168,6 +169,7 @@ sub paypal_buy {
 			$usd        = 90;
 			$params{a3} = $usd;
 			$params{t3} = 'Y';          # yearly
+			$button_text = qq{$usd USD per year};
 		}
 	}
 	else {
