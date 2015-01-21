@@ -22,7 +22,9 @@
           <td class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></td>
           <td class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></td>
           <td class="date"><% p.date %></td>
-          <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a></td>
+          <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a>
+             <% IF p.redirect %>(R)<% END %>
+          </td>
       </tr>
       <% IF abstract %>
         <tr>

@@ -171,6 +171,9 @@ sub process_files {
 				author    => $p->{author},
 				tags      => ( $p->{tags} || [] ),
 			};
+			if ( $p->{redirect} ) {
+				$e->{redirect} = $p->{redirect};
+			}
 			if ( $p->{translator} ) {
 				$e->{translator} = $p->{translator};
 			}
