@@ -213,6 +213,8 @@ sub read_tt {
 sub pm_show_abstract {
 	my ($params) = @_;
 	my $tt = read_tt( $params->{path} );
+
+	return redirect $tt->{redirect} if $tt->{redirect};
 	$tt->{promo} = $params->{promo} // 1;
 
 	#		if not logged_in(), tell the user to subscribe or log in
@@ -234,6 +236,7 @@ sub pm_show_page {
 	}
 
 	my $tt = read_tt($path);
+	return redirect $tt->{redirect} if $tt->{redirect};
 	if ( not $tt->{status}
 		or ( $tt->{status} !~ /^(show|draft|done)$/ ) )
 	{
