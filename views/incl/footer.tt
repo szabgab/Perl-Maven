@@ -25,6 +25,8 @@
              </div>
            <% END %>
 
+           <% INCLUDE incl/amazon_tall.tt %>
+
          <% END %>
       </div>
     </div><!-- end of right column -->
