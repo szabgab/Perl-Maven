@@ -1,5 +1,6 @@
 package Perl::Maven::WebTools;
 use Dancer2 appname => 'Perl::Maven';
+use Data::Dumper qw(Dumper);
 
 my $TIMEOUT = 60 * 60 * 24 * 365;
 
@@ -333,32 +334,34 @@ sub pm_user_info {
 	#debug("url = '$url'");
 	return \%data if $path =~ m{^/pm/};
 
-	if ( $url ne $referrer ) {
-		if ( logged_in() ) {
+	if ( mymaven->{conf}{enable_popups} ) {
+		if ( $url ne $referrer ) {
+			if ( logged_in() ) {
 
-			# if not a pro subscriber yet
-			if ( not $data{perl_maven_pro} ) {
+				# if not a pro subscriber yet
+				if ( not $data{perl_maven_pro} ) {
+					my $seen = session('popup_logged_in');
+
+					if ( not $seen or $seen < time - 60 * 60 * 24 ) {
+
+						#if ( not $seen or $seen < time - 10 ) {}
+						session( 'popup_logged_in' => time );
+						$data{delayed} = {
+							what => 'popup_logged_in',
+							when => 1000,
+						};
+					}
+				}
+			}
+			else {
 				my $seen = session('popup_logged_in');
-
 				if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-
-					#if ( not $seen or $seen < time - 10 ) {}
 					session( 'popup_logged_in' => time );
 					$data{delayed} = {
-						what => 'popup_logged_in',
+						what => 'popup_visitor',
 						when => 1000,
 					};
 				}
-			}
-		}
-		else {
-			my $seen = session('popup_logged_in');
-			if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-				session( 'popup_logged_in' => time );
-				$data{delayed} = {
-					what => 'popup_visitor',
-					when => 1000,
-				};
 			}
 		}
 	}
