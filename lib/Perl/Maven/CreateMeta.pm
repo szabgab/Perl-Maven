@@ -125,10 +125,10 @@ sub process_files {
 		}
 	}
 
-	#my %SKELETON = map { $_ => 1 } qw(about.tt archive.tt index.tt keywords.tt perl-tutorial.tt products.tt);
+	#my %SKELETON = map { $_ => 1 } qw(about.txt archive.txt index.txt keywords.txt perl-tutorial.txt products.txt);
 
 	foreach my $p (@$pages) {
-		my $filename = substr( $p->{url_path}, 0, -3 );
+		my $filename = substr( $p->{url_path}, 0, -4 );
 		if ( $self->verbose ) {
 			say "Processing $filename";
 		}
@@ -231,7 +231,7 @@ sub get_pages {
 	foreach my $s (@sources) {
 		die Dumper $s if not $s->{path};
 		say $s->{path};
-		foreach my $file ( File::Find::Rule->file()->name('*.tt')->relative()->in( $s->{path} ) ) {
+		foreach my $file ( File::Find::Rule->file()->name('*.txt')->relative()->in( $s->{path} ) ) {
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";

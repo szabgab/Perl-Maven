@@ -436,7 +436,7 @@ get '/download/:dir/:file' => sub {
 # and then we should probably just handle directories seenlessly
 get qr{^/pro/?$} => sub {
 	my $product = 'perl_maven_pro';
-	my $path    = mymaven->{site} . '/pages/pro.tt';
+	my $path    = mymaven->{site} . '/pages/pro.txt';
 	my $promo   = 1;
 	my $db      = setting('db');
 	if ( logged_in() and $db->is_subscribed( session('uid'), $product ) ) {
@@ -451,7 +451,7 @@ get qr{^/pro/(.+)} => sub {
 	my $product = 'perl_maven_pro';
 	my $dir     = 'pro';
 
-	my $path = mymaven->{dirs}{$dir} . "/$article.tt";
+	my $path = mymaven->{dirs}{$dir} . "/$article.txt";
 	pass if not -e $path;    # will show invalid page
 
 	my $db = setting('db');
@@ -482,7 +482,7 @@ get '/mail/:article' => sub {
 	my $code    = param('code') || '';
 	my $email   = param('email') || '';
 
-	my $path = mymaven->{dirs}{mail} . "/$article.tt";
+	my $path = mymaven->{dirs}{mail} . "/$article.txt";
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);

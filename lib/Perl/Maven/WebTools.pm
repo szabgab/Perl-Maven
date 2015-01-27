@@ -229,7 +229,7 @@ sub pm_show_page {
 	$data ||= {};
 
 	my $path
-		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.tt";
+		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.txt";
 	if ( not -e $path ) {
 		status 'not_found';
 		return template 'error', { 'no_such_article' => 1 };
