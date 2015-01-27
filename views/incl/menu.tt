@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
       </a>
 
-      <a class="brand" href="/">Perl Maven</a>
+      <a class="brand" href="/"><% brand_name %></a>
       <div class="nav-collapse">
         <% FOR m IN resources.menu %>
           <ul class="nav  <% IF m.dir == 'right' %>pull-right<% END %>  ">
