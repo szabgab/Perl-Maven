@@ -101,6 +101,16 @@ hook before_template => sub {
 		}
 	}
 
+	if ( $t->{books} ) {
+		my @logos;
+		foreach my $book ( @{ $t->{books} } ) {
+			if ( mymaven->{logos}{$book} ) {
+				push @logos, mymaven->{logos}{$book};
+			}
+		}
+		$t->{books} = \@logos;
+	}
+
 	# we assume that the whole complex is written in one leading language
 	# and some of the pages are to other languages The domain-site give the name of the
 	# default language and this is the same content that is displayed on the site

@@ -1,14 +1,8 @@
-      <% IF beginner_book %>
-        <div id="bookimg">
-        <a href="http://perlmaven.com/beginner-perl-maven-e-book"><img src="/img/beginner_perl_maven_150x212.png" alt="Beginner Perl Maven" /></a>
-        </div>
-      <% ELSE %>
-        <div id="bookimg">
-        <a href="/"><img src="/img/perl_maven_150x212.png" alt="Perl Maven" /></a>
-        </div>
+      <% IF books %>
+         <% FOR b IN books %>
+            <div id="bookimg">
+               <% b %>
+            </div>
+         <% END %>
       <% END %>
-      <% IF advanced_book %>
-      <a href="http://perlmaven.com/advanced-perl-maven-e-book">Advanced Perl Maven</a>
-      <% END %>
-
 

@@ -270,14 +270,6 @@ sub pm_show_page {
 		delete $tt->{translator};
 	}
 
-	my $books = delete $tt->{books};
-	if ($books) {
-		$books =~ s/^\s+|\s+$//g;
-		foreach my $name ( split /\s+/, $books ) {
-			$tt->{$name} = 1;
-		}
-	}
-
 	$tt->{$_} = $data->{$_} for keys %$data;
 
 	return template $params->{template}, $tt;
