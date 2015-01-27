@@ -559,7 +559,11 @@ sub register {
 
 	my $html_from = $mymaven->{from};
 	$html_from =~ s/</&lt;/g;
-	return pm_template 'response', { from => $html_from };
+	return pm_template 'response',
+		{
+		from           => $html_from,
+		perl_maven_pro => $db->get_product_by_code('perl_maven_pro'),
+		};
 }
 
 sub send_verification_mail {

@@ -150,8 +150,12 @@ function register_result (data, status, jqXHR) {
 
 	// success:
 	$('#popup_visitor').modal('hide');
-	$('#popup_logged_in').modal('show');
-	$('#just-register-message').html('Thank you for registering!');
+    if (data['perl_maven_pro']) {
+		$('#popup_logged_in').modal('show');
+		$('#just-register-message').html('Thank you for registering!');
+	} else {
+		$('#popup_thank_you').modal('show');
+	}
 }
 
 $(document).ready(function() {
