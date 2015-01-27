@@ -20,7 +20,7 @@
   <% END %>
 
   <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-  <link href="/atom" rel="alternate" type="application/atom+xml" title ="Perl Maven" />
+  <link href="/atom" rel="alternate" type="application/atom+xml" title ="<% brand_name %>" />
 
   <link href="//vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
   <script src="//vjs.zencdn.net/4.11/video.js"></script>
