@@ -7,9 +7,11 @@
           <span class="label label-warning"><% status %></span>
          <% END %>
 
-            <div id="newsletter-right-form">
-               <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
-            </div>
+            <% IF conf.show_consulting %>
+               <div id="newsletter-right-form">
+                  <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
+               </div>
+            <% END %>
 
            <% INCLUDE incl/social_share.tt %>
            <% INCLUDE incl/adsense_tall.tt %>
