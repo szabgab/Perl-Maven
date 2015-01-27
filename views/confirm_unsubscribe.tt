@@ -1,4 +1,4 @@
-Do you really want to unsubscribe from the FREE Perl Maven newsletter?
+Do you really want to unsubscribe from the FREE <% brand_name %> newsletter?
 <p>
 <form method="POST">
 Email: <% email %>

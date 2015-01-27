@@ -1,6 +1,6 @@
 <% IF email_footer %>
   <hr>
-   You are receiving this message because you subscribed to the <a href="<% url %>">Perl Maven newsletter</a>.
+   You are receiving this message because you subscribed to the <a href="<% url %>"><% brand_name %> newsletter</a>.
    <br>
    <% IF code %>
      If you don't want to receive these messages any more, you can <a href="<% url %>pm/unsubscribe?code=<% code %>&amp;email=<% email %>">unsubscribe</a> on the web site .

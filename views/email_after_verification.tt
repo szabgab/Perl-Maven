@@ -5,6 +5,7 @@ Thank you for registering!
 <p>
 You can now go to <a href="<% request.base %>pm/account">your account</a> and set your password.
 </p>
+<!--
 <p>
 You can also use the opportunity to subscribe to the <a href="<% request.base %>pro">Perl Maven Pro</a>.
 For a modest monthly fee that will give you access to tons of videos and articles.
@@ -12,6 +13,7 @@ For a modest monthly fee that will give you access to tons of videos and article
 Among the videos you will find the full length <a href="<% request.base %>/beginner-perl-maven-video-course">Beginner Perl course</a>,
 the <a href="<% request.base %>testing">Test Automation using Perl</a> course, and the <a href="<% request.base %>search-cpan-org">search.cpan.org cloning project</a>.
 </p>
+-->
 <p>
 Thank you
 </p>

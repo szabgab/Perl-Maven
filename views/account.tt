@@ -10,13 +10,16 @@
 
 <% IF subscribed %>
 <p>
-You are currently subscribed to the Perl Maven newsletter that entitles
+You are currently subscribed to the <% brand_name %> newsletter.
+<!--
+that entitles
 you to download the latest edition of the Perl Maven Cookbook.
+-->
 <a href="/pm/un-subscribe">unsubscribe</a>
 </p>
 <% ELSE %>
 <p>
-<a href="/pm/subscribe">subscribe to the free Perl Maven newsletter</a>
+<a href="/pm/subscribe">subscribe to the free <% brand_name %> newsletter</a>
 </p>
 <% END %>
 
