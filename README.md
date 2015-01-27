@@ -1,3 +1,6 @@
+###Status
+[![Build Status](https://travis-ci.org/szabgab/Perl-Maven.png)](https://travis-ci.org/szabgab/Perl-Maven)
+
 The source code of http://perlmaven.com/
 VERSION 0.11
 
