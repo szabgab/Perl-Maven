@@ -31,10 +31,12 @@
 
               <% IF e.button -%>
                 <% IF username %>
-                  <% IF user_info.perl_maven_pro %>
-                    <!-- placeholder -->
-                  <% ELSE %>
-                    <button class="btn btn-success" type="button" id="pro-button">Just $1 to go Pro!</button>
+                  <% IF perl_maven_pro_buy_button %>
+                     <% IF user_info.perl_maven_pro %>
+                       <!-- placeholder -->
+                     <% ELSE %>
+                       <button class="btn btn-success" type="button" id="pro-button">Just $1 to go Pro!</button>
+                     <% END %>
                   <% END %>
                 <% ELSE %>
                   <button class="btn btn-warning" type="button" id="free-button">FREE Registration</button>
