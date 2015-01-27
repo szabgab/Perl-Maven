@@ -1,13 +1,13 @@
-=title Test 2
-=timestamp 2014-01-151T07:30:01
+=title Test 1
 =indexes files
 =status draft
 =books beginner_book
 =author szabgab
 =archive 1
+=comments_disqus_enable 1
 =show_social 1
 
 
-Some text here. t/files/invalid_timestamp.tt
+Some text here.  t/files/no_timestamp.txt
 
 

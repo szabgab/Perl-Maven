@@ -1,13 +1,13 @@
-=title Invalid field before optional
+=title Invalid field
 =timestamp 2014-01-15T07:30:01
 =indexes files
 =status draft
-=darklord Anakin Skywalker
 =books beginner_book
+=darklord Darth Vader
 =author szabgab
 =archive 1
 =show_social 1
 
 
-Some text here. t/files/invalid_field_before_optional.tt
+Some text here. t/files/invalid_field.txt
 

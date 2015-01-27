@@ -11,6 +11,6 @@
 =show_date 1 
 
 
-Some text here in 3.tt
+Some text here in 3.txt
 
 

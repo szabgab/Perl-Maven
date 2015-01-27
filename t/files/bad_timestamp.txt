@@ -1,5 +1,5 @@
 =title Test 1
-=timestamp 
+=timestamp 2014-02-32T07:30:01
 =indexes files
 =status draft
 =books beginner_book
@@ -8,6 +8,6 @@
 =show_social 1
 
 
-Some text here. t/files/empty_timestamp.tt
+Some text here. t/files/bad_timestamp.txt
 
 
