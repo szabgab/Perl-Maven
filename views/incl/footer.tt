@@ -7,7 +7,7 @@
           <span class="label label-warning"><% status %></span>
          <% END %>
 
-            <% IF conf.show_consulting %>
+            <% IF conf.show_consultants %>
                <div id="newsletter-right-form">
                   <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
                </div>
