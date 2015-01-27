@@ -285,6 +285,7 @@ sub consultants {
 	my ( $self, $domain, $config ) = @_;
 
 	return if not $config->{conf}{show_consultants};
+
 	#die Dumper $config;
 	my $list_path = $config->{dirs}{articles} . '/consultants.txt';
 	say "Consultants $list_path";
