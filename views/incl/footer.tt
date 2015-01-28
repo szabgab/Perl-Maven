@@ -51,33 +51,8 @@
 
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
 
-<% IF conf.google_analytics %>
-<!-- Google Adwords -->
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '<% conf.google_analytics %>']);
-  _gaq.push(['_setDomainName', 'perlmaven.com']);
-  _gaq.push(['_trackPageview']);
-
-  <% IF conf.google_analytics_code %>
-    _gaq.push(['_setPageGroup', <% conf.google_analytics_code %>, '<% conf.google_analytics_name %>']);
-  <% END %>
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
-<% END %>
-
-<% IF conf.clicky %>
-<script src="//static.getclicky.com/js" type="text/javascript"></script>
-<script type="text/javascript">try{ clicky.init(<% conf.clicky %>); }catch(e){}</script>
-<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/<% conf.clicky %>ns.gif" /></p></noscript>
-<% END %>
-
+<% INCLUDE incl/google_analytics.tt %>
+<% INCLUDE incl/clicky.tt %>
 </body>
 </html>
 
