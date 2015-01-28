@@ -3,7 +3,7 @@
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '<% conf.google_analytics %>']);
-  _gaq.push(['_setDomainName', 'perlmaven.com']);
+  _gaq.push(['_setDomainName', '<% domain %>']);
   _gaq.push(['_trackPageview']);
 
   <% IF conf.google_analytics_code %>
