@@ -18,11 +18,12 @@ my $url            = "http://$t::lib::Test::DOMAIN";
 my $EMAIL          = 'gabor@perlmaven.com';
 my $EMAIL2         = 'other@perlmaven.com';
 my $EMAIL3         = 'zorg@perlmaven.com';
-my @PASSWORD       = ( '123456', 'abcdef', 'secret' );
+my $EMAIL4         = 'foobar@perlmaven.com';
+my @PASSWORD       = ( '123456', 'abcdef', 'secret', 'qwerty' );
 my $sha1_of_abcdef = 'H4rBDyPFtbwRZ72oS4M+XAV6d9I';
 my @NAMES          = ( 'Foo Bar', );
 
-plan tests => 9;
+plan tests => 10;
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 
@@ -521,5 +522,37 @@ subtest whitelist => sub {
 	my $form3 = $w->form_name('enable_white_list');
 	ok $form3, 'form found';
 
+};
+
+subtest register_with_password => sub {
+	plan tests => 6;
+
+	my $x = Test::WWW::Mechanize::PSGI->new( app => $app );
+	$x->get_ok("$url/pm/register");
+	$x->submit_form_ok(
+		{
+			form_name => 'registration_form',
+			fields    => {
+				email    => $EMAIL4,
+				password => $PASSWORD[3],
+			},
+		},
+		'registeration form filled'
+	);
+	$x->content_like(qr{<a href="/pm/login">Login</a>});
+	$x->follow_link_ok( { text => 'Login' } );
+	$x->submit_form_ok(
+		{
+			form_name => 'login',
+			fields    => {
+				email    => $EMAIL4,
+				password => $PASSWORD[3],
+			},
+		},
+		'login'
+	);
+	$x->content_like(qr{<a href="/pm/logout">logout</a>});
+
+	#diag $x->content;
 };
 

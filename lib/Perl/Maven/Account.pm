@@ -495,9 +495,10 @@ sub register {
 		email    => param('email'),
 		name     => param('name'),
 	);
+
+	$data{password} //= '';
+	$data{password} =~ s/^\s+|\s+$//g;
 	if ( $mymaven->{require_password} ) {
-		$data{password} //= '';
-		$data{password} =~ s/^\s+|\s+$//g;
 		if ( not $data{password} ) {
 			return _registration_form( %data, error => 'missing_password' );
 		}
@@ -544,6 +545,10 @@ sub register {
 			new_email => $data{email},
 		},
 	);
+
+	if ( $data{password} ) {
+		$db->set_password( $uid, passphrase( $data{password} )->generate->rfc2307 );
+	}
 
 	my $err = send_verification_mail(
 		'email_first_verification_code',
