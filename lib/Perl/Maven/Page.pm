@@ -5,9 +5,11 @@ use 5.014;
 use DateTime;
 use Data::Dumper qw(Dumper);
 use Storable qw(dclone);
+use Path::Tiny;
 
 our $VERSION = '0.11';
 
+has root  => ( is => 'ro', required => 1 );
 has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
@@ -140,6 +142,21 @@ SCREENCAST
 				if ( $line =~ /^\s*$/ ) {
 					$data{abstract} .= "<p>\n";
 				}
+			}
+
+			# <include file="examples/node_hello_world.js">
+			if ( $line =~ m{^\s*<include\s+file="([^"]+)">\s*$} ) {
+				my $include_file = $1;
+				my $path         = $self->root . "/$include_file";
+				if ( -e $path ) {
+					$cont .= "<b>$include_file</b><br>";
+
+					# TODO language based on extension?
+					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
+					$cont .= path($path)->slurp_utf8;
+					$cont .= qq{</pre>\n};
+				}    # else warn?
+				next;
 			}
 			if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
 				my $language = $1 || '';

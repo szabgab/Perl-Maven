@@ -198,7 +198,8 @@ sub pm_template {
 sub read_tt {
 	my $file = shift;
 	my $tt   = eval {
-		Perl::Maven::Page->new( file => $file, tools => setting('tools') )->read->merge_conf( mymaven->{conf} )->data;
+		Perl::Maven::Page->new( root => mymaven->{root}, file => $file, tools => setting('tools') )
+			->read->merge_conf( mymaven->{conf} )->data;
 	};
 	if ($@) {
 
