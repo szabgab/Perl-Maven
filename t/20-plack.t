@@ -46,7 +46,7 @@ END
 
 	my $favicon = $cb->( GET "$url/favicon.ico" );
 	is $favicon->code,    200;
-	is $favicon->content, Path::Tiny::path('public/favicon.ico')->slurp;
+	is $favicon->content, Path::Tiny::path('t/files/images/favicon.ico')->slurp;
 
 	foreach my $path (qw(atom rss tv/atom sitemap.xml)) {
 		my $res = $cb->( GET "$url/$path" );

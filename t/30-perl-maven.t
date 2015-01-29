@@ -58,7 +58,7 @@ Disallow: /media/*
 END
 
 	$visitor->get_ok("$url/favicon.ico");
-	is $visitor->content, Path::Tiny::path('public/favicon.ico')->slurp;
+	is $visitor->content, Path::Tiny::path('t/files/images/favicon.ico')->slurp;
 	$visitor->get_ok("$url/atom");
 	$visitor->get_ok("$url/rss");
 	$visitor->get_ok("$url/tv/atom");

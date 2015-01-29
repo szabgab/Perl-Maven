@@ -512,17 +512,27 @@ get '/mail/:article' => sub {
 	return template 'email_newsletter', $tt, { layout => 'email' };
 };
 
+get '/favicon.ico' => sub {
+	_send_file('favicon.ico');
+};
+
 get '/img/:file' => sub {
 	my $file = param('file');
+	_send_file($file);
+};
+
+sub _send_file {
+	my ($file) = @_;
+
 	return if $file !~ /^[\w-]+\.(\w+)$/;
 	my $ext = $1;
-	my %map = ( svg => 'image/svg+xml', );
+	my %content_type_map = ( svg => 'image/svg+xml', ico => 'image/x-icon' );
 	send_file(
 		path( mymaven->{dirs}{img}, $file ),
-		content_type => ( $map{$ext} // $ext ),
+		content_type => ( $content_type_map{$ext} // $ext ),
 		system_path => 1,
 	);
-};
+}
 
 get '/tv' => sub {
 	pm_show_page(
