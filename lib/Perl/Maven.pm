@@ -120,7 +120,7 @@ hook before_template => sub {
 	$t->{"lang_$language"} = 1;
 	$t->{brand_name} = mymaven->{title};
 
-	$t->{domain} =  mymaven->{domain};
+	$t->{domain}    = mymaven->{domain};
 	$t->{resources} = read_resources();
 
 	# linking to translations
