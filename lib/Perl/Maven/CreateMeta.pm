@@ -235,7 +235,8 @@ sub get_pages {
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
-			my $data = eval { Perl::Maven::Page->new( file => $path )->read->merge_conf( $config->{conf} )->data };
+			my $data
+				= eval { Perl::Maven::Page->new( root => '', file => $path )->read->merge_conf( $config->{conf} )->data };
 			if ($@) {
 				die "Could not read '$path' $@";
 			}
