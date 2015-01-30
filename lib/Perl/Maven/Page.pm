@@ -9,6 +9,7 @@ use Path::Tiny;
 
 our $VERSION = '0.11';
 
+has media => ( is => 'ro', required => 1 );
 has root  => ( is => 'ro', required => 1 );
 has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
@@ -99,21 +100,16 @@ sub read {
 		while ( my $line = <$fh> ) {
 			if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
 				my ( $type, $file ) = ( $1, $2 );
-				my @ext;
-				if ( $type eq 'screencast' ) {
-					@ext = ( 'mp4', 'webm' );
-				}
-				elsif ( $type eq 'slidecast' ) {
-					@ext = ( 'ogv', 'avi' );
-				}
+				my $path = substr $file, length('/media');
 				my %types = (
 					mp4  => 'mp4',
 					webm => 'webm',
 					ogv  => 'ogg',
 					avi  => 'avi',
 				);
-				my @sources   = map {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
-				my @downloads = map {qq{<a href="$file.$_">$_</a>}} @ext;
+				my @ext       = grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*';
+				my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
+				my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
 
 				$line = <<"SCREENCAST";
 <div id="screencast">
