@@ -149,7 +149,10 @@ SCREENCAST
 
 					# TODO language based on extension?
 					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
-					$cont .= path($path)->slurp_utf8;
+					my $code = path($path)->slurp_utf8;
+					$code =~ s/</&gt;/g;
+					$code =~ s/>/&lt;/g;
+					$cont .= $code;
 					$cont .= qq{</pre>\n};
 				}    # else warn?
 				next;
