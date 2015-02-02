@@ -6,7 +6,7 @@
        <li><a href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
     <% END %>
        <li><hr></li>
-       <li><a href="<% domain %>/about#translations">about the translations</a></li>
+       <li><a href="http://<% domain %>/about#translations">about the translations</a></li>
     </ul>
   </div>
   <% END %>
