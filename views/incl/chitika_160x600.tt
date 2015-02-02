@@ -1,4 +1,5 @@
 <% IF conf.show_ads %>
+  <div style="margin-top: 200px; text-align:center">
   <script type="text/javascript">
     ( function() {
       if (window.CHITIKA === undefined) { window.CHITIKA = { 'units' : [] }; };
@@ -9,5 +10,6 @@
   }());
   </script>
   <script type="text/javascript" src="//cdn.chitika.net/getads.js" async></script>
+  </div>
 <% END %>
 
