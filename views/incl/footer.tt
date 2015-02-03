@@ -27,7 +27,6 @@
              </div>
            <% END %>
 
-           <% INCLUDE incl/chitika_160x600.tt %>
 
          <% END %>
       </div>
