@@ -249,6 +249,25 @@ $(document).ready(function() {
 		$('#popup_logged_in').modal('show');
 	});
 
+    $('.spoiler').on('click', function(e) {
+        if ($(this).hasClass('spoiler_hidden')) {
+            $(this).html($(this).attr('content'));
+            $(this).removeClass('spoiler_hidden');
+            $(this).addClass('spoiler_spoiled');
+        } else {
+            $(this).html($(this).attr('text'));
+            $(this).removeClass('spoiler_spoiled');
+            $(this).addClass('spoiler_hidden');
+        }
+    });
+    $('.spoiler').each(function () {
+        $(this).attr('content', $(this).html());
+        $(this).addClass('spoiler_spoiled');
+        $(this).trigger('click');
+    
+    });
+
+
 	prettyPrint();
 });
 

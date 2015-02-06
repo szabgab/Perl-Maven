@@ -335,3 +335,15 @@ video {
   display: none;
 }
 
+.spoiler {
+   padding: 5px;
+}
+.spoiler_hidden {
+  background-color: #000;
+  color: #FFF;
+}
+.spoiler_spoiled {
+  color: #000;
+  background-color: #EEEEEE;
+}
+
