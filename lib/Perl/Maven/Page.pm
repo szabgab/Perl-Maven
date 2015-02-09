@@ -141,8 +141,9 @@ SCREENCAST
 			}
 
 			# <include file="examples/node_hello_world.js">
-			if ( $line =~ m{^\s*<include\s+file="([^"]+)">\s*$} ) {
-				my $include_file = $1;
+			if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
+				my $what         = $1;
+				my $include_file = $2;
 				my $path         = $self->root . "/$include_file";
 				if ( -e $path ) {
 					$cont .= "<b>$include_file</b><br>";
@@ -150,10 +151,13 @@ SCREENCAST
 					# TODO language based on extension?
 					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
 					my $code = path($path)->slurp_utf8;
-					$code =~ s/</&gt;/g;
-					$code =~ s/>/&lt;/g;
+					$code =~ s/</&lt;/g;
+					$code =~ s/>/&gt;/g;
 					$cont .= $code;
 					$cont .= qq{</pre>\n};
+					if ( $what eq 'try' ) {
+						$cont .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
+					}
 				}    # else warn?
 				next;
 			}
