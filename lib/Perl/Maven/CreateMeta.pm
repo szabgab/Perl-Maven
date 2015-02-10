@@ -94,9 +94,9 @@ sub process_site {
 
 	my ( $keywords, $archive, $sitemap, $categories ) = $self->process_files( $pages, $config->{extra_index}, $lang );
 	save( 'categories', $dest, $categories );
-	save( 'archive',  $dest, $archive );
-	save( 'keywords', $dest, $keywords );
-	save( 'sitemap',  $dest, $sitemap );
+	save( 'archive',    $dest, $archive );
+	save( 'keywords',   $dest, $keywords );
+	save( 'sitemap',    $dest, $sitemap );
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
 	return;
@@ -158,15 +158,18 @@ sub process_files {
 					};
 			}
 		}
+
 		#say "$p->{timestamp} $p->{file}";
 		if ( $p->{conf}{archive} ) {
-			if ($p->{books}) {
-			#die Dumper $p->{books} if $p->{books};
+			if ( $p->{books} ) {
+
+				#die Dumper $p->{books} if $p->{books};
 				foreach my $cat ( @{ $p->{books} } ) {
-					push @{ $categories{$cat} }, {
-						title => $p->{title},
+					push @{ $categories{$cat} },
+						{
+						title    => $p->{title},
 						filename => $filename,
-					};
+						};
 				}
 			}
 
@@ -264,7 +267,7 @@ sub get_pages {
 				url_path => $s->{uri} . $file,
 				%$data,
 			);
-Dumper $p{pages};
+			Dumper $p{pages};
 			if ( $s->{autotags} ) {
 				$p{autotags} = $s->{autotags};
 			}
