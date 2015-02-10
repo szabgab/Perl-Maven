@@ -42,14 +42,6 @@ require Perl::Maven::PayPal;
 hook before => sub {
 	set start_time => Time::HiRes::time;
 
-	#if (not is_bot()) {
-	#	set session => 'YAML';
-	#	set session_domain => '.' . mymaven->{domain} . ( in_development() ? '.local' : '' );
-	#}
-
-	#config->{engines}{session}{YAML}{cookie_domain} = ".perlmaven.com.local";
-	#set session_domain => '.' . mymaven->{domain} . ( in_development() ? '.local' : '' );
-
 	my $appdir = abs_path config->{appdir};
 
 	my $db = Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
