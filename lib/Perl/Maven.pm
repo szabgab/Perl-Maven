@@ -112,6 +112,17 @@ hook before_template => sub {
 	$t->{"lang_$language"} = 1;
 	$t->{brand_name} = mymaven->{title};
 
+	# Adserver
+	if ( $t->{conf}{show_ads} and mymaven->{ads} ) {
+		foreach my $place ( keys %{ mymaven->{ads} } ) {
+
+			#next if not mymaven->{ads}{$place};
+			my $ads  = mymaven->{ads}{$place};
+			my $file = $ads->[ rand @$ads ];
+			$t->{ads}{$place} = Path::Tiny::path( path( config->{appdir}, 'config/ads', $file ) )->slurp_utf8;
+		}
+	}
+
 	$t->{domain}    = mymaven->{domain};
 	$t->{resources} = read_resources();
 

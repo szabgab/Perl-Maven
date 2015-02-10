@@ -1,7 +1,7 @@
 
 <h2>Searching for <% keyword %></h2>
 
-<% INCLUDE incl/adsense_wide_top.tt %>
+<% ads.top %>
 
 <% FOR r IN results %>
 <div>

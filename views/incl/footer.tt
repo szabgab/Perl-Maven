@@ -17,7 +17,7 @@
                </div>
 
            <% INCLUDE incl/social_share.tt %>
-           <% INCLUDE incl/adsense_tall.tt %>
+           <% ads.right %>
 
            <% IF conf.show_related && related %>
              <div id="related">

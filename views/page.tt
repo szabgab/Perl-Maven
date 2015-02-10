@@ -1,6 +1,6 @@
 <h1><% title %></h1>
 
-<% INCLUDE incl/adsense_wide_top.tt %>
+<% ads.top %>
 
 <% IF conf.show_indexes %>
   <div id="indexes">
@@ -22,7 +22,7 @@
   Published on <% date %>
   </p>
 <% END %>
-<% INCLUDE incl/adsense_wide_bottom.tt %>
+<% ads.bottom %>
 <% INCLUDE incl/comments.tt %>
 
 

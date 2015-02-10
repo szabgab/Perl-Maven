@@ -1,4 +1,4 @@
-<% INCLUDE incl/adsense_wide_top.tt %>
+<% ads.top %>
 
 <% mycontent %>
 
