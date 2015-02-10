@@ -1,0 +1,6 @@
+<ul>
+ <% FOR c IN categories %>
+   <li><a href="/category/<% c %>"><% c %></a></li>
+ <% END %>
+</ul> 
+

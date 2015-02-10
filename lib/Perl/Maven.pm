@@ -438,6 +438,33 @@ get qr{^/(.+)} => sub {
 	pass;
 };
 
+get '/category' => sub {
+	my $categories = setting('tools')->read_meta( 'categories' );
+	return pm_show_page(
+		{
+			article  => 'category',
+			template => 'categories',
+		},
+		{
+			categories => [sort keys %$categories],
+		}
+	);
+};
+
+get '/category/:name' => sub {
+	my $name = param('name');
+	my $categories = setting('tools')->read_meta( 'categories' );
+	return "No such category '$name'" if not $categories->{$name};
+	pm_show_page(
+		{ article => 'archive', template => 'archive', },
+		{
+			pages => $categories->{$name},
+			abstract => 0,
+		}
+	);
+};
+
+
 get '/download/:dir/:file' => sub {
 	my $dir  = param('dir');
 	my $file = param('file');

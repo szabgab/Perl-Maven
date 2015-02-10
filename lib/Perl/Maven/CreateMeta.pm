@@ -92,7 +92,8 @@ sub process_site {
 
 	my $pages = $self->get_pages( $config, @sources );
 
-	my ( $keywords, $archive, $sitemap ) = $self->process_files( $pages, $config->{extra_index}, $lang );
+	my ( $keywords, $archive, $sitemap, $categories ) = $self->process_files( $pages, $config->{extra_index}, $lang );
+	save( 'categories', $dest, $categories );
 	save( 'archive',  $dest, $archive );
 	save( 'keywords', $dest, $keywords );
 	save( 'sitemap',  $dest, $sitemap );
@@ -110,7 +111,7 @@ sub process_files {
 	# =tags contain concepts that we will want to categorize on
 
 	my %keywords;    # =indexes and =tags are united here
-	my ( @archive, @sitemap );
+	my ( @archive, @sitemap, %categories );
 
 	if ($extra_index) {
 
@@ -157,9 +158,18 @@ sub process_files {
 					};
 			}
 		}
-
 		#say "$p->{timestamp} $p->{file}";
 		if ( $p->{conf}{archive} ) {
+			if ($p->{books}) {
+			#die Dumper $p->{books} if $p->{books};
+				foreach my $cat ( @{ $p->{books} } ) {
+					push @{ $categories{$cat} }, {
+						title => $p->{title},
+						filename => $filename,
+					};
+				}
+			}
+
 			$self->stats->{pagecount}{$lang}++;
 			my ($date) = split /T/, $p->{timestamp};
 			my $e = {
@@ -205,7 +215,7 @@ sub process_files {
 	foreach my $k ( keys %keywords ) {
 		$keywords{$k} = [ sort { $a->{title} cmp $b->{title} } @{ $keywords{$k} } ];
 	}
-	return ( \%keywords, \@archive, \@sitemap );
+	return ( \%keywords, \@archive, \@sitemap, \%categories );
 }
 
 sub save {
@@ -254,6 +264,7 @@ sub get_pages {
 				url_path => $s->{uri} . $file,
 				%$data,
 			);
+Dumper $p{pages};
 			if ( $s->{autotags} ) {
 				$p{autotags} = $s->{autotags};
 			}
