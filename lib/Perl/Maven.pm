@@ -176,15 +176,6 @@ hook before_template => sub {
 		$t->{conf}{google_analytics} = 0;
 	}
 
-	# TODO start using a separate development configuration file and remove this code from here:
-	if ( in_development() ) {
-		$t->{conf}{show_social} = 0;
-
-		$t->{conf}{comments_disqus_enable} = 0;
-		$t->{conf}{clicky}                 = 0;
-		$t->{conf}{google_analytics}       = 0;
-	}
-
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
 
 	$t->{user_info}      = pm_user_info();
