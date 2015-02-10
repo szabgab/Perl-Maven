@@ -55,7 +55,7 @@
 
 <% INCLUDE incl/google_analytics.tt %>
 <% INCLUDE incl/clicky.tt %>
-<% INCLUDE incl/infolinks.tt %>
+<% ads.body_end %>
 </body>
 </html>
 
