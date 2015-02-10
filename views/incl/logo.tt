@@ -1,6 +1,6 @@
       <% IF books %>
          <% FOR b IN books %>
-            <div id="bookimg">
+            <div class="category_img">
                <% b %>
             </div>
          <% END %>
