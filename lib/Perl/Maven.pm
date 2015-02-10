@@ -324,6 +324,21 @@ get '/keywords' => sub {
 	pm_show_page( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
 
+get qr{^/try/(.+)} => sub {
+	my ($try_file) = splat;
+
+	#send_file( path(mymaven->{root}, $try_file) , system_path => 1 );
+	my $p       = Path::Tiny::path( path( mymaven->{root}, $try_file ) );
+	my $content = $p->slurp_utf8;
+	my $tt      = Template->new(
+		{ INCLUDE_PATH => abs_path( config->{appdir} ) . '/views', START_TAG => '<%', END_TAG => '%>' } );
+	my %data;
+	$data{conf}{google_analytics} = mymaven->{conf}{google_analytics};
+	my $ga;
+	$tt->process( 'incl/google_analytics.tt', \%data, \$ga ) or die Template->error();
+	return $content . $ga;
+};
+
 get '/about' => sub {
 	my $pages = setting('tools')->read_meta_array('archive');
 	my %cont;
