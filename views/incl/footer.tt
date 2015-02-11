@@ -19,14 +19,18 @@
            <% INCLUDE incl/social_share.tt %>
            <% ads.right %>
 
-           <% IF conf.show_related and related.size %>
+           <% IF conf.show_related %>
              <div id="related">
                <b>Related articles</b>
-               <ul>
-                 <% FOR l IN related %>
-                   <li><a href="<% l.url %>"><% l.text %></a></li>
-                 <% END %>
-               </ul>
+               <% IF related.size %>
+                 <ul>
+                   <% FOR l IN related %>
+                     <li><a href="<% l.url %>"><% l.text %></a></li>
+                   <% END %>
+                 </ul>
+               <% END %>
+
+               <% ads.related %>
              </div>
            <% END %>
 
