@@ -19,7 +19,7 @@
            <% INCLUDE incl/social_share.tt %>
            <% ads.right %>
 
-           <% IF conf.show_related && related %>
+           <% IF conf.show_related and related.size %>
              <div id="related">
                <b>Related articles</b>
                <ul>
