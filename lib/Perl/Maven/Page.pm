@@ -15,6 +15,13 @@ has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
 
+my @page_options
+	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect?);
+my @common_options
+	= qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? show_ads?);
+my @header = ( @page_options, @common_options );
+my @merge_options = map { my $t = $_; $t =~ s/[?@]//g; $t } @common_options;
+
 sub read {
 	my ($self) = @_;
 
@@ -26,10 +33,6 @@ sub read {
 	# @ signals a multi-value, a comma-separated list of values
 	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
 	#    require it but also have a mark if we want to show it or not?)
-	my @header
-		= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect?);
-	push @header,
-		qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? show_ads?);
 
 	my %opts = (
 		'?' => 'optional',
@@ -254,10 +257,7 @@ sub merge_conf {
 	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
-	foreach my $f (
-		qw(archive comments_disqus_enable show_social show_newsletter_form show_right show_related   show_date show_ads)
-		)
-	{
+	foreach my $f (@merge_options) {
 		if ( defined $data->{$f} ) {
 			$conf->{$f} = delete $data->{$f};
 		}
