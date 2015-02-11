@@ -28,7 +28,7 @@ sub read {
 	#    require it but also have a mark if we want to show it or not?)
 	my @header = qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator?);
 	push @header,
-		qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? redirect?);
+		qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? redirect? show_ads?);
 
 	my %opts = (
 		'?' => 'optional',
@@ -254,7 +254,7 @@ sub merge_conf {
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
 	foreach
-		my $f (qw(archive comments_disqus_enable show_related show_newsletter_form show_social show_right show_date))
+		my $f (qw(archive comments_disqus_enable show_related show_newsletter_form show_social show_right show_date show_ads))
 	{
 		if ( defined $data->{$f} ) {
 			$conf->{$f} = delete $data->{$f};
