@@ -7,6 +7,11 @@
           <span class="label label-warning"><% status %></span>
          <% END %>
 
+
+         <% IF edit %>
+            <a href="<% edit %>"><button type="button" class="btn btn-success">Suggest a change</button></a>
+         <% END %>
+
             <% IF conf.show_consultants %>
                <div id="newsletter-right-form">
                   <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>

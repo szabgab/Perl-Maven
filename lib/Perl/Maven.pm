@@ -174,6 +174,10 @@ hook before_template => sub {
 		$t->{$field} = $url;
 	}
 
+	if ( mymaven->{github} and -e path( mymaven->{root}, 'sites', $language, 'pages', "$path.txt" ) ) {
+		$t->{edit} = mymaven->{github} . "/tree/main/sites/$language/pages/$path.txt";
+	}
+
 	if ( $t->{no_such_article} ) {
 		$t->{conf}{clicky}           = 0;
 		$t->{conf}{google_analytics} = 0;
