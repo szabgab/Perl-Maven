@@ -236,6 +236,17 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
   float: right;
 }
 
+#related_all {
+    margin-top: 100px;
+    padding: 5px;
+    border: dotted 1px;
+    margin-bottom: 20px;
+}
+
+#related {
+    margin-bottom: 20px;
+}
+
 #related ul {
 	margin-left: 0px;
 }
