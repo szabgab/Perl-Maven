@@ -26,9 +26,10 @@ sub read {
 	# @ signals a multi-value, a comma-separated list of values
 	# Others need to have a real value though for author we can set 0 if we don't want to provide (maybe we should
 	#    require it but also have a mark if we want to show it or not?)
-	my @header = qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator?);
+	my @header
+		= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect?);
 	push @header,
-		qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? redirect? show_ads?);
+		qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? show_ads?);
 
 	my %opts = (
 		'?' => 'optional',
@@ -253,8 +254,9 @@ sub merge_conf {
 	# TODO this should be probably the list of fields accepted by Perl::Maven::Pages
 	# which in itself might need to be configurable. For now we add the fields
 	# one by one as we convert the code and the pages.
-	foreach
-		my $f (qw(archive comments_disqus_enable show_related show_newsletter_form show_social show_right show_date show_ads))
+	foreach my $f (
+		qw(archive comments_disqus_enable show_social show_newsletter_form show_right show_related   show_date show_ads)
+		)
 	{
 		if ( defined $data->{$f} ) {
 			$conf->{$f} = delete $data->{$f};
