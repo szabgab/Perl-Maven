@@ -49,7 +49,19 @@ http://en.wikipedia.org/wiki/Hosts_%28file%29
 Create the directory for the pages:
 
    mkdir -p ../example.com/site/en/pages
+   mkdir -p ../example.com/site/en/img
    mkdir -p ../example.com/sites/de/pages
+
+Copy images
+
+  cp public/img/*  ../example.com/sites/en/img/
+
+Create ```../example.com/sites/en/img/favicon.ico```
+
+Menu:
+
+   cp resources.yml.skel ../example.com/sites/en/resources.yml
+
 
 Create ```../example.com/sites.yml``` with the following content:
 
@@ -75,6 +87,9 @@ Create ```../example.com/site/en/pages/index.txt``` with the following content:
   =show_related 0
   
   <h2>Welcome to your own Perl-Maven based site</h2>
+
+
+
 
 Generate the meta files:
 
