@@ -27,6 +27,70 @@ clone the Perl-Maven repository ( https://github.com/szabgab/Perl-Maven )
 
 ```$ git clone https://github.com/szabgab/Perl-Maven.git```
 
+Create the database:
+
+    $ perl bin/setup.pl
+
+Create configuration directory and configuration file:
+
+    $ mkdir config
+    $ cp mymaven.yml.skel config/mymaven.yml
+
+Configure DNS name resolving of example.com.local to 127.0.0.1
+(On Linux/Unix add the following line to /etc/hosts :
+
+    127.0.0.1 example.com www.example.com de.example.com
+
+This page shows the location of the hosts file on other operating systems, including
+various versions of MS Windows
+http://en.wikipedia.org/wiki/Hosts_%28file%29
+
+
+Create the directory for the pages:
+
+   mkdir -p ../example.com/site/en/pages
+   mkdir -p ../example.com/sites/de/pages
+
+Create ```../example.com/sites.yml``` with the following content:
+
+  en:
+    url: http://example.com/
+    english: English
+    name: English
+  de:
+    url: http://de.example.com/
+    english: German
+    name: Deutsch
+
+Create ```../example.com/site/en/pages/index.txt``` with the following content:
+
+
+  =title Example site
+  =timestamp 2013-07-16T00:00:02
+  =status show
+  =show_date 0
+  =author 0
+  =archive 0
+  =comments_disqus_enable 0
+  =show_related 0
+  
+  <h2>Welcome to your own Perl-Maven based site</h2>
+
+Generate the meta files:
+
+  $ cd Perl-Maven
+  $ perl bin/create_meta.pl
+
+Run the application using ```plackup -r```
+
+And visit the main page at ```http://example.com:5000/```
+
+
+
+
+perlmaven.com
+------------
+
 clone the repository of the articles https://github.com/szabgab/perlmaven.com
 into a directory next to the Perl-Maven directory
 
@@ -36,27 +100,6 @@ into a directory next to the Perl-Maven directory
     somdedir/
         Perl-Maven/
         perlmaven.com/
-
-Generate the meta files:
-
-    $ cd Perl-Maven
-    $ perl bin/create_meta.pl
-
-Create the database:
-
-    $ perl bin/setup.pl
-
-Configure DNS name resolving of perlmaven.com.local to 127.0.0.1
-(On Linux/Unix add the following line to /etc/hosts :
-
-    127.0.0.1 perlmaven.com.local
-
-
-Launch the application:
-
-    $ perl bin/app.pl
-
-Visit  http://perlmaven.com.local:3000/
 
 You should be able to see the English website.
 

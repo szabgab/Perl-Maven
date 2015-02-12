@@ -18,6 +18,8 @@ sub new {
 
 	return $instance if $instance;
 
+	die "Database file is missing '$dbfile'" if not -e $dbfile;
+
 	my $dsn = "dbi:SQLite:dbname=$dbfile";
 	my $dbh = DBI->connect(
 		$dsn, '', '',

@@ -33,6 +33,8 @@ sub new {
 
 	$path = $ENV{MYMAVEN_YML} || $path;
 
+	die "Missing configuration file '$path'" if not -e $path;
+
 	return bless {
 		root => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
 		config => scalar LoadFile($path),

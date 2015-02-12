@@ -1,0 +1,26 @@
+installation:
+  domain: example.com
+  main_site: en
+  root: '../example.com'
+  meta: 'meta/example.com'
+  title: 'Example based on Perl-Maven'
+  from: 'Foo Bar <foobar@example.com>'
+  listid: 'Example newsletter <newsletter.example.com>'
+  prefix: '[Example]' 
+  unsubscribe_salt: foobar123456789
+  conf:
+    enable_popups: 0
+    show_consultants: 0
+    show_ads: 1
+    google_analytics: 0
+    show_newsletter_form: 0
+    show_indexes: 1
+    show_related: 1
+    comments_disqus_enable: 0
+    show_archive_selector: 0
+    show_social: 1
+    show_right: 1
+    show_date: 1
+    archive: 1
+    show_language_links: 1
+
