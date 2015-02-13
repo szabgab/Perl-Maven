@@ -330,11 +330,16 @@ get qr{^/try/(.+)} => sub {
 	my $content = $p->slurp_utf8;
 	my $tt      = Template->new(
 		{ INCLUDE_PATH => abs_path( config->{appdir} ) . '/views', START_TAG => '<%', END_TAG => '%>' } );
-	my %data;
-	$data{conf}{google_analytics} = mymaven->{conf}{google_analytics};
-	my $ga;
-	$tt->process( 'incl/google_analytics.tt', \%data, \$ga ) or die Template->error();
-	return $content . $ga;
+
+	if ( $try_file =~ /\.html$/ ) {
+		my %data;
+		$data{conf}{google_analytics} = mymaven->{conf}{google_analytics};
+		my $ga;
+		$tt->process( 'incl/google_analytics.tt', \%data, \$ga ) or die Template->error();
+		$content .= $ga;
+	}
+
+	return $content;
 };
 
 get '/about' => sub {
