@@ -322,34 +322,42 @@ get '/keywords' => sub {
 	pm_show_page( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
 
-get qr{^/static/(.+)} => sub {
-	my ($static_file) = splat;
-	die if $static_file =~ /\.\./;
-	my $p = path( mymaven->{root}, "static/$static_file" );
-
-	if ( $static_file =~ /\.js$/ ) {
-		content_type 'text/javascript';
-	}
-	send_file( $p, system_path => 1 );
-};
+#get qr{^/static/(.+)} => sub {
+#	my ($static_file) = splat;
+#	die if $static_file =~ /\.\./;
+#	my $p = path( mymaven->{root}, "static/$static_file" );
+#
+#	if ( $static_file =~ /\.js$/ ) {
+#		content_type 'text/javascript';
+#	}
+#	send_file( $p, system_path => 1 );
+#};
 
 get qr{^/try/(.+)} => sub {
 	my ($try_file) = splat;
+	die if $try_file =~ /\.\./;
 
-	my $p       = Path::Tiny::path( path( mymaven->{root}, $try_file ) );
-	my $content = $p->slurp_utf8;
-	my $tt      = Template->new(
-		{ INCLUDE_PATH => abs_path( config->{appdir} ) . '/views', START_TAG => '<%', END_TAG => '%>' } );
-
+	my $path = path( mymaven->{root}, $try_file );
 	if ( $try_file =~ /\.html$/ ) {
+		my $p       = Path::Tiny::path($path);
+		my $content = $p->slurp_utf8;
+
+		my $tt = Template->new(
+			{ INCLUDE_PATH => abs_path( config->{appdir} ) . '/views', START_TAG => '<%', END_TAG => '%>' } );
 		my %data;
 		$data{conf}{google_analytics} = mymaven->{conf}{google_analytics};
 		my $ga;
 		$tt->process( 'incl/google_analytics.tt', \%data, \$ga ) or die Template->error();
 		$content .= $ga;
+
+		return $content;
 	}
 
-	return $content;
+	if ( $try_file =~ /\.js$/ ) {
+		content_type 'text/javascript';
+		send_file( $path, system_path => 1 );
+	}
+	die 'Dont know how to handle.';
 };
 
 get '/about' => sub {
