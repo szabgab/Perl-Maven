@@ -325,7 +325,7 @@ get '/keywords' => sub {
 get qr{^/static/(.+)} => sub {
 	my ($static_file) = splat;
 	die if $static_file =~ /\.\./;
-	my $p = Path::Tiny::path( path( mymaven->{root}, $static_file ) );
+	my $p = path( mymaven->{root}, "static/$static_file" );
 
 	if ( $static_file =~ /\.js$/ ) {
 		content_type 'text/javascript';
