@@ -322,10 +322,20 @@ get '/keywords' => sub {
 	pm_show_page( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
 
+get qr{^/static/(.+)} => sub {
+	my ($static_file) = splat;
+	die if $static_file =~ /\.\./;
+	my $p = Path::Tiny::path( path( mymaven->{root}, $static_file ) );
+
+	if ( $static_file =~ /\.js$/ ) {
+		content_type 'text/javascript';
+	}
+	send_file( $p, system_path => 1 );
+};
+
 get qr{^/try/(.+)} => sub {
 	my ($try_file) = splat;
 
-	#send_file( path(mymaven->{root}, $try_file) , system_path => 1 );
 	my $p       = Path::Tiny::path( path( mymaven->{root}, $try_file ) );
 	my $content = $p->slurp_utf8;
 	my $tt      = Template->new(
