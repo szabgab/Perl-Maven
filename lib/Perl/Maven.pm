@@ -309,7 +309,9 @@ get '/' => sub {
 		);
 	}
 
-	my $pages = setting('tools')->read_meta_array( 'archive', limit => mymaven->{main_page_entries} );
+	my $MAIN_PAGE_ENTRIES = 10;
+	my $pages             = setting('tools')
+		->read_meta_array( 'archive', limit => ( mymaven->{main_page_entries} // $MAIN_PAGE_ENTRIES ) );
 	_replace_tags($pages);
 
 	pm_show_page( { article => 'index', template => 'index', }, { pages => $pages } );
