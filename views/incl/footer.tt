@@ -17,9 +17,7 @@
                   <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
                </div>
             <% END %>
-               <div>
-               See also articles about Python and Node.js on <a href="http://code-maven.com/">Code Maven</a>.
-               </div>
+           <% ads.right_top %>
 
            <% INCLUDE incl/social_share.tt %>
            <% ads.right %>
