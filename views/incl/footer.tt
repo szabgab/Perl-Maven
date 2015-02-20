@@ -38,6 +38,10 @@
              </div>
            <% END %>
 
+           <div id="lower_right" style="margin-top: 200px">
+           <% ads.lower_right %>
+           </div>
+
 
          <% END %>
       </div>
