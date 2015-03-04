@@ -80,6 +80,7 @@ get '/pm/account' => sub {
 	my $db   = setting('db');
 	my $uid  = session('uid');
 	my $user = $db->get_user_by_id($uid);
+	#debug($user);
 
 	my @owned_products;
 	foreach my $code ( @{ $user->{subscriptions} } ) {
@@ -116,7 +117,7 @@ get '/pm/account' => sub {
 		whitelist_on  => ( $user->{whitelist_on} ? 1 : 0 ),
 	);
 	if ( $user->{whitelist_on} ) {
-		$params{whitelist} = $db->get_whitelist($uid);
+		$params{whitelist} = $user->{whitelist};
 	}
 	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
 		$params{perl_maven_pro_buy_button}
@@ -334,16 +335,19 @@ post '/pm/whitelist' => sub {
 			my $mask = '255.255.255.255';
 
 			my $whitelist = $db->get_whitelist($uid);
-			my $found = grep { $_->{ip} eq $ip and $_->{mask} eq $mask } keys @$whitelist;
+			debug($whitelist);
+			my $found = grep { $_->{ip} eq $ip and $_->{mask} eq $mask } @$whitelist;
+			debug("Whitelist for $uid");
 			if ( not $found ) {
-				$db->add_to_whitelist(
+				my $ret = $db->add_to_whitelist(
+					$uid,
 					{
-						uid  => $uid,
 						ip   => $ip,
 						mask => $mask,
 						note => 'Added automatically when whitelist was enabled'
 					}
 				);
+				debug($ret);
 			}
 			return pm_message('whitelist_enabled');
 		}
@@ -361,10 +365,12 @@ post '/pm/whitelist' => sub {
 post '/pm/whitelist-delete' => sub {
 	return redirect '/pm/login' if not logged_in();
 
-	my $uid = session('uid');
-	my $id  = param('id');
-	my $db  = setting('db');
-	$db->delete_from_whitelist( $uid, $id );
+	my $uid  = session('uid');
+	my $ip   = param('ip');
+	my $mask = param('mask');
+	my $db   = setting('db');
+	debug("Delete whitelist IP='$ip' mask='$mask' for user '$uid'");
+	$db->delete_from_whitelist( $uid, { ip => $ip, mask => $mask } );
 	pm_message('whitelist_entry_deleted');
 };
 

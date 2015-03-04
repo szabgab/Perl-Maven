@@ -82,11 +82,12 @@ to the white-list.
 <% IF whitelist %>
 <table class="table">
   <tr><th>IP</th><th>Mask</th><th>Note</th><th></th></tr>
-<% FOR w IN whitelist.keys.sort  %>
-  <tr><td><% whitelist.$w.ip %></td><td><% whitelist.$w.mask %></td><td><% whitelist.$w.note %></td>
+<% FOR w IN whitelist  %>
+  <tr><td><% w.ip %></td><td><% w.mask %></td><td><% w.note %></td>
       <td>
         <form action="/pm/whitelist-delete" method="POST">
-           <input type="hidden" name="id" value="<% whitelist.$w.id %>">
+           <input type="hidden" name="ip" value="<% w.ip %>">
+           <input type="hidden" name="mask" value="<% w.mask %>">
            <input type="submit" class="btn btn-danger" value="Delete">
         </form>
       </td>
