@@ -8,6 +8,19 @@
   <!-- recmmended Google Pagination -->
   <% IF prev %><link rel="prev" href="<% prev.url %>"><% END %>
   <% IF next %><link rel="next" href="<% next.url %>"><% END %>
+  <link href="/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+
+  <link href="/google-code-prettify/prettify.css" rel="stylesheet">
+  <script src="/javascripts/jquery-1.11.3.min.js"></script>
+  <script src="/google-code-prettify/prettify.js"></script>
+
+
+  <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
+  <% IF conf.rtl %>
+  	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
+  <% END %>
+
 
   <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
   <link href="/atom" rel="alternate" type="application/atom+xml" title ="<% brand_name %>" />
