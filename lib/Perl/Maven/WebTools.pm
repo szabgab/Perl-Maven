@@ -140,8 +140,6 @@ sub valid_ip {
 
 	my $ip = get_ip();
 
-	#my $whitelist = setting('db')->get_whitelist($uid);
-
 	# TODO make use of the mask with Net::Subnet
 	return scalar grep { $ip eq $_->{ip} } @{ $user->{whitelist} };
 }

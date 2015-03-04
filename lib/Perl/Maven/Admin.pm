@@ -56,9 +56,18 @@ get '/admin/user_info.json' => sub {
 		return to_json { error => 'too_many_hits' };
 	}
 
+	# TODO the to_json won't work if there are Objects in any of the fields
 	foreach my $p (@$people) {
 		$p->{verify_time} //= '';
+		delete $p->{_id};
+		delete $p->{password};
+		$p->{admin}        = $p->{admin}        ? 1 : 0;
+		$p->{whitelist_on} = $p->{whitelist_on} ? 1 : 0;
+		delete $p->{register_time};
+		delete $p->{verify_time};
 	}
+
+	#debug($people);
 	return to_json { people => $people };
 };
 
