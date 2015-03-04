@@ -1,22 +1,94 @@
+<style>
+.form-control {
+   width: 99%;
+}
 
-<input type="hidden" name="id" />
-<span><title>Title (80 char) </title><input id="job_title" size="80" /></span>
-<textarea id="job_description" rows="20" cols="80">
-</textarea>
-<span>check if on-site: <input type="checkbox" id="job_on_site"></span>
-<div id="location>
- <span>City: <input id="job_city" /></span>
- <span>State: <input id="job_state" /></span>
- <span>Country: <input id="job_country" /></span>
+.input-group {
+  width: 100%;
+  margin-top: 5px;
+  border: 1px solid #DDD;
+  padding-top: 20px;
+}
+</style>
+
+<form id="job-editor" class="form-horizontal">
+  <input type="hidden" name="job-id">
+
+  <div class="form-group">
+    <label for="job-title">Job Title (80 char)</label>
+    <input type="text" class="form-control" id="job-title" placeholder="Job Title">
+  </div>
+
+  <div class="form-group">
+    <label for="job-description">Job Description</label>
+    <textarea id="job-description" class="form-control" rows="9" placeholder="Job Description"></textarea>
+  </div>
+
+  <div class="input-group">
+     <div>
+     How to apply for the job? At least one of the following:
+     </div>
+
+     <div class="form-group">
+       <label for="application-email">Application Email address</label>
+       <input type="email" class="form-control" id="application-email" placeholder="Enter email">
+     </div>
+
+     <div class="form-group">
+       <label for="application-url">Application URL</label>
+       <input type="url" class="form-control" id="application-url" placeholder="Enter URL">
+     </div>
+  </div>
+
+  <div class="input-group">
+     <div>
+      Location of the job.
+     </div>
+
+     <div class="checkbox">
+       <label>
+         <input id="job-on-site" type="checkbox"> On-site
+       </label>
+     </div>
+
+     <div class="form-group">
+       <label for="job-city">City</label>
+       <input type="text" class="form-control" id="job-city" placeholder="City">
+     </div>
+
+     <div class="form-group">
+       <label for="job-state">State (if applicable)</label>
+       <input type="text" class="form-control" id="job-state" placeholder="State">
+     </div>
+
+     <div class="form-group">
+       <label for="job-countrye">Country</label>
+       <input type="text" class="form-control" id="job-country" placeholder="Country">
+     </div>
+  </div>
+
+  <div class="input-group">
+     <div>
+       <b>Company</b>
+     </div>
+
+     <div class="form-group">
+       <label for="company-name">Company name</label>
+       <input type="text" class="form-control" id="company-name" placeholder="Company name">
+     </div>
+
+     <div class="form-group">
+       <label for="company-url">Company URL</label>
+       <input type="text" class="form-control" id="company-url" placeholder="Company URL">
+     </div>
+
+  </div>
+
+  <button id="job-save" type="submit" class="btn btn-default">Save</button>
+</form>
+<div id="job-error">
 </div>
+<div id="job-post"></div>
 
-<span>Company name: <input id="job_company_name" /></span>
-<span>Company url: <input id="job_company_url" /></span>
-<span>Job url: <input id="job_url" /></span>
-
-<span><button id="job_save">Save</button>
-<div id="job_post"></div>
-
-
-<script src="/javascripts/jobs-editor.js"></script>
+<script src="/javascripts/jobs-editor.js?<% pm_version %>"></script>
 

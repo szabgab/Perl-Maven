@@ -1,4 +1,3 @@
-
 <h1>Perl Jobs</h1>
 
 <ul>
@@ -25,3 +24,17 @@ Francisco Obispo @ Uniregistry
 
 <p>
 In order to get your job offering listed, contact Gabor Szabo (gabor@perlmaven.com).
+
+<!--
+<a href="/pm/jobs/new">Create a Job post</a>
+
+
+<h2>Listed posts</h2>
+
+<ol>
+<% FOR j in jobs %>
+  <li><% j.title %></li>
+<% END %>
+</ol>
+-->
+

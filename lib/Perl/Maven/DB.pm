@@ -286,5 +286,18 @@ sub add_log {
 	return;
 }
 
+sub save_job_post {
+	my ( $self, $data ) = @_;
+
+	$self->{db}->get_collection('jobs')->insert($data);
+	return;
+}
+
+sub get_jobs {
+	my ( $self, $uid ) = @_;
+
+	return [ $self->{db}->get_collection('jobs')->find( { uid => $uid } )->all ];
+}
+
 1;
 

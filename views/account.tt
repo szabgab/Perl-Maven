@@ -2,6 +2,12 @@
 <a href="/admin" class="btn btn-danger">Admin</a>
 <% END %>
 
+<!--
+<p>
+<a href="/pm/jobs">Job posts</a>
+</p>
+-->
+
 <ul>
 <% FOR s IN subscriptions %>
 <li><% s.name %> <a href="<% s.filename %>"><% s.linkname %></a></li>
