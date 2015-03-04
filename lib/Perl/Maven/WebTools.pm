@@ -138,11 +138,12 @@ sub valid_ip {
 	# if white-listing is not turned on, then every IP is valid
 	return 1 if not $user->{whitelist_on};
 
-	my $ip        = get_ip();
-	my $whitelist = setting('db')->get_whitelist($uid);
+	my $ip = get_ip();
+
+	#my $whitelist = setting('db')->get_whitelist($uid);
 
 	# TODO make use of the mask with Net::Subnet
-	return scalar grep { $ip eq $_->{ip} } values %$whitelist;
+	return scalar grep { $ip eq $_->{ip} } @{ $user->{whitelist} };
 }
 
 sub pm_error {

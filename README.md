@@ -206,4 +206,16 @@ Add to crontab something like this (except of the username, and the path to perl
 3) Restart the munin node(!)
 ```sudo service munin-node restart```
 
+Manual
+==============
+Add admin bit manually:
+$ mongo
+> use PerlMaven
+> db.user.update( { '_id' : ObjectId("f6b1f9a1146066f4463782") }, { '$set' : { 'admin' : true } } );
+
+
+and to remove admin bit use $unset:
+> db.user.update( { '_id' : ObjectId("f6b1f9a1146066f4463782") }, { '$unset' : { 'admin' : true } } );
+
+
 

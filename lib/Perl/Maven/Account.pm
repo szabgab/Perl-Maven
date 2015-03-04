@@ -80,6 +80,7 @@ get '/pm/account' => sub {
 	my $db   = setting('db');
 	my $uid  = session('uid');
 	my $user = $db->get_user_by_id($uid);
+
 	#debug($user);
 
 	my @owned_products;
