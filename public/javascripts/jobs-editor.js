@@ -1,8 +1,8 @@
 
 function collect_job_data() {
 	var data = new Object;
-    data["title"]             = $('#job-title').val();
-    data["description"]       = $('#job-description').val();
+	data["title"]             = $('#job-title').val();
+	data["description"]       = $('#job-description').val();
 	data["application-email"] = $('#job-application-email').val();
 	data["application-url"]   = $('#job-application-url').val();
 	data["on-site"]           = $('#job-on-site').is(':checked');
@@ -18,13 +18,13 @@ function collect_job_data() {
 function show_job() {
 	var data = collect_job_data();
 
-    var html = '';
-    if (data["title"]) {
-        html = '<h2>' + data["title"] + '</h2>';
-    }
-    if (data["description"]) {
-       html += markdown(data["description"]);
-    }
+	var html = '';
+	if (data["title"]) {
+		html = '<h2>' + data["title"] + '</h2>';
+	}
+	if (data["description"]) {
+		html += markdown(data["description"]);
+	}
 
 	if (data["application-email"]) {
 		html += "<p>Apply by sending your CV to <b>" + data["application-email"] + "</b></p>";
@@ -59,60 +59,60 @@ function show_job() {
 		html += '<p>Company: <a href="' +  data["company-url"] + '">' + data["company-url"] + '</a></p>';
 	}
 
-    //console.log(html);
-    $('#job-post').html( html );
-    $('#job-error').html( '' );
+	//console.log(html);
+	$('#job-post').html( html );
+	$('#job-error').html( '' );
 }
 
 function show_error(txt) {
 	var html = '<div class="alert alert-danger" role="alert">' + txt + '</div>';
-    $('#job-error').html( html );
+	$('#job-error').html( html );
 }
 
 function markdown(text) {
-    return '<p>' + text + '</p>';
+	return '<p>' + text + '</p>';
 }
 
 function save_job_result(data, status, jqXHR) {
 	console.log(data);
 	if (data["ok"]) {
 		$("#job-editor").hide();
-    	$('#job-error').html( '' );
-    	$('#job-post').html( 'Job post saved. <a href="/pm/jobs">List jobs</a>' );
+		$('#job-error').html( '' );
+		$('#job-post').html( 'Job post saved. <a href="/pm/jobs">List jobs</a>' );
 		return;
 	}
 	if (data["error"]) {
-        show_error(data["error"]);
+		show_error(data["error"]);
 		return;
 	}
 
-    show_error("Unknown response");
+	show_error("Unknown response");
 	return;
 }
 
 function save_job(e) {
 	e.preventDefault();
-    //console.log('save job');
+	//console.log('save job');
 	var data = collect_job_data();
 	if (! data["title"] ) {
-        show_error('Title is missing');
-        return;
-    }
-    $.ajax({
-        url: '/pm/jobs/save.json',
-        data: data,
-        dataType: "json",
-        success: save_job_result,
-    });
+		show_error('Title is missing');
+		return;
+	}
+	$.ajax({
+		url: '/pm/jobs/save.json',
+		data: data,
+		dataType: "json",
+		success: save_job_result,
+	});
 }
 
 function setup_jobs_editor() {
-    $("#job-save").click(save_job);
-    $("input").change(show_job);
-    $("input").keyup(show_job);
-    $("input").click(show_job);
-    $("textarea").change(show_job);
-    $("textarea").keyup(show_job);
+	$("#job-save").click(save_job);
+	$("input").change(show_job);
+	$("input").keyup(show_job);
+	$("input").click(show_job);
+	$("textarea").change(show_job);
+	$("textarea").keyup(show_job);
 }
 
 setup_jobs_editor();
