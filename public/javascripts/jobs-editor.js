@@ -1,13 +1,20 @@
 
+function collect_job_data() {
+	var data = new Object;
+    data["title"] = $('#job-title').val();
+    data["description"] = $('#job-description').val();
+	return data;
+}
+
 function show_job() {
+	var data = collect_job_data();
+
     var html = '';
-    var title = $('#job-title').val();
-    if (title) {
-        html = '<h2>' + title + '</h2>';
+    if (data["title"]) {
+        html = '<h2>' + data["title"] + '</h2>';
     }
-    var description = $('#job-description').val();
-    if (description) {
-       html += markdown(description);
+    if (data["description"]) {
+       html += markdown(data["description"]);
     }
 
 	var email = $('#application-email').val();
@@ -85,14 +92,11 @@ function save_job_result(data, status, jqXHR) {
 function save_job(e) {
 	e.preventDefault();
     //console.log('save job');
-    var title = $('#job-title').val();
-	if (! title ) {
+	var data = collect_job_data();
+	if (! data["title"] ) {
         show_error('Title is missing');
         return;
     }
-	var data = {
-		'title' : title,
-	}
     $.ajax({
         url: '/pm/jobs/save.json',
         data: data,

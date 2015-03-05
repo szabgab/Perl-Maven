@@ -35,8 +35,8 @@ get '/pm/jobs/save.json' => sub {
 		return to_json { error => 'Editing not supported' };
 	}
 
-	my %data;
-	$data{title} = param('title');
+	my @fields = qw(title description);
+	my %data = map { $_ => param($_) } @fields;
 	$data{title} =~ s/^\s+|\s+$//g;
 	if ( not $data{title} ) {
 		return to_json { error => 'Missing title' };
