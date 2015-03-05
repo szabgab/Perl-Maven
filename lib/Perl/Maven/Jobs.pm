@@ -35,9 +35,11 @@ get '/pm/jobs/save.json' => sub {
 		return to_json { error => 'Editing not supported' };
 	}
 
-	my @fields = qw(title description);
+	my @fields
+		= qw(title description application-email application-url on-site city state country company-name company-url);
+
 	my %data = map { $_ => param($_) } @fields;
-	$data{title} =~ s/^\s+|\s+$//g;
+	$data{$_} =~ s/^\s+|\s+$//g for @fields;
 	if ( not $data{title} ) {
 		return to_json { error => 'Missing title' };
 	}

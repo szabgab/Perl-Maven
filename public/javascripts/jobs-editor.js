@@ -1,8 +1,17 @@
 
 function collect_job_data() {
 	var data = new Object;
-    data["title"] = $('#job-title').val();
-    data["description"] = $('#job-description').val();
+    data["title"]             = $('#job-title').val();
+    data["description"]       = $('#job-description').val();
+	data["application-email"] = $('#job-application-email').val();
+	data["application-url"]   = $('#job-application-url').val();
+	data["on-site"]           = $('#job-on-site').is(':checked');
+	data["city"]              = $('#job-city').val();
+	data["state"]             = $('#job-state').val();
+	data["country"]           = $('#job-country').val();
+	data["company-name"]      = $('#job-company-name').val();
+	data["company-url"]       = $('#job-company-url').val();
+
 	return data;
 }
 
@@ -17,45 +26,37 @@ function show_job() {
        html += markdown(data["description"]);
     }
 
-	var email = $('#application-email').val();
-	if (email) {
-		html += "<p>Apply by sending your CV to <b>" + email + "</b></p>";
+	if (data["application-email"]) {
+		html += "<p>Apply by sending your CV to <b>" + data["application-email"] + "</b></p>";
 	}
-	var url = $('#application-url').val();
-	if (url) {
-		html += '<p>Apply by visiting <a href="' + url + '">here</a></p>';
+	if (data["application-url"]) {
+		html += '<p>Apply by visiting <a href="' + data["application-url"] + '">here</a></p>';
 	}
 
-	var on_site = $('#job-on-site').is(':checked');
-	if (on_site) {
+	if (data["on-site"]) {
 		html += "<p>This is an on-site job at the following location:</p>";
 	} else {
 		html += "<p>This is a remote job, but if you want to visit, the offices of the company can be found here:</p>";
 	}
 
-	var job_city = $('#job-city').val();
-	if (job_city) {
-		html += '<p>City: ' + job_city + '</p>';
+	if (data["city"]) {
+		html += '<p>City: ' + data["city"] + '</p>';
 	}
 
-	var job_state = $('#job-state').val();
-	if (job_state) {
-		html += '<p>State: ' + job_state + '</p>';
+	if (data["state"]) {
+		html += '<p>State: ' + data["state"] + '</p>';
 	}
 
-	var job_country = $('#job-country').val();
-	if (job_country) {
-		html += '<p>Country: ' + job_country + '</p>';
+	if (data["country"]) {
+		html += '<p>Country: ' + data["country"] + '</p>';
 	}
 
-	var company_name = $('#company-name').val();
-	var company_url = $('#company-url').val();
-	if (company_name && company_url) {
-		html += '<p>Company: <a href="' +  company_url + '">' + company_name + '</a></p>';
-	} else if (company_name) {
-		html += '<p>Company: ' +  company_name + '</p>';
-	} else if (company_url) {
-		html += '<p>Company: <a href="' +  company_url + '">' + company_url + '</a></p>';
+	if (data["company-name"] && data["company-url"]) {
+		html += '<p>Company: <a href="' +  data["company-url"] + '">' + data["company-name"] + '</a></p>';
+	} else if (data["company-name"]) {
+		html += '<p>Company: ' +  data["company-name"] + '</p>';
+	} else if (data["company-url"]) {
+		html += '<p>Company: <a href="' +  data["company-url"] + '">' + data["company-url"] + '</a></p>';
 	}
 
     //console.log(html);

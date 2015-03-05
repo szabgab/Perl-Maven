@@ -43,13 +43,13 @@
      </div>
 
      <div class="form-group">
-       <label for="application-email">Application Email address</label>
-       <input type="email" class="form-control" id="application-email" placeholder="Enter email">
+       <label for="job-application-email">Application Email address</label>
+       <input type="email" class="form-control" id="job-application-email" placeholder="Enter email">
      </div>
 
      <div class="form-group">
-       <label for="application-url">Application URL</label>
-       <input type="url" class="form-control" id="application-url" placeholder="Enter URL">
+       <label for="job-application-url">Application URL</label>
+       <input type="url" class="form-control" id="job-application-url" placeholder="Enter URL">
      </div>
   </div>
 
@@ -86,13 +86,13 @@
      </div>
 
      <div class="form-group">
-       <label for="company-name">Company name</label>
-       <input type="text" class="form-control" id="company-name" placeholder="Company name">
+       <label for="job-company-name">Company name</label>
+       <input type="text" class="form-control" id="job-company-name" placeholder="Company name">
      </div>
 
      <div class="form-group">
-       <label for="company-url">Company URL</label>
-       <input type="text" class="form-control" id="company-url" placeholder="Company URL">
+       <label for="job-company-url">Company URL</label>
+       <input type="text" class="form-control" id="job-company-url" placeholder="Company URL">
      </div>
 
   </div>
