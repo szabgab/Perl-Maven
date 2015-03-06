@@ -12,10 +12,11 @@ language: c
 before_install:
   - wget http://dwimperl.com/download/dwimperl-linux-5.20.1-10-x86_64.tar.gz
   - tar xzf dwimperl-linux-5.20.1-10-x86_64.tar.gz
+  - ./dwimperl-linux-5.20.1-10-x86_64/perl/bin/cpanm --installdeps . 
 #  - cpanm --notest Test::Code::TidyAll 
 #  - cpanm --notest Test::Perl::Critic
 #  - cpanm --notest Test::Version
 services:
   - mongodb
 script:
-  - dwimperl-linux-5.20.1-10-x86_64/perl/bin/perl Makefile.PL; make; make test
+  - ./dwimperl-linux-5.20.1-10-x86_64/perl/bin/perl Makefile.PL; make; make test
