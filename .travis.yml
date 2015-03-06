@@ -1,21 +1,21 @@
 branches:
   except:
     - gh-pages
-language: perl
-sudo: false
-perl:
-#  - "blead"
-  - "5.20"
+language: c
+#perl:
+#  - "5.20"
 #  - "5.18"
 #  - "5.16"
 #  - "5.14"
 #  - "5.12"
 #  - "5.10"
 before_install:
-#  - eval $(curl https://travis-perl.github.io/init) --auto
-  - cpanm --notest Test::Code::TidyAll 
-  - cpanm --notest Test::Perl::Critic
-  - cpanm --notest Test::Version
+  - wget http://dwimperl.com/download/dwimperl-linux-5.20.1-10-x86_64.tar.gz
+  - tar xzf dwimperl-linux-5.20.1-10-x86_64.tar.gz
+#  - cpanm --notest Test::Code::TidyAll 
+#  - cpanm --notest Test::Perl::Critic
+#  - cpanm --notest Test::Version
 services:
   - mongodb
-
+script:
+  - dwimperl-linux-5.20.1-10-x86_64/perl/bin/perl Makefile.PL; make; make test
