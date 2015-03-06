@@ -47,17 +47,8 @@ post '/pm/login' => sub {
 		return pm_template 'login', { no_password => 1 };
 	}
 
-	if ( substr( $user->{password}, 0, 7 ) eq '{CRYPT}' ) {
-		return pm_error('invalid_pw')
-			if not passphrase($password)->matches( $user->{password} );
-	}
-	else {
-		return pm_error('invalid_pw')
-			if $user->{password} ne Digest::SHA::sha1_base64($password);
-
-		# password is good, we need to update it
-		$db->set_password( $user->{_id}, passphrase($password)->generate->rfc2307 );
-	}
+	return pm_error('invalid_pw')
+		if not passphrase($password)->matches( $user->{password} );
 
 	session uid       => $user->{_id};
 	session logged_in => 1;

@@ -424,37 +424,6 @@ subtest 'name' => sub {
 	#diag(explain($form));
 };
 
-# we inject an old-style password and check if after the first login it is upgraded
-subtest 'upgrade_pw' => sub {
-	plan tests => 7;
-
-	$w->get_ok('/pm/logout');
-	$w->get_ok('/pm/account');
-	is $w->base, "$url/pm/login", 'redirected to login page';
-
-	# white-box:
-	my $user_before = $db->get_user_by_email($EMAIL);
-	$db->set_password( $user_before->{_id}, $sha1_of_abcdef );
-	my $user_midi = $db->get_user_by_email($EMAIL);
-	is $user_midi->{password}, $sha1_of_abcdef, 'just making sure we set the old pw';
-
-	$w->submit_form_ok(
-		{
-			form_name => 'login',
-			fields    => {
-				email    => $EMAIL,
-				password => $PASSWORD[1],
-			},
-		},
-		'login'
-	);
-	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
-
-	# white-box:
-	my $user_after = $db->get_user_by_email($EMAIL);
-	is substr( $user_after->{password}, 0, 7 ), '{CRYPT}';
-};
-
 subtest change_email => sub {
 	plan tests => 12;
 
