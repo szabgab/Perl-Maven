@@ -14,8 +14,11 @@ get '/pm/jobs' => sub {
 	my $uid  = session('uid');
 	my $db   = setting('db');
 	my $jobs = $db->get_jobs($uid);
+	for my $job (@$jobs) {
+		$job->{id} = delete($job->{_id})->to_string;
+	}
 
-	#debug($jobs);
+	debug($jobs);
 	template 'jobs', { jobs => $jobs };
 };
 
@@ -30,7 +33,7 @@ get '/pm/jobs/save.json' => sub {
 	if ( not logged_in() ) {
 		return pm_error('not_logged_in');
 	}
-	my $job_id = param('job-id');
+	my $job_id = param('id');
 	if ($job_id) {
 		return to_json { error => 'Editing not supported' };
 	}
@@ -51,6 +54,9 @@ get '/pm/jobs/save.json' => sub {
 		return to_json { error => 'User not found' };
 	}
 	$data{uid} = $uid;
+	$data{create} = DateTime::Tiny->now;
+	$data{last_update} = DateTime::Tiny->now;
+
 	$db->save_job_post( \%data );
 
 	#return to_json { error => 'Some error' };

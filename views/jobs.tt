@@ -28,13 +28,23 @@ In order to get your job offering listed, contact Gabor Szabo (gabor@perlmaven.c
 <!--
 <a href="/pm/jobs/new">Create a Job post</a>
 
-
 <h2>Listed posts</h2>
 
-<ol>
+<table class="table">
+  <tr>
+   <th>Title</th>
+   <th></th>
+   <th></th>
+  </tr>
 <% FOR j in jobs %>
-  <li><% j.title %></li>
+  <tr>
+    <td><% j.title %></td>
+    <td><a href="/pm/jobs/edit/<% j.id %>">edit</a></td>
+    <td><a href="/pm/jobs/preview/<% j.id %>">preview</a></td>
+  </tr>
 <% END %>
 </ol>
+
+</table>
 -->
 

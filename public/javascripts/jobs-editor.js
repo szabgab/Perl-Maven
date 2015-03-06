@@ -1,6 +1,7 @@
 
 function collect_job_data() {
 	var data = new Object;
+	data["id"]                = $('#job-id').val();
 	data["title"]             = $('#job-title').val();
 	data["description"]       = $('#job-description').val();
 	data["application-email"] = $('#job-application-email').val();
