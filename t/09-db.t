@@ -1,12 +1,16 @@
 use strict;
 use warnings;
-use Test::Most tests => 8;
+use Test::Most;
 use Test::Deep qw(cmp_deeply re ignore isa);
 
 use File::Copy qw(move);
 use Capture::Tiny qw(capture);
 use Cwd qw(cwd);
 use t::lib::Test;
+
+plan skip_all => 'Old MongoDB on Travis???' if $ENV{TRAVIS};
+
+plan tests => 8;
 
 t::lib::Test::setup();
 
