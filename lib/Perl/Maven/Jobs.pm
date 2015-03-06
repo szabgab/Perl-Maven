@@ -15,7 +15,7 @@ get '/pm/jobs' => sub {
 	my $db   = setting('db');
 	my $jobs = $db->get_jobs($uid);
 	for my $job (@$jobs) {
-		$job->{id} = delete($job->{_id})->to_string;
+		$job->{id} = delete( $job->{_id} )->to_string;
 	}
 
 	debug($jobs);
@@ -53,8 +53,8 @@ get '/pm/jobs/save.json' => sub {
 	if ( not $user ) {
 		return to_json { error => 'User not found' };
 	}
-	$data{uid} = $uid;
-	$data{create} = DateTime::Tiny->now;
+	$data{uid}         = $uid;
+	$data{create}      = DateTime::Tiny->now;
 	$data{last_update} = DateTime::Tiny->now;
 
 	$db->save_job_post( \%data );
