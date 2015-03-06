@@ -8,7 +8,7 @@ use Capture::Tiny qw(capture);
 use Cwd qw(cwd);
 use t::lib::Test;
 
-plan skip_all => 'Old MongoDB on Travis???' if $ENV{TRAVIS};
+#plan skip_all => 'Old MongoDB on Travis???' if $ENV{TRAVIS};
 
 plan tests => 8;
 
@@ -186,6 +186,7 @@ subtest products => sub {
 };
 
 subtest subscriptions => sub {
+	plan skip_all => 'Old MongoDB on Travis???' if $ENV{TRAVIS};
 	plan tests => 14;
 
 	my $ret = $db->subscribe_to(
