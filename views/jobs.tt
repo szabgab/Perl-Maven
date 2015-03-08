@@ -1,0 +1,10 @@
+
+<h1>Perl Jobs</h1>
+
+<ul>
+<% FOR job IN jobs.keys %>
+  <li><a href="/jobs/<% job %>"><% jobs.$job.title %></a> at <% jobs.$job.company_name %> in <% jobs.$job.city %>, <% jobs.$job.state %>, <% jobs.$job.country %></li>
+<% END %>
+</ul>
+
+In order to get your job offering listed, contact Gabor Szabo (gabor@perlmaven.com).

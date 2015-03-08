@@ -1,0 +1,42 @@
+<style>
+#apply {
+  margin-top: 20px;
+}
+#job_location {
+  margin-top: 20px;
+}
+</style>
+
+<h1><% job.title %></h1>
+<h2><a href="<% job.company_url %>"><% job.company_name %></a></h2>
+
+<div id="job_description">
+<h2>Job description</h2>
+<% job.description %>
+</div>
+
+<div id="apply">
+<h2>How to apply</h2>
+<% IF job.application_email %>
+  In order to apply send your CV to <% job.application_email %>
+<% END %>
+
+<% IF job.application_url %>
+  In order to apply visit <a href="<% job.application_url %>">this</a> page.
+<% END %>
+</div>
+
+
+<div id="job_location">
+<h2>Location</h2>
+<% IF job.on_site %>
+  This is an on-site job that requires to be in the office in:
+<% ELSE %>
+  This is a remote work. The company can be found in:
+<% END %>
+
+<p>
+<% job.city %>, <% job.state %><br>
+<% job.country %>
+</p>
+</div>

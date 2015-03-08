@@ -361,3 +361,16 @@ video {
 .category_img {
    margin-top: 20px;
 }
+
+.featured_jobs {
+  margin: 20px;
+  background-color: #FFF;
+  padding: 10px;
+          border-radius: 15px;
+     -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+
+ border: 5px solid #FF4500;
+ display: none;
+}
+

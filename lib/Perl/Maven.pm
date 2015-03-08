@@ -13,6 +13,7 @@ use Digest::SHA;
 use Email::Valid;
 use Fcntl qw(:flock SEEK_END);
 use List::MoreUtils qw(uniq);
+use List::Util qw(min);
 use POSIX       ();
 use Time::HiRes ();
 use YAML qw(LoadFile);
@@ -69,6 +70,18 @@ hook before => sub {
 
 	set sid => session('id');
 
+	# Job server
+	if (1) {
+		my %jobs;
+		my @files = grep { !/skeleton.yml/ } glob path( config->{appdir}, 'config/jobs', '*.yml' );
+		foreach my $file (@files) {
+			my ($job_id) = $file =~ m{([^/]+)\.yml$};
+			$jobs{$job_id} = YAML::LoadFile($file);
+			$jobs{$job_id}{id} = $job_id;
+		}
+		set jobs => \%jobs;
+	}
+
 	return;
 };
 
@@ -111,6 +124,19 @@ hook before_template => sub {
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
 	$t->{brand_name} = mymaven->{title};
+
+	if ( $t->{conf}{show_jobs} ) {
+		my $jobs    = setting('jobs');
+		my @job_ids = sort keys %$jobs;
+		$t->{jobs} = [];
+		my $n = min( 1, scalar @job_ids );    # number of featured ads
+		foreach ( 1 .. $n ) {
+			my $jid = int rand scalar @job_ids;
+			push @{ $t->{jobs} }, $jobs->{ splice @job_ids, $jid, 1 };
+		}
+
+		#die Dumper $t->{jobs};
+	}
 
 	# Adserver
 	if ( $t->{conf}{show_ads} and mymaven->{ads} ) {
@@ -239,6 +265,22 @@ get '/search/:keyword' => sub {
 		results => _search(),
 		keyword => $keyword,
 		};
+};
+
+get '/jobs/' => sub {
+	my $jobs = setting('jobs');
+	template 'jobs', { jobs => $jobs };
+};
+
+get '/jobs/:id' => sub {
+	my ($job_id) = param('id');
+	my $jobs = setting('jobs');
+	if ( $jobs->{$job_id} ) {
+		template 'job', { job => $jobs->{$job_id} };
+	}
+	else {
+		return 'No such job. Please check out the <a href="/jobs/">list of available Perl jobs</a>.';
+	}
 };
 
 get '/search' => sub {

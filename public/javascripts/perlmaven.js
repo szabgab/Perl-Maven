@@ -1,6 +1,26 @@
 
 var show_automatically = false;
 
+// show the job posts one-by-one
+function show_jobs() {
+    //console.log('show_jobs');
+	var done = false;
+    $('.featured_jobs').each(function() {
+		if (done) {
+			return;
+		}
+        //console.log('show');
+		//console.log( $(this).is(':visible') );
+		if (! $(this).is(':visible') ) {
+            $(this).show();
+			done = true;
+	        setTimeout(show_jobs, 1000);
+            return;
+        }
+		//console.log( $(this).is(':visible') );
+    });
+}
+
 function mysearch(keyword, auto) {
     if (keyword) {
         window.location = '/search/' + keyword;
@@ -267,6 +287,7 @@ $(document).ready(function() {
     
     });
 
+	setTimeout(show_jobs, 1000);
 
 	prettyPrint();
 });

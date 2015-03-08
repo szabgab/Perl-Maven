@@ -12,11 +12,25 @@
             <a href="<% edit %>"><button type="button" class="btn btn-success">Suggest a change</button></a>
          <% END %>
 
+            <% IF conf.show_jobs %>
+            <div class="featured_jobs">
+               <a href="/jobs/">Find a Perl Job</a>
+            </div>
+               <% FOR j IN jobs %>
+                 <div class="featured_jobs">
+                    <a href="/jobs/<% j.id %>"><% j.title %></a><br>
+                    <% j.city %>, <% j.state %><br>
+                    <% j.country %>
+                 </div>
+               <% END %>
+            <% END %>
+
             <% IF conf.show_consultants %>
                <div id="newsletter-right-form">
                   <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
                </div>
             <% END %>
+
            <% ads.right_top %>
 
            <% INCLUDE incl/social_share.tt %>
