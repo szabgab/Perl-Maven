@@ -129,7 +129,7 @@ hook before_template => sub {
 		my $jobs    = setting('jobs');
 		my @job_ids = sort keys %$jobs;
 		$t->{jobs} = [];
-		my $n = min( 1, scalar @job_ids );    # number of featured ads
+		my $n = min( $t->{conf}{featured_jobs}, scalar @job_ids );    # number of featured ads
 		foreach ( 1 .. $n ) {
 			my $jid = int rand scalar @job_ids;
 			push @{ $t->{jobs} }, $jobs->{ splice @job_ids, $jid, 1 };
