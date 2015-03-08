@@ -134,8 +134,6 @@ hook before_template => sub {
 			my $jid = int rand scalar @job_ids;
 			push @{ $t->{jobs} }, $jobs->{ splice @job_ids, $jid, 1 };
 		}
-
-		#die Dumper $t->{jobs};
 	}
 
 	# Adserver
@@ -267,6 +265,9 @@ get '/search/:keyword' => sub {
 		};
 };
 
+get '/jobs' => sub {
+    redirect '/jobs/';
+};
 get '/jobs/' => sub {
 	my $jobs = setting('jobs');
 	template 'jobs', { jobs => $jobs };
