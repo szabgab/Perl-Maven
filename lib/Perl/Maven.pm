@@ -266,7 +266,7 @@ get '/search/:keyword' => sub {
 };
 
 get '/jobs' => sub {
-    redirect '/jobs/';
+	redirect '/jobs/';
 };
 get '/jobs/' => sub {
 	my $jobs = setting('jobs');
