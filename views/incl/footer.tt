@@ -14,7 +14,7 @@
 
             <% IF conf.show_jobs %>
             <div class="featured_jobs">
-               <a href="/jobs/">Find a Perl Job</a>
+               <a href="/jobs/">Looking for a Perl Job ...</a>
             </div>
                <% FOR j IN jobs %>
                  <div class="featured_jobs">
