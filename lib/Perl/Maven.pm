@@ -73,7 +73,7 @@ hook before => sub {
 	# Job server
 	if (1) {
 		my %jobs;
-		my @files = grep { !/skeleton.yml/ } glob path( config->{appdir}, 'config/jobs', '*.yml' );
+		my @files = grep { !/(links|skeleton).yml/ } glob path( config->{appdir}, 'config/jobs', '*.yml' );
 		foreach my $file (@files) {
 			my ($job_id) = $file =~ m{([^/]+)\.yml$};
 			$jobs{$job_id} = YAML::LoadFile($file);
