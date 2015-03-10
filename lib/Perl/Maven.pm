@@ -80,6 +80,7 @@ hook before => sub {
 			$jobs{$job_id}{id} = $job_id;
 		}
 		set jobs => \%jobs;
+		set job_links => YAML::LoadFile( path( config->{appdir}, 'config/jobs/links.yml' ) );
 	}
 
 	return;
@@ -274,9 +275,14 @@ get '/jobs/' => sub {
 };
 
 get '/jobs/:id' => sub {
-	my ($job_id) = param('id');
-	my $jobs = setting('jobs');
+	my ($job_id)  = param('id');
+	my $jobs      = setting('jobs');
+	my $job_links = setting('job_links');
 	if ( $jobs->{$job_id} ) {
+		if ( $jobs->{$job_id}{modules} ) {
+			@{ $jobs->{$job_id}{modules} } = map { { name => $_, url => $job_links->{modules}{$_}, } }
+				grep { $job_links->{modules}{$_} } @{ $jobs->{$job_id}{modules} };
+		}
 		template 'job', { job => $jobs->{$job_id} };
 	}
 	else {

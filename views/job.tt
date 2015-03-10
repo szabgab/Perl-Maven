@@ -40,3 +40,12 @@
 <% job.country %>
 </p>
 </div>
+
+<% IF job.modules %>
+  <h2>Modules</h2>
+  <ul>
+  <% FOR m IN job.modules %>
+     <li><a href="<% m.url %>"><% m.name %></a></li>
+  <% END %>
+  </ul>
+<% END %>
