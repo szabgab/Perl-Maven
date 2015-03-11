@@ -42,7 +42,9 @@
 </div>
 
 <% IF job.modules %>
-  <h2>Modules</h2>
+  <h2>Learning material</h2>
+  The following are some of the most important Perl-related subject for you at this position.
+
   <ul>
   <% FOR m IN job.modules %>
      <li><a href="<% m.url %>"><% m.name %></a></li>
