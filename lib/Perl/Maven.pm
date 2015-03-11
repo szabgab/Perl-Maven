@@ -80,7 +80,10 @@ hook before => sub {
 			$jobs{$job_id}{id} = $job_id;
 		}
 		set jobs => \%jobs;
-		set job_links => YAML::LoadFile( path( config->{appdir}, 'config/jobs/links.yml' ) );
+		my $links_file = path( config->{appdir}, 'config/jobs/links.yml' );
+		if ( -e $links_file ) {
+			set job_links => YAML::LoadFile($links_file);
+		}
 	}
 
 	return;
