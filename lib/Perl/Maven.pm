@@ -76,7 +76,9 @@ hook before => sub {
 		my @files = grep { !/(links|skeleton).yml/ } glob path( config->{appdir}, 'config/jobs', '*.yml' );
 		foreach my $file (@files) {
 			my ($job_id) = $file =~ m{([^/]+)\.yml$};
-			$jobs{$job_id} = YAML::LoadFile($file);
+			my $job_data = YAML::LoadFile($file);
+			next if not $job_data->{show};
+			$jobs{$job_id} = $job_data;
 			$jobs{$job_id}{id} = $job_id;
 		}
 		set jobs => \%jobs;
