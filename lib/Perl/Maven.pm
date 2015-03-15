@@ -323,7 +323,7 @@ sub _search {
 		foreach my $kw ( keys %$data ) {
 			my ($entry) = grep { $_->{title} eq $keyword } @{ $data->{$kw} };
 			if ($entry) {
-				return { $entry->{url} => $keyword };
+				return [$entry];
 			}
 		}
 
