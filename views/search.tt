@@ -1,5 +1,5 @@
 
-<h2>Searching for <% keyword %></h2>
+<h2>Searching for '<% keyword %>'</h2>
 
 <% ads.top %>
 

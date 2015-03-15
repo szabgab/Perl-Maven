@@ -285,7 +285,7 @@ get '/jobs/:id' => sub {
 
 get '/search/:keyword' => sub {
 	my ($keyword) = param('keyword');
-	my $results = _search();
+	my $results = _search($keyword);
 	if ( @$results == 1 ) {
 		redirect $results->[0]{url};
 	}
@@ -304,19 +304,21 @@ get '/search' => sub {
 	return pm_show_page { article => 'search', template => 'search', },
 		{
 		title   => $keyword,
-		results => _search(),
+		results => _search($keyword),
 		keyword => $keyword,
 		};
 };
 
 get '/search.json' => sub {
-	return to_json _search();
+	my ($keyword) = param('keyword');
+	return to_json _search($keyword);
 };
 
 sub _search {
+	my ($keyword) = @_;
 	my $data = setting('tools')->read_meta_hash('keywords');
 
-	my ($keyword) = param('keyword');
+	$keyword =~ s/^\s+|\s+$//g;
 	if ( defined $keyword ) {
 
 		# check if there is an exact keyword match
@@ -332,6 +334,16 @@ sub _search {
 				return [$entry];
 			}
 		}
+
+		my @results;
+		foreach my $word ( split /\W+/, lc $keyword ) {
+			foreach my $k ( keys %$data ) {
+				if ( $word eq lc $k ) {
+					push @results, @{ $data->{$k} };
+				}
+			}
+		}
+		return \@results;
 
 		# TODO we should do better here for no exact matches
 		return [];
