@@ -259,16 +259,6 @@ get '/contributor/:name' => sub {
 	);
 };
 
-get '/search/:keyword' => sub {
-	my ($keyword) = param('keyword');
-	return pm_show_page { article => 'search', template => 'search', },
-		{
-		title   => $keyword,
-		results => _search(),
-		keyword => $keyword,
-		};
-};
-
 get '/jobs' => sub {
 	redirect '/jobs/';
 };
@@ -293,6 +283,22 @@ get '/jobs/:id' => sub {
 	}
 };
 
+get '/search/:keyword' => sub {
+	my ($keyword) = param('keyword');
+	my $results = _search();
+	if ( @$results == 1 ) {
+		redirect $results->[0]{url};
+	}
+
+	return pm_show_page { article => 'search', template => 'search', },
+		{
+		title   => $keyword,
+		results => $results,
+		keyword => $keyword,
+		};
+};
+
+# TODO do we still need to support this: or can we redirect to /search/$keyword  ?
 get '/search' => sub {
 	my ($keyword) = param('keyword');
 	return pm_show_page { article => 'search', template => 'search', },
@@ -328,7 +334,7 @@ sub _search {
 		}
 
 		# TODO we should do better here for no exact matches
-		return {};
+		return [];
 	}
 
 	my ($query) = param('query');
