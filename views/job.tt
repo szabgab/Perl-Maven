@@ -17,6 +17,9 @@
 
 <div id="apply">
 <h2>How to apply</h2>
+<% IF job.application_text %>
+<% END %>
+   <% job.application_text %>
 <% IF job.application_email %>
   In order to apply send your CV to <% job.application_email %>
 <% END %>
