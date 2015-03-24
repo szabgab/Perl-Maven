@@ -144,6 +144,7 @@ sub process_files {
 
 		foreach my $f (qw(indexes tags)) {
 			next if not $p->{$f};
+			next if $p->{redirect};
 			my @words = @{ $p->{$f} };
 			foreach my $w (@words) {
 
@@ -204,12 +205,14 @@ sub process_files {
 		#$p->{abstract} ||= $p->{title};
 		#$p->{abstract} ||= ' ';
 
-		push @sitemap,
-			{
-			title     => $p->{title},
-			filename  => ( $filename eq 'index' ? '' : $filename ),
-			timestamp => $p->{timestamp},
-			};
+		if ( not $p->{redirect} ) {
+			push @sitemap,
+				{
+				title     => $p->{title},
+				filename  => ( $filename eq 'index' ? '' : $filename ),
+				timestamp => $p->{timestamp},
+				};
+		}
 	}
 	if (@archive) {
 		$self->latest->{$lang} = $archive[0];

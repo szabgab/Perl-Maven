@@ -95,4 +95,17 @@ Code snippets are wrapped in
     </code>
 
 
+Separate controls to include files in the following places:
+
+    =status show   is required for each one of the following
+
+    /   (homepage)     (uses the 'archive' meta file)
+    /archive           (uses the 'archive' meta file)
+    /category/     ??  (uses the 'categories' and 'archive' meta files)
+    /atom              (uses the 'archive' meta file)
+    /keywords and /search  (using the 'keywords' meta file)
+    /sitemap.xml       (uses the 'sitemap' meta file)
+
+
+
 
