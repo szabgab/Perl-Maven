@@ -431,7 +431,7 @@ get qr{^/try/(.+)} => sub {
 		return $content;
 	}
 
-	if ( $try_file =~ /\.js$/ ) {
+	if ( $try_file =~ /\.js$/ or $try_file =~ /\.json$/ ) {
 		content_type 'text/javascript';
 		send_file( $path, system_path => 1 );
 	}
