@@ -9,23 +9,31 @@ use Email::Stuffer;
 use Email::Sender::Transport::SMTP ();
 use Time::Local qw(timegm);
 
+our $VERSION = '0.11';
+
 =pod
 
 Run bin/monitor.pl
 
 Send details about the distributions released in the last ELAPSED_TIME (where ELAPSED_TIME can be 1 hour, 24 hours, 7 days)
 
-1) all    - unfiltered
-2) unique - Filter the distribution to include each one only once.
+*) all    - unfiltered
+*) unique - Filter the distribution to include each one only once.
+*) modules - provides given module
+
+*) new    - This is the first time the distribution was released.
+*) gap    - First release after a big gap (1 year)
+
+TODO: Large change in number of lines of code since the most recent release.
+
 
 Each subscription belongs to a user (and each user can have multiple subscriptions).
 
 We collect all the data from MetaCPAN based on the recent feed.
 Then for each subscription we build the e-mail and send it.
 
-
-load config file
-fetch N most recent uploads to CPAN
+Load config file
+Fetch N most recent uploads to CPAN
 
 =cut
 
@@ -50,7 +58,7 @@ sub run {
 	#my %new;
 	my %modules;
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		$modules{$_} = 1 for keys %{ $sub->{modules} };
+		$modules{$_} = '' for keys %{ $sub->{modules} };
 	}
 
 	#die Dumper \%modules;
@@ -93,6 +101,12 @@ sub run {
 			$html_unique .= $html;
 		}
 
+		foreach my $module ( @{ $r->provides } ) {
+			if ( defined $modules{$module} ) {
+				$modules{$module} .= $html;
+			}
+		}
+
 		#say join ', ', @{$r->provides};
 	}
 
@@ -122,6 +136,21 @@ sub run {
 		if ( $sub->{unique} ) {
 			$html_content .= $html{unique};
 		}
+
+		my $html_modules = '';
+		foreach my $module ( sort keys %{ $sub->{modules} } ) {
+			if ( $modules{$module} ) {
+				$html_modules .= $modules{$module};
+			}
+		}
+		if ($html_modules) {
+			$html_content .= qq{<h2>Changed Modules</h2>\n};
+			$html_content .= qq{<table>\n};
+			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+			$html_content .= $html_modules;
+			$html_content .= qq{</table>\n};
+		}
+
 		next if not $html_content;
 
 		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
