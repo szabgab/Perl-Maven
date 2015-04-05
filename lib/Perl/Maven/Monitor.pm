@@ -20,12 +20,14 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
 *) all    - unfiltered
 *) unique - Filter the distribution to include each one only once.
 *) modules - provides given module
+*) author  - released by given author
 
+
+*) immediate prerequisites of a given module
+*) immediate prerequisites of any module of a given author
 *) new    - This is the first time the distribution was released.
 *) gap    - First release after a big gap (1 year)
-
-TODO: Large change in number of lines of code since the most recent release.
-
+*) diff   - Large change in number of lines of code since the most recent release.
 
 Each subscription belongs to a user (and each user can have multiple subscriptions).
 
@@ -57,8 +59,10 @@ sub run {
 
 	#my %new;
 	my %modules;
+	my %authors;
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 		$modules{$_} = '' for keys %{ $sub->{modules} };
+		$authors{$_} = '' for keys %{ $sub->{authors} };
 	}
 
 	#die Dumper \%modules;
@@ -68,7 +72,7 @@ sub run {
 
 	my $now   = time;
 	my $hours = 24;     # 1, 24, 168  ??
-	my $limit = 10;
+	my $limit = 1000;
 	my $count;
 
 	my $mcpan  = MetaCPAN::Client->new;
@@ -99,6 +103,10 @@ sub run {
 
 		if ( not $unique{ $r->distribution }++ ) {
 			$html_unique .= $html;
+		}
+
+		if ( defined $authors{ $r->author } ) {
+			$authors{ $r->author } .= $html;
 		}
 
 		foreach my $module ( @{ $r->provides } ) {
@@ -148,6 +156,20 @@ sub run {
 			$html_content .= qq{<table>\n};
 			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
 			$html_content .= $html_modules;
+			$html_content .= qq{</table>\n};
+		}
+
+		my $html_authors = '';
+		foreach my $author ( sort keys %{ $sub->{authors} } ) {
+			if ( $authors{$author} ) {
+				$html_authors .= $authors{$author};
+			}
+		}
+		if ($html_authors) {
+			$html_content .= qq{<h2>Changed Modules by monitored authors</h2>\n};
+			$html_content .= qq{<table>\n};
+			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+			$html_content .= $html_authors;
 			$html_content .= qq{</table>\n};
 		}
 
