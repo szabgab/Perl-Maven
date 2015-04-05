@@ -23,11 +23,13 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
 *) author  - released by given author
 
 
+*) partial_module - Any module in certain namespaces
 *) immediate prerequisites of a given module
 *) immediate prerequisites of any module of a given author
 *) new    - This is the first time the distribution was released.
 *) gap    - First release after a big gap (1 year)
 *) diff   - Large change in number of lines of code since the most recent release.
+*) Module the user has starred on MetaCPAN
 
 Each subscription belongs to a user (and each user can have multiple subscriptions).
 
@@ -44,7 +46,7 @@ has root => ( is => 'ro', required => 1 );
 sub run {
 	my ($self) = @_;
 
-	my $config_file = $self->root . '/cpan.json';
+	my $config_file = $self->root . '/config/cpan.json';
 
 	if ( not -e $config_file ) {
 		_log("No config file '$config_file'");
@@ -58,11 +60,13 @@ sub run {
 	my %unique;
 
 	#my %new;
+	my %partial_modules;
 	my %modules;
 	my %authors;
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		$modules{$_} = '' for keys %{ $sub->{modules} };
-		$authors{$_} = '' for keys %{ $sub->{authors} };
+		$partial_modules{$_} = {} for keys %{ $sub->{partial_modules} };
+		$modules{$_}         = '' for keys %{ $sub->{modules} };
+		$authors{$_}         = '' for keys %{ $sub->{authors} };
 	}
 
 	#die Dumper \%modules;
@@ -110,9 +114,17 @@ sub run {
 		}
 
 		foreach my $module ( @{ $r->provides } ) {
+
+			#my @parts = split /::/, $module;
+			#my ($part) = grep { $partial_modules{$_} } @parts;
 			if ( defined $modules{$module} ) {
 				$modules{$module} .= $html;
 			}
+
+			#	if ($part) {
+			#		$partial_modules{$part}{$module} = 1;
+			#	}
+			#}
 		}
 
 		#say join ', ', @{$r->provides};
@@ -145,6 +157,7 @@ sub run {
 			$html_content .= $html{unique};
 		}
 
+		# modules
 		my $html_modules = '';
 		foreach my $module ( sort keys %{ $sub->{modules} } ) {
 			if ( $modules{$module} ) {
@@ -152,13 +165,31 @@ sub run {
 			}
 		}
 		if ($html_modules) {
-			$html_content .= qq{<h2>Changed Modules</h2>\n};
+			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
 			$html_content .= qq{<table>\n};
 			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
 			$html_content .= $html_modules;
 			$html_content .= qq{</table>\n};
 		}
 
+		# partial_modules
+		#my $html_parts = '';
+		#foreach my $part ( sort keys %{ $sub->{partial_modules} } ) {
+		#	if ( $partial_modules{$part} ) {
+		#		foreach my $module (keys %{ $partial_modules{$part} } ) {
+		#			$html_parts .= $modules{$module};
+		#		}
+		#	}
+		#}
+		#if ($html_parts) {
+		#	$html_content .= qq{<h2>Changed Modules monitored by partial module name</h2>\n};
+		#	$html_content .= qq{<table>\n};
+		#	$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+		#	$html_content .= $html_parts;
+		#	$html_content .= qq{</table>\n};
+		#}
+
+		# authors
 		my $html_authors = '';
 		foreach my $author ( sort keys %{ $sub->{authors} } ) {
 			if ( $authors{$author} ) {
@@ -185,14 +216,14 @@ sub run {
 			$html_body
 				.= qq{We have reached the limit of CPAN distributions retreived that was set to $limit. Some distributions might have been left out from this report.};
 		}
-		$html_body .= qq{</body></html>};
+		$html_body .= qq{</body></html>\n};
 
 		my $to = $sub->{email};
 		_log("Sending to '$to'");
 		Email::Stuffer
 
 			#->text_body($text)
-			->html_body($html_body)->subject('Recently uploaded CPAN distributions')
+			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
 			->from('Gabor Szabo <gabor@perlmaven.com>')
 			->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )->to($to)->send;
 	}
