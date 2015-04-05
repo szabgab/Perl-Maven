@@ -93,11 +93,11 @@ sub run {
 		$count++;
 		my $html = '';
 		$html .= q{<tr>};
-		$html .= sprintf qq{<td><a href="http://metacpan.org/release/%s">%s</a></td>}, $r->distribution, $r->name;
-		$html .= sprintf qq{<td><a href="http://metacpan.org/author/%s">%s</a></td>}, $r->author, $r->author;
-		$html .= sprintf qq{<td>%s</td>},                    $r->abstract;
-		$html .= sprintf qq{<td style="width:130px">%s<td>}, $r->date;       # , ($now - $time);
-		$html .= q{</tr>};
+		$html .= sprintf q{<td><a href="http://metacpan.org/release/%s">%s</a></td>}, $r->distribution, $r->name;
+		$html .= sprintf q{<td><a href="http://metacpan.org/author/%s">%s</a></td>}, $r->author, $r->author;
+		$html .= sprintf q{<td>%s</td>},                    $r->abstract;
+		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->date;       # , ($now - $time);
+		$html .= qq{</tr>\n};
 
 		$html_all .= $html;
 
