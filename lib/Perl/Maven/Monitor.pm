@@ -113,16 +113,20 @@ sub run {
 	}
 
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
-		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
 
+		my $html_content = '';
 		if ( $sub->{all} ) {
-			$html_body .= $html{all};
+			$html_content .= $html{all};
 		}
 
 		if ( $sub->{unique} ) {
-			$html_body .= $html{unique};
+			$html_content .= $html{unique};
 		}
+		next if not $html_content;
+
+		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
+		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
+		$html_body .= $html_content;
 
 		if ( $count == $limit ) {
 
