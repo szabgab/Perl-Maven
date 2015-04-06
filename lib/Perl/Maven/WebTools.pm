@@ -341,10 +341,16 @@ sub pm_user_info {
 
 	if ( mymaven->{conf}{enable_popups} ) {
 		if ( $url ne $referrer ) {
-			$data{delayed} = {
-				what => 'popup_yapc_na',
-				when => 1000,
-			};
+			my $seen = session('popup_yapc_na');
+			if ( not $seen or $seen < time - 60 * 60 * 24 ) {
+
+				#if ( not $seen or $seen < time - 10 ) {}
+				session( 'popup_yapc_na' => time );
+				$data{delayed} = {
+					what => 'popup_yapc_na',
+					when => 1000,
+				};
+			}
 
 			#if ( logged_in() ) {
 
