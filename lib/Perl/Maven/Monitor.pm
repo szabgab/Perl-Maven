@@ -43,6 +43,7 @@ Fetch N most recent uploads to CPAN
 
 has root  => ( is => 'ro', required => 1 );
 has limit => ( is => 'ro', default  => 1000 );
+has hours => ( is => 'ro', default  => 24 );     # shall we restrict this to these numbers 1, 24, 168  ??
 
 sub run {
 	my ($self) = @_;
@@ -75,8 +76,7 @@ sub run {
 	#}
 	# fetch recent module
 
-	my $now   = time;
-	my $hours = 24;     # 1, 24, 168  ??
+	my $now = time;
 	my $count;
 
 	my $mcpan  = MetaCPAN::Client->new;
@@ -87,7 +87,7 @@ sub run {
 	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
 		my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
 		my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
-		last if $time < $now - 60 * 60 * $hours;
+		last if $time < $now - 60 * 60 * $self->hours;
 
 		#my $rd = DateTime::Tiny->from_string( $r->date ); #2015-04-05T12:10:00
 
