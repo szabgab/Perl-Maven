@@ -41,7 +41,8 @@ Fetch N most recent uploads to CPAN
 
 =cut
 
-has root => ( is => 'ro', required => 1 );
+has root  => ( is => 'ro', required => 1 );
+has limit => ( is => 'ro', default  => 1000 );
 
 sub run {
 	my ($self) = @_;
@@ -76,11 +77,10 @@ sub run {
 
 	my $now   = time;
 	my $hours = 24;     # 1, 24, 168  ??
-	my $limit = 1000;
 	my $count;
 
 	my $mcpan  = MetaCPAN::Client->new;
-	my $recent = $mcpan->recent($limit);
+	my $recent = $mcpan->recent( $self->limit );
 	my %html;
 	my $html_all    = '';
 	my $html_unique = '';
@@ -210,11 +210,13 @@ sub run {
 		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
 		$html_body .= $html_content;
 
-		if ( $count == $limit ) {
+		if ( $count == $self->limit ) {
 
 			# report that we should incease the limit
 			$html_body
-				.= qq{We have reached the limit of CPAN distributions retreived that was set to $limit. Some distributions might have been left out from this report.};
+				.= sprintf
+				q{We have reached the limit of CPAN distributions retreived that was set to %s. Some distributions might have been left out from this report.},
+				$self->limit;
 		}
 		$html_body .= qq{</body></html>\n};
 
