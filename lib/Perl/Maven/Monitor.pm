@@ -21,6 +21,7 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
 *) unique - Filter the distribution to include each one only once.
 *) modules - provides given module
 *) author  - released by given author
+*) partials - Any disribution where either the distribution name or any of the provided modules match the given regex.
 
 
 - One-click unsubscribe:
@@ -32,7 +33,6 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
 
 
 
-*) partial_module - Any module in certain namespaces
 *) immediate prerequisites of a given module
 *) immediate prerequisites of any module of a given author
 *) new    - This is the first time the distribution was released.
@@ -71,14 +71,16 @@ sub run {
 	my %unique;
 
 	#my %new;
-	my %partial_modules;
+	my %partials;
 	my %modules;
 	my %authors;
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 		next if not $sub->{enabled};
-		$partial_modules{$_} = {} for keys %{ $sub->{partial_modules} };
-		$modules{$_}         = '' for keys %{ $sub->{modules} };
-		$authors{$_}         = '' for keys %{ $sub->{authors} };
+
+		# TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
+		$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
+		$modules{$_}  = '' for keys %{ $sub->{modules} };
+		$authors{$_}  = '' for keys %{ $sub->{authors} };
 	}
 
 	#die Dumper \%modules;
@@ -124,17 +126,17 @@ sub run {
 		}
 
 		foreach my $module ( @{ $r->provides } ) {
-
-			#my @parts = split /::/, $module;
-			#my ($part) = grep { $partial_modules{$_} } @parts;
 			if ( defined $modules{$module} ) {
 				$modules{$module} .= $html;
 			}
+		}
 
-			#	if ($part) {
-			#		$partial_modules{$part}{$module} = 1;
-			#	}
-			#}
+		foreach my $partial ( keys %partials ) {
+
+			#say "part $partial";
+			if ( $r->name =~ /$partial/ or grep {/\Q$partial/} @{ $r->provides } ) {
+				$partials{$partial} .= $html;
+			}
 		}
 
 		#say join ', ', @{$r->provides};
@@ -183,22 +185,17 @@ sub run {
 			$html_content .= qq{</table>\n};
 		}
 
-		# partial_modules
-		#my $html_parts = '';
-		#foreach my $part ( sort keys %{ $sub->{partial_modules} } ) {
-		#	if ( $partial_modules{$part} ) {
-		#		foreach my $module (keys %{ $partial_modules{$part} } ) {
-		#			$html_parts .= $modules{$module};
-		#		}
-		#	}
-		#}
-		#if ($html_parts) {
-		#	$html_content .= qq{<h2>Changed Modules monitored by partial module name</h2>\n};
-		#	$html_content .= qq{<table>\n};
-		#	$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		#	$html_content .= $html_parts;
-		#	$html_content .= qq{</table>\n};
-		#}
+		# partials
+		my $html_parts = '';
+		foreach my $part ( sort keys %{ $sub->{partials} } ) {
+			if ( $partials{$part} ) {
+				$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
+				$html_content .= qq{<table>\n};
+				$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+				$html_content .= $partials{$part};
+				$html_content .= qq{</table>\n};
+			}
+		}
 
 		# authors
 		my $html_authors = '';
