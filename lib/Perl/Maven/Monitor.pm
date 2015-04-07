@@ -23,6 +23,15 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
 *) author  - released by given author
 
 
+- One-click unsubscribe:
+   In each e-mail include a link to unsubscribe (and another link to modify subscription)
+   Both can lead to the same page where the user can
+     1) delete this subscription
+     2) disable this susbscriptin (this will keep the subscription in the database to make it easy to enable later)
+     3) Change the subscription
+
+
+
 *) partial_module - Any module in certain namespaces
 *) immediate prerequisites of a given module
 *) immediate prerequisites of any module of a given author
@@ -66,6 +75,7 @@ sub run {
 	my %modules;
 	my %authors;
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
+		next if not $sub->{enabled};
 		$partial_modules{$_} = {} for keys %{ $sub->{partial_modules} };
 		$modules{$_}         = '' for keys %{ $sub->{modules} };
 		$authors{$_}         = '' for keys %{ $sub->{authors} };
@@ -147,6 +157,7 @@ sub run {
 	}
 
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
+		next if not $sub->{enabled};
 
 		my $html_content = '';
 		if ( $sub->{all} ) {
