@@ -65,6 +65,14 @@ Then for each subscription we build the e-mail and send it.
 Load config file
 Fetch N most recent uploads to CPAN
 
+
+
+=head2 PyPi
+
+Frequently fetch the RSS feed and update the locally cached information
+use the locally stored data to fetch the "most recent" list
+
+
 =cut
 
 has root  => ( is => 'ro', required => 1 );

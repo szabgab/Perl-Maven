@@ -8,7 +8,7 @@ use Getopt::Long qw(GetOptions);
 use Perl::Maven::Monitor;
 
 my %opt;
-GetOptions( \%opt, 'limit:i', 'hours:i', 'help', ) or usage();
+GetOptions( \%opt, 'limit:i', 'hours:i', 'conf:s', 'pypi', ['help', ) or usage();
 usage() if delete $opt{help};
 
 my $root = dirname dirname abs_path($0);
