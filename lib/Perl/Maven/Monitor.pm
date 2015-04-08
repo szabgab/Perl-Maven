@@ -31,6 +31,9 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
      2) disable this susbscriptin (this will keep the subscription in the database to make it easy to enable later)
      3) Change the subscription
 
+- Include information about the run (hours, limit)
+- Report the total elapsed time of the process
+- Report the total memory used by the process
 
 
 *) immediate prerequisites of a given module
