@@ -80,7 +80,10 @@ any '/paypal' => sub {
 		# TODO we should report this
 
 		log_paypal( "IPN - could not verify - $reason", \%query );
-		$body .= "<h2>IPN - could not verify - $reason</h2>\n";
+		$body .= "<h2>IPN - could not verify</h2>\n";
+		$body .= "<pre>\n";
+		$body .= $reason;
+		$body .= "\n</pre>\n";
 		$body .= "<pre>\n";
 		$body .= Dumper \%query;
 		$body .= "\n</pre>\n";
