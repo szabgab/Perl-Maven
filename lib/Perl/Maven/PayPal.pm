@@ -136,6 +136,9 @@ any '/paypal' => sub {
 	}
 	log_paypal( 'IPN-ok', \%query );
 	$body .= "<h2>IPN-ok</h2>\n";
+	$body .= "<b>txn_type</b>=$query{txn_type}\n";
+	$body .= "<b>payer_email</b>=$query{payer_email}\n";
+	$body .= "<b>payment_gross</b>=$query{payment_gross}\n";
 	$body .= "<pre>\n";
 	$body .= Dumper \%query;
 	$body .= "\n</pre>\n";
