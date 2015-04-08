@@ -15,14 +15,31 @@ our $VERSION = '0.11';
 
 Run bin/monitor.pl
 
-Send details about the distributions released in the last ELAPSED_TIME (where ELAPSED_TIME can be 1 hour, 24 hours, 7 days)
+Send details about the distributions released in the last 24 hours.
 
-*) all    - unfiltered
-*) unique - Filter the distribution to include each one only once.
-*) modules - provides given module
-*) author  - released by given author
-*) partials - Any disribution where either the distribution name or any of the provided modules match the given regex.
+Each user can have several "subsscriptions".
 
+Each "subscription" has
+<ul>
+ <li>Am "email" where we are going to send the messages.</li>
+ <li>A "title" that will be used in the subject line of the e-mail for easy identification of the monitor.
+</il>
+
+One or more of the following:
+
+<ul>
+  <li><b>all</b>      - (True/False.) All the recently uploaded distributions. Should be the same as the <a href="https://metacpan.org/recent">recent on MetaCPAN</a>.</li>
+  <li><b>unique</b>   - (True/False.) Filter the distribution to include each one only once. (In case more than one version was uploaded recently.)</li>
+  <li><b>new</b>      - (True/False.) This is the first time the distribution was released. <a href="https://metacpan.org/recent?f=n">MetaCPAN also provides this</a>.</li>
+  <li><b>modules</b>  - (A list of module names.) Include distributions that provide any of the listed modules.</li>
+  <li><b>author</b>   - (A list of PAUSE ids.) Include distributions released by any of the given authors.</li>
+  <li><b>partials</b> - (A list of regexes.) Any disribution where either the distribution name or any of the provided modules match the given regex.</li>
+</ul>
+
+
+  Send details about the distributions released in the last ELAPSED_TIME (where ELAPSED_TIME can be 1 hour, 1 day, or 1 week)
+ <li>A "userid" that connects it to the PerlMaven user account which has the e-mail address in it.
+ <li>An elapsed_time value which is 1, 24, or 168 (day and week in hours).
 
 - One-click unsubscribe:
    In each e-mail include a link to unsubscribe (and another link to modify subscription)
@@ -38,12 +55,9 @@ Send details about the distributions released in the last ELAPSED_TIME (where EL
 
 *) immediate prerequisites of a given module
 *) immediate prerequisites of any module of a given author
-*) new    - This is the first time the distribution was released.
 *) gap    - First release after a big gap (1 year)
 *) diff   - Large change in number of lines of code since the most recent release.
 *) Module the user has starred on MetaCPAN
-
-Each subscription belongs to a user (and each user can have multiple subscriptions).
 
 We collect all the data from MetaCPAN based on the recent feed.
 Then for each subscription we build the e-mail and send it.
@@ -97,6 +111,7 @@ sub run {
 	my $mcpan  = MetaCPAN::Client->new;
 	my $recent = $mcpan->recent( $self->limit );
 	my %html;
+	my $html_new    = '';
 	my $html_all    = '';
 	my $html_unique = '';
 	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
@@ -107,7 +122,6 @@ sub run {
 		#my $rd = DateTime::Tiny->from_string( $r->date ); #2015-04-05T12:10:00
 
 		#die Dumper $r->metadata;
-		#die $r->first;  # is this already in use?
 
 		$count++;
 		my $html = '';
@@ -119,6 +133,10 @@ sub run {
 		$html .= qq{</tr>\n};
 
 		$html_all .= $html;
+
+		if ( $r->first ) {
+			$html_new .= $html;
+		}
 
 		if ( not $unique{ $r->distribution }++ ) {
 			$html_unique .= $html;
@@ -161,6 +179,14 @@ sub run {
 		$html{unique} .= qq{</table>\n};
 	}
 
+	if ($html_new) {
+		$html{new} = qq{<h2>Recently uploaded new distributions</h2>\n};
+		$html{new} .= qq{<table>\n};
+		$html{new} .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+		$html{new} .= $html_new;
+		$html{new} .= qq{</table>\n};
+	}
+
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 		next if not $sub->{enabled};
 
@@ -171,6 +197,10 @@ sub run {
 
 		if ( $sub->{unique} ) {
 			$html_content .= $html{unique};
+		}
+
+		if ( $sub->{new} ) {
+			$html_content .= $html{new};
 		}
 
 		# modules
