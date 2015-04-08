@@ -3,6 +3,7 @@ use Dancer2 appname => 'Perl::Maven';
 use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::WebTools qw(logged_in pm_error pm_message);
+use Perl::Maven::Sendmail qw(send_mail);
 
 use POSIX;
 use Data::Dumper qw(Dumper);
@@ -54,8 +55,17 @@ any '/paid' => sub {
 any '/paypal' => sub {
 	my %query = params();
 
+	my $header = {
+		From    => mymaven->{from},
+		To      => mymaven->{admin}{email},
+		Subject => 'PayPal  IPN received',
+	};
+
+	my $body    = '';
 	my $content = request->body;
 	log_paypal( 'IPN content', { body => $content } );
+	$body .= "<h2>IPN content</h2>\n";
+	$body .= "<pre>\n$content\n</pre>\n";
 
 	my $id = param('custom');
 	my $paypal = paypal( id => $id );
@@ -70,6 +80,12 @@ any '/paypal' => sub {
 		# TODO we should report this
 
 		log_paypal( "IPN - could not verify - $reason", \%query );
+		$body .= "<h2>IPN - could not verify - $reason</h2>\n";
+		$body .= "<pre>\n";
+		$body .= Dumper \%query;
+		$body .= "\n</pre>\n";
+
+		send_mail( $header, { html => $body } );
 		return '';
 	}
 
@@ -82,6 +98,11 @@ any '/paypal' => sub {
 		# Have we lost the request?
 		# TODO we should report this
 		log_paypal( 'IPN-unrecognized-id', \%query );
+		$body .= "<h2>IPN-unrecognized-id</h2>\n";
+		$body .= "<pre>\n";
+		$body .= Dumper \%query;
+		$body .= "\n</pre>\n";
+		send_mail( $header, { html => $body } );
 		return '';
 	}
 	my $payment_status = $query{payment_status} || '';
@@ -96,14 +117,27 @@ any '/paypal' => sub {
 		code => $paypal_data->{what}
 	);
 	log_paypal( 'subscribe_to', \%params );
+	$body .= "<h2>subscribe_to</h2>\n";
+	$body .= "<pre>\n";
+	$body .= Dumper \%params;
+	$body .= "\n</pre>\n";
 	eval { setting('db')->subscribe_to(%params); };
+
 	if ($@) {
-		log_paypal( 'exception', { ex => $@ } );
+		my $err = $@;
+		log_paypal( 'exception', { ex => $err } );
+		$body .= "<h2>exception</h2>\n";
+		$body .= "<pre>\n";
+		$body .= $err;
+		$body .= "\n</pre>\n";
 	}
 	log_paypal( 'IPN-ok', \%query );
+	$body .= "<h2>IPN-ok</h2>\n";
+	$body .= "<pre>\n";
+	$body .= Dumper \%query;
+	$body .= "\n</pre>\n";
+	send_mail( $header, { html => $body } );
 	return '';
-
-	#}
 
 	#log_paypal( 'IPN-failed', \%query );
 	#return '';
