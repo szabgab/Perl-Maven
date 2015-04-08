@@ -28,7 +28,6 @@ use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
 	qw(logged_in get_ip mymaven pm_error pm_template read_tt pm_show_abstract pm_show_page authors pm_message pm_user_info);
-use Perl::Maven::Sendmail qw(send_mail);
 use Perl::Maven::Account;
 
 prefix '/foobar';
