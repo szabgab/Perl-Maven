@@ -78,11 +78,12 @@ use the locally stored data to fetch the "most recent" list
 has root  => ( is => 'ro', required => 1 );
 has limit => ( is => 'ro', default  => 1000 );
 has hours => ( is => 'ro', default  => 24 );     # shall we restrict this to these numbers 1, 24, 168  ??
+has conf  => ( is => 'ro' );
 
 sub run {
 	my ($self) = @_;
 
-	my $config_file = $self->root . '/config/cpan.json';
+	my $config_file = $self->conf // $self->root . '/config/cpan.json';
 
 	if ( not -e $config_file ) {
 		_log("No config file '$config_file'");
