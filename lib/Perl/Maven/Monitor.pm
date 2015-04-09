@@ -9,6 +9,8 @@ use Email::Stuffer;
 use Email::Sender::Transport::SMTP ();
 use Time::Local qw(timegm);
 
+with('Perl::Maven::Monitor::Pypi');
+
 our $VERSION = '0.11';
 
 =pod
@@ -86,7 +88,7 @@ sub run {
 	my $config_file = $self->conf // $self->root . '/config/cpan.json';
 
 	if ( not -e $config_file ) {
-		_log("No config file '$config_file'");
+		$self->_log("No config file '$config_file'");
 		return;
 	}
 
@@ -271,7 +273,7 @@ sub run {
 		$html_body .= qq{</body></html>\n};
 
 		my $to = $sub->{email};
-		_log("Sending to '$to'");
+		$self->_log("Sending to '$to'");
 		Email::Stuffer
 
 			#->text_body($text)
@@ -283,7 +285,7 @@ sub run {
 }
 
 sub _log {
-	my ($msg) = @_;
+	my ( $self, $msg ) = @_;
 	print "LOG: $msg\n";
 }
 
