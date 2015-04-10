@@ -5,6 +5,8 @@ use XML::Feed ();
 use MongoDB;
 use boolean;
 
+our $VERSION = '0.11';
+
 sub fetch_pypi {
 	my ($self) = @_;
 
@@ -68,8 +70,8 @@ DIST:
 	}
 
 	$self->_log("Added Pypi $count_add from a total of $count_feed in the feed.");
-	$self->_log("All the entries in the feed were added. Increase frequency!") if $count_add >= $count_feed;
-	$self->_log( "Total number of entries in Pypi: " . $pypi->count );
+	$self->_log('All the entries in the feed were added. Increase frequency!') if $count_add >= $count_feed;
+	$self->_log( 'Total number of entries in Pypi: ' . $pypi->count );
 
 	return;
 }
