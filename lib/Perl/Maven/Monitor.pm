@@ -107,68 +107,6 @@ sub run {
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 		my $html_content = '';
 
-		# modules
-		my $html_modules = '';
-		foreach my $module ( sort @{ $sub->{modules} } ) {
-			if ( $html{modules}{$module} ) {
-				$html_modules .= $html{modules}{$module};
-			}
-		}
-		if ($html_modules) {
-			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
-			$html_content .= qq{<table>\n};
-			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-			$html_content .= $html_modules;
-			$html_content .= qq{</table>\n};
-		}
-
-		# partials
-		my $html_parts = '';
-		foreach my $part ( sort keys %{ $sub->{partials} } ) {
-			if ( $html{partials}{$part} ) {
-				$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
-				$html_content .= qq{<table>\n};
-				$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-				$html_content .= $html{partials}{$part};
-				$html_content .= qq{</table>\n};
-			}
-		}
-
-		# authors
-		my $html_authors = '';
-		foreach my $author ( sort keys %{ $sub->{authors} } ) {
-			if ( $html{authors}{$author} ) {
-				$html_authors .= $html{authors}{$author};
-			}
-		}
-		if ($html_authors) {
-			$html_content .= qq{<h2>Changed Modules by monitored authors</h2>\n};
-			$html_content .= qq{<table>\n};
-			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-			$html_content .= $html_authors;
-			$html_content .= qq{</table>\n};
-		}
-
-		next if not $html_content;
-
-		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
-		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
-		$html_body .= $html_content;
-
-		$html_body .= $html{footer} // '';
-
-		$html_body .= qq{</body></html>\n};
-
-		my $to = $sub->{email};
-		$self->_log("xSending to '$to'");
-		Email::Stuffer
-
-			#->text_body($text)
-			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
-			->from('Gabor Szabo <gabor@perlmaven.com>')
-
-			#->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )
-			->to($to)->send;
 	}
 
 }
@@ -193,10 +131,6 @@ sub collect_cpan {
 		last if $time < $now - 60 * 60 * $self->hours;
 
 		my $html = '';
-
-		if ( defined $html{authors}{ $r->author } ) {
-			$html{authors}{ $r->author } .= $html;
-		}
 
 		foreach my $module ( @{ $r->provides } ) {
 			if ( defined $html{modules}{$module} ) {
@@ -272,9 +206,9 @@ sub prepare_cpan {
 		push @{ $data{all} },    $r;
 		push @{ $data{unique} }, $r if not $unique{ $r->{distribution} }++;
 		push @{ $data{new} },    $r if $r->{first};
-		push @{ $data{authors}{ $r->{author} } },            $r;
-		push @{ $data{distribution}{ $r->{distribution} } }, $r;
-		push @{ $data{module}{$_} }, $r for @{ $r->{modules} };
+		push @{ $data{authors}{ $r->{author} } },             $r;
+		push @{ $data{distributions}{ $r->{distribution} } }, $r;
+		push @{ $data{modules}{$_} }, $r for @{ $r->{modules} };
 	}
 
 	#say $count;
@@ -326,48 +260,43 @@ sub send_cpan {
 			$html_content .= _generate_html( $data->{new} );
 		}
 
-		#		# modules
-		#		my $html_modules = '';
-		#		foreach my $module ( sort @{ $sub->{modules} } ) {
-		#			if ( $html{modules}{$module} ) {
-		#				$html_modules .= $html{modules}{$module};
-		#			}
-		#		}
-		#		if ($html_modules) {
-		#			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
-		#			$html_content .= qq{<table>\n};
-		#			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		#			$html_content .= $html_modules;
-		#			$html_content .= qq{</table>\n};
-		#		}
-		#
-		#		# partials
-		#		my $html_parts = '';
-		#		foreach my $part ( sort keys %{ $sub->{partials} } ) {
-		#			if ( $html{partials}{$part} ) {
-		#				$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
-		#				$html_content .= qq{<table>\n};
-		#				$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		#				$html_content .= $html{partials}{$part};
-		#				$html_content .= qq{</table>\n};
-		#			}
-		#		}
-		#
-		#		# authors
-		#		my $html_authors = '';
-		#		foreach my $author ( sort keys %{ $sub->{authors} } ) {
-		#			if ( $html{authors}{$author} ) {
-		#				$html_authors .= $html{authors}{$author};
-		#			}
-		#		}
-		#		if ($html_authors) {
-		#			$html_content .= qq{<h2>Changed Modules by monitored authors</h2>\n};
-		#			$html_content .= qq{<table>\n};
-		#			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		#			$html_content .= $html_authors;
-		#			$html_content .= qq{</table>\n};
-		#		}
-		#
+		# modules
+		if ( $sub->{modules} ) {
+			my @dists;
+			foreach my $module ( sort @{ $sub->{modules} } ) {
+				if ( $data->{modules}{$module} ) {
+					push @dists, @{ $data->{modules}{$module} };
+				}
+			}
+			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
+			$html_content .= _generate_html( \@dists );
+		}
+
+		# partials
+		if ( $sub->{partials} ) {
+
+			#my @dists;
+			foreach my $part ( sort @{ $sub->{partials} } ) {
+				if ( $data->{partials}{$part} ) {
+					$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
+					$html_content .= _generate_html( $data->{partials}{$part} );
+
+					#push @dists, @{ $data->{partials}{$part} };
+				}
+			}
+
+			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
+			#$html_content .= _generate_html( \@dists );
+		}
+
+		# authors
+		if ( $sub->{authors} ) {
+			foreach my $author ( sort @{ $sub->{authors} } ) {
+				$html_content .= qq{<h2>Changed Modules by monitored authors - $author</h2>\n};
+				$html_content .= _generate_html( $data->{authors}{$author} );
+			}
+		}
+
 		next if not $html_content;
 
 		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
