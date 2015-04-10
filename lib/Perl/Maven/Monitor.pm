@@ -275,6 +275,9 @@ sub send_cpan {
 		$html_body .= qq{</body></html>\n};
 
 		my $to = $sub->{email};
+		if ( $ENV{EMAIL} ) {
+			$to = $ENV{EMAIL};
+		}
 		$self->_log("Sending to '$to'");
 
 		Email::Stuffer
