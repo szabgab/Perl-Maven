@@ -157,8 +157,8 @@ sub prepare_cpan {
 	return \%data;
 }
 
-sub _generate_html {
-	my ($data) = @_;
+sub generate_html {
+	my ( $self, $data ) = @_;
 	my $html = qq{<table>\n};
 	$html .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
 
@@ -189,16 +189,16 @@ sub send_cpan {
 		my $html_content = '';
 		if ( $sub->{all} ) {
 			$html_content .= qq{<h2>All the recently uploaded distributions</h2>\n};
-			$html_content .= _generate_html( $data->{all} );
+			$html_content .= $self->generate_html( $data->{all} );
 		}
 
 		if ( $sub->{unique} ) {
 			$html_content .= qq{<h2>Unique recently uploaded distributions</h2>\n};
-			$html_content .= _generate_html( $data->{unique} );
+			$html_content .= $self->generate_html( $data->{unique} );
 		}
 		if ( $sub->{new} ) {
 			$html_content = qq{<h2>Recently uploaded new distributions</h2>\n};
-			$html_content .= _generate_html( $data->{new} );
+			$html_content .= $self->generate_html( $data->{new} );
 		}
 
 		# modules
@@ -210,7 +210,7 @@ sub send_cpan {
 				}
 			}
 			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
-			$html_content .= _generate_html( \@dists );
+			$html_content .= $self->generate_html( \@dists );
 		}
 
 		# distribution-regex
@@ -227,12 +227,12 @@ sub send_cpan {
 				if (@dists) {
 					$html_content
 						.= qq{<h2>Changed Distributions monitored by regex for distribution name - $regex</h2>\n};
-					$html_content .= _generate_html( \@dists );
+					$html_content .= $self->generate_html( \@dists );
 				}
 			}
 
 			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name</h2>\n};
-			#$html_content .= _generate_html( \@dists );
+			#$html_content .= $self->generate_html( \@dists );
 		}
 
 		# module-regex
@@ -248,19 +248,19 @@ sub send_cpan {
 				}
 				if (@dists) {
 					$html_content .= qq{<h2>Changed Distributions monitored by regex for module name - $regex</h2>\n};
-					$html_content .= _generate_html( \@dists );
+					$html_content .= $self->generate_html( \@dists );
 				}
 			}
 
 			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name</h2>\n};
-			#$html_content .= _generate_html( \@dists );
+			#$html_content .= $self->generate_html( \@dists );
 		}
 
 		# authors
 		if ( $sub->{authors} ) {
 			foreach my $author ( sort @{ $sub->{authors} } ) {
 				$html_content .= qq{<h2>Changed Modules by monitored authors - $author</h2>\n};
-				$html_content .= _generate_html( $data->{authors}{$author} );
+				$html_content .= $self->generate_html( $data->{authors}{$author} );
 			}
 		}
 
