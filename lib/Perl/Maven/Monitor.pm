@@ -8,6 +8,8 @@ use MetaCPAN::Client;
 use Email::Stuffer;
 use Email::Sender::Transport::SMTP ();
 use Time::Local qw(timegm);
+use MongoDB;
+use DateTime::Tiny;
 
 with('Perl::Maven::Monitor::Pypi');
 
@@ -97,6 +99,7 @@ sub run {
 		$authors{$_}  = '' for keys %{ $sub->{authors} };
 	}
 
+	$self->fetch;
 	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
 	$self->_log("Data collection finished");
 
@@ -193,9 +196,9 @@ sub collect_cpan {
 	my $count;
 	my %unique;
 
-	my $mcpan  = MetaCPAN::Client->new;
-	my $recent = $mcpan->recent( $self->limit );
-	$self->_log('recent downloaded from MetaCPAN');
+	my $cpan   = $self->mongodb('cpan');
+	my $recent = $cpan->find;
+
 	my $html_new    = '';
 	my $html_all    = '';
 	my $html_unique = '';
@@ -281,6 +284,59 @@ sub collect_cpan {
 	}
 
 	return %html;
+}
+
+sub fetch {
+	my ($self) = @_;
+	$self->fetch_cpan;
+}
+
+sub fetch_cpan {
+	my ($self) = @_;
+
+	$self->_log('Fetching from MetaCPAN');
+	my $mcpan  = MetaCPAN::Client->new;
+	my $recent = $mcpan->recent( $self->limit );
+	$self->_log( 'recent downloaded from MetaCPAN limit: ' . $self->limit );
+
+	my $cpan = $self->mongodb('cpan');
+
+	my $count = 0;
+
+	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
+		    #my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
+		    #my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
+		    #last if $time < $now - 60 * 60 * $self->hours;
+		my $rd = DateTime::Tiny->from_string( $r->date );    #2015-04-05T12:10:00
+
+		my %data;
+		$data{distribution} = $r->distribution;
+		$data{name}         = $r->name;
+		$data{author}       = $r->author;
+		$data{abstract}     = ( $r->abstract // '' );
+		$data{date}         = $rd;
+		$data{first}        = $r->first ? boolean::true : boolean::false;
+
+		my $res = $cpan->find_one( { name => $data{name} } );
+		next if $res;                                        # TODO or shall we quit here?
+
+		$count++;
+		$cpan->insert( \%data );
+
+		#warn Dumper \%data;
+	}
+	$self->_log("CPAN inserted $count entries");
+	if ( not $count ) {
+		$self->_log("WARN - No new CPAN modules were added. Either limit or frequencey should be increased!");
+	}
+	return;
+}
+
+sub mongodb {
+	my ( $self, $collection ) = @_;
+	my $client = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database = $client->get_database('PerlMaven');
+	return $database->get_collection($collection);
 }
 
 sub _log {

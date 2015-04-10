@@ -2,7 +2,6 @@ package Perl::Maven::Monitor::Pypi;
 use 5.010;
 use Moo::Role;
 use XML::Feed ();
-use MongoDB;
 use boolean;
 
 our $VERSION = '0.11';
@@ -13,9 +12,7 @@ sub fetch_pypi {
 	my $latest_url = 'https://pypi.python.org/pypi?%3Aaction=rss';
 	my $newest_url = 'https://pypi.python.org/pypi?%3Aaction=packages_rss';
 
-	my $client   = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $database = $client->get_database('PerlMaven');
-	my $pypi     = $database->get_collection('pypi');
+	my $pypi = $self->mongodb('pypi');
 
 	my $new_feed = XML::Feed->parse( URI->new($newest_url) );
 	if ( not $new_feed ) {
