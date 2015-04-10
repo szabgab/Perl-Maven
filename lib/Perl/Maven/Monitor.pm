@@ -209,8 +209,10 @@ sub send_cpan {
 					push @dists, @{ $data->{modules}{$module} };
 				}
 			}
-			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
-			$html_content .= $self->generate_html( \@dists );
+			if (@dists) {
+				$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
+				$html_content .= $self->generate_html( \@dists );
+			}
 		}
 
 		# distribution-regex
@@ -259,8 +261,10 @@ sub send_cpan {
 		# authors
 		if ( $sub->{authors} ) {
 			foreach my $author ( sort @{ $sub->{authors} } ) {
-				$html_content .= qq{<h2>Changed Modules by monitored authors - $author</h2>\n};
-				$html_content .= $self->generate_html( $data->{authors}{$author} );
+				if ( $data->{authors}{$author} ) {
+					$html_content .= qq{<h2>Changed Modules by monitored authors - $author</h2>\n};
+					$html_content .= $self->generate_html( $data->{authors}{$author} );
+				}
 			}
 		}
 
