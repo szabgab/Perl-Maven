@@ -17,6 +17,12 @@ our $VERSION = '0.11';
 
 Run bin/monitor.pl
 
+Separate fetching from feeds to local database.
+
+1) all/unique/new
+2) modules/authors/regex
+
+
 
   Send details about the distributions released in the last ELAPSED_TIME (where ELAPSED_TIME can be 1 hour, 1 day, or 1 week)
  <li>An "email" where we are going to send the messages.</li>
@@ -86,7 +92,7 @@ sub run {
 
 		# TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
 		$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
-		$modules{$_}  = '' for keys %{ $sub->{modules} };
+		$modules{$_}  = '' for @{ $sub->{modules} };
 		$authors{$_}  = '' for keys %{ $sub->{authors} };
 	}
 
@@ -110,7 +116,7 @@ sub run {
 
 		# modules
 		my $html_modules = '';
-		foreach my $module ( sort keys %{ $sub->{modules} } ) {
+		foreach my $module ( sort @{ $sub->{modules} } ) {
 			if ( $html{modules}{$module} ) {
 				$html_modules .= $html{modules}{$module};
 			}
