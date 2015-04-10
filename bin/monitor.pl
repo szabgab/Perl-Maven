@@ -23,7 +23,6 @@ if ( defined $opt{report} ) {
 	$monitor->report( $opt{report} );
 }
 
-#$monitor->run;
 exit;
 
 sub usage {

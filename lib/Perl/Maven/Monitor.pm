@@ -70,8 +70,9 @@ has root  => ( is => 'ro', required => 1 );
 has limit => ( is => 'ro', default  => 1000 );
 has hours => ( is => 'ro', default  => 24 );     # shall we restrict this to these numbers 1, 24, 168  ??
 has conf  => ( is => 'ro' );
+has config => ( is => 'rw' );
 
-sub run {
+sub BUILD {
 	my ($self) = @_;
 
 	my $config_file = $self->conf // $self->root . '/config/cpan.json';
@@ -82,45 +83,29 @@ sub run {
 	}
 
 	my $config = decode_json path($config_file)->slurp_utf8;
+	$self->config($config);
 	$self->_log("Config file '$config_file' read");
 
 	#die Dumper $config;
-	#my %all;
+	return;
+}
 
-	#my %new;
+sub run {
+	my ($self) = @_;
+
+	my $config = $self->config;
 	my %partials;
 	my %modules;
 	my %authors;
-	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		next if not $sub->{enabled};
 
-		# TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
-		$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
-		$modules{$_}  = '' for @{ $sub->{modules} };
-		$authors{$_}  = '' for keys %{ $sub->{authors} };
-	}
-
-	$self->fetch;
-	$self->report;
+	# TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
+	#$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
 
 	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
 	$self->_log('Data collection finished');
 
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		next if not $sub->{enabled};
-
 		my $html_content = '';
-		if ( $sub->{all} ) {
-			$html_content .= $html{all};
-		}
-
-		if ( $sub->{unique} ) {
-			$html_content .= $html{unique};
-		}
-
-		if ( $sub->{new} ) {
-			$html_content .= $html{new};
-		}
 
 		# modules
 		my $html_modules = '';
@@ -175,7 +160,7 @@ sub run {
 		$html_body .= qq{</body></html>\n};
 
 		my $to = $sub->{email};
-		$self->_log("Sending to '$to'");
+		$self->_log("xSending to '$to'");
 		Email::Stuffer
 
 			#->text_body($text)
@@ -191,9 +176,6 @@ sub run {
 sub collect_cpan {
 	my ( $self, $monitored_authors, $monitored_modules, $monitored_partials ) = @_;
 	my %html;
-	$html{authors}  = {%$monitored_authors};
-	$html{modules}  = {%$monitored_modules};
-	$html{partials} = {%$monitored_partials};
 
 	my $now = time;
 	my $count;
@@ -210,28 +192,7 @@ sub collect_cpan {
 		my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
 		last if $time < $now - 60 * 60 * $self->hours;
 
-		#my $rd = DateTime::Tiny->from_string( $r->date ); #2015-04-05T12:10:00
-
-		#die Dumper $r->metadata;
-
-		$count++;
 		my $html = '';
-		$html .= q{<tr>};
-		$html .= sprintf q{<td><a href="http://metacpan.org/release/%s">%s</a></td>}, $r->distribution, $r->name;
-		$html .= sprintf q{<td><a href="http://metacpan.org/author/%s">%s</a></td>}, $r->author, $r->author;
-		$html .= sprintf q{<td>%s</td>}, ( $r->abstract // '' );
-		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->date;    # , ($now - $time);
-		$html .= qq{</tr>\n};
-
-		$html_all .= $html;
-
-		if ( $r->first ) {
-			$html_new .= $html;
-		}
-
-		if ( not $unique{ $r->distribution }++ ) {
-			$html_unique .= $html;
-		}
 
 		if ( defined $html{authors}{ $r->author } ) {
 			$html{authors}{ $r->author } .= $html;
@@ -252,30 +213,6 @@ sub collect_cpan {
 		}
 
 		#say join ', ', @{$r->provides};
-	}
-
-	if ($html_all) {
-		$html{all} = qq{<h2>All the recently uploaded distributions</h2>\n};
-		$html{all} .= qq{<table>\n};
-		$html{all} .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		$html{all} .= $html_all;
-		$html{all} .= qq{</table>\n};
-	}
-
-	if ($html_unique) {
-		$html{unique} = qq{<h2>Unique recently uploaded distributions</h2>\n};
-		$html{unique} .= qq{<table>\n};
-		$html{unique} .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		$html{unique} .= $html_unique;
-		$html{unique} .= qq{</table>\n};
-	}
-
-	if ($html_new) {
-		$html{new} = qq{<h2>Recently uploaded new distributions</h2>\n};
-		$html{new} .= qq{<table>\n};
-		$html{new} .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-		$html{new} .= $html_new;
-		$html{new} .= qq{</table>\n};
 	}
 
 	if ( $count == $self->limit ) {
@@ -304,7 +241,7 @@ sub fetch {
 
 sub prepare_cpan {
 	my ($self) = @_;
-	$self->_log("Prepare CPAN reports");
+	$self->_log('Prepare CPAN reports');
 
 	my $now   = time;
 	my $start = $now - 60 * 60 * $self->hours;
@@ -326,11 +263,15 @@ sub prepare_cpan {
 	my $cpan   = $self->mongodb('cpan');
 	my $recent = $cpan->find( { date => { '$gt', $start_time } } )->sort( { date => -1 } );
 	my $count  = 0;
+	my %unique;
 	while ( my $r = $recent->next ) {
 		$count++;
 
 		#print Dumper $r;
 		#<STDIN>;
+		push @{ $data{all} },    $r;
+		push @{ $data{unique} }, $r if not $unique{ $r->{distribution} }++;
+		push @{ $data{new} },    $r if $r->{first};
 		push @{ $data{authors}{ $r->{author} } },            $r;
 		push @{ $data{distribution}{ $r->{distribution} } }, $r;
 		push @{ $data{module}{$_} }, $r for @{ $r->{modules} };
@@ -341,9 +282,125 @@ sub prepare_cpan {
 	return \%data;
 }
 
+sub _generate_html {
+	my ($data) = @_;
+	my $html = qq{<table>\n};
+	$html .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+
+	for my $r (@$data) {
+		$html .= q{<tr>};
+		$html .= sprintf q{<td><a href="http://metacpan.org/release/%s">%s</a></td>}, $r->{distribution}, $r->{name};
+		$html .= sprintf q{<td><a href="http://metacpan.org/author/%s">%s</a></td>}, $r->{author}, $r->{author};
+		$html .= sprintf q{<td>%s</td>}, ( $r->{abstract} // '' );
+		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->{date};
+		$html .= qq{</tr>\n};
+	}
+	$html .= qq{</table>\n};
+
+	return $html;
+}
+
+sub send_cpan {
+	my ( $self, $data ) = @_;
+	$self->_log('Send CPAN reports');
+
+	my $config = $self->config;
+	foreach my $sub ( @{ $config->{subscriptions} } ) {
+
+		#print Dumper $sub;
+		next if not $sub->{enabled};
+		next if $sub->{source} ne 'cpan';
+
+		my $html_content = '';
+		if ( $sub->{all} ) {
+			$html_content .= qq{<h2>All the recently uploaded distributions</h2>\n};
+			$html_content .= _generate_html( $data->{all} );
+		}
+
+		if ( $sub->{unique} ) {
+			$html_content .= qq{<h2>Unique recently uploaded distributions</h2>\n};
+			$html_content .= _generate_html( $data->{unique} );
+		}
+		if ( $sub->{new} ) {
+			$html_content = qq{<h2>Recently uploaded new distributions</h2>\n};
+			$html_content .= _generate_html( $data->{new} );
+		}
+
+		#		# modules
+		#		my $html_modules = '';
+		#		foreach my $module ( sort @{ $sub->{modules} } ) {
+		#			if ( $html{modules}{$module} ) {
+		#				$html_modules .= $html{modules}{$module};
+		#			}
+		#		}
+		#		if ($html_modules) {
+		#			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
+		#			$html_content .= qq{<table>\n};
+		#			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+		#			$html_content .= $html_modules;
+		#			$html_content .= qq{</table>\n};
+		#		}
+		#
+		#		# partials
+		#		my $html_parts = '';
+		#		foreach my $part ( sort keys %{ $sub->{partials} } ) {
+		#			if ( $html{partials}{$part} ) {
+		#				$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
+		#				$html_content .= qq{<table>\n};
+		#				$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+		#				$html_content .= $html{partials}{$part};
+		#				$html_content .= qq{</table>\n};
+		#			}
+		#		}
+		#
+		#		# authors
+		#		my $html_authors = '';
+		#		foreach my $author ( sort keys %{ $sub->{authors} } ) {
+		#			if ( $html{authors}{$author} ) {
+		#				$html_authors .= $html{authors}{$author};
+		#			}
+		#		}
+		#		if ($html_authors) {
+		#			$html_content .= qq{<h2>Changed Modules by monitored authors</h2>\n};
+		#			$html_content .= qq{<table>\n};
+		#			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+		#			$html_content .= $html_authors;
+		#			$html_content .= qq{</table>\n};
+		#		}
+		#
+		next if not $html_content;
+
+		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
+		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
+		$html_body .= $html_content;
+
+		#		$html_body .= $html{footer} // '';
+
+		$html_body .= qq{</body></html>\n};
+
+		my $to = $sub->{email};
+		$self->_log("Sending to '$to'");
+
+		#say $html_body;
+		Email::Stuffer
+
+			#->text_body($text)
+			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
+			->from('Gabor Szabo <gabor@perlmaven.com>')
+
+			#->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )
+			->to($to)->send;
+	}
+	return;
+}
+
+sub send_pypi {
+	my ( $self, $data ) = @_;
+}
+
 sub prepare_pypi {
 	my ($self) = @_;
-	$self->_log("Prepare Pypi reports");
+	$self->_log('Prepare Pypi reports');
 
 	return;
 }
@@ -357,9 +414,8 @@ sub report {
 		my $data    = $self->$prepare;
 
 		#warn Dumper $data;
-
-		#my $send = "send_$what";
-		#$self->$send;
+		my $send = "send_$what";
+		$self->$send($data);
 	}
 
 	return;
