@@ -79,6 +79,7 @@ sub run {
 	}
 
 	my $config = decode_json path($config_file)->slurp_utf8;
+	$self->_log("Config file '$config_file' read");
 
 	#die Dumper $config;
 	#my %all;
@@ -97,6 +98,7 @@ sub run {
 	}
 
 	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
+	$self->_log("Data collection finished");
 
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 		next if not $sub->{enabled};
@@ -191,8 +193,9 @@ sub collect_cpan {
 	my $count;
 	my %unique;
 
-	my $mcpan       = MetaCPAN::Client->new;
-	my $recent      = $mcpan->recent( $self->limit );
+	my $mcpan  = MetaCPAN::Client->new;
+	my $recent = $mcpan->recent( $self->limit );
+	$self->_log('recent downloaded from MetaCPAN');
 	my $html_new    = '';
 	my $html_all    = '';
 	my $html_unique = '';
