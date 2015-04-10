@@ -101,7 +101,7 @@ sub run {
 
 	$self->fetch;
 	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
-	$self->_log("Data collection finished");
+	$self->_log('Data collection finished');
 
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 		next if not $sub->{enabled};
@@ -334,7 +334,7 @@ sub fetch_cpan {
 	}
 	$self->_log("CPAN inserted $count entries");
 	if ( not $count ) {
-		$self->_log("WARN - No new CPAN modules were added. Either limit or frequencey should be increased!");
+		$self->_log('WARN - No new CPAN modules were added. Either limit or frequencey should be increased!');
 	}
 	return;
 }
