@@ -287,8 +287,15 @@ sub collect_cpan {
 }
 
 sub fetch {
-	my ($self) = @_;
+	my ( $self, $what ) = @_;
+	if ($what) {
+		my $method = "fetch_$what";
+		$self->$method;
+		return;
+	}
+
 	$self->fetch_cpan;
+	$self->fetch_pypi;
 }
 
 sub fetch_cpan {

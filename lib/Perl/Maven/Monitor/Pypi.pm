@@ -9,6 +9,8 @@ our $VERSION = '0.11';
 sub fetch_pypi {
 	my ($self) = @_;
 
+	$self->_log('Fetching from pypi');
+
 	my $latest_url = 'https://pypi.python.org/pypi?%3Aaction=rss';
 	my $newest_url = 'https://pypi.python.org/pypi?%3Aaction=packages_rss';
 
