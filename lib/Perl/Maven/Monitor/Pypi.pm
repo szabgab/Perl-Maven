@@ -64,8 +64,8 @@ sub fetch_pypi {
 
 		my $json   = get "$data{link}/json";
 		my $distro = decode_json $json;
-		warn Dumper $distro;
-		next;
+		#warn Dumper $distro;
+		#next;
 
 		#die Dumper \%data;
 		$count_add++;
