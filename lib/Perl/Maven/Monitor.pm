@@ -101,6 +101,8 @@ sub run {
 	}
 
 	$self->fetch;
+	$self->report;
+
 	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
 	$self->_log('Data collection finished');
 
@@ -287,16 +289,80 @@ sub collect_cpan {
 	return %html;
 }
 
+my @services = qw(cpan pypi);
+
 sub fetch {
 	my ( $self, $what ) = @_;
-	if ($what) {
+
+	my @todo = $what ? ($what) : @services;
+	foreach my $what (@todo) {
 		my $method = "fetch_$what";
 		$self->$method;
-		return;
+	}
+	return;
+}
+
+sub prepare_cpan {
+	my ($self) = @_;
+	$self->_log("Prepare CPAN reports");
+
+	my $now   = time;
+	my $start = $now - 60 * 60 * $self->hours;
+	my ( $sec, $min, $hour, $day, $month, $year ) = gmtime $start;
+	my $start_time = DateTime::Tiny->new(
+		year   => 1900 + $year,
+		month  => 1 + $month,
+		day    => $day,
+		hour   => $hour,
+		minute => $min,
+		second => $sec,
+	);
+
+	#say $start_time;
+	#say scalar gmtime $start;
+
+	my %data;
+
+	my $cpan   = $self->mongodb('cpan');
+	my $recent = $cpan->find( { date => { '$gt', $start_time } } )->sort( { date => -1 } );
+	my $count  = 0;
+	while ( my $r = $recent->next ) {
+		$count++;
+
+		#print Dumper $r;
+		#<STDIN>;
+		push @{ $data{authors}{ $r->{author} } },            $r;
+		push @{ $data{distribution}{ $r->{distribution} } }, $r;
+		push @{ $data{module}{$_} }, $r for @{ $r->{modules} };
 	}
 
-	$self->fetch_cpan;
-	$self->fetch_pypi;
+	#say $count;
+
+	return \%data;
+}
+
+sub prepare_pypi {
+	my ($self) = @_;
+	$self->_log("Prepare Pypi reports");
+
+	return;
+}
+
+sub report {
+	my ( $self, $what ) = @_;
+
+	my @todo = $what ? ($what) : @services;
+	foreach my $what (@todo) {
+		my $prepare = "prepare_$what";
+		my $data    = $self->$prepare;
+
+		#warn Dumper $data;
+
+		#my $send = "send_$what";
+		#$self->$send;
+	}
+
+	return;
 }
 
 sub mongodb {

@@ -30,6 +30,7 @@ sub fetch_cpan {
 		$data{abstract}     = ( $r->abstract // '' );
 		$data{date}         = $rd;
 		$data{first}        = $r->first ? boolean::true : boolean::false;
+		$data{modules}      = $r->provides;
 
 		my $res = $cpan->find_one( { name => $data{name} } );
 		next if $res;                                        # TODO or shall we quit here?
