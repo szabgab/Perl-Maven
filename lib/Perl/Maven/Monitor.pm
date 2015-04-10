@@ -213,19 +213,41 @@ sub send_cpan {
 			$html_content .= _generate_html( \@dists );
 		}
 
-		# partials
-		if ( $sub->{partials} ) {
-			foreach my $partial ( sort @{ $sub->{partials} } ) {
+		# distribution-regex
+		if ( $sub->{'distribution-regex'} ) {
+			foreach my $regex ( sort @{ $sub->{'distribution-regex'} } ) {
 				my @dists;
 
-				#say "part $partial";
+				my $reg = qr/$regex/;
 				foreach my $r ( @{ $data->{all} } ) {
-					if ( $r->{name} =~ /$partial/ or grep {/\Q$partial/} @{ $r->{modules} } ) {
+					if ( $r->{name} =~ /$reg/ ) {
 						push @dists, $r;
 					}
 				}
 				if (@dists) {
-					$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $partial</h2>\n};
+					$html_content
+						.= qq{<h2>Changed Distributions monitored by regex for distribution name - $regex</h2>\n};
+					$html_content .= _generate_html( \@dists );
+				}
+			}
+
+			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name</h2>\n};
+			#$html_content .= _generate_html( \@dists );
+		}
+
+		# module-regex
+		if ( $sub->{'module-regex'} ) {
+			foreach my $regex ( sort @{ $sub->{'module-regex'} } ) {
+				my @dists;
+
+				my $reg = qr/$regex/;
+				foreach my $r ( @{ $data->{all} } ) {
+					if ( grep {/$reg/} @{ $r->{modules} } ) {
+						push @dists, $r;
+					}
+				}
+				if (@dists) {
+					$html_content .= qq{<h2>Changed Distributions monitored by regex for module name - $regex</h2>\n};
 					$html_content .= _generate_html( \@dists );
 				}
 			}
