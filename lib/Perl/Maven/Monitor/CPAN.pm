@@ -2,6 +2,7 @@ package Perl::Maven::Monitor::CPAN;
 use 5.010;
 use Moo::Role;
 use boolean;
+use Data::Dumper qw(Dumper);
 
 our $VERSION = '0.11';
 
@@ -18,6 +19,7 @@ sub fetch_cpan {
 	my $count = 0;
 
 	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
+		    #die Dumper $r;
 		    #my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
 		    #my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
 		    #last if $time < $now - 60 * 60 * $self->hours;
@@ -31,14 +33,17 @@ sub fetch_cpan {
 		$data{date}         = $rd;
 		$data{first}        = $r->first ? boolean::true : boolean::false;
 		$data{modules}      = $r->provides;
+		$data{version}      = $r->version;
+		$data{dependency}   = $r->dependency;
+		$data{license}      = $r->license;
 
 		my $res = $cpan->find_one( { name => $data{name} } );
-		next if $res;                                        # TODO or shall we quit here?
+		next if $res;    # TODO or shall we quit here?
 
 		$count++;
 		$cpan->insert( \%data );
 
-		#warn Dumper \%data;
+		#die Dumper \%data;
 	}
 	$self->_log("CPAN inserted $count entries");
 	if ( not $count ) {

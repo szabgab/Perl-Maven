@@ -277,15 +277,11 @@ sub send_cpan {
 		my $to = $sub->{email};
 		$self->_log("Sending to '$to'");
 
-		#say $html_body;
 		Email::Stuffer
 
 			#->text_body($text)
 			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
-			->from('Gabor Szabo <gabor@perlmaven.com>')
-
-			#->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )
-			->to($to)->send;
+			->from('Gabor Szabo <gabor@perlmaven.com>')->to($to)->send;
 	}
 	return;
 }

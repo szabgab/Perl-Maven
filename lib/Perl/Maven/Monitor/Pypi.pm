@@ -3,6 +3,9 @@ use 5.010;
 use Moo::Role;
 use XML::Feed ();
 use boolean;
+use Data::Dumper qw(Dumper);
+use LWP::Simple qw(get);
+use JSON::MaybeXS qw(decode_json encode_json);
 
 our $VERSION = '0.11';
 
@@ -35,7 +38,6 @@ sub fetch_pypi {
 	my $count_feed = 0;
 	my $count_add  = 0;
 
-DIST:
 	for my $entry ( $feed->entries ) {
 		$count_feed++;
 		my %data;
@@ -46,8 +48,8 @@ DIST:
 		#http://pypi.python.org/pypi/pyglut/1.0.0
 		$data{link} = $entry->link;
 		( $data{distribution}, $data{version} ) = $data{link} =~ m{http://pypi.python.org/pypi/([^/]+)/([^/]+)$};
-		$data{description} = $entry->content->body;
-		$data{issued}      = $entry->issued;          # DateTime
+		$data{abstract} = $entry->content->body;
+		$data{date}     = $entry->issued;          # DateTime
 		if ( $first{"http://pypi.python.org/pypi/$data{distribution}"} ) {
 			$data{first} = boolean::true;
 		}
@@ -58,8 +60,14 @@ DIST:
 				'version'      => $data{version}
 			}
 		);
-		next DIST if $res;
+		next if $res;
 
+		my $json   = get "$data{link}/json";
+		my $distro = decode_json $json;
+		warn Dumper $distro;
+		next;
+
+		#die Dumper \%data;
 		$count_add++;
 		$pypi->insert( \%data );
 
