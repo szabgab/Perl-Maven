@@ -72,6 +72,19 @@ has hours => ( is => 'ro', default  => 24 );     # shall we restrict this to the
 has conf  => ( is => 'ro' );
 has config => ( is => 'rw' );
 
+# TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
+#$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
+
+# TOTO
+#if ( $count == $self->limit ) {
+#	# report that we should incease the limit
+#	$html{footer} = sprintf
+#		q{We have reached the limit of CPAN distributions retreived that was set to %s. Some distributions might have been left out from this report.},
+#		$self->limit;
+#}
+
+my @services = qw(cpan pypi);
+
 sub BUILD {
 	my ($self) = @_;
 
@@ -89,78 +102,6 @@ sub BUILD {
 	#die Dumper $config;
 	return;
 }
-
-sub run {
-	my ($self) = @_;
-
-	my $config = $self->config;
-	my %partials;
-	my %modules;
-	my %authors;
-
-	# TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
-	#$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
-
-	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
-	$self->_log('Data collection finished');
-
-	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		my $html_content = '';
-
-	}
-
-}
-
-sub collect_cpan {
-	my ( $self, $monitored_authors, $monitored_modules, $monitored_partials ) = @_;
-	my %html;
-
-	my $now = time;
-	my $count;
-	my %unique;
-
-	my $cpan   = $self->mongodb('cpan');
-	my $recent = $cpan->find;
-
-	my $html_new    = '';
-	my $html_all    = '';
-	my $html_unique = '';
-	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
-		my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
-		my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
-		last if $time < $now - 60 * 60 * $self->hours;
-
-		my $html = '';
-
-		foreach my $module ( @{ $r->provides } ) {
-			if ( defined $html{modules}{$module} ) {
-				$html{modules}{$module} .= $html;
-			}
-		}
-
-		foreach my $partial ( keys %{ $html{partials} } ) {
-
-			#say "part $partial";
-			if ( $r->name =~ /$partial/ or grep {/\Q$partial/} @{ $r->provides } ) {
-				$html{partials}{$partial} .= $html;
-			}
-		}
-
-		#say join ', ', @{$r->provides};
-	}
-
-	if ( $count == $self->limit ) {
-
-		# report that we should incease the limit
-		$html{footer} = sprintf
-			q{We have reached the limit of CPAN distributions retreived that was set to %s. Some distributions might have been left out from this report.},
-			$self->limit;
-	}
-
-	return %html;
-}
-
-my @services = qw(cpan pypi);
 
 sub fetch {
 	my ( $self, $what ) = @_;
@@ -274,18 +215,22 @@ sub send_cpan {
 
 		# partials
 		if ( $sub->{partials} ) {
+			foreach my $partial ( sort @{ $sub->{partials} } ) {
+				my @dists;
 
-			#my @dists;
-			foreach my $part ( sort @{ $sub->{partials} } ) {
-				if ( $data->{partials}{$part} ) {
-					$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
-					$html_content .= _generate_html( $data->{partials}{$part} );
-
-					#push @dists, @{ $data->{partials}{$part} };
+				#say "part $partial";
+				foreach my $r ( @{ $data->{all} } ) {
+					if ( $r->{name} =~ /$partial/ or grep {/\Q$partial/} @{ $r->{modules} } ) {
+						push @dists, $r;
+					}
+				}
+				if (@dists) {
+					$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $partial</h2>\n};
+					$html_content .= _generate_html( \@dists );
 				}
 			}
 
-			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
+			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name</h2>\n};
 			#$html_content .= _generate_html( \@dists );
 		}
 
