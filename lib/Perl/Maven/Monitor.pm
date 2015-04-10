@@ -17,29 +17,9 @@ our $VERSION = '0.11';
 
 Run bin/monitor.pl
 
-Send details about the distributions released in the last 24 hours.
-
-Each user can have several "subsscriptions".
-
-Each "subscription" has
-<ul>
- <li>Am "email" where we are going to send the messages.</li>
- <li>A "title" that will be used in the subject line of the e-mail for easy identification of the monitor.
-</il>
-
-One or more of the following:
-
-<ul>
-  <li><b>all</b>      - (True/False.) All the recently uploaded distributions. Should be the same as the <a href="https://metacpan.org/recent">recent on MetaCPAN</a>.</li>
-  <li><b>unique</b>   - (True/False.) Filter the distribution to include each one only once. (In case more than one version was uploaded recently.)</li>
-  <li><b>new</b>      - (True/False.) This is the first time the distribution was released. <a href="https://metacpan.org/recent?f=n">MetaCPAN also provides this</a>.</li>
-  <li><b>modules</b>  - (A list of module names.) Include distributions that provide any of the listed modules.</li>
-  <li><b>author</b>   - (A list of PAUSE ids.) Include distributions released by any of the given authors.</li>
-  <li><b>partials</b> - (A list of regexes.) Any disribution where either the distribution name or any of the provided modules match the given regex.</li>
-</ul>
-
 
   Send details about the distributions released in the last ELAPSED_TIME (where ELAPSED_TIME can be 1 hour, 1 day, or 1 week)
+ <li>An "email" where we are going to send the messages.</li>
  <li>A "userid" that connects it to the PerlMaven user account which has the e-mail address in it.
  <li>An elapsed_time value which is 1, 24, or 168 (day and week in hours).
 
@@ -96,7 +76,6 @@ sub run {
 
 	#die Dumper $config;
 	#my %all;
-	my %unique;
 
 	#my %new;
 	my %partials;
@@ -111,17 +90,101 @@ sub run {
 		$authors{$_}  = '' for keys %{ $sub->{authors} };
 	}
 
-	#die Dumper \%modules;
-	#foreach my $module (keys %modules) {
-	#}
-	# fetch recent module
+	my %html = $self->collect_cpan( \%authors, \%modules, \%partials );
+
+	foreach my $sub ( @{ $config->{subscriptions} } ) {
+		next if not $sub->{enabled};
+
+		my $html_content = '';
+		if ( $sub->{all} ) {
+			$html_content .= $html{all};
+		}
+
+		if ( $sub->{unique} ) {
+			$html_content .= $html{unique};
+		}
+
+		if ( $sub->{new} ) {
+			$html_content .= $html{new};
+		}
+
+		# modules
+		my $html_modules = '';
+		foreach my $module ( sort keys %{ $sub->{modules} } ) {
+			if ( $html{modules}{$module} ) {
+				$html_modules .= $html{modules}{$module};
+			}
+		}
+		if ($html_modules) {
+			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
+			$html_content .= qq{<table>\n};
+			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+			$html_content .= $html_modules;
+			$html_content .= qq{</table>\n};
+		}
+
+		# partials
+		my $html_parts = '';
+		foreach my $part ( sort keys %{ $sub->{partials} } ) {
+			if ( $html{partials}{$part} ) {
+				$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
+				$html_content .= qq{<table>\n};
+				$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+				$html_content .= $html{partials}{$part};
+				$html_content .= qq{</table>\n};
+			}
+		}
+
+		# authors
+		my $html_authors = '';
+		foreach my $author ( sort keys %{ $sub->{authors} } ) {
+			if ( $html{authors}{$author} ) {
+				$html_authors .= $html{authors}{$author};
+			}
+		}
+		if ($html_authors) {
+			$html_content .= qq{<h2>Changed Modules by monitored authors</h2>\n};
+			$html_content .= qq{<table>\n};
+			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
+			$html_content .= $html_authors;
+			$html_content .= qq{</table>\n};
+		}
+
+		next if not $html_content;
+
+		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
+		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
+		$html_body .= $html_content;
+
+		$html_body .= $html{footer} // '';
+
+		$html_body .= qq{</body></html>\n};
+
+		my $to = $sub->{email};
+		$self->_log("Sending to '$to'");
+		Email::Stuffer
+
+			#->text_body($text)
+			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
+			->from('Gabor Szabo <gabor@perlmaven.com>')
+			->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )->to($to)->send;
+	}
+
+}
+
+sub collect_cpan {
+	my ( $self, $monitored_authors, $monitored_modules, $monitored_partials ) = @_;
+	my %html;
+	$html{authors}  = {%$monitored_authors};
+	$html{modules}  = {%$monitored_modules};
+	$html{partials} = {%$monitored_partials};
 
 	my $now = time;
 	my $count;
+	my %unique;
 
-	my $mcpan  = MetaCPAN::Client->new;
-	my $recent = $mcpan->recent( $self->limit );
-	my %html;
+	my $mcpan       = MetaCPAN::Client->new;
+	my $recent      = $mcpan->recent( $self->limit );
 	my $html_new    = '';
 	my $html_all    = '';
 	my $html_unique = '';
@@ -139,8 +202,8 @@ sub run {
 		$html .= q{<tr>};
 		$html .= sprintf q{<td><a href="http://metacpan.org/release/%s">%s</a></td>}, $r->distribution, $r->name;
 		$html .= sprintf q{<td><a href="http://metacpan.org/author/%s">%s</a></td>}, $r->author, $r->author;
-		$html .= sprintf q{<td>%s</td>},                    $r->abstract;
-		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->date;       # , ($now - $time);
+		$html .= sprintf q{<td>%s</td>}, ( $r->abstract // '' );
+		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->date;    # , ($now - $time);
 		$html .= qq{</tr>\n};
 
 		$html_all .= $html;
@@ -153,21 +216,21 @@ sub run {
 			$html_unique .= $html;
 		}
 
-		if ( defined $authors{ $r->author } ) {
-			$authors{ $r->author } .= $html;
+		if ( defined $html{authors}{ $r->author } ) {
+			$html{authors}{ $r->author } .= $html;
 		}
 
 		foreach my $module ( @{ $r->provides } ) {
-			if ( defined $modules{$module} ) {
-				$modules{$module} .= $html;
+			if ( defined $html{modules}{$module} ) {
+				$html{modules}{$module} .= $html;
 			}
 		}
 
-		foreach my $partial ( keys %partials ) {
+		foreach my $partial ( keys %{ $html{partials} } ) {
 
 			#say "part $partial";
 			if ( $r->name =~ /$partial/ or grep {/\Q$partial/} @{ $r->provides } ) {
-				$partials{$partial} .= $html;
+				$html{partials}{$partial} .= $html;
 			}
 		}
 
@@ -198,90 +261,15 @@ sub run {
 		$html{new} .= qq{</table>\n};
 	}
 
-	foreach my $sub ( @{ $config->{subscriptions} } ) {
-		next if not $sub->{enabled};
+	if ( $count == $self->limit ) {
 
-		my $html_content = '';
-		if ( $sub->{all} ) {
-			$html_content .= $html{all};
-		}
-
-		if ( $sub->{unique} ) {
-			$html_content .= $html{unique};
-		}
-
-		if ( $sub->{new} ) {
-			$html_content .= $html{new};
-		}
-
-		# modules
-		my $html_modules = '';
-		foreach my $module ( sort keys %{ $sub->{modules} } ) {
-			if ( $modules{$module} ) {
-				$html_modules .= $modules{$module};
-			}
-		}
-		if ($html_modules) {
-			$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
-			$html_content .= qq{<table>\n};
-			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-			$html_content .= $html_modules;
-			$html_content .= qq{</table>\n};
-		}
-
-		# partials
-		my $html_parts = '';
-		foreach my $part ( sort keys %{ $sub->{partials} } ) {
-			if ( $partials{$part} ) {
-				$html_content .= qq{<h2>Changed Distributions monitored by partial module name - $part</h2>\n};
-				$html_content .= qq{<table>\n};
-				$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-				$html_content .= $partials{$part};
-				$html_content .= qq{</table>\n};
-			}
-		}
-
-		# authors
-		my $html_authors = '';
-		foreach my $author ( sort keys %{ $sub->{authors} } ) {
-			if ( $authors{$author} ) {
-				$html_authors .= $authors{$author};
-			}
-		}
-		if ($html_authors) {
-			$html_content .= qq{<h2>Changed Modules by monitored authors</h2>\n};
-			$html_content .= qq{<table>\n};
-			$html_content .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
-			$html_content .= $html_authors;
-			$html_content .= qq{</table>\n};
-		}
-
-		next if not $html_content;
-
-		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
-		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
-		$html_body .= $html_content;
-
-		if ( $count == $self->limit ) {
-
-			# report that we should incease the limit
-			$html_body
-				.= sprintf
-				q{We have reached the limit of CPAN distributions retreived that was set to %s. Some distributions might have been left out from this report.},
-				$self->limit;
-		}
-		$html_body .= qq{</body></html>\n};
-
-		my $to = $sub->{email};
-		$self->_log("Sending to '$to'");
-		Email::Stuffer
-
-			#->text_body($text)
-			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
-			->from('Gabor Szabo <gabor@perlmaven.com>')
-			->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )->to($to)->send;
+		# report that we should incease the limit
+		$html{footer} = sprintf
+			q{We have reached the limit of CPAN distributions retreived that was set to %s. Some distributions might have been left out from this report.},
+			$self->limit;
 	}
 
+	return %html;
 }
 
 sub _log {
