@@ -173,7 +173,9 @@ sub run {
 			#->text_body($text)
 			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
 			->from('Gabor Szabo <gabor@perlmaven.com>')
-			->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )->to($to)->send;
+
+			#->transport( Email::Sender::Transport::SMTP->new( { host => 'mail.perlmaven.com' } ) )
+			->to($to)->send;
 	}
 
 }
