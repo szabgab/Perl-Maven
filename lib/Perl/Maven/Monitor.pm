@@ -197,7 +197,7 @@ sub send_cpan {
 			$html_content .= $self->generate_html( $data->{unique} );
 		}
 		if ( $sub->{new} ) {
-			$html_content = qq{<h2>Recently uploaded new distributions</h2>\n};
+			$html_content .= qq{<h2>Recently uploaded new distributions</h2>\n};
 			$html_content .= $self->generate_html( $data->{new} );
 		}
 
