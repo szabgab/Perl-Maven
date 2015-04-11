@@ -67,7 +67,7 @@ use the locally stored data to fetch the "most recent" list
 =cut
 
 has root  => ( is => 'ro', required => 1 );
-has limit => ( is => 'ro', default  => 1000 );
+has limit => ( is => 'ro', default  => 100 );
 has hours => ( is => 'ro', default  => 24 );     # shall we restrict this to these numbers 1, 24, 168  ??
 has conf  => ( is => 'ro' );
 has config => ( is => 'rw' );

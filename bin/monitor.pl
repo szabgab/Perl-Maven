@@ -28,7 +28,7 @@ exit;
 sub usage {
 	print <<"USAGE";
 Usage: $0
-    --limit 1000
+    --limit 100
     --hours 24       (1, 24, or 168)
     --conf path/to/config/file
     --fetch [cpan|pypi]   Get data from the pypi RSS feed or from the recent API of MetaCPAN.
