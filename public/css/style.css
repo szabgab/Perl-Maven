@@ -374,3 +374,14 @@ video {
  display: none;
 }
 
+.testimonial {
+   width: 400px;
+   padding: 10px;
+   border: 1px solid;
+}
+
+.testimonial .person {
+   background-color: #EEE;
+}
+
+
