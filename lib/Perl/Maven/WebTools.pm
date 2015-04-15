@@ -341,6 +341,7 @@ sub pm_user_info {
 
 	if ( mymaven->{conf}{enable_popups} ) {
 		if ( $url ne $referrer ) {
+
 			#my $seen = session('popup_yapc_na');
 			#if ( not $seen or $seen < time - 60 * 60 * 24 ) {
 
