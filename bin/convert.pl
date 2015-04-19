@@ -21,12 +21,19 @@ my $dbh = DBI->connect(
 	}
 );
 
+clean_mongo();
 add_users();
 add_products();
 add_subscriptions();
 add_transactions();
 
 exit;
+
+sub clean_mongo {
+	foreach my $coll (qw(user products verification transactions paypal_transactions)) {
+		$db->{db}->get_collection($coll)->drop;
+	}
+}
 
 sub add_users {
 	my %whitelist;
@@ -121,7 +128,7 @@ sub add_transactions {
 				second => $time[0],
 			);
 		}
-		$t->{paypal_id} = delete $t->{id};
+		$h->{paypal_id} = delete $h->{id};
 		$db->{db}->get_collection('paypal_transactions')->insert($h);
 	}
 }
