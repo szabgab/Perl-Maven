@@ -102,13 +102,15 @@ subtest users => sub {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
 				'name'  => 'Beginner Perl Maven e-book',
-				'price' => '0.01'
+				'price' => '0.01',
+				cnt     => 0,
 			},
 			'perl_maven_cookbook' => {
 				'_id'   => $ID,
 				'code'  => 'perl_maven_cookbook',
 				'name'  => 'Perl Maven Cookbook',
-				'price' => 0
+				'price' => 0,
+				cnt     => 0,
 			}
 		}
 		};
@@ -153,13 +155,13 @@ subtest products => sub {
 			'code'  => 'beginner_perl_maven_ebook',
 			'_id'   => $ID,
 			'name'  => 'Beginner Perl Maven e-book',
-			'price' => '0.01'
+			'price' => '0.01',
 		},
 		'perl_maven_cookbook' => {
 			'code'  => 'perl_maven_cookbook',
 			'_id'   => $ID,
 			'name'  => 'Perl Maven Cookbook',
-			'price' => 0
+			'price' => 0,
 		}
 	);
 
@@ -241,19 +243,22 @@ subtest subscriptions => sub {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
 				'name'  => 'Beginner Perl Maven e-book',
-				'price' => '0.01'
+				'price' => '0.01',
+				cnt     => 1,
 			},
 			'mars_landing_handbook' => {
 				'_id'   => $ID,
 				'code'  => 'mars_landing_handbook',
 				'name'  => 'Mars Landing Handbook',
-				'price' => '20.4'
+				'price' => '20.4',
+				cnt     => 1,
 			},
 			'perl_maven_cookbook' => {
 				'_id'   => $ID,
 				'code'  => 'perl_maven_cookbook',
 				'name'  => 'Perl Maven Cookbook',
-				'price' => 0
+				'price' => 0,
+				cnt     => 0,
 			}
 		}
 		},
@@ -300,19 +305,22 @@ subtest subscriptions => sub {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
 				'name'  => 'Beginner Perl Maven e-book',
-				'price' => '0.01'
+				'price' => '0.01',
+				cnt     => 1,
 			},
 			'mars_landing_handbook' => {
 				'_id'   => $ID,
 				'code'  => 'mars_landing_handbook',
 				'name'  => 'Mars Landing Handbook',
-				'price' => '20.4'
+				'price' => '20.4',
+				cnt     => 0,
 			},
 			'perl_maven_cookbook' => {
 				'_id'   => $ID,
 				'code'  => 'perl_maven_cookbook',
 				'name'  => 'Perl Maven Cookbook',
-				'price' => 0
+				'price' => 0,
+				cnt     => 0,
 			}
 		}
 		},
@@ -429,19 +437,22 @@ subtest update_user => sub {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
 				'name'  => 'Beginner Perl Maven e-book',
-				'price' => '0.01'
+				'price' => '0.01',
+				cnt     => 1,
 			},
 			'perl_maven_cookbook' => {
 				'_id'   => $ID,
 				'code'  => 'perl_maven_cookbook',
 				'name'  => 'Perl Maven Cookbook',
-				'price' => 0
+				'price' => 0,
+				cnt     => 0,
 			},
 			'mars_landing_handbook' => {
 				'_id'   => $ID,
 				'code'  => 'mars_landing_handbook',
 				'name'  => 'Mars Landing Handbook',
-				'price' => '20.4'
+				'price' => '20.4',
+				cnt     => 0,
 			},
 		}
 		};
