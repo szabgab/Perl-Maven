@@ -68,7 +68,7 @@ use the locally stored data to fetch the "most recent" list
 
 has root  => ( is => 'ro', required => 1 );
 has limit => ( is => 'ro', default  => 100 );
-has hours => ( is => 'ro', default  => 24 );     # shall we restrict this to these numbers 1, 24, 168  ??
+has hours => ( is => 'ro', default  => 24 );    # shall we restrict this to these numbers 1, 24, 168  ??
 has conf  => ( is => 'ro' );
 has config => ( is => 'rw' );
 
@@ -114,9 +114,9 @@ sub fetch {
 	return;
 }
 
-sub prepare_cpan {
-	my ($self) = @_;
-	$self->_log('Prepare CPAN reports');
+sub prepare {
+	my ( $self, $source ) = @_;
+	$self->_log("Prepare $source reports");
 
 	my $now   = time;
 	my $start = $now - 60 * 60 * $self->hours;
@@ -135,9 +135,9 @@ sub prepare_cpan {
 
 	my %data;
 
-	my $cpan   = $self->mongodb('cpan');
-	my $recent = $cpan->find( { date => { '$gt', $start_time } } )->sort( { date => -1 } );
-	my $count  = 0;
+	my $collection = $self->mongodb($source);
+	my $recent     = $collection->find( { date => { '$gt', $start_time } } )->sort( { date => -1 } );
+	my $count      = 0;
 	my %unique;
 	while ( my $r = $recent->next ) {
 		$count++;
@@ -297,20 +297,14 @@ sub send_pypi {
 	my ( $self, $data ) = @_;
 }
 
-sub prepare_pypi {
-	my ($self) = @_;
-	$self->_log('Prepare Pypi reports');
-
-	return;
-}
-
 sub report {
 	my ( $self, $what ) = @_;
 
 	my @todo = $what ? ($what) : @services;
 	foreach my $what (@todo) {
-		my $prepare = "prepare_$what";
-		my $data    = $self->$prepare;
+
+		#my $prepare = "prepare_$what";
+		my $data = $self->prepare($what);
 
 		#warn Dumper $data;
 		my $send = "send_$what";
