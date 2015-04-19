@@ -15,10 +15,7 @@ use Test::WWW::Mechanize::PSGI;
 t::lib::Test::setup();
 
 my $url      = "http://$t::lib::Test::DOMAIN";
-my $EMAIL    = 'gabor@perlmaven.com';
-my $EMAIL2   = 'other@perlmaven.com';
-my $EMAIL3   = 'zorg@perlmaven.com';
-my $EMAIL4   = 'foobar@perlmaven.com';
+my @EMAIL    = ( 'gabor@perlmaven.com', 'other@perlmaven.com', 'zorg@perlmaven.com', 'foobar@perlmaven.com' );
 my @PASSWORD = ( '123456', 'abcdef', 'secret', 'qwerty' );
 my @NAMES    = ( 'Foo Bar', );
 
@@ -116,7 +113,7 @@ subtest 'subscribe' => sub {
 		{
 			form_name => 'registration_form',
 			fields    => {
-				email => $EMAIL,
+				email => $EMAIL[0],
 			},
 		},
 		'has registeration form'
@@ -127,7 +124,7 @@ subtest 'subscribe' => sub {
 	# Returns a list of hashesh. Each has has 4 keys:
 	# successes, failures, envelope, email
 	#diag join ', ', keys %{ $mails[0] };
-	is_deeply $mails[0]{successes}, [$EMAIL];
+	is_deeply $mails[0]{successes}, [ $EMAIL[0] ];
 	is_deeply $mails[0]{failures},  [];
 
 	#diag explain $mails[0]{successes};
@@ -173,7 +170,7 @@ subtest 'subscribe' => sub {
 	my $mail3 = $mails[2]{email}->as_string;
 
 	like $mail2, qr{Thank you for registering}, 'thank you mail';
-	like $mail3, qr{$EMAIL has registered},     'self reporting';
+	like $mail3, qr{$EMAIL[0] has registered},  'self reporting';
 
 	# hit it again
 	$w->get_ok($set_url);
@@ -211,7 +208,7 @@ subtest 'subscribe' => sub {
 };
 
 {
-	my $id = $db->add_registration( { email => $EMAIL3 } );
+	my $id = $db->add_registration( { email => $EMAIL[2] } );
 	$db->set_password( $id, $PASSWORD[2] );
 }
 
@@ -242,7 +239,7 @@ subtest 'ask for password reset, then login' => sub {
 		{
 			form_name => 'send_reset_pw',
 			fields    => {
-				email => $EMAIL,
+				email => $EMAIL[0],
 			},
 		},
 		'ask to reset password'
@@ -279,7 +276,7 @@ subtest 'ask for password reset, then login' => sub {
 	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
 
 	# white-box:
-	my $user = $db->get_user_by_email($EMAIL);
+	my $user = $db->get_user_by_email( $EMAIL[0] );
 	is substr( $user->{password}, 0, 7 ), '{CRYPT}';
 
 	#diag('now logout');
@@ -293,7 +290,7 @@ subtest 'ask for password reset, then login' => sub {
 		{
 			form_name => 'login',
 			fields    => {
-				email    => $EMAIL,
+				email    => $EMAIL[0],
 				password => $PASSWORD[0],
 			},
 		},
@@ -340,7 +337,7 @@ subtest 'change password while logged in' => sub {
 	$w->back;
 
 	# white-box:
-	my $user = $db->get_user_by_email($EMAIL);
+	my $user = $db->get_user_by_email( $EMAIL[0] );
 	is substr( $user->{password}, 0, 7 ), '{CRYPT}';
 
 	$w->submit_form_ok(
@@ -365,7 +362,7 @@ subtest 'change password while logged in' => sub {
 		{
 			form_name => 'login',
 			fields    => {
-				email    => $EMAIL,
+				email    => $EMAIL[0],
 				password => $PASSWORD[0],
 			},
 		},
@@ -381,7 +378,7 @@ subtest 'change password while logged in' => sub {
 		{
 			form_name => 'login',
 			fields    => {
-				email    => $EMAIL,
+				email    => $EMAIL[0],
 				password => $PASSWORD[1],
 			},
 		},
@@ -394,7 +391,7 @@ subtest 'change password while logged in' => sub {
 
 	#diag($w->content);
 
-	my $other_user = $db->get_user_by_email($EMAIL3);
+	my $other_user = $db->get_user_by_email( $EMAIL[2] );
 	is $other_user->{password}, $PASSWORD[2], 'other use still exists with old password';
 };
 
@@ -432,7 +429,7 @@ subtest change_email => sub {
 		{
 			form_name => 'change_email',
 			fields    => {
-				email => $EMAIL2,
+				email => $EMAIL[1],
 			},
 		},
 		'change_email'
@@ -452,20 +449,20 @@ subtest change_email => sub {
 	$w->get_ok("$url/pm/verify2/1234567");
 	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
-	my $before = $db->get_user_by_email($EMAIL);
-	is $before->{email}, $EMAIL, 'old email';
+	my $before = $db->get_user_by_email( $EMAIL[0] );
+	is $before->{email}, $EMAIL[0], 'old email';
 
 	$w->get_ok($set_url);
 	$w->content_like( qr{Email updated successfully.}, 'updated successfully mesage' );
 
-	my $after = $db->get_user_by_email($EMAIL2);
-	is $after->{email}, $EMAIL2, 'old email';
+	my $after = $db->get_user_by_email( $EMAIL[1] );
+	is $after->{email}, $EMAIL[1], 'old email';
 
 	$w->get_ok($set_url);
 	$w->content_like( qr{Invalid or expired verification code.}, 'invalid verification code' );
 
-	my $other_user = $db->get_user_by_email($EMAIL3);
-	is $other_user->{email}, $EMAIL3, 'other use still exists with old email';
+	my $other_user = $db->get_user_by_email( $EMAIL[2] );
+	is $other_user->{email}, $EMAIL[2], 'other use still exists with old email';
 };
 
 subtest whitelist => sub {
@@ -512,7 +509,7 @@ subtest register_with_password => sub {
 		{
 			form_name => 'registration_form',
 			fields    => {
-				email    => $EMAIL4,
+				email    => $EMAIL[3],
 				password => $PASSWORD[3],
 			},
 		},
@@ -526,7 +523,7 @@ subtest register_with_password => sub {
 		{
 			form_name => 'login',
 			fields    => {
-				email    => $EMAIL4,
+				email    => $EMAIL[3],
 				password => $PASSWORD[3],
 			},
 		},
@@ -548,9 +545,9 @@ subtest admin => sub {
 
 	#diag Dumper $people;
 	is scalar @$people, 3;
-	is $people->[0]{email}, $EMAIL4;
-	is $people->[1]{email}, $EMAIL2;
-	is $people->[2]{email}, $EMAIL3;
+	is $people->[0]{email}, $EMAIL[3];
+	is $people->[1]{email}, $EMAIL[1];
+	is $people->[2]{email}, $EMAIL[2];
 	is $people->[0]{admin}, undef;
 
 	$db->update_user( $people->[0]{_id}, admin => boolean::true );
@@ -566,7 +563,7 @@ subtest admin => sub {
 		{
 			form_name => 'login',
 			fields    => {
-				email    => $EMAIL4,
+				email    => $EMAIL[3],
 				password => $PASSWORD[3],
 			},
 		},
