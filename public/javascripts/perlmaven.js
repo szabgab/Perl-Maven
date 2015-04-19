@@ -140,7 +140,8 @@ function admin_show_user_details(data, status, jqXHR) {
 	for (var i = 0; i < data['people'].length; i++) { 
 		html += '<tr>';
         html += '<td>' + data['people'][i]['email'] + '</td>';
-        html += '<td>' + new Date(data['people'][i]['verify_time'] * 1000) + '</td>';
+        //html += '<td>' + new Date(data['people'][i]['verify_time']) + '</td>';
+        html += '<td>' + data['people'][i]['verify_time'] + '</td>';
 		html += '<td>';
 			for (var j=0; j < data['people'][i]['subscriptions'].length; j++) {
 				html += data['people'][i]['subscriptions'][j] + '<br>';
