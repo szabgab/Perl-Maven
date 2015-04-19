@@ -39,6 +39,7 @@ sub new {
 }
 
 sub instance {
+	die if not $instance;
 	return $instance;
 }
 
