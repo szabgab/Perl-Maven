@@ -22,7 +22,7 @@ my $EMAIL4   = 'foobar@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', 'secret', 'qwerty' );
 my @NAMES    = ( 'Foo Bar', );
 
-plan tests => 9;
+plan tests => 10;
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 
@@ -504,7 +504,7 @@ subtest whitelist => sub {
 };
 
 subtest register_with_password => sub {
-	plan tests => 6;
+	plan tests => 8;
 
 	my $x = Test::WWW::Mechanize::PSGI->new( app => $app );
 	$x->get_ok("$url/pm/register");
@@ -534,6 +534,78 @@ subtest register_with_password => sub {
 	);
 	$x->content_like(qr{<a href="/pm/logout">logout</a>});
 
+	$x->get_ok("$url/admin/user_info.json?email=perl");
+	my $data = from_json $x->content;
+	is_deeply $data, { error => 'You dont have admin rights.', show_right => 0 };
+
 	#diag $x->content;
+};
+
+subtest admin => sub {
+	plan tests => 10;
+
+	my $people = $db->get_people('');
+
+	#diag Dumper $people;
+	is scalar @$people, 3;
+	is $people->[0]{email}, $EMAIL4;
+	is $people->[1]{email}, $EMAIL2;
+	is $people->[2]{email}, $EMAIL3;
+	is $people->[0]{admin}, undef;
+
+	$db->update_user( $people->[0]{_id}, admin => boolean::true );
+
+	my $new_people = $db->get_people('');
+
+	#diag Dumper $new_people;
+	ok $new_people->[0]{admin};
+
+	my $admin = Test::WWW::Mechanize::PSGI->new( app => $app );
+	$admin->get_ok("$url/pm/login");
+	$admin->submit_form_ok(
+		{
+			form_name => 'login',
+			fields    => {
+				email    => $EMAIL4,
+				password => $PASSWORD[3],
+			},
+		},
+		'login'
+	);
+	$admin->get_ok("$url/admin/user_info.json?email=perl");
+	my $data = from_json $admin->content;
+
+	#diag $admin->content;
+	is_deeply $data,
+		{
+		people => [
+			{
+				email         => 'foobar@perlmaven.com',
+				admin         => 1,
+				whitelist_on  => 0,
+				subscriptions => [],
+			},
+			{
+				email        => 'other@perlmaven.com',
+				whitelist_on => 0,
+				whitelist    => [
+					{
+						mask => '255.255.255.255',
+						note => 'Added automatically when whitelist was enabled',
+						ip   => '127.0.0.1',
+					}
+				],
+				admin         => 0,
+				name          => 'Foo Bar',
+				subscriptions => ['perl_maven_cookbook']
+			},
+			{
+				email         => 'zorg@perlmaven.com',
+				whitelist_on  => 0,
+				admin         => 0,
+				subscriptions => [],
+			},
+		],
+		};
 };
 
