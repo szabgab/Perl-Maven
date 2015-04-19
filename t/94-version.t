@@ -11,6 +11,7 @@ eval q{use Test::Version 1.003001 qw( version_all_ok ), {
 };
 plan skip_all => "Test::Version 1.003001 required for testing version numbers"
 	if $@;
+diag "Using Test::Version v$Test::Version::VERSION";
 version_all_ok();
 done_testing;
 

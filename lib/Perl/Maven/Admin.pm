@@ -8,13 +8,6 @@ use Perl::Maven::Sendmail qw(send_mail);
 
 use DateTime::Tiny;
 
-package DateTime::Tiny {
-
-	sub TO_JSON {
-		shift->as_string;
-	}
-};
-
 our $VERSION = '0.11';
 
 get '/admin' => sub {
@@ -137,6 +130,13 @@ sub admin_check {
 
 	return;
 }
+
+package DateTime::Tiny {
+
+	sub TO_JSON {
+		shift->as_string;
+	}
+};
 
 true;
 
