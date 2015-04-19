@@ -157,8 +157,9 @@ sub prepare {
 	return \%data;
 }
 
-sub generate_html {
+sub generate_html_cpan {
 	my ( $self, $data ) = @_;
+
 	my $html = qq{<table>\n};
 	$html .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th><th>Date</th></tr>\n};
 
@@ -175,30 +176,54 @@ sub generate_html {
 	return $html;
 }
 
-sub send_cpan {
+sub generate_html_pypi {
 	my ( $self, $data ) = @_;
-	$self->_log('Send CPAN reports');
+
+	#die Dumper $data;
+
+	my $html = qq{<table>\n};
+	$html .= qq{<tr><th>Distribution</th><th>Author</th><th>Abstract</th></tr>\n};
+
+	for my $r (@$data) {
+		$html .= q{<tr>};
+		$html .= sprintf q{<td><a href="https://pypi.python.org/pypi/%s">%s</a></td>}, $r->{distribution},
+			$r->{distribution};
+		$html .= sprintf q{<td>%s</td>}, $r->{author};
+		$html .= sprintf q{<td>%s</td>}, ( $r->{abstract} // '' );
+		$html .= qq{</tr>\n};
+	}
+	$html .= qq{</table>\n};
+
+	return $html;
+
+}
+
+sub send {
+	my ( $self, $source, $data ) = @_;
+	$self->_log("Send $source reports");
 
 	my $config = $self->config;
 	foreach my $sub ( @{ $config->{subscriptions} } ) {
 
 		#print Dumper $sub;
 		next if not $sub->{enabled};
-		next if $sub->{source} ne 'cpan';
+		next if $sub->{source} ne $source;
+
+		my $generate_html = "generate_html_$source";
 
 		my $html_content = '';
 		if ( $sub->{all} ) {
 			$html_content .= qq{<h2>All the recently uploaded distributions</h2>\n};
-			$html_content .= $self->generate_html( $data->{all} );
+			$html_content .= $self->$generate_html( $data->{all} );
 		}
 
 		if ( $sub->{unique} ) {
 			$html_content .= qq{<h2>Unique recently uploaded distributions</h2>\n};
-			$html_content .= $self->generate_html( $data->{unique} );
+			$html_content .= $self->$generate_html( $data->{unique} );
 		}
 		if ( $sub->{new} ) {
 			$html_content .= qq{<h2>Recently uploaded new distributions</h2>\n};
-			$html_content .= $self->generate_html( $data->{new} );
+			$html_content .= $self->$generate_html( $data->{new} );
 		}
 
 		# modules
@@ -211,7 +236,7 @@ sub send_cpan {
 			}
 			if (@dists) {
 				$html_content .= qq{<h2>Changed Modules monitored by module name</h2>\n};
-				$html_content .= $self->generate_html( \@dists );
+				$html_content .= $self->$generate_html( \@dists );
 			}
 		}
 
@@ -229,12 +254,12 @@ sub send_cpan {
 				if (@dists) {
 					$html_content
 						.= qq{<h2>Changed Distributions monitored by regex for distribution name - $regex</h2>\n};
-					$html_content .= $self->generate_html( \@dists );
+					$html_content .= $self->$generate_html( \@dists );
 				}
 			}
 
 			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name</h2>\n};
-			#$html_content .= $self->generate_html( \@dists );
+			#$html_content .= $self->$generate_html( \@dists );
 		}
 
 		# module-regex
@@ -250,12 +275,12 @@ sub send_cpan {
 				}
 				if (@dists) {
 					$html_content .= qq{<h2>Changed Distributions monitored by regex for module name - $regex</h2>\n};
-					$html_content .= $self->generate_html( \@dists );
+					$html_content .= $self->$generate_html( \@dists );
 				}
 			}
 
 			#$html_content .= qq{<h2>Changed Distributions monitored by partial module name</h2>\n};
-			#$html_content .= $self->generate_html( \@dists );
+			#$html_content .= $self->$generate_html( \@dists );
 		}
 
 		# authors
@@ -263,15 +288,15 @@ sub send_cpan {
 			foreach my $author ( sort @{ $sub->{authors} } ) {
 				if ( $data->{authors}{$author} ) {
 					$html_content .= qq{<h2>Changed Modules by monitored authors - $author</h2>\n};
-					$html_content .= $self->generate_html( $data->{authors}{$author} );
+					$html_content .= $self->$generate_html( $data->{authors}{$author} );
 				}
 			}
 		}
 
 		next if not $html_content;
 
-		my $html_body = qq{<html><head><title>CPAN</title></head><body>\n};
-		$html_body .= qq{<h1>Recently uploaded CPAN distributions</h1>\n};
+		my $html_body = qq{<html><head><title>$source</title></head><body>\n};
+		$html_body .= qq{<h1>Recently uploaded $source distributions</h1>\n};
 		$html_body .= $html_content;
 
 		#		$html_body .= $html{footer} // '';
@@ -287,14 +312,10 @@ sub send_cpan {
 		Email::Stuffer
 
 			#->text_body($text)
-			->html_body($html_body)->subject("Recently uploaded CPAN distributions - $sub->{title}")
+			->html_body($html_body)->subject("Recently uploaded $source distributions - $sub->{title}")
 			->from('Gabor Szabo <gabor@perlmaven.com>')->to($to)->send;
 	}
 	return;
-}
-
-sub send_pypi {
-	my ( $self, $data ) = @_;
 }
 
 sub report {
@@ -307,8 +328,7 @@ sub report {
 		my $data = $self->prepare($what);
 
 		#warn Dumper $data;
-		my $send = "send_$what";
-		$self->$send($data);
+		$self->send( $what, $data );
 	}
 
 	return;
