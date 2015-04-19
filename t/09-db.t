@@ -86,6 +86,7 @@ subtest users => sub {
 	#diag explain $all;
 
 	my $stats = $db->stats;
+	delete $stats->{product_list};
 
 	#diag explain $stats;
 	cmp_deeply $stats,
@@ -227,6 +228,7 @@ subtest subscriptions => sub {
 	is_deeply $users->[0]{subscriptions}, [ 'beginner_perl_maven_ebook', 'mars_landing_handbook' ], 'subscribed';
 
 	my $stats1 = $db->stats;
+	delete $stats1->{product_list};
 
 	#diag explain $stats1;
 	cmp_deeply $stats1,
@@ -289,6 +291,7 @@ subtest subscriptions => sub {
 	is_deeply $users->[0]{subscriptions}, [], 'empty again';
 
 	my $stats2 = $db->stats;
+	delete $stats2->{product_list};
 
 	#diag explain $stats;
 	cmp_deeply $stats2,
@@ -423,6 +426,7 @@ subtest update_user => sub {
 	isa_ok $user2->{verify_time}, 'DateTime::Tiny';
 
 	my $stats = $db->stats;
+	delete $stats->{product_list};
 	cmp_deeply $stats,
 		{
 		'all_users'    => '4',

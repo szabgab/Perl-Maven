@@ -230,6 +230,7 @@ sub stats {
 	}
 
 	my %stats = ( products => $products );
+	$stats{product_list} = [ sort { $a->{code} cmp $b->{code} } values %$products ];
 
 	#$stats{all_subs}
 	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});

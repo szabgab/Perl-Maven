@@ -55,9 +55,9 @@ elsif ( $opt{stats} ) {
 	my $format = "%-35s %5s\n";
 	printf $format, 'Product code', 'Number of subscribers';
 
-	#foreach my $code ( sort keys %{ $stats->{products} } ) {
-	#	printf $format, $stats->{products}{$code}{code}, $stats->{products}{$code}{cnt},;
-	#}
+	foreach my $prod ( @{ $stats->{product_list} } ) {
+		printf $format, $prod->{code}, $prod->{cnt},;
+	}
 	say '-' x 45;
 
 	#printf $format, q{Total 'purchases':},     $stats->{all_subs};

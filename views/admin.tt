@@ -5,8 +5,8 @@ Admin page. For authorized users only.
 
 <table>
 <tr><td>Product code</td><td>Number of subscribers</td></tr>
-<% FOR code IN stats.products.sort %>
-   <tr><td><% stats.products.$code.code %></td><td><% stats.products.$code.cnt %></td></tr>
+<% FOR prod IN stats.product_list %>
+   <tr><td><% prod.code %></td><td><% prod.cnt %></td></tr>
 <% END %>
 </table>
 <hr>
