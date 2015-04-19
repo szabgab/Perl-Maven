@@ -4,6 +4,7 @@ use Dancer2 appname => 'Perl::Maven';
 use Dancer2::Plugin::Passphrase qw(passphrase);
 use Email::Valid ();
 use Digest::SHA  ();
+use Data::Dumper qw(Dumper);
 
 use Perl::Maven::WebTools
 	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template pm_user_info);
@@ -327,9 +328,9 @@ post '/pm/whitelist' => sub {
 			my $mask = '255.255.255.255';
 
 			my $whitelist = $db->get_whitelist($uid);
-			debug($whitelist);
+
+			#debug("Whitelist for uid='$uid': " . Dumper $whitelist);
 			my $found = grep { $_->{ip} eq $ip and $_->{mask} eq $mask } @$whitelist;
-			debug("Whitelist for $uid");
 			if ( not $found ) {
 				my $ret = $db->add_to_whitelist(
 					$uid,
@@ -339,7 +340,8 @@ post '/pm/whitelist' => sub {
 						note => 'Added automatically when whitelist was enabled'
 					}
 				);
-				debug($ret);
+
+				#debug("Whitelist added to uid='$uid': " . Dumper $ret);
 			}
 			return pm_message('whitelist_enabled');
 		}

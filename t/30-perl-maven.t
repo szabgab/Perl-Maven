@@ -12,6 +12,8 @@ use Test::Most;
 use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
 
+my $DATE = re('^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$');
+
 t::lib::Test::setup();
 
 my $url      = "http://$t::lib::Test::DOMAIN";
@@ -573,7 +575,7 @@ subtest admin => sub {
 	my $data = from_json $admin->content;
 
 	#diag $admin->content;
-	is_deeply $data,
+	cmp_deeply $data,
 		{
 		people => [
 			{
@@ -581,6 +583,7 @@ subtest admin => sub {
 				admin         => 1,
 				whitelist_on  => 0,
 				subscriptions => [],
+				verify_time   => '',
 			},
 			{
 				email        => 'other@perlmaven.com',
@@ -594,13 +597,15 @@ subtest admin => sub {
 				],
 				admin         => 0,
 				name          => 'Foo Bar',
-				subscriptions => ['perl_maven_cookbook']
+				subscriptions => ['perl_maven_cookbook'],
+				verify_time   => $DATE,
 			},
 			{
 				email         => 'zorg@perlmaven.com',
 				whitelist_on  => 0,
 				admin         => 0,
 				subscriptions => [],
+				verify_time   => '',
 			},
 		],
 		};

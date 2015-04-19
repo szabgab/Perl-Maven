@@ -1,8 +1,19 @@
 package Perl::Maven::Admin;
 use Dancer2 appname => 'Perl::Maven';
+use Data::Dumper qw(Dumper);
+use Cpanel::JSON::XS ();    # qw(encode_json decode_json);
 
 use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code pm_error pm_template);
 use Perl::Maven::Sendmail qw(send_mail);
+
+use DateTime::Tiny;
+
+package DateTime::Tiny {
+
+	sub TO_JSON {
+		shift->as_string;
+	}
+};
 
 our $VERSION = '0.11';
 
@@ -64,11 +75,16 @@ get '/admin/user_info.json' => sub {
 		$p->{admin}        = $p->{admin}        ? 1 : 0;
 		$p->{whitelist_on} = $p->{whitelist_on} ? 1 : 0;
 		delete $p->{register_time};
-		delete $p->{verify_time};
+
+		#debug(Dumper $p->{verify_time});
+		#delete $p->{verify_time};
 	}
 
 	#debug($people);
-	return to_json { people => $people };
+
+	my $json = Cpanel::JSON::XS->new;
+	$json->convert_blessed(1);
+	return $json->encode( { people => $people } );
 };
 
 sub admin_check {
