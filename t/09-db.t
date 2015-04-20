@@ -91,14 +91,16 @@ subtest users => sub {
 	#diag explain $stats;
 	cmp_deeply $stats,
 		{
-		'all_users'    => 4,
-		'no_password'  => 0,
-		'verified'     => 0,
-		'not_verified' => 4,
-		'has_password' => 0,
-		'new_password' => 0,
-		'old_password' => 0,
-		'products'     => {
+		'all_users'     => 4,
+		'no_password'   => 0,
+		'verified'      => 0,
+		'not_verified'  => 4,
+		'has_password'  => 0,
+		'new_password'  => 0,
+		'old_password'  => 0,
+		'all_subs'      => 0,
+		'distinct_subs' => 0,
+		'products'      => {
 			'beginner_perl_maven_ebook' => {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
@@ -233,14 +235,16 @@ subtest subscriptions => sub {
 	#diag explain $stats1;
 	cmp_deeply $stats1,
 		{
-		'all_users'    => 4,
-		'no_password'  => 0,
-		'verified'     => 0,
-		'not_verified' => 4,
-		'has_password' => 0,
-		'new_password' => 0,
-		'old_password' => 0,
-		'products'     => {
+		'all_users'     => 4,
+		'no_password'   => 0,
+		'verified'      => 0,
+		'not_verified'  => 4,
+		'has_password'  => 0,
+		'new_password'  => 0,
+		'old_password'  => 0,
+		'all_subs'      => 2,
+		'distinct_subs' => 1,
+		'products'      => {
 			'beginner_perl_maven_ebook' => {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
@@ -296,14 +300,16 @@ subtest subscriptions => sub {
 	#diag explain $stats;
 	cmp_deeply $stats2,
 		{
-		'all_users'    => 4,
-		'no_password'  => 0,
-		'verified'     => 0,
-		'not_verified' => 4,
-		'has_password' => 0,
-		'new_password' => 0,
-		'old_password' => 0,
-		'products'     => {
+		'all_users'     => 4,
+		'no_password'   => 0,
+		'verified'      => 0,
+		'not_verified'  => 4,
+		'has_password'  => 0,
+		'new_password'  => 0,
+		'old_password'  => 0,
+		'all_subs'      => 1,
+		'distinct_subs' => 1,
+		'products'      => {
 			'beginner_perl_maven_ebook' => {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',
@@ -429,14 +435,16 @@ subtest update_user => sub {
 	delete $stats->{product_list};
 	cmp_deeply $stats,
 		{
-		'all_users'    => '4',
-		'no_password'  => '1',
-		'not_verified' => '3',
-		'verified'     => 1,
-		'has_password' => 1,
-		'new_password' => 0,
-		'old_password' => 1,
-		'products'     => {
+		'all_users'     => '4',
+		'no_password'   => '1',
+		'not_verified'  => '3',
+		'verified'      => 1,
+		'has_password'  => 1,
+		'new_password'  => 0,
+		'old_password'  => 1,
+		'all_subs'      => 1,
+		'distinct_subs' => 1,
+		'products'      => {
 			'beginner_perl_maven_ebook' => {
 				'_id'   => $ID,
 				'code'  => 'beginner_perl_maven_ebook',

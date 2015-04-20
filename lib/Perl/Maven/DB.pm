@@ -223,20 +223,31 @@ sub stats {
 
 	my $products = $self->get_products;
 
+	my $all_subs = 0;
 	foreach my $code ( keys %$products ) {
 		my $count = $self->{db}->get_collection('user')
 			->find( { 'subscriptions' => { '$elemMatch' => { '$eq' => $code } } } )->count;
 		$products->{$code}{cnt} = $count;
+		$all_subs += $count if $code ne 'perl_maven_cookbook';
 	}
 
 	my %stats = ( products => $products );
 	$stats{product_list} = [ sort { $a->{code} cmp $b->{code} } values %$products ];
 
-	#$stats{all_subs}
-	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(uid) FROM subscription WHERE pid != 1});
-	#$stats{distinct_subs}
-	#	= $self->{dbh}->selectrow_array(q{SELECT COUNT(DISTINCT(uid)) FROM subscription WHERE pid != 1});
+	$stats{all_subs} = $all_subs;
 
+	my $all_users_with_subscription
+		= $self->{db}->get_collection('user')->find( { 'subscriptions' => { '$not' => { '$size' => 0 } } } )->count;
+	my $free_only_subs = $self->{db}->get_collection('user')->find(
+		{
+			'$and' => [
+				{ 'subscriptions' => { '$size'      => 1 } },
+				{ 'subscriptions' => { '$elemMatch' => { '$eq' => 'perl_maven_cookbook' } } }
+			]
+		}
+	)->count;
+
+	$stats{distinct_subs} = $all_users_with_subscription - $free_only_subs;
 	$stats{all_users}
 		= $self->{db}->get_collection('user')->find()->count;
 	$stats{verified}
