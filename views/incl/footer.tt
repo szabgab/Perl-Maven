@@ -78,6 +78,7 @@
 <script src="/bootstrap/js/bootstrap-typeahead.js"></script>
 
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
+<div id="modal"></div>
 
 <% INCLUDE incl/google_analytics.tt %>
 <% INCLUDE incl/clicky.tt %>
