@@ -340,49 +340,54 @@ sub pm_user_info {
 	return \%data if $path =~ m{^/pm/};
 
 	if ( mymaven->{conf}{enable_popups} ) {
-		if ( $url ne $referrer ) {
-
-			#my $seen = session('popup_yapc_na');
-			#if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-
-			#	#if ( not $seen or $seen < time - 10 ) {}
-			#	session( 'popup_yapc_na' => time );
-			#	$data{delayed} = {
-			#		what => 'popup_yapc_na',
-			#		when => 1000,
-			#	};
-			#}
-
-			#if ( logged_in() ) {
-
-			#	# if not a pro subscriber yet
-			#	if ( not $data{perl_maven_pro} ) {
-			#		my $seen = session('popup_logged_in');
-
-			#		if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-
-			#			#if ( not $seen or $seen < time - 10 ) {}
-			#			session( 'popup_logged_in' => time );
-			#			$data{delayed} = {
-			#				what => 'popup_logged_in',
-			#				when => 1000,
-			#			};
-			#		}
-			#	}
-			#}
-			#else {
-			#	my $seen = session('popup_logged_in');
-			#	if ( not $seen or $seen < time - 60 * 60 * 24 ) {
-			#		session( 'popup_logged_in' => time );
-			#		$data{delayed} = {
-			#			what => 'popup_visitor',
-			#			when => 1000,
-			#		};
-			#	}
-			#}
+		foreach my $code ( keys %{ mymaven->{popups} } ) {
+			my $pop = mymaven->{popups}{$code};
+			if ( $pop->{incoming_only} and $url eq $referrer ) {
+				next;
+			}
+			if ( $pop->{logged_in} and not logged_in() ) {
+				next;
+			}
+			if ( $pop->{logged_out} and logged_in() ) {
+				next;
+			}
+			my $frequency = 0;
+			if ( $pop->{frequency} =~ /^(\d+)([dhms]?)$/ ) {
+				my ( $m, $t ) = ( $1, $2 );
+				$t //= 's';
+				my %sec = (
+					s => 1,
+					m => 60,
+					h => 60 * 60,
+					d => 60 * 60 * 24,
+				);
+				$frequency = $m * $sec{$t};
+			}
+			my $seen = session($code);
+			if ( $seen and $seen > time - $frequency ) {
+				next;
+			}
+			session( $code, time );
+			$data{delayed} = {
+				what => $code,
+				when => $pop->{delay},
+			};
 		}
-	}
 
+		# TODO: only if not a pro subscriber yet
+		# perl_maven_pro_logged_in:
+		#   incoming_only: 1
+		#   logged_in: 1
+		#   logged_out: 0
+		#   frequency: '1d'
+		#   delay: 1000
+		# perl_maven_pro_logged_out:
+		#   incoming_only: 1
+		#   logged_in: 0
+		#   logged_out: 1
+		#   frequency: '1d'
+		#   delay: 1000
+	}
 	return \%data;
 }
 

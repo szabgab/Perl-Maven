@@ -122,7 +122,14 @@ function code_explain() {
 
 function show_user_info() {
 	if ('delayed' in user_info) {
-		setTimeout(function () {$( '#' + user_info['delayed']['what'] ).modal('show')} , user_info['delayed']['when'] );
+        $.ajax({
+           url: '/modal/' + user_info['delayed']['what'],
+           dataType: "html",
+           success: function(data, status, jqXHR) {
+               $("#modal").html(data);
+		       setTimeout(function () {$( '#' + user_info['delayed']['what'] ).modal('show')} , user_info['delayed']['when'] );
+           },
+        });
 	}
 }
 

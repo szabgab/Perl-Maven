@@ -51,7 +51,7 @@
 <% END %>
 
 <% INCLUDE incl/menu.tt %>
-<% INCLUDE incl/modals.tt %>
+<div id="modal"></div>
 
 <div class="container-fluid">
   <div class="row-fluid">
