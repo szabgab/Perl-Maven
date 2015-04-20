@@ -342,6 +342,7 @@ sub pm_user_info {
 	if ( mymaven->{conf}{enable_popups} ) {
 		foreach my $code ( keys %{ mymaven->{popups} } ) {
 			my $pop = mymaven->{popups}{$code};
+			next if not $pop->{on};
 			if ( $pop->{incoming_only} and $url eq $referrer ) {
 				next;
 			}
