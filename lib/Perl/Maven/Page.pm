@@ -145,6 +145,16 @@ SCREENCAST
 			}
 
 			# <include file="examples/node_hello_world.js">
+			my %ext = (
+				py   => 'python',
+				rb   => 'ruby',
+				php  => 'php',
+				pl   => 'perl',
+				pm   => 'perl',
+				js   => 'javascript',
+				html => 'html',
+				xml  => 'xml',
+			);
 			if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
 				my $what         = $1;
 				my $include_file = $2;
@@ -153,7 +163,9 @@ SCREENCAST
 					$cont .= "<b>$include_file</b><br>";
 
 					# TODO language based on extension?
-					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
+					my ($extension) = $path =~ /\.([^.]+)$/;
+					my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
+					$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
 					my $code = path($path)->slurp_utf8;
 					$code =~ s/</&lt;/g;
 					$code =~ s/>/&gt;/g;
