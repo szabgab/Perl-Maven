@@ -147,7 +147,12 @@ sub prepare {
 		push @{ $data{all} },    $r;
 		push @{ $data{unique} }, $r if not $unique{ $r->{distribution} }++;
 		push @{ $data{new} },    $r if $r->{first};
-		push @{ $data{authors}{ $r->{author} } },             $r;
+		if ( $r->{author} ) {
+			push @{ $data{authors}{ $r->{author} } }, $r;
+		}
+		else {
+			#$self->_log('WARN: author is empty in ' . Dumper $r);
+		}
 		push @{ $data{distributions}{ $r->{distribution} } }, $r;
 		push @{ $data{modules}{$_} }, $r for @{ $r->{modules} };
 	}
@@ -307,13 +312,13 @@ sub send {
 		if ( $ENV{EMAIL} ) {
 			$to = $ENV{EMAIL};
 		}
-		$self->_log("Sending to '$to'");
+		my $subject = "Recently uploaded $source distributions - $sub->{title}";
+		$self->_log( sprintf( "Sending '%-40s' to '%s'", $subject, $to ) );
 
 		Email::Stuffer
 
 			#->text_body($text)
-			->html_body($html_body)->subject("Recently uploaded $source distributions - $sub->{title}")
-			->from('Gabor Szabo <gabor@perlmaven.com>')->to($to)->send;
+			->html_body($html_body)->subject($subject)->from('Gabor Szabo <gabor@perlmaven.com>')->to($to)->send;
 	}
 	return;
 }
