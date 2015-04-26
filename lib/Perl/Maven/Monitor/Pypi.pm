@@ -80,7 +80,8 @@ sub fetch_pypi {
 	}
 
 	$self->_log("Added Pypi $count_add from a total of $count_feed in the feed.");
-	$self->_log('All the entries in the feed were added. Increase frequency!') if $count_add >= $count_feed;
+	$self->_log('More than 90% of the entries in the feed were added. Increase frequency!')
+		if $count_add >= 0.9 * $count_feed;
 	$self->_log( 'Total number of entries in Pypi: ' . $pypi->count );
 
 	return;

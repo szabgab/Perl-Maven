@@ -46,9 +46,10 @@ sub fetch_cpan {
 		#die Dumper \%data;
 	}
 	$self->_log("CPAN inserted $count entries");
-	if ( not $count ) {
-		$self->_log('WARN - No new CPAN modules were added. Either limit or frequencey should be increased!');
-	}
+	$self->_log(
+		'WARN - More than 90% of the CPAN modules were added. Either the limit or the frequencey should be increased!')
+		if $count > 0.9 * $self->limit;
+	$self->_log( 'Total number of entries in CPAN: ' . $cpan->count );
 	return;
 }
 
