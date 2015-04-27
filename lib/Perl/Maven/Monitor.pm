@@ -313,7 +313,7 @@ sub send {
 			$to = $ENV{EMAIL};
 		}
 		my $subject = "Recently uploaded $source distributions - $sub->{title}";
-		$self->_log( sprintf( "Sending '%-40s' to '%s'", $subject, $to ) );
+		$self->_log( sprintf( q{Sending '%-40s' to '%s'}, $subject, $to ) );
 
 		Email::Stuffer
 
