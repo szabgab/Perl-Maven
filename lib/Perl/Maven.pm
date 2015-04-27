@@ -96,7 +96,7 @@ hook before => sub {
 
 hook after => sub {
 	my ($response) = @_;
-	log_request($response);
+	log_request();
 	return;
 };
 
@@ -856,7 +856,6 @@ sub is_bot {
 }
 
 sub log_request {
-	my ($response) = @_;
 
 	# It seems uri is not set when accessing images on the development server
 	my $uri = request->uri;
@@ -894,7 +893,7 @@ sub log_request {
 
 	log_to_mongodb( \%details );
 
-	return if $response->status != 200;
+	return if response->status != 200;
 	return if $uri =~ m{^/atom};
 	return if $uri =~ m{^/robots.txt};
 	return if $uri =~ m{^/search.json};
