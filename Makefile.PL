@@ -36,6 +36,7 @@ WriteMakefile(
 		'Time::HiRes'                 => 0,
 		'YAML'                        => 1.09,
 		'JSON'                        => 2.90,
+		'JSON::MaybeXS'               => 1.003,
 		'Web::Feed'                   => 0.02,
 		'Digest::SHA'                 => 5.92,
 
@@ -59,6 +60,7 @@ WriteMakefile(
 		'Daemon::Control' => 0.001005,
 
 		'MetaCPAN::API' => 0,    # for bin/cpan_monitor.pl
+		'MetaCPAN::Client' => 0, # for bin/monitor.pl
 	},
 	dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 	clean => { FILES    => 'Perl-Maven-*' },
