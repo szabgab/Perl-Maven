@@ -11,6 +11,7 @@
          <% IF edit %>
             <a href="<% edit %>"><button type="button" class="btn btn-success">Suggest a change</button></a>
          <% END %>
+         <a href="https://gratipay.com/~szabgab/"><img src="//img.shields.io/gratipay/szabgab.svg" title="Support the site via Gratipay"></a>
 
             <% IF conf.show_jobs %>
             <div class="featured_jobs">
