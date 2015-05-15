@@ -166,6 +166,7 @@ sub process_files {
 
 				#die Dumper $p->{books} if $p->{books};
 				foreach my $cat ( @{ $p->{books} } ) {
+					next if $p->{redirect};
 					push @{ $categories{$cat} },
 						{
 						title    => $p->{title},
