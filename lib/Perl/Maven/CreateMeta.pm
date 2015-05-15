@@ -162,6 +162,7 @@ sub process_files {
 
 		#say "$p->{timestamp} $p->{file}";
 		if ( $p->{conf}{archive} ) {
+			my ($date) = split /T/, $p->{timestamp};
 			if ( $p->{books} ) {
 
 				#die Dumper $p->{books} if $p->{books};
@@ -170,13 +171,14 @@ sub process_files {
 					push @{ $categories{$cat} },
 						{
 						title    => $p->{title},
+						timestamp => $p->{timestamp},
+						date      => $date,
 						filename => $filename,
 						};
 				}
 			}
 
 			$self->stats->{pagecount}{$lang}++;
-			my ($date) = split /T/, $p->{timestamp};
 			my $e = {
 				title     => $p->{title},
 				timestamp => $p->{timestamp},
