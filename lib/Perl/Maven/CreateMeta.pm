@@ -170,10 +170,10 @@ sub process_files {
 					next if $p->{redirect};
 					push @{ $categories{$cat} },
 						{
-						title    => $p->{title},
+						title     => $p->{title},
 						timestamp => $p->{timestamp},
 						date      => $date,
-						filename => $filename,
+						filename  => $filename,
 						};
 				}
 			}
