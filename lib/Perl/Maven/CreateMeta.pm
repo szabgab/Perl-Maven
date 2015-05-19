@@ -129,6 +129,7 @@ sub process_files {
 	#my %SKELETON = map { $_ => 1 } qw(about.txt archive.txt index.txt keywords.txt perl-tutorial.txt products.txt);
 
 	foreach my $p (@$pages) {
+		next if $p->{redirect};
 		my $filename = substr( $p->{url_path}, 0, -4 );
 		if ( $self->verbose ) {
 			say "Processing $filename";
