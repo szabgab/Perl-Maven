@@ -794,7 +794,7 @@ sub _feed {
 		}
 
 		$url = $p->{url} ? $p->{url} : $url;
-		$e{link} = qq{$url/$p->{filename}?utm_campaign=rss};
+		$e{link} = qq{$url/$p->{filename}};
 
 		$e{id} = $p->{id} ? $p->{id} : "$url/$p->{filename}";
 		$e{content} = qq{<![CDATA[$p->{abstract}]]>};
