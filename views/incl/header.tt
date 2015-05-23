@@ -8,6 +8,8 @@
   <link href="/google-code-prettify/prettify.css" rel="stylesheet">
   <script src="/google-code-prettify/prettify.js"></script>
 
+<script src="//cdn.optimizely.com/js/2946880103.js"></script>
+
   <script>
     var user_info = <% user_info_json %>;
   </script>
