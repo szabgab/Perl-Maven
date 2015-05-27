@@ -915,10 +915,13 @@ sub log_request {
 sub log_to_mongodb {
 	my ($data) = @_;
 
-	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $database   = $client->get_database('PerlMaven');
-	my $collection = $database->get_collection('logging');
-	$collection->insert($data);
+	eval {
+		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+		my $database   = $client->get_database('PerlMaven');
+		my $collection = $database->get_collection('logging');
+		$collection->insert($data);
+	};
+	error("Could not log to MongoDB: $@") if $@;
 }
 
 sub in_development {
