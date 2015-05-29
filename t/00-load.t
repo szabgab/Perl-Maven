@@ -4,10 +4,13 @@ use warnings;
 use Test::More;
 use Test::Script;
 
+
+# Temporariy removed
+#	bin/cpan_monitor.pl
+
 my @scripts = qw(
 	bin/admin.pl
 	app.psgi
-	bin/cpan_monitor.pl
 	bin/create_meta.pl
 	bin/remove_sessions.pl
 	bin/sendmail.pl
