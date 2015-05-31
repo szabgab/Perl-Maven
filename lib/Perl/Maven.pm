@@ -725,7 +725,10 @@ get '/modal/:name' => sub {
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
-	return pm_show_page( { article => $article, template => 'page' } );
+	my $p = path( config->{appdir}, "config/pre/$article.yml" );
+	my $data = -e $p ? LoadFile($p) : {};
+
+	return pm_show_page( { article => $article, template => 'page' }, {}, $data );
 };
 
 ##########################################################################################

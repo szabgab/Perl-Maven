@@ -196,13 +196,16 @@ sub pm_template {
 }
 
 sub read_tt {
-	my $file = shift;
-	my $tt   = eval {
+	my ( $file, $pre_process ) = @_;
+	$pre_process //= {};
+
+	my $tt = eval {
 		Perl::Maven::Page->new(
 			media => mymaven->{dirs}{media},
 			root  => mymaven->{root},
 			file  => $file,
-			tools => setting('tools')
+			tools => setting('tools'),
+			pre   => $pre_process,
 		)->read->process->merge_conf( mymaven->{conf} )->data;
 	};
 	if ($@) {
@@ -231,17 +234,19 @@ sub pm_show_abstract {
 }
 
 sub pm_show_page {
-	my ( $params, $data ) = @_;
-	$data ||= {};
+	my ( $params, $data, $pre_process ) = @_;
+	$data        //= {};
+	$pre_process //= {};
 
 	my $path
 		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.txt";
+
 	if ( not -e $path ) {
 		status 'not_found';
 		return template 'error', { 'no_such_article' => 1 };
 	}
 
-	my $tt = read_tt($path);
+	my $tt = read_tt( $path, $pre_process );
 	return redirect $tt->{redirect} if $tt->{redirect};
 	if ( not $tt->{status}
 		or ( $tt->{status} !~ /^(show|draft|done)$/ ) )

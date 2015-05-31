@@ -5,7 +5,8 @@ use 5.014;
 use DateTime;
 use Data::Dumper qw(Dumper);
 use Storable qw(dclone);
-use Path::Tiny;
+use Path::Tiny qw(path);
+use YAML qw(LoadFile DumpFile);
 
 our $VERSION = '0.11';
 
@@ -15,6 +16,7 @@ has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
 has raw => ( is => 'rw', default => sub { [] } );
+has pre => ( is => 'ro', default => sub { {} } );
 
 my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect?);
@@ -27,10 +29,25 @@ sub read {
 	my ($self) = @_;
 
 	my $file = $self->file;
-	if ( open my $fh, '<encoding(UTF-8)', $file ) {
-		my @raw = <$fh>;
+	if ( $self->pre ) {
+		my $template = Template->new(
+			{
+				INTERPOLATE => 0,
+				POST_CHOMP  => 1,
+				EVAL_PERL   => 0,
+				ABSOLUTE    => 1,
+			}
+		);
+
+		my $html;
+		$template->process( $file, $self->pre, \$html )
+			or die $template->error();
+		my @raw = split /\n/, $html;
 		$self->raw( \@raw );
-		close $fh;
+	}
+	else {
+		my @raw = path($file)->lines_utf8;
+		$self->raw( \@raw );
 	}
 	return $self;
 }
@@ -73,7 +90,8 @@ sub process {
 
 	my $file = $self->file;
 
-	while ( my $line = shift @{ $self->raw } ) {
+	while ( @{ $self->raw } ) {
+		my $line = shift @{ $self->raw };
 		chomp $line;
 		last if $line =~ /^\s*$/;
 		if ( my ( $field, $value ) = $line =~ /=([\w-]+)\s+(.*?)\s*$/ ) {
@@ -113,7 +131,8 @@ sub process {
 		die "$@  in file $file\n";
 	}
 
-	while ( my $line = shift @{ $self->raw } ) {
+	while ( @{ $self->raw } ) {
+		my $line = shift @{ $self->raw };
 		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
 			my ( $type, $file ) = ( $1, $2 );
 			my $path = substr $file, length('/media');
