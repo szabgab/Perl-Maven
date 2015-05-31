@@ -15,7 +15,9 @@ subtest one => sub {
 	plan tests => 2;
 
 	my $path = 't/files/1.txt';
-	my $data = eval { Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->data };
+	my $data = eval {
+		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->process->data;
+	};
 	ok !$@, "load $path" or diag $@;
 
 	cmp_deeply $data,
@@ -40,7 +42,9 @@ subtest indexes => sub {
 	plan tests => 2;
 
 	my $path = 't/files/3.txt';
-	my $data = eval { Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->data };
+	my $data = eval {
+		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->process->data;
+	};
 	ok !$@, "load $path" or diag $@;
 
 	cmp_deeply $data,
@@ -78,8 +82,9 @@ subtest errors => sub {
 
 	foreach my $name ( sort keys %cases ) {
 		my $path = "t/files/$name.txt";
-		my $data
-			= eval { Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->data };
+		my $data = eval {
+			Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->process->data;
+		};
 		is $@, $cases{$name}, $name;
 	}
 };
@@ -88,7 +93,9 @@ subtest bad_timestamp => sub {
 	plan tests => 1;
 
 	my $path = 't/files/bad_timestamp.txt';
-	my $data = eval { Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->data };
+	my $data = eval {
+		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->process->data;
+	};
 	like $@,
 		qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback};
 };
@@ -97,15 +104,18 @@ subtest abstract_not_ending => sub {
 	plan tests => 3;
 
 	my $path = 't/files/abstract_not_ending.txt';
-	my $data = eval { Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->data };
+	my $data = eval {
+		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->process->data;
+	};
 	like $@, qr{=abstract started but not ended};
 
 	# repeate the first one because there was a bug
 	# it was including the content as the abstract due to the missing and of abstract in the previous file
 
 	my $path_1 = 't/files/1.txt';
-	my $data_1
-		= eval { Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path_1 )->read->data };
+	my $data_1 = eval {
+		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path_1 )->read->process->data;
+	};
 	ok !$@, "load $path_1" or diag $@;
 
 	cmp_deeply $data_1,
@@ -133,7 +143,7 @@ subtest one_with_config => sub {
 	my $mymaven = Perl::Maven::Config->new('t/files/config/mymaven.yml');
 	my $data    = eval {
 		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )
-			->read->merge_conf( $mymaven->config('perlmaven.com')->{conf} )->data;
+			->read->process->merge_conf( $mymaven->config('perlmaven.com')->{conf} )->data;
 	};
 	ok !$@, "load $path" or diag $@;
 

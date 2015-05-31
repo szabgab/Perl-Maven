@@ -14,6 +14,7 @@ has root  => ( is => 'ro', required => 1 );
 has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
+has raw => ( is => 'rw', default => sub { [] } );
 
 my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect?);
@@ -23,6 +24,18 @@ my @header = ( @page_options, @common_options );
 my @merge_options = map { my $t = $_; $t =~ s/[?@]//g; $t } @common_options;
 
 sub read {
+	my ($self) = @_;
+
+	my $file = $self->file;
+	if ( open my $fh, '<encoding(UTF-8)', $file ) {
+		my @raw = <$fh>;
+		$self->raw( \@raw );
+		close $fh;
+	}
+	return $self;
+}
+
+sub process {
 	my ($self) = @_;
 
 	my %data = ( abstract => '', );
@@ -60,62 +73,61 @@ sub read {
 
 	my $file = $self->file;
 
-	if ( open my $fh, '<encoding(UTF-8)', $file ) {
-		while ( my $line = <$fh> ) {
-			chomp $line;
-			last if $line =~ /^\s*$/;
-			if ( my ( $field, $value ) = $line =~ /=([\w-]+)\s+(.*?)\s*$/ ) {
-				$value //= '';
+	while ( my $line = shift @{ $self->raw } ) {
+		chomp $line;
+		last if $line =~ /^\s*$/;
+		if ( my ( $field, $value ) = $line =~ /=([\w-]+)\s+(.*?)\s*$/ ) {
+			$value //= '';
 
-				if ( not defined $fields{$field} ) {
-					die "Invalid entry in header '$field' file $file\n";
-				}
+			if ( not defined $fields{$field} ) {
+				die "Invalid entry in header '$field' file $file\n";
+			}
 
-				# TODO make it configurable, which fields to split?
-				if ( $fields{$field}{multivalue} ) {
-					$data{$field} = [
-						map { my $z = $_; $z =~ s/^\s+|\s+$//g; $z }
-							split /,/, $value
-					];
-				}
-				else {
-					$data{$field} = $value;
-				}
+			# TODO make it configurable, which fields to split?
+			if ( $fields{$field}{multivalue} ) {
+				$data{$field} = [
+					map { my $z = $_; $z =~ s/^\s+|\s+$//g; $z }
+						split /,/, $value
+				];
 			}
 			else {
-				die "Invalid entry in header in line '$line' file $file\n";
+				$data{$field} = $value;
 			}
 		}
-
-		for my $field ( keys %fields ) {
-			if ( not $fields{$field}{optional} and not defined $data{$field} ) {
-				die "Header ended and '$field' was not supplied for file $file\n";
-			}
+		else {
+			die "Invalid entry in header in line '$line' file $file\n";
 		}
-		die "=timestamp missing in file $file\n" if not $data{timestamp};
-		die "Invalid =timestamp '$data{timestamp}' in file $file\n"
-			if $data{timestamp} !~ /^(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$/;
-		eval { DateTime->new( year => $1, month => $2, day => $3, hour => $4, minute => $5,
-				second => $6 ); };    # just check if it is valid
-		if ($@) {
-			die "$@  in file $file\n";
+	}
+
+	for my $field ( keys %fields ) {
+		if ( not $fields{$field}{optional} and not defined $data{$field} ) {
+			die "Header ended and '$field' was not supplied for file $file\n";
 		}
+	}
+	die "=timestamp missing in file $file\n" if not $data{timestamp};
+	die "Invalid =timestamp '$data{timestamp}' in file $file\n"
+		if $data{timestamp} !~ /^(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$/;
+	eval { DateTime->new( year => $1, month => $2, day => $3, hour => $4, minute => $5,
+			second => $6 ); };    # just check if it is valid
+	if ($@) {
+		die "$@  in file $file\n";
+	}
 
-		while ( my $line = <$fh> ) {
-			if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
-				my ( $type, $file ) = ( $1, $2 );
-				my $path = substr $file, length('/media');
-				my %types = (
-					mp4  => 'mp4',
-					webm => 'webm',
-					ogv  => 'ogg',
-					avi  => 'avi',
-				);
-				my @ext       = grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*';
-				my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
-				my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
+	while ( my $line = shift @{ $self->raw } ) {
+		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
+			my ( $type, $file ) = ( $1, $2 );
+			my $path = substr $file, length('/media');
+			my %types = (
+				mp4  => 'mp4',
+				webm => 'webm',
+				ogv  => 'ogg',
+				avi  => 'avi',
+			);
+			my @ext       = grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*';
+			my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
+			my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
 
-				$line = <<"SCREENCAST";
+			$line = <<"SCREENCAST";
 <div id="screencast">
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
@@ -128,85 +140,84 @@ Download:
 </div>
 </div>
 SCREENCAST
-			}
-
-			$line =~ s{<hl>}{<span class="inline_code">}g;
-			$line =~ s{</hl>}{</span>}g;
-			if ( $line =~ /^=abstract (start|end)/ ) {
-				$data{"abstract_$1"}++;
-				next;
-			}
-
-			if ( $data{abstract_start} and not $data{abstract_end} ) {
-				$data{abstract} .= $line;
-				if ( $line =~ /^\s*$/ ) {
-					$data{abstract} .= "<p>\n";
-				}
-			}
-
-			# <include file="examples/node_hello_world.js">
-			my %ext = (
-				py   => 'python',
-				rb   => 'ruby',
-				php  => 'php',
-				pl   => 'perl',
-				pm   => 'perl',
-				js   => 'javascript',
-				html => 'html',
-				xml  => 'xml',
-			);
-			if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
-				my $what         = $1;
-				my $include_file = $2;
-				my $path         = $self->root . "/$include_file";
-				if ( -e $path ) {
-					$cont .= "<b>$include_file</b><br>";
-
-					# TODO language based on extension?
-					my ($extension) = $path =~ /\.([^.]+)$/;
-					my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
-					$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
-					my $code = path($path)->slurp_utf8;
-					$code =~ s/</&lt;/g;
-					$code =~ s/>/&gt;/g;
-					$cont .= $code;
-					$cont .= qq{</pre>\n};
-					if ( $what eq 'try' ) {
-						$cont .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
-					}
-				}    # else warn?
-				next;
-			}
-			if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
-				my $language = $1 || '';
-				$in_code = 1;
-				if ( $language eq 'perl' ) {
-					$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
-				}
-				else {
-					# Without linenumst IE10 does not respect newlines and smashes everything together
-					# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
-					# in IE10 and in general some pages.
-					$cont .= qq{<pre class="linenums">\n};
-				}
-				next;
-			}
-			if ( $line =~ m{^</code>} ) {
-				$in_code = undef;
-				$cont .= qq{</pre>\n};
-				next;
-			}
-			if ($in_code) {
-				$line =~ s{<}{&lt;}g;
-				$cont .= $line;
-				next;
-			}
-
-			if ( $line =~ /^\s*$/ ) {
-				$cont .= "<p>\n";
-			}
-			$cont .= $line;
 		}
+
+		$line =~ s{<hl>}{<span class="inline_code">}g;
+		$line =~ s{</hl>}{</span>}g;
+		if ( $line =~ /^=abstract (start|end)/ ) {
+			$data{"abstract_$1"}++;
+			next;
+		}
+
+		if ( $data{abstract_start} and not $data{abstract_end} ) {
+			$data{abstract} .= $line;
+			if ( $line =~ /^\s*$/ ) {
+				$data{abstract} .= "<p>\n";
+			}
+		}
+
+		# <include file="examples/node_hello_world.js">
+		my %ext = (
+			py   => 'python',
+			rb   => 'ruby',
+			php  => 'php',
+			pl   => 'perl',
+			pm   => 'perl',
+			js   => 'javascript',
+			html => 'html',
+			xml  => 'xml',
+		);
+		if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
+			my $what         = $1;
+			my $include_file = $2;
+			my $path         = $self->root . "/$include_file";
+			if ( -e $path ) {
+				$cont .= "<b>$include_file</b><br>";
+
+				# TODO language based on extension?
+				my ($extension) = $path =~ /\.([^.]+)$/;
+				my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
+				$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
+				my $code = path($path)->slurp_utf8;
+				$code =~ s/</&lt;/g;
+				$code =~ s/>/&gt;/g;
+				$cont .= $code;
+				$cont .= qq{</pre>\n};
+				if ( $what eq 'try' ) {
+					$cont .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
+				}
+			}    # else warn?
+			next;
+		}
+		if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
+			my $language = $1 || '';
+			$in_code = 1;
+			if ( $language eq 'perl' ) {
+				$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
+			}
+			else {
+				# Without linenumst IE10 does not respect newlines and smashes everything together
+				# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
+				# in IE10 and in general some pages.
+				$cont .= qq{<pre class="linenums">\n};
+			}
+			next;
+		}
+		if ( $line =~ m{^</code>} ) {
+			$in_code = undef;
+			$cont .= qq{</pre>\n};
+			next;
+		}
+		if ($in_code) {
+			$line =~ s{<}{&lt;}g;
+			$cont .= $line;
+			next;
+		}
+
+		if ( $line =~ /^\s*$/ ) {
+			$cont .= "<p>\n";
+		}
+		$cont .= $line;
 	}
 	$data{mycontent} = $cont;
 

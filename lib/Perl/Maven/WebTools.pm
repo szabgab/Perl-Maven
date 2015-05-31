@@ -203,7 +203,7 @@ sub read_tt {
 			root  => mymaven->{root},
 			file  => $file,
 			tools => setting('tools')
-		)->read->merge_conf( mymaven->{conf} )->data;
+		)->read->process->merge_conf( mymaven->{conf} )->data;
 	};
 	if ($@) {
 
