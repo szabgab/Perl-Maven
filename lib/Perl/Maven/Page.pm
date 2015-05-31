@@ -30,7 +30,7 @@ sub read {
 	my ($self) = @_;
 
 	my $file = $self->file;
-	if ( $self->pre ) {
+	if ( %{ $self->pre } ) {
 		my $template = Template->new(
 			{
 				INTERPOLATE => 0,
