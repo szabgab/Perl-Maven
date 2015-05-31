@@ -4,7 +4,6 @@ use warnings;
 use Test::More;
 use Test::Script;
 
-
 # Temporariy removed
 #	bin/cpan_monitor.pl
 
