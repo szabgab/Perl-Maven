@@ -430,7 +430,7 @@ get qr{^/try/(.+)} => sub {
 		return $content;
 	}
 
-	if ( $try_file =~ /\.js$/ or $try_file =~ /\.json$/ ) {
+	if ( $try_file =~ /\.js$/ or $try_file =~ /\.json$/ or $try_file =~ /\.htm$/ ) {
 		content_type 'text/javascript';
 		send_file( $path, system_path => 1 );
 	}
