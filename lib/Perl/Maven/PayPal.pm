@@ -183,25 +183,25 @@ sub paypal_buy {
 		#	$params{p1} = 1;
 		#	$params{t1} = 'M';
 		#}
-		if ( $type eq 'trial' ) {
-			$params{a1} = 1;
-			$params{p1} = 1;
-			$params{t1} = 'M';
+		#if ( $type eq 'trial' ) {
+		#	$params{a1} = 1;
+		#	$params{p1} = 1;
+		#	$params{t1} = 'M';
 
-			#$button_text = qq{1 USD for the first month and then $usd USD per month};
-			#$button_text = qq{1 USD for the first month};
-			$button_text = q{Sign me up to the Perl Maven Pro for $1!};
-		}
+		#	#$button_text = qq{1 USD for the first month and then $usd USD per month};
+		#	#$button_text = qq{1 USD for the first month};
+		#	$button_text = q{Sign me up to the Perl Maven Pro for $1!};
+		#}
 
-		if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
-			$params{a1}  = 1;
-			$params{p1}  = 1;
-			$params{t1}  = 'M';
-			$usd         = 90;
-			$params{a3}  = $usd;
-			$params{t3}  = 'Y';                     # yearly
-			$button_text = qq{$usd USD per year};
-		}
+		#if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
+		#	$params{a1}  = 1;
+		#	$params{p1}  = 1;
+		#	$params{t1}  = 'M';
+		#	$usd         = 90;
+		#	$params{a3}  = $usd;
+		#	$params{t3}  = 'Y';                     # yearly
+		#	$button_text = qq{$usd USD per year};
+		#}
 		if ( $type eq 'annual' ) {                  # TODO remove hardcoding
 			                                        #$params{a1} = 60;
 			                                        #$params{p1} = 1;
