@@ -134,13 +134,19 @@ sub process {
 
 	while ( @{ $self->raw } ) {
 		my $line = shift @{ $self->raw };
-		if ( $line =~ m{^\s*<(youtube)\s+id="(.*)"\s+/>\s*$} ) {
-			my $youtube = $2;
-			$line = qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>}
-		}
+		#if ( $line =~ m{^\s*<(youtube)\s+id="(.*)"\s+/>\s*$} ) {
+		#	my $youtube = $2;
+		#	$line = qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>}
+		#}
 
-		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
-			my ( $type, $file ) = ( $1, $2 );
+		if ( $line =~ m{^\s*<(screencast|slidecast)\s+(?:file="(.*?)"\s+)?(?:youtube="(.*?)")?\s+/>\s*$} ) {
+			my ( $type, $file, $youtube ) = ( $1, $2, $3 );
+			if ($youtube) {
+				$line = qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>}
+			} else {
+				$line = '';
+			}
+
 			my $path = substr $file, length('/media');
 			my %types = (
 				mp4  => 'mp4',
@@ -152,19 +158,25 @@ sub process {
 			my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
 			my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
 
-			$line = <<"SCREENCAST";
-<div id="screencast">
+			$line .= q{<div id="screencast">};
+
+			if (not $youtube) {
+			$line .= <<"SCREENCAST";
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
   data-setup='{"controls":true}'>
   @sources
 </video>
+SCREENCAST
+}
+
+			$line .= <<"DOWNLOADS";
 <div id="download">
 Download:
 @downloads
 </div>
 </div>
-SCREENCAST
+DOWNLOADS
 		}
 
 		$line =~ s{<hl>}{<span class="inline_code">}g;
