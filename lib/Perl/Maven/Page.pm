@@ -134,6 +134,11 @@ sub process {
 
 	while ( @{ $self->raw } ) {
 		my $line = shift @{ $self->raw };
+		if ( $line =~ m{^\s*<(youtube)\s+id="(.*)"\s+/>\s*$} ) {
+			my $youtube = $2;
+			$line = qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>}
+		}
+
 		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*)"\s+/>\s*$} ) {
 			my ( $type, $file ) = ( $1, $2 );
 			my $path = substr $file, length('/media');
