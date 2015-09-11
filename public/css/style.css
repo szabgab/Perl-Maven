@@ -398,3 +398,7 @@ video {
  display: none;
 }
 
+#term {
+  color: red;
+}
+

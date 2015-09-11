@@ -82,6 +82,6 @@
       <% INCLUDE incl/languages.tt %>
 
     </div>
-    <div class="col-md-7">
+    <div class="col-md-7" id="content">
 
 

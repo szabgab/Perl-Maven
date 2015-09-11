@@ -211,6 +211,29 @@ $(document).ready(function() {
 //		}, 100);
 //	});
 
+ 	$("#search_box").keyup(function (e) {
+       var query = $("#search_box").val();
+
+       $.ajax({
+           url: '/search.json',
+           data: { 'query' :  query},
+           dataType: "json",
+           success: function(data, status, jqXHR) {
+              //console.log('callback');
+              var html = '<h2>Searching for <span id="term">' + query + '</span></h2>';
+              html += '<ul>';
+              var i;
+              for (i=0; i < data.length; i++) {
+                  html += '<li><a href="/search/' + data[i] + '">' + data[i] + '</a></li>';
+              }
+              html += '</ul>';
+              $("#content").html(html);
+              //console.log(data);
+	       },
+       });
+       return;
+    });
+
 // 	$("#search_box").keyup(function (e) {
 // 	    if (e.keyCode == 13) {
 // 	        var keyword = $("#search_box").val();
