@@ -6,9 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
   <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
+  <link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+
   <link href="/google-code-prettify/prettify.css" rel="stylesheet">
   <script src="/google-code-prettify/prettify.js"></script>
+
+
+  <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
+  <% IF conf.rtl %>
+  	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
+  <% END %>
+
+
+
+  <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
+  <link href="/atom" rel="alternate" type="application/atom+xml" title ="<% brand_name %>" />
 
   <script>
     var user_info = <% user_info_json %>;
@@ -21,20 +33,13 @@
     <% END %>
   <% END %>
 
-  <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-  <link href="/atom" rel="alternate" type="application/atom+xml" title ="<% brand_name %>" />
 
-  <link href="//vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
-  <script src="//vjs.zencdn.net/4.11/video.js"></script>
+  <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+  <script src="//vjs.zencdn.net/4.12/video.js"></script>
 
   <title><% title %></title>
   <meta name="description" content="<% description %>">
   <meta name="author" content="<% author %>">
-
-  <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
-  <% IF conf.rtl %>
-  	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
-  <% END %>
 
   <meta property="og:title" content="<% title %>"/>
   <meta property="og:type" content="article"/>
@@ -51,6 +56,7 @@
 
 <% IF conf.show_social %>
 <!-- start facebook SDK ?? -->
+<!--
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -60,6 +66,7 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 </script>
+-->
 <!-- end facebook -->
 <% END %>
 
