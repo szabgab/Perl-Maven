@@ -40,6 +40,12 @@
   <% IF conf.rtl %>
   	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
   <% END %>
+
+  <meta property="og:title" content="<% title %>"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="<% default_image %>"/>
+  <meta property="og:site_name" content="<% brand_name %>"/>
+  <meta property="og:description" content="<% description %>"/>
 </head>
 <body>
 
