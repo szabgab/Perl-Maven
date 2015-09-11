@@ -2,6 +2,7 @@ branches:
   except:
     - gh-pages
 language: perl
+sudo: false
 perl:
   - "5.20"
 #  - "5.18"
