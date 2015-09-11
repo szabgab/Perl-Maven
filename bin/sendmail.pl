@@ -67,7 +67,7 @@ sub build_content {
 
 	#die $r->[0]; # http status
 	my $utf8 = $r->[2][0];                              # html
-	my ($title) = $utf8 =~ m{<title>([^<]*)</title>};
+	my ($title) = $utf8 =~ m{<title>(.*)</title>};
 
 	die 'missing title' if not $title;
 
