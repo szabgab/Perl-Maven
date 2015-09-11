@@ -18,7 +18,6 @@ has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
 has raw => ( is => 'rw', default => sub { [] } );
 has pre => ( is => 'ro', default => sub { {} } );
-has videos => ( is => 'rw' );
 
 my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect?);
@@ -153,7 +152,7 @@ sub process {
 			my @ext       = grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*';
 			my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
 			my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
-			$self->videos(\@downloads);
+			$data{videos} = [ map { qq{$file.$_} } @ext ];
 
 			$line .= q{<div id="screencast">};
 
