@@ -213,7 +213,6 @@ hook before_template => sub {
 	}
 
 	if ( $t->{no_such_article} ) {
-		$t->{conf}{clicky}           = 0;
 		$t->{conf}{google_analytics} = 0;
 	}
 

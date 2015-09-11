@@ -157,7 +157,6 @@ subtest one_with_config => sub {
 			'comments_disqus_enable' => '1',
 			'show_newsletter_form'   => 1,
 			'show_social'            => '1',
-			'clicky'                 => '12345678',
 			'comments_disqus_code'   => 'perl5maven',
 			'google_analytics'       => 'UA-11111112-3',
 			'show_indexes'           => '1',

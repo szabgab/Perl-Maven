@@ -50,7 +50,6 @@ subtest mymaven => sub {
 
 	is_deeply $br->{dirs}, { 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
 	is_deeply $main->{conf}, {
-		'clicky'                 => '12345678',
 		'comments_disqus_enable' => '1',
 		'comments_disqus_code'   => 'perl5maven',
 		'google_analytics'       => 'UA-11111112-3',
@@ -62,7 +61,6 @@ subtest mymaven => sub {
 		'main conf';
 	is_deeply $br->{conf},
 		{
-		'clicky'                 => '12345678',
 		'comments_disqus_code'   => 'br-test-perlmaven',
 		'comments_disqus_enable' => '1',
 		'google_analytics'       => 'UA-11111112-3',
@@ -73,7 +71,6 @@ subtest mymaven => sub {
 		'br conf';
 	is_deeply $cn->{conf},
 		{
-		'clicky'                 => '12345678',
 		'comments_disqus_enable' => '0',
 		'google_analytics'       => 'UA-11111112-3',
 		'show_indexes'           => '1',

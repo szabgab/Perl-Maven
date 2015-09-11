@@ -32,7 +32,6 @@ installation:
   main_page_entries: 3
   feed_size: 10
   conf:
-    #clicky: 66509
     #google_analytics: UA-12199222
     show_newsletter_form: 0
     show_indexes: 1

@@ -68,7 +68,6 @@
 <div id="modal"></div>
 
 <% INCLUDE incl/google_analytics.tt %>
-<% INCLUDE incl/clicky.tt %>
 <% ads.body_end %>
 </body>
 </html>
