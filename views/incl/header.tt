@@ -46,6 +46,11 @@
   <meta property="og:image" content="<% default_image %>"/>
   <meta property="og:site_name" content="<% brand_name %>"/>
   <meta property="og:description" content="<% description %>"/>
+  <% IF videos %>
+    <% FOR v IN videos %>
+       <meta property="og:video" content="v" />
+    <% END %>
+  <% END %>
 </head>
 <body>
 
