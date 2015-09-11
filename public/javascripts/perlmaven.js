@@ -184,10 +184,10 @@ function register_result (data, status, jqXHR) {
 		$('#popup_thank_you').modal('show');
 	}
 }
-
+ 
 $(document).ready(function() {
-    $('#explain').click(code_explain);
-    show_user_info();
+   $('#explain').click(code_explain);
+   show_user_info();
 
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );
@@ -200,62 +200,62 @@ $(document).ready(function() {
 	    mysearch(e.target.value, false);
 	});
 
-	$('#search_box').typeahead( { 'source' : setup_search, items : 20  });
-	$('#search_box').blur(function (e) {
-		// This delay is a work-around to let the JS fill the input box before we grab the value from there.
-		// In later versions of Bootstrap there is probably a better solution for this
-		setTimeout(function() {
-			var keyword = $("#search_box").val();
-			//console.log('click:' + keyword);
-			mysearch(keyword, true);
-		}, 100);
-	});
+//	$('#search_box').typeahead( { 'source' : setup_search, items : 20  });
+//	$('#search_box').blur(function (e) {
+//		// This delay is a work-around to let the JS fill the input box before we grab the value from there.
+//		// In later versions of Bootstrap there is probably a better solution for this
+//		setTimeout(function() {
+//			var keyword = $("#search_box").val();
+//			//console.log('click:' + keyword);
+//			mysearch(keyword, true);
+//		}, 100);
+//	});
 
-	$("#search_box").keyup(function (e) {
-	    if (e.keyCode == 13) {
-	        var keyword = $("#search_box").val();
-	        mysearch(keyword, true);
-		}
-	});
-
-	$('#email').keypress(function(e) {
-		$("#need-email").hide();
-	});
-
-	$('#admin-show-details').on('click', function(e) {
-		var email = $('#email').val();
-		//console.log(email);
-		if (! email) {
-			//console.log('alert');
-			$("#need-email").show();
-			return false;
-		}
-    	$.ajax({
-        	url: '/admin/user_info.json',
-        	data: { "email" : email },
-        	dataType: "json",
-        	success: admin_show_user_details,
-    	});
-
-		return false;
-	});
-
-	$('#register-button').on('click', function(e) {
-		var name = $('#register-name').val();
-		var email = $('#register-email').val();
-		var password = $('#register-password').val();
-		//console.log(email);
-		// TODO validate before submit
-		$('#register-message').html('');
-	    $.ajax({
-            url: '/pm/register.json',
-            type: 'POST',
-            data: {"name" : name, "email" : email, "password" : password},
-            dataType: "json",
-            success: register_result,
-        });
-	});
-
+// 	$("#search_box").keyup(function (e) {
+// 	    if (e.keyCode == 13) {
+// 	        var keyword = $("#search_box").val();
+// 	        mysearch(keyword, true);
+// 		}
+// 	});
+// 
+// 	$('#email').keypress(function(e) {
+// 		$("#need-email").hide();
+// 	});
+// 
+// 	$('#admin-show-details').on('click', function(e) {
+// 		var email = $('#email').val();
+// 		//console.log(email);
+// 		if (! email) {
+// 			//console.log('alert');
+// 			$("#need-email").show();
+// 			return false;
+// 		}
+//     	$.ajax({
+//         	url: '/admin/user_info.json',
+//         	data: { "email" : email },
+//         	dataType: "json",
+//         	success: admin_show_user_details,
+//     	});
+// 
+// 		return false;
+// 	});
+// 
+// 	$('#register-button').on('click', function(e) {
+// 		var name = $('#register-name').val();
+// 		var email = $('#register-email').val();
+// 		var password = $('#register-password').val();
+// 		//console.log(email);
+// 		// TODO validate before submit
+// 		$('#register-message').html('');
+// 	    $.ajax({
+//             url: '/pm/register.json',
+//             type: 'POST',
+//             data: {"name" : name, "email" : email, "password" : password},
+//             dataType: "json",
+//             success: register_result,
+//         });
+// 	});
+// 
 	$('a[href^="/pro\\/"]').each(function(i, e) {
 		//console.log(this);
 		//console.log( $(this).attr('href') );
@@ -298,4 +298,4 @@ $(document).ready(function() {
 
 	prettyPrint();
 });
-
+ 

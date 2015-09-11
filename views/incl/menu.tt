@@ -1,69 +1,69 @@
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<nav class="navbar navbar-devault navbar-fixed-top navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </a>
+      </button>
+      <a class="navbar-brand" href="/"><% brand_name %></a>
+    </div>
 
-      <a class="brand" href="/"><% brand_name %></a>
-      <div class="nav-collapse">
-        <% FOR m IN resources.menu %>
-          <ul class="nav  <% IF m.dir == 'right' %>pull-right<% END %>  ">
-            <% FOR e IN m.menu %>
-              <%- IF e.url -%>
-                <li><a href="<% e.url %>"><% e.title %></a></li>
-              <%- END -%>
 
-              <% IF e.dropdown -%>
-                <li class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"><% e.title %><span class="caret"></span></button>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <% FOR d IN e.dropdown %>
-                      <% IF d.url %><li role="presentation"><a role="menuitem" tabindex="-1" href="<% d.url %>"><% d.title %></a></li><% END %>
-                      <% IF d.subtitle %><li role="presentation" class="dropdown-header"><% d.subtitle %></li><% END %>
-                      <% IF d.divider %><li role="presentation" class="divider"></li><% END %>
-                    <% END %>
-                  </ul>
-                </li>
-              <%- END %>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <% FOR m IN resources.menu %>
+        <ul class="nav navbar-nav <% IF m.dir == 'right' %>pull-right<% END %>  ">
+          <% FOR e IN m.menu %>
+            <%- IF e.url -%>
+              <li><a href="<% e.url %>"><% e.title %></a></li>
+            <%- END -%>
 
-              <% IF e.button -%>
-                <% IF username %>
-                  <% IF perl_maven_pro_buy_button %>
-                     <% IF user_info.perl_maven_pro %>
-                       <!-- placeholder -->
-                     <% ELSE %>
-                       <button class="btn btn-success" type="button" id="pro-button">Just $1 to go Pro!</button>
-                     <% END %>
+            <% IF e.dropdown -%>
+              <li class="dropdown-menu">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"><% e.title %><span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                  <% FOR d IN e.dropdown %>
+                    <% IF d.url %><li role="presentation"><a role="menuitem" tabindex="-1" href="<% d.url %>"><% d.title %></a></li><% END %>
+                    <% IF d.subtitle %><li role="presentation" class="dropdown-header"><% d.subtitle %></li><% END %>
+                    <% IF d.divider %><li role="presentation" class="divider"></li><% END %>
                   <% END %>
-                <% ELSE %>
-                  <button class="btn btn-warning" type="button" id="free-button">FREE Registration</button>
+                </ul>
+              </li>
+            <%- END %>
+
+            <% IF e.button -%>
+              <% IF username %>
+                <% IF perl_maven_pro_buy_button %>
+                   <% IF user_info.perl_maven_pro %>
+                   <% ELSE %>
+                     <button class="btn btn-success" type="button" id="pro-button">Just $1 to go Pro!</button>
+                   <% END %>
                 <% END %>
-              <%- END %>
-
-              <% IF e.login %>
-                <% IF username %>
-                  <li><a href="/pm/account">Account</a></li>
-                <% ELSE %>
-                  <li><a href="/pm/login"><% e.title %></a></li>
-                <% END %>
+              <% ELSE %>
+                <button class="btn btn-warning" type="button" id="free-button">FREE Registration</button>
               <% END %>
+            <%- END %>
 
-              <% IF e.searchbox %>
-                <li><input id="search_box" type="text" data-provide="typeahead" data-items="4" ></li>
-              <% END %>
-
-              <% IF e.atom %>
-                <li><a href="/atom" rel="alternate" type="application/atom+xml"><img src="/img/feed-icon16x16.png" id="atom-icon" alt="" /></a></li>
+            <% IF e.login %>
+              <% IF username %>
+                <li><a href="/pm/account">Account</a></li>
+              <% ELSE %>
+                <li><a href="/pm/login"><% e.title %></a></li>
               <% END %>
             <% END %>
-          </ul>
-        <% END %>
-      </div><!--/.nav-collapse -->
+
+            <% IF e.searchbox %>
+              <li><input id="search_box" type="text" data-provide="typeahead" data-items="4" ></li>
+            <% END %>
+
+            <% IF e.atom %>
+              <li><a href="/atom" rel="alternate" type="application/atom+xml"><img src="/img/feed-icon16x16.png" id="atom-icon" alt="" /></a></li>
+            <% END %>
+          <% END %>
+        </ul>
+      <% END %>
     </div>
   </div>
-</div>
-
+</nav>
 

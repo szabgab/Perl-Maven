@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-  <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+  <link href="/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
 
   <link href="/google-code-prettify/prettify.css" rel="stylesheet">
   <script src="/google-code-prettify/prettify.js"></script>
@@ -68,16 +68,20 @@
 <!-- end facebook -->
 <% END %>
 
-<% INCLUDE incl/menu.tt %>
-
 <div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span1">
+  <div class="row">
+    <div class="col-md-12">
+      <% INCLUDE incl/menu.tt %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
 
       <% INCLUDE incl/logo.tt %>
       <% INCLUDE incl/languages.tt %>
 
     </div>
-    <div class="span8">
+    <div class="col-md-7">
 
 
