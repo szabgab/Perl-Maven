@@ -384,4 +384,17 @@ video {
    background-color: #EEE;
 }
 
+#job-apply {
+  margin-top: 20px;
+}
+#job-location {
+  margin-top: 20px;
+}
+
+#lower_right {
+ margin-top: 200px;
+}
+#need-email {
+ display: none;
+}
 

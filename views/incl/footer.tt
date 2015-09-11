@@ -52,7 +52,7 @@
              </div>
            <% END %>
 
-           <div id="lower_right" style="margin-top: 200px">
+           <div id="lower_right">
            <% ads.lower_right %>
            </div>
 

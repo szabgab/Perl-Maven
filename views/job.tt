@@ -1,12 +1,3 @@
-<style>
-#apply {
-  margin-top: 20px;
-}
-#job_location {
-  margin-top: 20px;
-}
-</style>
-
 <h1><% job.title %></h1>
 <h2><a href="<% job.company_url %>"><% job.company_name %></a></h2>
 
@@ -15,7 +6,7 @@
 <% job.description %>
 </div>
 
-<div id="apply">
+<div id="job-apply">
 <h2>How to apply</h2>
 <% IF job.application_text %>
 <% END %>
@@ -30,7 +21,7 @@
 </div>
 
 
-<div id="job_location">
+<div id="job-location">
 <h2>Location</h2>
 <% IF job.on_site %>
   This is an on-site job that requires to be in the office in:
