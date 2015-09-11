@@ -132,8 +132,8 @@ hook before_template => sub {
 	my $original_language = mymaven->{main_site};
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
-	$t->{brand_name} = mymaven->{title};
-    $t->{default_image} = mymaven->{default_image};
+	$t->{brand_name}       = mymaven->{title};
+	$t->{default_image}    = mymaven->{default_image};
 
 	if ( $t->{conf}{show_jobs} ) {
 		my $jobs    = setting('jobs');

@@ -137,8 +137,10 @@ sub process {
 		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*?)"\s+(?:youtube="(.*?)"\s+)?/>\s*$} ) {
 			my ( $type, $file, $youtube ) = ( $1, $2, $3 );
 			if ($youtube) {
-				$line = qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>}
-			} else {
+				$line
+					= qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>};
+			}
+			else {
 				$line = '';
 			}
 
@@ -152,19 +154,19 @@ sub process {
 			my @ext       = grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*';
 			my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
 			my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
-			$data{videos} = [ map { qq{$file.$_} } @ext ];
+			$data{videos} = [ map {qq{$file.$_}} @ext ];
 
 			$line .= q{<div id="screencast">};
 
-			if (not $youtube) {
-			$line .= <<"SCREENCAST";
+			if ( not $youtube ) {
+				$line .= <<"SCREENCAST";
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
   data-setup='{"controls":true}'>
   @sources
 </video>
 SCREENCAST
-}
+			}
 
 			$line .= <<"DOWNLOADS";
 <div id="download">
