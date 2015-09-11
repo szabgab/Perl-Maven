@@ -10,13 +10,6 @@
   <link href="/google-code-prettify/prettify.css" rel="stylesheet">
   <script src="/google-code-prettify/prettify.js"></script>
 
-  <!-- prosperent link for perlmaven.com -->
-  <script type="text/javascript">
-    var _prosperent = {campaign_id: '144631e74ef647142d1b2cccf44ed06c'};
-  </script>
-  <script type="text/javascript" src="//prosperent.com/js/prosperent.js"></script>
-
-
   <script>
     var user_info = <% user_info_json %>;
   </script>
