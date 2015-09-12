@@ -200,7 +200,7 @@ hook before_template => sub {
 	my %localized = map { ( $ISO_LANG{$_} || $_ ) => $links{$_} } keys %links;
 	$t->{localized_versions} = \%localized;
 
-	delete $links{$language};    # no link to the curren site
+	$links{$language}{current} = 1;    # mark the current language
 	$t->{languages} = [ sort { $a->{name} cmp $b->{name} } values %links ];
 
 	my $url = request->uri_base . request->path;

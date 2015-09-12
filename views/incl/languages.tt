@@ -3,7 +3,10 @@
   <div id="sites">
     <ul>
     <% FOR lang IN languages %>
-       <li><a href="<% lang.url %>"><% lang.name %></a></li>
+       <li>
+          <a href="<% lang.url %>"><% lang.name %></a>
+          <% IF lang.current %><span class="glyphicon glyphicon-ok"></span><% END %>
+       </li>
     <% END %>
        <li><hr></li>
        <li><a href="http://<% domain %>/about#translations">about the translations</a></li>
