@@ -1,13 +1,15 @@
 <% IF series %>
 <div id="series">
   <a href="<% series.url %>"><% series.title %></a>
+  <hr>
     <% IF series.current %><span class="glyphicon glyphicon-ok"></span><% END %>
   <ol>
   <% FOR ch IN series.chapters %>
     <li><% ch.title %>
       <ol>
         <% FOR s IN ch.sub %>
-          <li><a href="<% s.url %>"><% s.title %></a>
+          <li>
+            <a <% IF s.current %>class="current"<% END %> href="<% s.url %>"><% s.title %></a>
             <% IF s.current %><span class="glyphicon glyphicon-ok"></span><% END %>
           </li>
         <% END %>

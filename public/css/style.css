@@ -405,3 +405,22 @@ video {
 #series {
    margin-top: 20px;
 }
+
+#series > ol {
+  list-style: inside;
+}
+#series > ol {
+  padding-left: 0px;
+}
+
+#series > ol > li > ol {
+  padding-left: 20px;
+}
+
+#series > ol > li > ol > li {
+  margin-top: 10px;
+}
+
+.current {
+   font-weight: bold;
+}
