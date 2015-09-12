@@ -201,7 +201,7 @@ hook before_template => sub {
 	$t->{localized_versions} = \%localized;
 
 	delete $links{$language};    # no link to the curren site
-	$t->{languages} = \%links;
+	$t->{languages} = [ sort { $a->{name} cmp $b->{name} } values %links ];
 
 	my $url = request->uri_base . request->path;
 	foreach my $field (qw(reddit_url twitter_data_url twitter_data_counturl google_plus_href facebook_href)) {

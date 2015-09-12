@@ -1,9 +1,9 @@
 <% IF conf.show_language_links %>
-  <% IF languages.keys.size %>
+  <% IF languages.size %>
   <div id="sites">
     <ul>
-    <% FOR lang IN languages.keys %>
-       <li><a href="<% languages.$lang.url %>"><% languages.$lang.name %></a></li>
+    <% FOR lang IN languages %>
+       <li><a href="<% lang.url %>"><% lang.name %></a></li>
     <% END %>
        <li><hr></li>
        <li><a href="http://<% domain %>/about#translations">about the translations</a></li>
