@@ -1,25 +1,18 @@
 <% IF series %>
 <div id="series">
   <a href="<% series.url %>"><% series.title %></a>
+    <% IF series.current %><span class="glyphicon glyphicon-ok"></span><% END %>
   <ol>
-  <% FOR s IN series.sub %>
-     <% IF s.url %>
-         <li><% IF s.url == path %><i class="icon-arrow-right"></i> <% END %><a href="<% s.url %>"><% s.title %></a></li>
-     <% ELSE %>
-         <li><% s.title %>
-             <% IF s.sub %>
-                 <ol>
-                   <% FOR s2 IN s.sub %>
-                       <% IF s2.url == path %>
-                           <li id="current_link"><i class="icon-arrow-right"></i> <a href="<% s2.url %>"><% s2.title %></a></li>
-                       <% ELSE %>
-                           <li><a href="<% s2.url %>"><% s2.title %></a>
-                       <% END %>
-                   <% END %>
-                 </ol>
-             <% END %>
-         </li>
-     <% END %>
+  <% FOR ch IN series.chapters %>
+    <li><% ch.title %>
+      <ol>
+        <% FOR s IN ch.sub %>
+          <li><a href="<% s.url %>"><% s.title %></a>
+            <% IF s.current %><span class="glyphicon glyphicon-ok"></span><% END %>
+          </li>
+        <% END %>
+      </ol>
+    </li>
   <% END %>
   </ol>
 </div>

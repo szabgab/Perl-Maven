@@ -79,6 +79,7 @@
     <div class="col-md-2">
 
       <% INCLUDE incl/logo.tt %>
+      <% INCLUDE incl/series.tt %>
 
     </div>
     <div class="col-md-7" id="content">

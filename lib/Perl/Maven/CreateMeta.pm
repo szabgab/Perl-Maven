@@ -11,6 +11,7 @@ has meta_archive => ( is => 'ro', default => sub { [] } );
 has translations => ( is => 'ro', default => sub { {} } );
 has stats        => ( is => 'ro', default => sub { {} } );
 has latest       => ( is => 'ro', default => sub { {} } );
+has pages        => ( is => 'rw' );
 
 use Data::Dumper qw(Dumper);
 use File::Find::Rule;
@@ -30,6 +31,7 @@ sub process_domain {
 	my $config = $self->mymaven->config($domain);
 	say "   Saving to $config->{meta}";
 
+	
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
 	foreach my $lang ( keys %$sites ) {
@@ -38,6 +40,7 @@ sub process_domain {
 			? $config
 			: $self->mymaven->config("$lang.$domain");
 		$self->process_site( $lang_config, $domain, $lang );
+
 	}
 	my @meta_archive
 		= reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
@@ -60,6 +63,34 @@ sub process_domain {
 
 	$self->consultants( $domain, $config );
 }
+
+sub process_series {
+	my ($self) = @_;
+
+	my $series = LoadFile('config/series.yml');
+	my %series_map;
+	foreach my $main (keys %$series) {
+		say $main;
+		$series_map{$main} = $main;
+		$series->{$main}{title} = $self->pages->{$main};
+		$series->{$main}{url} = "/$main";
+		foreach my $chapter (@{ $series->{$main}{chapters} }) {
+			foreach my $i (0 .. @{ $chapter->{sub} }-1) {
+				$series_map{ $chapter->{sub}[$i] } = $main;
+				my $title = $self->pages->{ $chapter->{sub}[$i] };
+				if (not $title) {
+					$title = $self->pages->{ substr($chapter->{sub}[$i], 4) };
+				}
+				$chapter->{sub}[$i] = {
+					url => "/$chapter->{sub}[$i]",
+					title => $title,
+				};
+			}
+		}
+	}
+	return ($series, \%series_map);
+}
+
 
 sub process_site {
 	my ( $self, $config, $domain, $lang ) = @_;
@@ -98,6 +129,13 @@ sub process_site {
 	save( 'keywords',   $dest, $keywords );
 	save( 'sitemap',    $dest, $sitemap );
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
+	$self->pages( { map { substr($_->{file}, 0, -4) => $_->{title} } @$pages } );
+
+	if ($lang eq 'en') {
+		my ($series, $series_map) = $self->process_series();
+		save( 'series', $dest, $series );
+		save( 'lookup_series', $dest, $series_map );
+	}
 
 	return;
 }

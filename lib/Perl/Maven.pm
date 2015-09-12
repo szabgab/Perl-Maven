@@ -4,7 +4,7 @@ use Dancer2;
 use Dancer2::Plugin::Passphrase qw(passphrase);
 
 our $VERSION = '0.11';
-my $PM_VERSION = 12;    # Version number to force JavaScript and CSS files reload
+my $PM_VERSION = 13;    # Version number to force JavaScript and CSS files reload
 
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
@@ -171,6 +171,22 @@ hook before_template => sub {
 	my $translations = setting('tools')->read_meta_meta('translations');
 	my $path         = request->path;
 	my %links;
+
+	my $lookup_series = setting('tools')->read_meta('lookup_series');
+    my $series = $lookup_series->{ substr($path, 1) };
+    if ($series) {
+        my $all_series = setting('tools')->read_meta('series');
+        $t->{series} = $all_series->{$series};
+        if ($t->{series}{url} eq $path) {
+            $t->{series}{current} = 1;
+        }
+        foreach my $ch (@{ $t->{series}{chapters} }) {
+            foreach my $e (@{ $ch->{sub} }) {
+                $e->{current} = 1 if $e->{url} eq $path;
+            }
+        }
+        #debug Dumper $t->{series};
+    }
 
 	if ( $path ne '/' ) {
 		my $original
