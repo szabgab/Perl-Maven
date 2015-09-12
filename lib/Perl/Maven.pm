@@ -173,20 +173,21 @@ hook before_template => sub {
 	my %links;
 
 	my $lookup_series = setting('tools')->read_meta('lookup_series');
-    my $series = $lookup_series->{ substr($path, 1) };
-    if ($series) {
-        my $all_series = setting('tools')->read_meta('series');
-        $t->{series} = $all_series->{$series};
-        if ($t->{series}{url} eq $path) {
-            $t->{series}{current} = 1;
-        }
-        foreach my $ch (@{ $t->{series}{chapters} }) {
-            foreach my $e (@{ $ch->{sub} }) {
-                $e->{current} = 1 if $e->{url} eq $path;
-            }
-        }
-        #debug Dumper $t->{series};
-    }
+	my $series = $lookup_series->{ substr( $path, 1 ) };
+	if ($series) {
+		my $all_series = setting('tools')->read_meta('series');
+		$t->{series} = $all_series->{$series};
+		if ( $t->{series}{url} eq $path ) {
+			$t->{series}{current} = 1;
+		}
+		foreach my $ch ( @{ $t->{series}{chapters} } ) {
+			foreach my $e ( @{ $ch->{sub} } ) {
+				$e->{current} = 1 if $e->{url} eq $path;
+			}
+		}
+
+		#debug Dumper $t->{series};
+	}
 
 	if ( $path ne '/' ) {
 		my $original
