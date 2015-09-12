@@ -124,6 +124,12 @@ hook before_template => sub {
 		}
 		$t->{books} = \@logos;
 	}
+	else {
+		$t->{books} = [
+			sprintf q{<a href="/"><img src="%s" alt="%s" title="%s" /></a>}, mymaven->{default_image},
+			mymaven->{title},                                                mymaven->{title}
+		];
+	}
 
 	# we assume that the whole complex is written in one leading language
 	# and some of the pages are to other languages The domain-site give the name of the
