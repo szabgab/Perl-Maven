@@ -52,6 +52,8 @@
              </div>
            <% END %>
 
+           <% INCLUDE incl/languages.tt %>
+
            <div id="lower_right">
            <% ads.lower_right %>
            </div>
