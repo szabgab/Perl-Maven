@@ -179,6 +179,8 @@ hook before_template => sub {
 		$t->{series} = $all_series->{$series};
 		if ( $t->{series}{url} eq $path ) {
 			$t->{series}{current} = 1;
+			$t->{next}{url}       = $t->{series}{chapters}[0]{sub}[0]{url};
+			$t->{next}{title}     = $t->{series}{chapters}[0]{sub}[0]{title};
 		}
 	CHAPTER:
 		foreach my $ch ( 0 .. @{ $t->{series}{chapters} } - 1 ) {
@@ -192,6 +194,10 @@ hook before_template => sub {
 					elsif ( $ch > 0 ) {
 						$t->{prev}{url}   = $t->{series}{chapters}[ $ch - 1 ]{sub}[-1]{url};
 						$t->{prev}{title} = $t->{series}{chapters}[ $ch - 1 ]{sub}[-1]{title};
+					}
+					else {
+						$t->{prev}{url}   = $t->{series}{url};
+						$t->{prev}{title} = $t->{series}{title};
 					}
 					if ( $e < @{ $t->{series}{chapters}[$ch]{sub} } - 1 ) {
 						$t->{next}{url}   = $t->{series}{chapters}[$ch]{sub}[ $e + 1 ]{url};
