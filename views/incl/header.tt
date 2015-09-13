@@ -17,7 +17,9 @@
   	<link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
   <% END %>
 
-
+  <!-- recmmended Google Pagination -->
+  <% IF prev %><link rel="prev" href="<% prev.url %>"><% END %>
+  <% IF next %><link rel="next" href="<% next.url %>"><% END %>
 
   <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
   <link href="/atom" rel="alternate" type="application/atom+xml" title ="<% brand_name %>" />
@@ -26,6 +28,7 @@
     var user_info = <% user_info_json %>;
   </script>
 
+  <!-- Google recommended indication of translated versions -->
   <%  IF localized_versions && localized_versions.size > 1 %>
     <link rel="alternate" hreflang="x-default" href="<% localized_versions.en.url %>" />
     <% FOR lang IN localized_versions.keys %>
@@ -41,6 +44,7 @@
   <meta name="description" content="<% description %>">
   <meta name="author" content="<% author %>">
 
+  <!-- The Open Graph protocol -->
   <meta property="og:title" content="<% title %>"/>
   <meta property="og:type" content="article"/>
   <meta property="og:image" content="<% default_image %>"/>
@@ -51,6 +55,7 @@
        <meta property="og:video" content="<% v %>" />
     <% END %>
   <% END %>
+
 </head>
 <body>
 
