@@ -70,7 +70,6 @@ sub process_series {
 	my $series = LoadFile('config/series.yml');
 	my %series_map;
 	foreach my $main ( keys %$series ) {
-		say $main;
 		die "This main page '$main' is already in use" if $series_map{$main};
 		$series_map{$main}      = $main;
 		$series->{$main}{title} = $self->pages->{$main};
