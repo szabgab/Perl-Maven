@@ -124,7 +124,7 @@ hook before_template => sub {
 		}
 		$t->{books} = \@logos;
 	}
-	else {
+	elsif ( mymaven->{default_image} ) {
 		$t->{books} = [
 			sprintf q{<a href="/"><img src="%s" alt="%s" title="%s" /></a>}, mymaven->{default_image},
 			mymaven->{title},                                                mymaven->{title}

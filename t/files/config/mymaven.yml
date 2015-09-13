@@ -7,6 +7,7 @@ installation:
   root: '../sites/perlmaven.com/'
   meta: '/home/foobar/perlmaven-meta'
   title: 'Perl Maven'
+  default_image: '/img/perl_maven_150x212.png'
   from: 'Perl Maven <test@perlmaven.com>'
   listid: 'Perl Maven newsletter <demo.perlmaven.com>'
   prefix: '[Perl Maven]'

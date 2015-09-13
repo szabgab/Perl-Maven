@@ -66,6 +66,7 @@ sub process_domain {
 sub process_series {
 	my ($self) = @_;
 
+	return if not -e 'config/series.yml';
 	my $series = LoadFile('config/series.yml');
 	my %series_map;
 	foreach my $main ( keys %$series ) {
@@ -78,7 +79,13 @@ sub process_series {
 				$series_map{ $chapter->{sub}[$i] } = $main;
 				my $title = $self->pages->{ $chapter->{sub}[$i] };
 				if ( not $title ) {
-					$title = $self->pages->{ substr( $chapter->{sub}[$i], 4 ) };
+					if ( length $chapter->{sub}[$i] > 4 ) {
+						$title = $self->pages->{ substr( $chapter->{sub}[$i], 4 ) };
+					}
+				}
+				if ( not $title ) {
+
+					#warn "not found: '$chapter->{sub}[$i]'";
 				}
 				$chapter->{sub}[$i] = {
 					url   => "/$chapter->{sub}[$i]",
@@ -131,8 +138,10 @@ sub process_site {
 
 	if ( $lang eq 'en' ) {
 		my ( $series, $series_map ) = $self->process_series();
-		save( 'series',        $dest, $series );
-		save( 'lookup_series', $dest, $series_map );
+		if ($series) {
+			save( 'series',        $dest, $series );
+			save( 'lookup_series', $dest, $series_map );
+		}
 	}
 
 	return;
