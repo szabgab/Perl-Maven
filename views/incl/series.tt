@@ -1,8 +1,8 @@
 <% IF series %>
 <div id="series">
   <a href="<% series.url %>"><% series.title %></a>
+  <% IF series.current %><span class="glyphicon glyphicon-ok"></span><% END %>
   <hr>
-    <% IF series.current %><span class="glyphicon glyphicon-ok"></span><% END %>
   <ol>
   <% FOR ch IN series.chapters %>
     <li><% ch.title %>
