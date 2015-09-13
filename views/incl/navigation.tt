@@ -1,0 +1,5 @@
+<div class="prev-next">
+<% IF prev %><button class="btn btn-mini btn-success prev"><span class="glyphicon glyphicon-chevron-left"></span><a href="<% prev.url %>" title="<% prev.title %>" alt="<% prev.title %>">Prev</a></button><% END %>
+<% IF next %><button class="btn btn-mini btn-success next"><span class="glyphicon glyphicon-chevron-right"></span><a href="<% next.url %>" title="<% next.title %>" alt="<% next.title %>">Next</a></button><% END %>
+</div>
+

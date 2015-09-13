@@ -180,13 +180,31 @@ hook before_template => sub {
 		if ( $t->{series}{url} eq $path ) {
 			$t->{series}{current} = 1;
 		}
-		foreach my $ch ( @{ $t->{series}{chapters} } ) {
-			foreach my $e ( @{ $ch->{sub} } ) {
-				$e->{current} = 1 if $e->{url} eq $path;
+	CHAPTER:
+		foreach my $ch ( 0 .. @{ $t->{series}{chapters} } - 1 ) {
+			foreach my $e ( 0 .. @{ $t->{series}{chapters}[$ch]{sub} } - 1 ) {
+				if ( $t->{series}{chapters}[$ch]{sub}[$e]{url} eq $path ) {
+					$t->{series}{chapters}[$ch]{sub}[$e]{current} = 1;
+					if ( $e > 0 ) {
+						$t->{prev}{url}   = $t->{series}{chapters}[$ch]{sub}[ $e - 1 ]{url};
+						$t->{prev}{title} = $t->{series}{chapters}[$ch]{sub}[ $e - 1 ]{title};
+					}
+					elsif ( $ch > 0 ) {
+						$t->{prev}{url}   = $t->{series}{chapters}[ $ch - 1 ]{sub}[-1]{url};
+						$t->{prev}{title} = $t->{series}{chapters}[ $ch - 1 ]{sub}[-1]{title};
+					}
+					if ( $e < @{ $t->{series}{chapters}[$ch]{sub} } - 1 ) {
+						$t->{next}{url}   = $t->{series}{chapters}[$ch]{sub}[ $e + 1 ]{url};
+						$t->{next}{title} = $t->{series}{chapters}[$ch]{sub}[ $e + 1 ]{title};
+					}
+					elsif ( $ch < @{ $t->{series}{chapters} } - 1 ) {
+						$t->{next}{url}   = $t->{series}{chapters}[ $ch + 1 ]{sub}[1]{url};
+						$t->{next}{title} = $t->{series}{chapters}[ $ch + 1 ]{sub}[1]{title};
+					}
+					last CHAPTER;
+				}
 			}
 		}
-
-		#debug Dumper $t->{series};
 	}
 
 	if ( $path ne '/' ) {

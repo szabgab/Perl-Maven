@@ -424,3 +424,19 @@ video {
 .current {
    font-weight: bold;
 }
+.prev a {
+  color: #FFF;
+}
+.next a {
+  color: #FFF;
+  float: right;
+}
+.prev-next .next {
+   float: right;
+}
+.prev-next .glyphicon-chevron-right {
+  float: right;
+}
+
+
+

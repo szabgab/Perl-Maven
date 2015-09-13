@@ -12,7 +12,11 @@
   </div>
 <% END %>
 
+<% INCLUDE incl/navigation.tt %>
+
 <% INCLUDE incl/content.tt %>
+
+<% INCLUDE incl/navigation.tt %>
 
 <% INCLUDE incl/credits.tt %>
 
@@ -24,5 +28,4 @@
 <% END %>
 <% ads.bottom %>
 <% INCLUDE incl/comments.tt %>
-
 
