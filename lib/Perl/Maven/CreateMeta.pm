@@ -71,11 +71,13 @@ sub process_series {
 	my %series_map;
 	foreach my $main ( keys %$series ) {
 		say $main;
+		die "This main page '$main' is already in use" if $series_map{$main};
 		$series_map{$main}      = $main;
 		$series->{$main}{title} = $self->pages->{$main};
 		$series->{$main}{url}   = "/$main";
 		foreach my $chapter ( @{ $series->{$main}{chapters} } ) {
 			foreach my $i ( 0 .. @{ $chapter->{sub} } - 1 ) {
+				die "This page '$chapter->{sub}[$i]' is already in use" if $series_map{ $chapter->{sub}[$i] };
 				$series_map{ $chapter->{sub}[$i] } = $main;
 				my $title = $self->pages->{ $chapter->{sub}[$i] };
 				if ( not $title ) {
