@@ -361,6 +361,9 @@ video {
 .category_img {
    margin-top: 20px;
 }
+.category_img img {
+   max-width: 150px;
+}
 
 .featured_jobs {
   margin: 20px;
