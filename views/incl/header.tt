@@ -8,9 +8,6 @@
   <link href="/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
   <link href="/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
 
-  <link href="/google-code-prettify/prettify.css" rel="stylesheet">
-  <script src="/google-code-prettify/prettify.js"></script>
-
 
   <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
   <% IF conf.rtl %>
@@ -36,9 +33,6 @@
     <% END %>
   <% END %>
 
-
-  <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
-  <script src="//vjs.zencdn.net/4.12/video.js"></script>
 
   <title><% title %></title>
   <meta name="description" content="<% description %>">
