@@ -3,6 +3,7 @@
 <div id="social-share">
 <script>reddit_url='<% reddit_url %>'</script>
 <script>reddit_title='<% title %>'</script>
+<script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
 
 <a href="http://twitter.com/share" class="twitter-share-button"
 data-text="<% title %>" data-url="<% twitter_data_url %>" data-count="vertical" data-counturl="<% twitter_data_counturl %>" >Tweet</a>
