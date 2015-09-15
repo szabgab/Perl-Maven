@@ -84,6 +84,13 @@
                                          
 <script src="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
+
+<% IF conf.show_social %>
+  <script type="text/javascript" src="http://reddit.com/button.js?t=2"></script>
+  <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+  <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<% END %>
+
 <div id="modal"></div>
 
 <% INCLUDE incl/google_analytics.tt %>
