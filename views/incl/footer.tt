@@ -66,6 +66,7 @@
 </div>
 
 <script src="/javascripts/jquery-1.11.3.min.js"></script>
+<script src="/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
 <div id="modal"></div>
 
