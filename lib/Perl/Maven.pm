@@ -592,6 +592,7 @@ get '/category' => sub {
 		},
 		{
 			categories => [ sort keys %$categories ],
+			books => [ sort keys %$categories ],
 		}
 	);
 };
