@@ -264,6 +264,9 @@ hook before_template => sub {
 	}
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
+	if ( not in_development() ) {
+		$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
+	}
 
 	$t->{user_info}      = pm_user_info();
 	$t->{user_info_json} = to_json $t->{user_info};
