@@ -74,8 +74,7 @@
   <link href="/css/rtl.css?<% pm_version %>" rel="stylesheet">
 <% END %>
 
-<link href="/google-code-prettify/prettify.css" rel="stylesheet">
-<script src="/google-code-prettify/prettify.js"></script>
+<% google_prettify %>
 
 <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
 <script src="//vjs.zencdn.net/4.12/video.js"></script>

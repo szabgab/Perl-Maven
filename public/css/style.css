@@ -170,6 +170,10 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 	text-align: left;
 }
 
+.prettyprint li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+  list-style-type: decimal !important
+}
+
 #indexes li {
     list-style: none;
     display: inline;
