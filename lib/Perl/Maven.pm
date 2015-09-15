@@ -265,7 +265,11 @@ hook before_template => sub {
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
 	if ( not in_development() ) {
+		$t->{jquery_cdn}    = 'https://code.jquery.com';
 		$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
+	}
+	else {
+		$t->{jquery_cdn} = '/javascripts';
 	}
 
 	$t->{user_info}      = pm_user_info();

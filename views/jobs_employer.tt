@@ -18,6 +18,5 @@
 <div id="job_post"></div>
 
 
-<script src="/javascripts/jquery-1.11.1.min.js"></script>
 <script src="/javascripts/jobs-editor.js"></script>
 

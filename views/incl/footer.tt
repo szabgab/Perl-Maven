@@ -72,7 +72,8 @@
 <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
 <script src="//vjs.zencdn.net/4.12/video.js"></script>
 
-<script src="/javascripts/jquery-1.11.3.min.js"></script>
+<script src="<% jquery_cdn %>/jquery-1.11.3.min.js"></script>
+                                         
 <script src="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
 <div id="modal"></div>
