@@ -104,6 +104,7 @@ subtest testmaven => sub {
 		'root'      => "$root/t/files/test",
 		'meta'      => "$root/t/files/meta",
 		'title'     => 'Test Maven',
+		'series'    => 0,
 		'site'      => "$root/t/files/test/sites/en",
 		'admin'     => {
 			'email' => 'Test Maven <admin-test@perlmaven.com>'

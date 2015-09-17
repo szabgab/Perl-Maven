@@ -6,6 +6,7 @@
 /MYMETA.*
 /Makefile
 /blib
+/books
 /config
 /cover_db
 /logs

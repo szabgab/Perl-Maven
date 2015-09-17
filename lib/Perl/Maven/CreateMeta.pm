@@ -18,6 +18,7 @@ use File::Find::Rule;
 use File::Path qw(mkpath);
 use JSON qw(from_json to_json);
 use YAML qw(LoadFile);
+use Path::Tiny qw(path);
 
 use Perl::Maven::Page;
 
@@ -74,7 +75,9 @@ sub process_series {
 		$series_map{$main}      = $main;
 		$series->{$main}{title} = $self->pages->{$main}{title};
 		$series->{$main}{url}   = "/$main";
+		my $html = qq{<h1>$series->{$main}{title}</h1>\n};
 		foreach my $chapter ( @{ $series->{$main}{chapters} } ) {
+			$html .= qq{<h2>$chapter->{title}</h2>\n};
 			foreach my $i ( 0 .. @{ $chapter->{sub} } - 1 ) {
 				die "This page '$chapter->{sub}[$i]' is already in use" if $series_map{ $chapter->{sub}[$i] };
 				$series_map{ $chapter->{sub}[$i] } = $main;
@@ -87,8 +90,16 @@ sub process_series {
 					title => $page->{title},
 				};
 
+				#die join ' ', keys %$page;
+				$html .= qq{<hr>\n};
+				$html .= qq{<h3>$page->{title}</h3>\n};
+				$html .= qq{$page->{abstract}\n};
+				$html .= qq{$page->{mycontent}\n};
+
 			}
 		}
+		mkdir 'books';
+		path("books/$main.html")->spew_utf8($html);
 	}
 	return ( $series, \%series_map );
 }
@@ -130,14 +141,17 @@ sub process_site {
 	save( 'keywords',   $dest, $keywords );
 	save( 'sitemap',    $dest, $sitemap );
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
+
 	#$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_ } @$pages } );
 	$self->pages( { map { substr( $_->{url_path}, 0, -4 ) => $_ } @$pages } );
 
 	if ( $lang eq 'en' ) {
-		my ( $series, $series_map ) = $self->process_series();
-		if ($series) {
-			save( 'series',        $dest, $series );
-			save( 'lookup_series', $dest, $series_map );
+		if ( $config->{series} ) {
+			my ( $series, $series_map ) = $self->process_series();
+			if ($series) {
+				save( 'series',        $dest, $series );
+				save( 'lookup_series', $dest, $series_map );
+			}
 		}
 	}
 
