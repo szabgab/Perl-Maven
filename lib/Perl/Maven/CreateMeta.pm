@@ -104,12 +104,7 @@ sub process_series {
 		mkdir 'books';
 		Path::Tiny::path("books/$main.html")->spew_utf8($html);
 
-		my $img_path = $config->{dirs}{img};
-
-		#$html =~ s{img\s+src="/img/([^"]+)"}{img src="$img_path/$1"}g;
-
-		# Remove images till I manage to install Image::Imlib2 and then  EBook::MOBI::Image
-		$html =~ s{<img\s+src="/img/([^"]+)"\s* (\s*(alt|title)=\"[^"]*"\s*)* /?>}{}gx;
+		$html = _clean_html( $config, $html );
 		require EBook::MOBI;
 		my $book = EBook::MOBI->new();
 		$book->add_mhtml_content($html);
@@ -117,6 +112,12 @@ sub process_series {
 		$book->set_author('Gabor Szabo');
 		$book->set_encoding(':encoding(UTF-8)');
 		$book->set_filename("books/$main.mobi");
+		$book->add_toc_once();
+		$book->add_pagebreak();
+
+		if ( $main eq 'dancer' ) {
+			$book->print_mhtml;
+		}
 		$book->make();
 		$book->save();
 
@@ -423,6 +424,33 @@ sub consultants {
 		push @people, \%p;
 	}
 	save( 'consultants', $config->{meta}, \@people );
+}
+
+sub codify {
+	my ($str) = @_;
+	$str =~ s{^$}{}s;
+	$str =~ s{^(\s*)(.*)$}{ '&nbsp;' x length($1) . $2 . '<br>'}gem;
+	return "<code>\n$str\n</code>";
+}
+
+sub _clean_html {
+	my ( $config, $html ) = @_;
+	my $img_path = $config->{dirs}{img};
+
+	#$html =~ s{img\s+src="/img/([^"]+)"}{img src="$img_path/$1"}g;
+
+	# Remove images till I manage to install Image::Imlib2 and then  EBook::MOBI::Image
+	$html =~ s{<img\s+src="/img/([^"]+)"\s* (\s*(alt|title)=\"[^"]*"\s*)* /?>}{}gx;
+	$html =~ s{<video.*?video>}{}sg;    # remove videos
+	$html =~ s{<div id="download">\s*Download:\s*</div>}{}g;
+
+	# <span class="inline_code">cpanm --verbose Dancer</span>
+	$html =~ s{<span class="inline_code">(.*?)</span>}{<b>$1</b>}sg;
+
+	$html =~ s{<pre class="linenums">(.*?)</pre>}{codify($1)}sge;
+	$html =~ s{<pre class="prettyprint linenums language-perl">(.*?)</pre>}{codify($1)}sge;
+	$html =~ s{<div id="screencast">\s*</div>}{}g;
+	return $html;
 }
 
 1;
