@@ -7,6 +7,7 @@ our $VERSION = '0.11';
 
 has mymaven      => ( is => 'ro' );
 has verbose      => ( is => 'ro' );
+has books        => ( is => 'ro' );
 has meta_archive => ( is => 'ro', default => sub { [] } );
 has translations => ( is => 'ro', default => sub { {} } );
 has stats        => ( is => 'ro', default => sub { {} } );
@@ -18,7 +19,6 @@ use File::Find::Rule;
 use File::Path qw(mkpath);
 use JSON qw(from_json to_json);
 use YAML qw(LoadFile);
-use Path::Tiny qw(path);
 
 use Perl::Maven::Page;
 
@@ -65,12 +65,13 @@ sub process_domain {
 }
 
 sub process_series {
-	my ($self) = @_;
+	my ( $self, $config ) = @_;
 
 	return if not -e 'config/series.yml';
 	my $series = LoadFile('config/series.yml');
 	my %series_map;
 	foreach my $main ( keys %$series ) {
+		say "Procesing series $main";
 		die "This main page '$main' is already in use" if $series_map{$main};
 		$series_map{$main}      = $main;
 		$series->{$main}{title} = $self->pages->{$main}{title};
@@ -98,8 +99,27 @@ sub process_series {
 
 			}
 		}
+		return if not $self->books;
+
 		mkdir 'books';
-		path("books/$main.html")->spew_utf8($html);
+		Path::Tiny::path("books/$main.html")->spew_utf8($html);
+
+		my $img_path = $config->{dirs}{img};
+
+		#$html =~ s{img\s+src="/img/([^"]+)"}{img src="$img_path/$1"}g;
+
+		# Remove images till I manage to install Image::Imlib2 and then  EBook::MOBI::Image
+		$html =~ s{<img\s+src="/img/([^"]+)"\s* (\s*(alt|title)=\"[^"]*"\s*)* /?>}{}gx;
+		require EBook::MOBI;
+		my $book = EBook::MOBI->new();
+		$book->add_mhtml_content($html);
+		$book->set_title( $series->{$main}{title} );
+		$book->set_author('Gabor Szabo');
+		$book->set_encoding(':encoding(UTF-8)');
+		$book->set_filename("books/$main.mobi");
+		$book->make();
+		$book->save();
+
 	}
 	return ( $series, \%series_map );
 }
@@ -147,7 +167,7 @@ sub process_site {
 
 	if ( $lang eq 'en' ) {
 		if ( $config->{series} ) {
-			my ( $series, $series_map ) = $self->process_series();
+			my ( $series, $series_map ) = $self->process_series($config);
 			if ($series) {
 				save( 'series',        $dest, $series );
 				save( 'lookup_series', $dest, $series_map );

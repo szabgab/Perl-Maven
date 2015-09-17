@@ -21,6 +21,7 @@ my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 
 GetOptions(
 	'verbose' => \my $verbose,
+	'books'   => \my $books,
 
 	#	'all'      => \my $all,
 );
@@ -30,6 +31,7 @@ my $domain_name = $mymaven->{config}{installation}{domain};
 my $meta        = Perl::Maven::CreateMeta->new(
 	verbose => $verbose,
 	mymaven => $mymaven,
+	books   => $books,
 );
 $meta->process_domain($domain_name);
 
