@@ -4,6 +4,7 @@ branches:
 language: perl
 sudo: false
 perl:
+  - "blead"
   - "5.20"
 #  - "5.18"
 #  - "5.16"
@@ -16,4 +17,6 @@ before_install:
   - cpanm --notest Test::Version
 services:
   - mongodb
+before_install:
+  - eval $(curl https://travis-perl.github.io/init) --auto
 
