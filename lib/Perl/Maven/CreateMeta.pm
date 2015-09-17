@@ -72,26 +72,21 @@ sub process_series {
 	foreach my $main ( keys %$series ) {
 		die "This main page '$main' is already in use" if $series_map{$main};
 		$series_map{$main}      = $main;
-		$series->{$main}{title} = $self->pages->{$main};
+		$series->{$main}{title} = $self->pages->{$main}{title};
 		$series->{$main}{url}   = "/$main";
 		foreach my $chapter ( @{ $series->{$main}{chapters} } ) {
 			foreach my $i ( 0 .. @{ $chapter->{sub} } - 1 ) {
 				die "This page '$chapter->{sub}[$i]' is already in use" if $series_map{ $chapter->{sub}[$i] };
 				$series_map{ $chapter->{sub}[$i] } = $main;
-				my $title = $self->pages->{ $chapter->{sub}[$i] };
-				if ( not $title ) {
-					if ( length $chapter->{sub}[$i] > 4 ) {
-						$title = $self->pages->{ substr( $chapter->{sub}[$i], 4 ) };
-					}
-				}
-				if ( not $title ) {
-
-					#warn "not found: '$chapter->{sub}[$i]'";
+				my $page = $self->pages->{ $chapter->{sub}[$i] };
+				if ( not $page ) {
+					die "Page Not found: '$chapter->{sub}[$i]'";
 				}
 				$chapter->{sub}[$i] = {
 					url   => "/$chapter->{sub}[$i]",
-					title => $title,
+					title => $page->{title},
 				};
+
 			}
 		}
 	}
@@ -135,7 +130,8 @@ sub process_site {
 	save( 'keywords',   $dest, $keywords );
 	save( 'sitemap',    $dest, $sitemap );
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
-	$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_->{title} } @$pages } );
+	#$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_ } @$pages } );
+	$self->pages( { map { substr( $_->{url_path}, 0, -4 ) => $_ } @$pages } );
 
 	if ( $lang eq 'en' ) {
 		my ( $series, $series_map ) = $self->process_series();
@@ -301,6 +297,7 @@ sub get_pages {
 
 			say "Reading $file" if $self->verbose;
 			my $path = "$s->{path}/$file";
+			say "Path $path" if $self->verbose;
 			my $data = eval {
 				Perl::Maven::Page->new( media => '', root => '', file => $path )
 					->read->process->merge_conf( $config->{conf} )->data;
