@@ -221,7 +221,11 @@ DOWNLOADS
 				if ( $what eq 'try' ) {
 					$cont .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
 				}
-			}    # else warn?
+			}
+			else {
+				die "Could not find '$path'";
+
+			}
 			next;
 		}
 		if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
