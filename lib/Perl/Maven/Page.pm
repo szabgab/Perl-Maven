@@ -214,10 +214,12 @@ DOWNLOADS
 				my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
 				$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
 				my $code = path($path)->slurp_utf8;
+				$code =~ s/&/&amp;/g;
 				$code =~ s/</&lt;/g;
 				$code =~ s/>/&gt;/g;
 				$cont .= $code;
 				$cont .= qq{</pre>\n};
+
 				if ( $what eq 'try' ) {
 					$cont .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
 				}
