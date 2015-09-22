@@ -19,6 +19,7 @@ use File::Find::Rule;
 use File::Path qw(mkpath);
 use JSON qw(from_json to_json);
 use YAML qw(LoadFile);
+use POSIX ();
 
 use Perl::Maven::Page;
 
@@ -70,6 +71,12 @@ sub process_series {
 	return if not -e 'config/series.yml';
 	my $series = LoadFile('config/series.yml');
 	my %series_map;
+	if ( $self->books ) {
+		mkdir 'books';
+		require EBook::MOBI;
+	}
+
+	my $date = POSIX::strftime '%Y-%m-%d %H:%M:%S', gmtime();
 	foreach my $main ( keys %$series ) {
 		say "Procesing series $main";
 		die "This main page '$main' is already in use" if $series_map{$main};
@@ -77,8 +84,27 @@ sub process_series {
 		$series->{$main}{title} = $self->pages->{$main}{title};
 		$series->{$main}{url}   = "/$main";
 		my $html = qq{<h1>$series->{$main}{title}</h1>\n};
+		$html .= qq{<p>Generated on $date</p>\n};
+
+		my $mobi;
+		if ( $self->books ) {
+			$mobi = EBook::MOBI->new();
+			$mobi->set_author('Gabor Szabo');
+			$mobi->set_encoding(':encoding(UTF-8)');
+			$mobi->set_filename("books/$main.mobi");
+			$mobi->add_toc_once();
+			$mobi->set_title( $series->{$main}{title} );
+			$mobi->add_pagebreak();
+
+			$mobi->add_mhtml_content($html);
+			$mobi->add_pagebreak();
+		}
+
 		foreach my $chapter ( @{ $series->{$main}{chapters} } ) {
 			$html .= qq{<h2>$chapter->{title}</h2>\n};
+			if ( $self->books ) {
+				$mobi->add_mhtml_content(qq{<h1>$chapter->{title}</h1>\n});
+			}
 			foreach my $i ( 0 .. @{ $chapter->{sub} } - 1 ) {
 				die "This page '$chapter->{sub}[$i]' is already in use" if $series_map{ $chapter->{sub}[$i] };
 				$series_map{ $chapter->{sub}[$i] } = $main;
@@ -97,29 +123,28 @@ sub process_series {
 				$html .= qq{$page->{abstract}\n};
 				$html .= qq{$page->{mycontent}\n};
 
+				if ( $self->books ) {
+					$mobi->add_mhtml_content(qq{<h1>$page->{title}</h1>});
+					$mobi->add_mhtml_content( _clean_html( $config, $page->{abstract} ) );
+					$mobi->add_mhtml_content( _clean_html( $config, $page->{mycontent} ) );
+					$mobi->add_pagebreak();
+				}
+
+			}
+
+			if ( $self->books ) {
+				$mobi->add_pagebreak();
 			}
 		}
-		return if not $self->books;
+		if ( $self->books ) {
+			Path::Tiny::path("books/$main.html")->spew_utf8($html);
 
-		mkdir 'books';
-		Path::Tiny::path("books/$main.html")->spew_utf8($html);
-
-		$html = _clean_html( $config, $html );
-		require EBook::MOBI;
-		my $book = EBook::MOBI->new();
-		$book->add_mhtml_content($html);
-		$book->set_title( $series->{$main}{title} );
-		$book->set_author('Gabor Szabo');
-		$book->set_encoding(':encoding(UTF-8)');
-		$book->set_filename("books/$main.mobi");
-		$book->add_toc_once();
-		$book->add_pagebreak();
-
-		if ( $main eq 'dancer' ) {
-			$book->print_mhtml;
+			if ( $main eq 'dancer' ) {
+				$mobi->print_mhtml;
+			}
+			$mobi->make();
+			$mobi->save();
 		}
-		$book->make();
-		$book->save();
 
 	}
 	return ( $series, \%series_map );
@@ -334,7 +359,7 @@ sub get_pages {
 			my $path = "$s->{path}/$file";
 			say "Path $path" if $self->verbose;
 			my $data = eval {
-				Perl::Maven::Page->new( media => '', root => '', file => $path )
+				Perl::Maven::Page->new( media => '', root => $config->{root}, file => $path )
 					->read->process->merge_conf( $config->{conf} )->data;
 			};
 			if ($@) {
