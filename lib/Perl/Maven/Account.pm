@@ -2,6 +2,8 @@ package Perl::Maven::Account;
 use Dancer2 appname => 'Perl::Maven';
 
 use Dancer2::Plugin::Passphrase qw(passphrase);
+use Email::Valid ();
+use Digest::SHA  ();
 
 use Perl::Maven::WebTools
 	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template pm_user_info);

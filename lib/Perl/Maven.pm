@@ -8,9 +8,7 @@ my $PM_VERSION = 15;    # Version number to force JavaScript and CSS files reloa
 
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
-use DateTime;
-use Digest::SHA;
-use Email::Valid;
+use DateTime ();
 use Fcntl qw(:flock SEEK_END);
 use List::MoreUtils qw(uniq);
 use List::Util qw(min);
@@ -18,7 +16,7 @@ use POSIX       ();
 use Time::HiRes ();
 use YAML qw(LoadFile);
 use MongoDB;
-use Path::Tiny ();    # the path function would clash with the path function of Dancer
+use Path::Tiny ();      # the path function would clash with the path function of Dancer
 
 use Web::Feed;
 
