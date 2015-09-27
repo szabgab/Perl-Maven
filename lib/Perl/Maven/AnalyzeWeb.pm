@@ -38,7 +38,14 @@ get '/projects' => sub {
 };
 
 get '/modules' => sub {
-	return 'list of all the modules...';
+	my $db = mongodb('perl_modules');
+	my @all = sort map { $_->{_id} } $db->find->all;
+	pm_show_page(
+		{ article => 'modules', template => 'digger/modules' },
+		{
+			modules => \@all,
+		}
+	);
 };
 
 get '/p/:project' => sub {

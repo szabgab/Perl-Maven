@@ -1,0 +1,11 @@
+<h2>Modules</h2>
+<a href="<% digger %>">Home</a>
+
+
+<ul>
+  <% FOR m IN modules %>
+   <li><a href="<% digger %>m/<% m %>"><% m %></a></li>
+  <% END %>
+</ul>
+
+
