@@ -8,7 +8,9 @@ use Data::Dumper qw(Dumper);
 use MetaCPAN::Client ();
 use MongoDB          ();
 use LWP::Simple qw(getstore);
-use Sys::Ramdisk ();
+
+#use Sys::Ramdisk ();
+use File::Temp qw(tempdir);
 use Perl::PrereqScanner;
 
 option limit => ( is => 'ro', default => 1, format => 'i' );
@@ -32,13 +34,15 @@ sub fetch_cpan {
 		my $res = $db->find_one( { project => $r->distribution, version => $r->version } );
 		next if $res;                    # already processed
 
-		my $ramdisk = Sys::Ramdisk->new(
-			size    => '100m',
-			dir     => '/tmp/ramdisk',
-			cleanup => 1,
-		);
-		$ramdisk->mount();
-		my $dir = $ramdisk->dir;
+		#my $ramdisk = Sys::Ramdisk->new(
+		#	size    => '100m',
+		#	dir     => '/tmp/ramdisk',
+		#	cleanup => 1,
+		#);
+		#$ramdisk->mount();
+		#my $dir = $ramdisk->dir;
+		my $dir = tempdir( CLEANUP => 1 );
+		say "DIR $dir";
 
 		#say 'glob:' , glob "$dir/*";
 
@@ -64,7 +68,8 @@ sub fetch_cpan {
 		my $scanner = Perl::PrereqScanner->new;
 		my @docs;
 		foreach my $file (@files) {
-			say $file;
+
+			#say $file;
 			my $path = "$dir/$file";
 			say "Missing $file" if not -e $path;
 			next if $file !~ /\.(pl|pm)$/;
