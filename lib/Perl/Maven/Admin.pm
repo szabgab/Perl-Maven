@@ -25,10 +25,6 @@ get '/admin/sessions' => sub {
 	my $res = admin_check();
 	return $res if $res;
 
-	#my $start = param('start');
-	#my $end   = param('end');
-	#my $end = DateTime->now;
-
 	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 	my $database   = $client->get_database('PerlMaven');
 	my $collection = $database->get_collection('logging');

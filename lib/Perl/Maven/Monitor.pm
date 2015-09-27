@@ -130,9 +130,6 @@ sub prepare {
 		second => $sec,
 	);
 
-	#say $start_time;
-	#say scalar gmtime $start;
-
 	my %data;
 
 	my $collection = $self->mongodb($source);
