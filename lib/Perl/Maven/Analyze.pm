@@ -100,14 +100,13 @@ sub fetch_cpan {
 		#$db->delete_many( { project => $r->distribution, version => $r->version } );
 		$db->remove( { project => $r->distribution, version => $r->version } );
 
+		# not yet supported on the server
+		#$db->insert_many( \@docs );
+		#$self->mongodb('perl_projects')->insert_one( { project => $r->distribution } );
 		foreach my $d (@docs) {
 			$db->insert($d);
 		}
-
-		# not yet supported on the server
-		#$db->insert_many( \@docs );
-		#$db->insert_many( \@docs );
-		$self->mongodb('perl_projects')->insert_one( { project => $r->distribution } );
+		$self->mongodb('perl_projects')->insert( { project => $r->distribution } );
 	}
 	return;
 }
