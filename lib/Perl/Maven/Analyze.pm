@@ -44,16 +44,11 @@ sub fetch_cpan {
 		#$ramdisk->mount();
 		#my $dir = $ramdisk->dir;
 		my $dir = tempdir( CLEANUP => 1 );
-		say "DIR $dir";
-
-		#say 'glob:' , glob "$dir/*";
 
 		#say $r->distribution;   # EBook-EPUB-Lite
-		say 'Processing ', $r->name;    # EBook-EPUB-Lite-0.71
+		#say 'Processing ', $r->name;    # EBook-EPUB-Lite-0.71
 		my $local_zip_file = $dir . '/' . $r->archive;
 
-		#say $r->download_url;
-		#say $local_zip_file;
 		my $rc = getstore( $r->download_url, $local_zip_file );
 		if ( $rc != 200 ) {    # RC_OK
 			say 'ERROR: Failed to download ', $r->download;
@@ -64,6 +59,10 @@ sub fetch_cpan {
 		#say -e $local_zip_file ? 'exists' : 'not';
 
 		my $archive = Archive::Any->new($local_zip_file);
+		if ( not defined $archive ) {
+			say "ERROR: Could not launch Archive::Any for '$local_zip_file'";
+			next;
+		}
 		$archive->extract($dir);
 		my @files = $archive->files;
 
