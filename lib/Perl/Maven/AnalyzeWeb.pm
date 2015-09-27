@@ -22,10 +22,6 @@ hook before_template => sub {
 	$t->{digger} = $URL;
 };
 
-get '' => sub {
-	redirect $URL;
-};
-
 get '/' => sub {
 	pm_show_page( { article => 'modules', template => 'digger/main' }, {} );
 };
