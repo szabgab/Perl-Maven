@@ -19,7 +19,7 @@ get '/' => sub {
 	my $db = mongodb('perl_projects');
 	my @all = map { $_->{project} } $db->find->all;
 	pm_show_page(
-		{ article => 'modules', template => 'modules' },
+		{ article => 'modules', template => 'digger/modules' },
 		{
 			projects => \@all,
 		}
@@ -32,7 +32,7 @@ get '/:project' => sub {
 	my $db = mongodb('perl');
 	my @all = map { delete $_->{_id}; $_ } $db->find( { project => $project } )->all;
 	pm_show_page(
-		{ article => 'modules', template => 'module' },
+		{ article => 'modules', template => 'digger/module' },
 		{
 			project => $project,
 			files   => \@all,
