@@ -54,6 +54,8 @@
 
            <% INCLUDE incl/languages.tt %>
 
+			<a href="/digger/">digger</a>
+
            <div id="lower_right">
            <% ads.lower_right %>
            </div>
