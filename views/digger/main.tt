@@ -1,5 +1,7 @@
 <h2>Analyzing Perl-based projects</h2>
 
+Currently available: dependency analyzis.
+
 <a href="<% digger %>projects">Projects</a>
 
 <a href="<% digger %>modules">Modules</a>

@@ -9,7 +9,6 @@ use lib 'lib';
 #    allow the user to find all the places where a module is used
 #    list files that don't use strict (or one of the alternatives)
 
-
 # Fetch the recent list from MetaCPAN
 # Check which one of the releases has not been processed yet (deduct the project name which is the distribution in CPAN/MetaCPAN)
 #    Download the files

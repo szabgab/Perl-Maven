@@ -27,9 +27,7 @@ get '' => sub {
 };
 
 get '/' => sub {
-	pm_show_page(
-		{ article => 'modules', template => 'digger/main' }, {}
-	);
+	pm_show_page( { article => 'modules', template => 'digger/main' }, {} );
 };
 
 get '/projects' => sub {
@@ -60,6 +58,33 @@ get '/p/:project' => sub {
 		}
 	);
 
+};
+
+get '/m/:module' => sub {
+	my $module = param('module');
+
+	my $db = mongodb('perl');
+
+	#my @all = map { delete $_->{_id}; $_ } $db->find({ "depends.$module" => { '$exists' => boolean::true } })->all;
+	#return Dumper \@all;
+	my @all = map {
+		{
+			author  => $_->{author},
+			project => $_->{project},
+			version => $_->{version},
+			depends => $_->{depends}{$module},
+			file    => $_->{file},
+		}
+	} $db->find( { "depends.$module" => { '$exists' => boolean::true } } )->all;
+
+	#return Dumper \@all;
+	pm_show_page(
+		{ article => 'modules', template => 'digger/module' },
+		{
+			projects => \@all,
+			module   => $module,
+		}
+	);
 };
 
 1;

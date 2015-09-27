@@ -1,0 +1,14 @@
+<h2>Module <% module %></h2>
+<a href="<% digger %>"</a>Home</a>
+<a href="<% digger %>projects">Projects</a>
+<a href="http://metacpan.org/pod/<% module %>"><% module %> on MetaCPAN</a>
+
+<ul>
+  <% FOR p IN projects %>
+   <li><a href="<% digger %>p/<% p.project %>"><% p.project %></a> <% p.version %>
+    <a href="https://metacpan.org/source/<% p.author %>/<% p.file %>"><% p.file %></a>
+   </li>
+  <% END %>
+</ul>
+
+

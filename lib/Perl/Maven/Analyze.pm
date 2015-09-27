@@ -16,10 +16,16 @@ use Perl::PrereqScanner;
 our $VERSION = '0.11';
 
 option limit => ( is => 'ro', default => 1, format => 'i' );
+option verbose => ( is => 'ro', default => 0 );
+
+sub _log {
+	my ( $self, $msg ) = @_;
+	say $msg if $self->verbose;
+}
 
 sub run {
 	my ($self) = @_;
-	say 'run';
+	$self->_log('run');
 
 	$self->fetch_cpan;
 
@@ -33,6 +39,7 @@ sub fetch_cpan {
 	my $db     = $self->mongodb('perl');
 
 	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
+		$self->_log( 'project: ' . $r->distribution . ' version: ' . $r->version );
 		my $res = $db->find_one( { project => $r->distribution, version => $r->version } );
 		next if $res;                    # already processed
 
@@ -87,6 +94,7 @@ sub fetch_cpan {
 			my %data    = (
 				project => $r->distribution,
 				version => $r->version,
+				author  => $r->author,
 
 	   # at one point I think I saw cpan module release with the same version number MetaCPAN should probably catch that
 	   # but maybe we should also notice, protect ourself and maybe even complain
