@@ -13,6 +13,8 @@ use LWP::Simple qw(getstore);
 use File::Temp qw(tempdir);
 use Perl::PrereqScanner;
 
+our $VERSION = '0.11';
+
 option limit => ( is => 'ro', default => 1, format => 'i' );
 
 sub run {
