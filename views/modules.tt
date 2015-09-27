@@ -1,0 +1,9 @@
+<h2>Projects</h2>
+
+
+<ul>
+  <% FOR p IN projects %>
+   <li><a href="/module/<% p %>"><% p %></a></li>
+  <% END %>
+</ul>
+

@@ -1,0 +1,15 @@
+<h2>Project <% project %></h2>
+List of <a href="/module">projects</a>.
+
+<ul>
+  <% FOR f IN files %>
+   <li><% f.file %>
+     <ul>
+       <% FOR d IN f.depends.keys.sort %>
+         <li><a href="http://metacpan.org/pod/<% d %>"><% d %></a> <% IF f.depends.$d %><% f.depends.$d %><% END %></li>
+       <% END %>
+     </ul>
+   </li>
+  <% END %>
+</ul>
+

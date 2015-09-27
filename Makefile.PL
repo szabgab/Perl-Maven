@@ -49,6 +49,16 @@ WriteMakefile(
 		'Email::MIME::Creator'  => 1.926,
 		'Email::Stuffer'        => 0,
 
+		# needed for bin/perl_analyze.pl
+		# Moo
+		#MongoDB
+		'MooX::Options'       => 0,
+		'Archive::Any'        => 0,
+		'MetaCPAN::Client'    => 0,
+		'LWP::Simple'         => 0,
+		'Sys::Ramdisk'        => 0,
+		'Perl::PrereqScanner' => 0,
+
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,
 		'Test::WWW::Mechanize::PSGI' => 0.35,
