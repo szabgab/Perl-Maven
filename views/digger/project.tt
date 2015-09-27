@@ -1,5 +1,5 @@
 <h2>Project <% project %></h2>
-List of <a href="/module">projects</a>.
+<a href="<% digger %>"</a>Home</a> <a href="<% digger %>projects">Projects</a>.
 
 <ul>
   <% FOR f IN files %>

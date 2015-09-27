@@ -1,0 +1,6 @@
+<h2>Analyzing Perl-based projects</h2>
+
+<a href="<% digger %>projects">Projects</a>
+
+<a href="<% digger %>modules">Modules</a>
+

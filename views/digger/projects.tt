@@ -1,0 +1,10 @@
+<h2>Projects</h2>
+<a href="<% digger %>">Home</a>
+
+
+<ul>
+  <% FOR p IN projects %>
+   <li><a href="<% digger %>p/<% p %>"><% p %></a></li>
+  <% END %>
+</ul>
+

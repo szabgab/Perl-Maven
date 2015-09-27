@@ -15,24 +15,45 @@ sub mongodb {
 	return $database->get_collection($collection);
 }
 
+my $URL = '/digger/';
+
+hook before_template => sub {
+	my $t = shift;
+	$t->{digger} = $URL;
+};
+
+get '' => sub {
+	redirect $URL;
+};
+
 get '/' => sub {
+	pm_show_page(
+		{ article => 'modules', template => 'digger/main' }, {}
+	);
+};
+
+get '/projects' => sub {
 	my $db = mongodb('perl_projects');
 	my @all = map { $_->{project} } $db->find->all;
 	pm_show_page(
-		{ article => 'modules', template => 'digger/modules' },
+		{ article => 'modules', template => 'digger/projects' },
 		{
 			projects => \@all,
 		}
 	);
 };
 
-get '/:project' => sub {
+get '/modules' => sub {
+	return 'list of all the modules...';
+};
+
+get '/p/:project' => sub {
 	my $project = param('project');
 
 	my $db = mongodb('perl');
 	my @all = map { delete $_->{_id}; $_ } $db->find( { project => $project } )->all;
 	pm_show_page(
-		{ article => 'modules', template => 'digger/module' },
+		{ article => 'modules', template => 'digger/project' },
 		{
 			project => $project,
 			files   => \@all,
