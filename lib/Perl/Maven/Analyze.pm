@@ -98,8 +98,8 @@ sub fetch_cpan {
 		}
 
 		# not supported in old MongoDB
-		#$db->delete_many( { project => $r->distribution, version => $r->version } );
-		$db->remove( { project => $r->distribution, version => $r->version } );
+		#$db->delete_many( { project => $r->distribution } );
+		$db->remove( { project => $r->distribution } );
 
 		# not yet supported on the server
 		#$db->insert_many( \@docs );
