@@ -96,7 +96,10 @@ sub fetch_cpan {
 
 		}
 
-		$db->delete_many( { project => $r->distribution, version => $r->version } );
+		# not supported in old MongoDB
+		#$db->delete_many( { project => $r->distribution, version => $r->version } );
+		$db->delete( { project => $r->distribution, version => $r->version } );
+
 		foreach my $d (@docs) {
 			$db->insert($d);
 		}
