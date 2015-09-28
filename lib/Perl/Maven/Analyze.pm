@@ -121,7 +121,7 @@ sub analyze_project {
 
 		my $depsref = $prereqs->as_string_hash();
 		my %data    = (
-			project => $p->{distribution},
+			project => $p->{project},
 			version => $p->{version},
 			author  => $p->{author},
 
@@ -135,14 +135,14 @@ sub analyze_project {
 	}
 
 	# not supported in old MongoDB
-	#$db->delete_many( { project => $p->{distribution} } );
-	$db->remove( { project => $p->{distribution} } );
+	#$db->delete_many( { project => $p->{project} } );
+	$db->remove( { project => $p->{project} } );
 
 	my $db_modules = $self->mongodb('perl_modules');
 
 	# not yet supported on the server
 	#$db->insert_many( \@docs );
-	#$self->mongodb('perl_projects')->insert_one( { project => $p->{distribution} } );
+	#$self->mongodb('perl_projects')->insert_one( { project => $p->{project} } );
 	foreach my $d (@docs) {
 		$db->insert($d);
 		foreach my $module ( keys %{ $d->{depends} } ) {
@@ -150,7 +150,7 @@ sub analyze_project {
 			eval { $db_modules->insert( { _id => $module } ) };    # disregard duplicate error
 		}
 	}
-	$self->mongodb('perl_projects')->insert( { project => $p->{distribution} } );
+	eval { $self->mongodb('perl_projects')->insert( { _id => $p->{project} } ) };
 	return;
 }
 
