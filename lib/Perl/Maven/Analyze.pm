@@ -4,12 +4,15 @@ use Moo;
 use MooX::Options;
 
 use Archive::Any ();
+use Cwd qw(getcwd);
 use Data::Dumper qw(Dumper);
 use MetaCPAN::Client ();
 use MongoDB          ();
 use LWP::Simple qw(getstore);
-
-#use Sys::Ramdisk ();
+use Path::Tiny qw(path);
+use Capture::Tiny qw(capture);
+use JSON::MaybeXS qw(decode_json);
+use Path::Iterator::Rule ();
 use File::Temp qw(tempdir);
 use Perl::PrereqScanner;
 
@@ -17,6 +20,9 @@ our $VERSION = '0.11';
 
 option limit => ( is => 'ro', default => 1, format => 'i' );
 option verbose => ( is => 'ro', default => 0 );
+option conf => ( is => 'ro', required => 1, format => 's', doc => 'Path to configuration JSON file' );
+option dir =>
+	( is => 'ro', required => 1, format => 's', doc => 'Path to directory that holds the source code of the projects' );
 
 sub _log {
 	my ( $self, $msg ) = @_;
@@ -29,6 +35,121 @@ sub run {
 
 	$self->fetch_cpan;
 
+	#$self->process_projects;
+
+}
+
+sub process_projects {
+	my ($self) = @_;
+
+	my $home_dir = getcwd();
+	my $dir      = $self->dir;
+	die "Dir '$dir' does not exist\n" if not -d $dir;
+	my $config = decode_json path( $self->conf )->slurp_utf8;
+	foreach my $p ( @{ $config->{projects} } ) {
+
+		#say Dumper $p;
+		next if not $p->{enabled};
+		my $path = "$dir/$p->{dir}";
+		if ( -e $path ) {
+			if ( $p->{type} eq 'git' ) {
+				$self->_log("git pull for '$p->{git_url}'");
+				chdir $path;
+				my ( $stdout, $stderr, $exit ) = capture { system 'git pull -q' };
+
+				#if 'Already up-to-date.';
+				say "OUT: $stdout";
+				say "ERR: $stderr";
+				say "EXIT: $exit";
+				chdir $home_dir;
+			}
+			else {
+				warn "Type '$p->{type}' is not handled yet\n";
+				next;
+			}
+		}
+		else {
+			if ( $p->{type} eq 'git' ) {
+				chdir $dir;
+				$self->_log("Cloning '$p->{git_url}'");
+				my ( $stdout, $stderr, $exit ) = capture { system "git clone -q $p->{git_url} $p->{dir}" };
+
+				#say "OUT: $stdout"; # expect to be empty
+				#say "ERR: $stderr"; # expect to be empty
+				#say "EXIT: $exit"; # expect 0
+				chdir $home_dir;
+				my $rule  = Path::Iterator::Rule->new;
+				my @files = $rule->all('.');
+
+				#$self->analyze_project($p, \@files);
+			}
+			else {
+				warn "Type '$p->{type}' is not handled yet\n";
+				next;
+			}
+		}
+	}
+
+	return;
+}
+
+sub analyze_project {
+	my ( $self, $p, $dir, $files ) = @_;
+
+	# list all the files
+	# go over files one
+
+	my $db      = $self->mongodb('perl');
+	my $scanner = Perl::PrereqScanner->new;
+	my @docs;
+	foreach my $file (@$files) {
+
+		#say $file;
+		my $path = "$dir/$file";
+		say "Missing $file" if not -e $path;
+		next if $file !~ /\.(pl|pm)$/;
+
+		# Huge files (eg currently Perl::Tidy) will cause PPI to barf
+		# So we need to catch those, keep calm, and carry on
+		my $prereqs = eval { $scanner->scan_file($path); };
+		if ($@) {
+			warn $@;
+			next;
+		}
+
+		my $depsref = $prereqs->as_string_hash();
+		my %data    = (
+			project => $p->{distribution},
+			version => $p->{version},
+			author  => $p->{author},
+
+	   # at one point I think I saw cpan module release with the same version number MetaCPAN should probably catch that
+	   # but maybe we should also notice, protect ourself and maybe even complain
+			file    => $file,
+			depends => $depsref,
+		);
+		push @docs, \%data;
+
+	}
+
+	# not supported in old MongoDB
+	#$db->delete_many( { project => $p->{distribution} } );
+	$db->remove( { project => $p->{distribution} } );
+
+	my $db_modules = $self->mongodb('perl_modules');
+
+	# not yet supported on the server
+	#$db->insert_many( \@docs );
+	#$self->mongodb('perl_projects')->insert_one( { project => $p->{distribution} } );
+	foreach my $d (@docs) {
+		$db->insert($d);
+		foreach my $module ( keys %{ $d->{depends} } ) {
+			$self->_log("Adding module '$module'");
+			eval { $db_modules->insert( { _id => $module } ) };    # disregard duplicate error
+		}
+	}
+	$self->mongodb('perl_projects')->insert( { project => $p->{distribution} } );
+	return;
 }
 
 sub fetch_cpan {
@@ -72,56 +193,13 @@ sub fetch_cpan {
 		}
 		$archive->extract($dir);
 		my @files = $archive->files;
+		my %data  = (
+			project => $r->distribution,
+			version => $r->version,
+			author  => $r->author,
+		);
+		$self->analyze_project( \%data, $dir, \@files );
 
-		my $scanner = Perl::PrereqScanner->new;
-		my @docs;
-		foreach my $file (@files) {
-
-			#say $file;
-			my $path = "$dir/$file";
-			say "Missing $file" if not -e $path;
-			next if $file !~ /\.(pl|pm)$/;
-
-			# Huge files (eg currently Perl::Tidy) will cause PPI to barf
-			# So we need to catch those, keep calm, and carry on
-			my $prereqs = eval { $scanner->scan_file($path); };
-			if ($@) {
-				warn $@;
-				next;
-			}
-
-			my $depsref = $prereqs->as_string_hash();
-			my %data    = (
-				project => $r->distribution,
-				version => $r->version,
-				author  => $r->author,
-
-	   # at one point I think I saw cpan module release with the same version number MetaCPAN should probably catch that
-	   # but maybe we should also notice, protect ourself and maybe even complain
-				file    => $file,
-				depends => $depsref,
-			);
-			push @docs, \%data;
-
-		}
-
-		# not supported in old MongoDB
-		#$db->delete_many( { project => $r->distribution } );
-		$db->remove( { project => $r->distribution } );
-
-		my $db_modules = $self->mongodb('perl_modules');
-
-		# not yet supported on the server
-		#$db->insert_many( \@docs );
-		#$self->mongodb('perl_projects')->insert_one( { project => $r->distribution } );
-		foreach my $d (@docs) {
-			$db->insert($d);
-			foreach my $module ( keys %{ $d->{depends} } ) {
-				$self->_log("Adding module '$module'");
-				eval { $db_modules->insert( { _id => $module } ) };    # disregard duplicate error
-			}
-		}
-		$self->mongodb('perl_projects')->insert( { project => $r->distribution } );
 	}
 	return;
 }
