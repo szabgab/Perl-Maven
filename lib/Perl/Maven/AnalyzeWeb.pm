@@ -28,7 +28,7 @@ get '/' => sub {
 
 get '/projects' => sub {
 	my $db = mongodb('perl_projects');
-	my @all = map { $_->{project} } $db->find->all;
+	my @all = map { $_->{_id} } $db->find->all;
 	pm_show_page(
 		{ article => 'modules', template => 'digger/projects' },
 		{
