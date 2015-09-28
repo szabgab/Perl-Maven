@@ -78,10 +78,8 @@ sub process_projects {
 				#say "ERR: $stderr"; # expect to be empty
 				#say "EXIT: $exit"; # expect 0
 				chdir $home_dir;
-				my $rule  = Path::Iterator::Rule->new;
-				my @files = $rule->all('.');
 
-				#$self->analyze_project($p, \@files);
+				#$self->analyze_project($p, '.');
 			}
 			else {
 				warn "Type '$p->{type}' is not handled yet\n";
@@ -94,15 +92,19 @@ sub process_projects {
 }
 
 sub analyze_project {
-	my ( $self, $p, $dir, $files ) = @_;
+	my ( $self, $p, $dir ) = @_;
 
 	# list all the files
 	# go over files one
+	$self->_log("DIR $dir");
+	my $rule = Path::Iterator::Rule->new;
+	my @files = $rule->all( $dir, { relative => 1 } );
+	$self->_log( 'Files: ' . Dumper \@files );
 
 	my $db      = $self->mongodb('perl');
 	my $scanner = Perl::PrereqScanner->new;
 	my @docs;
-	foreach my $file (@$files) {
+	foreach my $file (@files) {
 
 		#say $file;
 		my $path = "$dir/$file";
@@ -193,12 +195,14 @@ sub fetch_cpan {
 		}
 		$archive->extract($dir);
 		my @files = $archive->files;
-		my %data  = (
+		undef $archive;
+		unlink $local_zip_file;
+		my %data = (
 			project => $r->distribution,
 			version => $r->version,
 			author  => $r->author,
 		);
-		$self->analyze_project( \%data, $dir, \@files );
+		$self->analyze_project( \%data, $dir );
 
 	}
 	return;
