@@ -1,7 +1,8 @@
 # please alpha sort config items as you add them
 
 severity = 5
-verbose = 11
+#verbose = 11
+verbose = %f: [%p] %m at line %l, column %c.\n
 theme = core
 
 [TestingAndDebugging::RequireUseStrict]
