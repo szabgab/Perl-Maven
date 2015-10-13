@@ -688,6 +688,18 @@ get qr{^/pro/(.+)} => sub {
 	);
 };
 
+get qr{^/pod/(.+)} => sub {
+	my ($article) = splat;
+
+	return pm_show_page(
+		{
+			path     => mymaven->{dirs}{pod},
+			article  => $article,
+			template => 'page',
+		}
+	);
+};
+
 get '/mail/:article' => sub {
 	my $article = param('article');
 	my $code    = param('code') || '';
