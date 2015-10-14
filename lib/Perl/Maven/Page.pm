@@ -159,7 +159,7 @@ sub process {
 
 			$line .= q{<div id="screencast">};
 
-			if ( not $youtube ) {
+			if ( @sources and not $youtube ) {
 				$line .= <<"SCREENCAST";
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
@@ -169,13 +169,16 @@ sub process {
 SCREENCAST
 			}
 
-			$line .= <<"DOWNLOADS";
+			if (@downloads) {
+				$line .= <<"DOWNLOADS";
 <div id="download">
 Download:
 @downloads
 </div>
-</div>
 DOWNLOADS
+			}
+
+			$line .= "</div>\n";
 		}
 
 		$line =~ s{<hl>}{<span class="inline_code">}g;
