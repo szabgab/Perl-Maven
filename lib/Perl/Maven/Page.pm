@@ -151,9 +151,10 @@ sub process {
 				ogv  => 'ogg',
 				avi  => 'avi',
 			);
-			my @ext       = grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*';
-			my @sources   = map  {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
-			my @downloads = map  {qq{<a href="$file.$_">$_</a>}} @ext;
+			my @ext
+				= $self->media ? ( grep { $types{$_} } map { /\.(\w+)$/; $1 } glob $self->media . $path . '.*' ) : ();
+			my @sources   = map {qq{<source src="$file.$_" type='video/$types{$_}' />\n}} @ext;
+			my @downloads = map {qq{<a href="$file.$_">$_</a>}} @ext;
 			$data{videos} = [ map {qq{$file.$_}} @ext ];
 
 			$line .= q{<div id="screencast">};
