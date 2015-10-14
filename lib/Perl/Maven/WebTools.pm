@@ -209,9 +209,7 @@ sub read_tt {
 		)->read->process->merge_conf( mymaven->{conf} )->data;
 	};
 	if ($@) {
-
-		# hmm, this should have been caught when the meta files were generated...
-		error $@;
+		error "This error: '$@' should have been caught when the meta files were generated!";
 		return {};
 	}
 	else {
