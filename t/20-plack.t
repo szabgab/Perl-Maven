@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::Most;
 use Plack::Test;
 use HTTP::Request::Common;
 use Cwd qw(getcwd);

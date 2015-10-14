@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::Most;
 use Cwd qw(abs_path);
 
 use t::lib::Test;

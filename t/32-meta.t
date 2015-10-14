@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use v5.10;
 
-use Test::More;
+use Test::Most;
 plan tests => 2;
 
 use Perl::Maven::Config;

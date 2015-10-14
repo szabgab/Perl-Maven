@@ -7,7 +7,7 @@ use Cwd qw(abs_path getcwd);
 use File::Basename qw(basename);
 use Data::Dumper qw(Dumper);
 
-use Test::More;
+use Test::Most;
 use Test::Deep;
 use Test::WWW::Mechanize::PSGI;
 

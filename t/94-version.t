@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More;
+use Test::Most;
 
 ## no critic
 eval q{use Test::Version 1.003001 qw( version_all_ok ), {

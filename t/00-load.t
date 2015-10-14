@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::Most;
 use Test::Script;
 
 # Temporariy removed

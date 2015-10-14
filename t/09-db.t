@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::Most tests => 5;
 use Test::Deep qw(cmp_deeply re);
 
 use File::Copy qw(move);

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::Most tests => 9;
 
 use File::Copy qw(move);
 use Capture::Tiny qw(capture);

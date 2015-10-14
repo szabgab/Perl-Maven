@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::Most;
 
 ## no critic
 eval 'use Test::Code::TidyAll 0.20';
