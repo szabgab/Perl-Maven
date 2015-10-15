@@ -200,19 +200,9 @@ $(document).ready(function() {
 	    mysearch(e.target.value, false);
 	});
 
-//	$('#search_box').typeahead( { 'source' : setup_search, items : 20  });
-//	$('#search_box').blur(function (e) {
-//		// This delay is a work-around to let the JS fill the input box before we grab the value from there.
-//		// In later versions of Bootstrap there is probably a better solution for this
-//		setTimeout(function() {
-//			var keyword = $("#search_box").val();
-//			//console.log('click:' + keyword);
-//			mysearch(keyword, true);
-//		}, 100);
-//	});
-
  	$("#search_box").keyup(function (e) {
        var query = $("#search_box").val();
+		//console.log(query);
 
        $.ajax({
            url: '/search.json',
@@ -234,12 +224,12 @@ $(document).ready(function() {
        return;
     });
 
-// 	$("#search_box").keyup(function (e) {
-// 	    if (e.keyCode == 13) {
-// 	        var keyword = $("#search_box").val();
-// 	        mysearch(keyword, true);
-// 		}
-// 	});
+ 	$("#search_box").keyup(function (e) {
+ 	    if (e.keyCode == 13) {
+ 	        var keyword = $("#search_box").val();
+ 	        mysearch(keyword, true);
+ 		}
+ 	});
 // 
 // 	$('#email').keypress(function(e) {
 // 		$("#need-email").hide();
