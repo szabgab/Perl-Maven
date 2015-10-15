@@ -4,7 +4,7 @@ use 5.010;
 
 # converting old sessions with e-mail addresses to new sessions with uid
 use Data::Dumper;
-use YAML qw(LoadFile DumpFile);
+use YAML::XS qw(LoadFile DumpFile);
 use lib 'lib';
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new('pm.db');

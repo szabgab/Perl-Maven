@@ -9,7 +9,7 @@ use Getopt::Long qw(GetOptions);
 use Cwd qw(abs_path cwd);
 use File::Basename qw(dirname);
 use Dancer2;
-use YAML qw();
+use YAML::XS qw(LoadFile);
 use Digest::SHA;
 
 binmode( STDOUT, ':encoding(UTF-8)' );
@@ -27,7 +27,7 @@ exit;
 
 sub main {
 
-	my $cfg     = YAML::LoadFile('config.yml');
+	my $cfg     = LoadFile('config.yml');
 	my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 	my $config  = $mymaven->config('perlmaven.com');
 	$mymaven = $config;

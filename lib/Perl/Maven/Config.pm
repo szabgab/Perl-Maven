@@ -25,7 +25,7 @@ use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
 use File::Basename qw(dirname);
 use Hash::Merge::Simple qw(merge);
-use YAML qw(LoadFile);
+use YAML::XS qw(LoadFile);
 use Storable qw(dclone);
 
 sub new {

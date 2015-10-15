@@ -35,6 +35,7 @@ WriteMakefile(
 		'Template'                    => 2.25,
 		'Time::HiRes'                 => 0,
 		'YAML'                        => 1.09,
+		'YAML::XS'                    => 0.59,
 		'JSON'                        => 2.90,
 		'JSON::MaybeXS'               => 1.003,
 		'Web::Feed'                   => 0.02,

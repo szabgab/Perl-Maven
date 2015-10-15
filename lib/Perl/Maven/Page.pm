@@ -6,7 +6,8 @@ use DateTime;
 use Data::Dumper qw(Dumper);
 use Storable qw(dclone);
 use Path::Tiny qw(path);
-use YAML qw(LoadFile DumpFile);
+
+#use YAML::XS qw(LoadFile DumpFile);
 use Template;
 
 our $VERSION = '0.11';

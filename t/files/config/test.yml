@@ -3,7 +3,7 @@ installation:
   main_site: en
     #redirect: 0
   www:
-    redirect: http://test-pm.com/
+    redirect: 'http://test-pm.com/'
   root: 'test'
   meta: 'meta'
   conf:

@@ -507,6 +507,8 @@ subtest register_with_password => sub {
 		},
 		'registeration form filled'
 	);
+
+	#diag $x->content;
 	$x->content_like(qr{<a href="/pm/login">Login</a>});
 	$x->follow_link_ok( { text => 'Login' } );
 	$x->submit_form_ok(

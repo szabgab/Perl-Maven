@@ -14,7 +14,7 @@ use List::MoreUtils qw(uniq);
 use List::Util qw(min);
 use POSIX       ();
 use Time::HiRes ();
-use YAML qw(LoadFile);
+use YAML::XS qw(LoadFile);
 use MongoDB;
 use Path::Tiny ();      # the path function would clash with the path function of Dancer
 
@@ -76,7 +76,7 @@ hook before => sub {
 		my @files = grep { !/(links|skeleton).yml/ } glob path( config->{appdir}, 'config/jobs', '*.yml' );
 		foreach my $file (@files) {
 			my ($job_id) = $file =~ m{([^/]+)\.yml$};
-			my $job_data = eval { YAML::LoadFile($file) };
+			my $job_data = eval { LoadFile($file) };
 			if ($@) {
 				error("While loading '$file':\n$@");
 				next;
@@ -88,7 +88,7 @@ hook before => sub {
 		set jobs => \%jobs;
 		my $links_file = path( config->{appdir}, 'config/jobs/links.yml' );
 		if ( -e $links_file ) {
-			set job_links => YAML::LoadFile($links_file);
+			set job_links => eval { LoadFile($links_file) };
 		}
 	}
 
@@ -805,9 +805,9 @@ get qr{^/(.+)} => sub {
 
 ##########################################################################################
 sub read_sites {
-	my $p = Path::Tiny::path( mymaven->{root} . '/sites.yml' );
-	return {} if not $p;
-	return YAML::Load $p->slurp_utf8;
+	my $path = mymaven->{root} . '/sites.yml';
+	return {} if not -e $path;
+	return LoadFile $path;
 }
 
 # Each site can have a file called resources.txt with rows of key=value pairs
@@ -816,8 +816,11 @@ sub read_resources {
 	my $default_file = mymaven->{root} . '/resources.yml';
 	my $defaults = eval { LoadFile $default_file};
 
+	#error("Could not load '$default_file' $@") if $@;
+
 	my $resources_file = mymaven->{site} . '/resources.yml';
 	my $data = eval { LoadFile $resources_file};
+	error("Could not load '$resources_file' $@") if $@;
 	$data ||= {};
 
 	foreach my $key ( keys %{ $defaults->{text} } ) {

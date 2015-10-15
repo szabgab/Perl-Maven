@@ -18,7 +18,7 @@ use Data::Dumper qw(Dumper);
 use File::Find::Rule;
 use File::Path qw(mkpath);
 use JSON qw(from_json to_json);
-use YAML qw(LoadFile);
+use YAML::XS qw(LoadFile);
 use POSIX ();
 
 use Perl::Maven::Page;
