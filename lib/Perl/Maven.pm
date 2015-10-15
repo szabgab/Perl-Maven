@@ -362,17 +362,6 @@ get '/search/:keyword' => sub {
 		};
 };
 
-# TODO do we still need to support this: or can we redirect to /search/$keyword  ?
-get '/search' => sub {
-	my ($keyword) = param('keyword');
-	return pm_show_page { article => 'search', template => 'search', },
-		{
-		title   => $keyword,
-		results => _search($keyword),
-		keyword => $keyword,
-		};
-};
-
 get '/search.json' => sub {
 	my ($keyword) = param('keyword');
 	return to_json _search($keyword);
