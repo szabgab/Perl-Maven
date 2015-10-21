@@ -152,22 +152,6 @@ function admin_show_user_details(data, status, jqXHR) {
 
 }
 
-function setup_search (query, process) {
-	//console.log('setup');
-
-    $.ajax({
-        url: '/search.json',
-        data: { 'query' :  query},
-        dataType: "json",
-        success: function(data, status, jqXHR) {
-           //console.log('callback');
-           process(data);
-	    },
-    });
-
-    return;
-}
-
 function register_result (data, status, jqXHR) {
 	//console.log(data);
 	if (data['error']) {
