@@ -166,13 +166,6 @@ sub fetch_cpan {
 		my $res = $db->find_one( { project => $r->distribution, version => $r->version } );
 		next if $res;                    # already processed
 
-		#my $ramdisk = Sys::Ramdisk->new(
-		#	size    => '100m',
-		#	dir     => '/tmp/ramdisk',
-		#	cleanup => 1,
-		#);
-		#$ramdisk->mount();
-		#my $dir = $ramdisk->dir;
 		my $dir = tempdir( CLEANUP => 1 );
 
 		#say $r->distribution;   # EBook-EPUB-Lite

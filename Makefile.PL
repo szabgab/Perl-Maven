@@ -57,7 +57,6 @@ WriteMakefile(
 		'Archive::Any'        => 0,
 		'MetaCPAN::Client'    => 0,
 		'LWP::Simple'         => 0,
-		'Sys::Ramdisk'        => 0,
 		'Perl::PrereqScanner' => 0,
 
 		# For testing
