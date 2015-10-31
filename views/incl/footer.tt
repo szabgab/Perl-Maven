@@ -71,9 +71,9 @@
 <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
 
 
-<link href="/css/style.css" rel="stylesheet">
+<link href="/css/style.css?<% pm_version %>" rel="stylesheet">
 <% IF conf.rtl %>
-  <link href="/css/rtl.css" rel="stylesheet">
+  <link href="/css/rtl.css??<% pm_version %>" rel="stylesheet">
 <% END %>
 
 <% google_prettify %>
@@ -84,7 +84,7 @@
 <script src="<% jquery_cdn %>/jquery-1.11.3.min.js"></script>
                                          
 <script src="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="/javascripts/perlmaven.js"></script>
+<script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
 
 <% IF conf.show_social %>
   <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
