@@ -138,10 +138,7 @@ sub process_series {
 		}
 		if ( $self->books ) {
 			Path::Tiny::path("books/$main.html")->spew_utf8($html);
-
-			if ( $main eq 'dancer' ) {
-				$mobi->print_mhtml;
-			}
+			Path::Tiny::path("books/$main.mhtml")->spew_utf8( $mobi->print_mhtml('return') );
 			$mobi->make();
 			$mobi->save();
 		}

@@ -22,9 +22,11 @@ my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 GetOptions(
 	'verbose' => \my $verbose,
 	'books'   => \my $books,
+	'help'    => \my $help,
 
 	#	'all'      => \my $all,
 );
+usage() if $help;
 $ENV{METAMETA} = 1;
 
 my $domain_name = $mymaven->{config}{installation}{domain};
@@ -58,11 +60,13 @@ $meta->process_domain($domain_name);
 exit;
 ###############################################################################
 sub usage {
-	my ($msg) = @_;
+	my ($msg) = shift || '';
 
 	print "*** $msg\n\n";
 	print "Usage $0\n";
 	print "         --verbose\n";
+	print "         --books\n";
+	print "         --help\n";
 	exit;
 }
 
