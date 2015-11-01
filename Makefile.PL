@@ -59,7 +59,7 @@ WriteMakefile(
 		'LWP::Simple'         => 0,
 		'Perl::PrereqScanner' => 0,
 
-		'EBook::MOBI'         => 0,
+		'EBook::MOBI' => 0,
 
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,
