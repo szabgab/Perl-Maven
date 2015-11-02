@@ -74,10 +74,13 @@ sub process_series {
 	if ( $self->books ) {
 		mkdir 'books';
 		require EBook::MOBI;
+		require PDF::Create;
 	}
 
 	my $date = POSIX::strftime '%Y-%m-%d %H:%M:%S', gmtime();
 	foreach my $main ( keys %$series ) {
+
+		#next if $main ne 'dancer';
 		say "Procesing series $main";
 		die "This main page '$main' is already in use" if $series_map{$main};
 		$series_map{$main}      = $main;
@@ -87,9 +90,24 @@ sub process_series {
 		$html .= qq{<p>Generated on $date</p>\n};
 
 		my $mobi;
+		my $pdf;
+		my %PDF;
 		if ( $self->books ) {
+			my $author = 'Gabor Szabo';
+
+			say "books/$main.pdf";
+			$pdf = PDF::Create->new(
+				'filename'     => "books/$main.pdf",
+				'Author'       => $author,
+				'Title'        => $series->{$main}{title},
+				'CreationDate' => [localtime],
+			);
+			$PDF{title_font} = $pdf->font( 'BaseFont' => 'Helvetica' );
+			$PDF{root} = $pdf->new_page( 'MediaBox' => $pdf->get_page_size('A4') );
+			$PDF{page} = $PDF{root}->new_page;
+
 			$mobi = EBook::MOBI->new();
-			$mobi->set_author('Gabor Szabo');
+			$mobi->set_author($author);
 			$mobi->set_encoding(':encoding(UTF-8)');
 			$mobi->set_filename("books/$main.mobi");
 			$mobi->add_toc_once();
@@ -104,6 +122,8 @@ sub process_series {
 			$html .= qq{<h2>$chapter->{title}</h2>\n};
 			if ( $self->books ) {
 				$mobi->add_mhtml_content(qq{<h1>$chapter->{title}</h1>\n});
+				$PDF{page} = $PDF{page}->new_page;
+				$PDF{page}->stringc( $PDF{title_font}, 40, 306, 850, $chapter->{title} );
 			}
 			foreach my $i ( 0 .. @{ $chapter->{sub} } - 1 ) {
 				die "This page '$chapter->{sub}[$i]' is already in use" if $series_map{ $chapter->{sub}[$i] };
@@ -141,6 +161,8 @@ sub process_series {
 			Path::Tiny::path("books/$main.mhtml")->spew_utf8( $mobi->print_mhtml('return') );
 			$mobi->make();
 			$mobi->save();
+
+			$pdf->close;
 		}
 
 	}
