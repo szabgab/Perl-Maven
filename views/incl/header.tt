@@ -42,7 +42,7 @@
   <% END %>
 
 </head>
-<body>
+<body ng-app="PerlMavenApp" ng-controller="PerlMavenCtrl">
 
 <% IF conf.show_social %>
 <!-- start facebook SDK ?? -->

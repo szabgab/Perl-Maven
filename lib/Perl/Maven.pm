@@ -269,11 +269,12 @@ hook before_template => sub {
 		$t->{google_prettify} = q{<link href="/google-code-prettify/prettify.css" rel="stylesheet">};
 		$t->{google_prettify} .= q{<script src="/google-code-prettify/prettify.js"></script>};
 		$t->{jquery_cdn} = '/javascripts';
+		$t->{angular_cdn} = '';
 	}
 	else {
 		$t->{google_prettify}
 			= q{<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>};
-		$t->{jquery_cdn}    = 'https://code.jquery.com';
+		$t->{angular_cdn}    = 'https://ajax.googleapis.com/ajax/libs';
 		$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
 	}
 

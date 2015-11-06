@@ -229,3 +229,8 @@ $(document).ready(function() {
 	prettyPrint();
 });
  
+angular.module('PerlMavenApp', []);
+angular.module('PerlMavenApp').controller('PerlMavenCtrl', function($scope) {
+});
+
+
