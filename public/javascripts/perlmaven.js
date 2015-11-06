@@ -181,29 +181,29 @@ $(document).ready(function() {
  	        mysearch(keyword, true);
  		}
  	});
-// 
-// 	$('#email').keypress(function(e) {
-// 		$("#need-email").hide();
-// 	});
-// 
-// 	$('#admin-show-details').on('click', function(e) {
-// 		var email = $('#email').val();
-// 		//console.log(email);
-// 		if (! email) {
-// 			//console.log('alert');
-// 			$("#need-email").show();
-// 			return false;
-// 		}
-//     	$.ajax({
-//         	url: '/admin/user_info.json',
-//         	data: { "email" : email },
-//         	dataType: "json",
-//         	success: admin_show_user_details,
-//     	});
-// 
-// 		return false;
-// 	});
-// 
+ 
+ 	$('#admin-search-email').keypress(function(e) {
+ 		$("#need-email").hide();
+ 	});
+ 
+ 	$('#admin-show-details').on('click', function(e) {
+ 		var email = $('#admin-search-email').val();
+ 		//console.log(email);
+ 		if (! email) {
+ 			//console.log('alert');
+ 			$("#need-email").show();
+ 			return false;
+ 		}
+     	$.ajax({
+         	url: '/admin/user_info.json',
+         	data: { "email" : email },
+         	dataType: "json",
+         	success: admin_show_user_details,
+     	});
+ 
+ 		return false;
+ 	});
+ 
 
 	$('a[href^="/pro\\/"]').each(function(i, e) {
 		//console.log(this);
@@ -211,12 +211,6 @@ $(document).ready(function() {
 		//console.log( $(this).html());
 		$(this).html( $(this).html() + ' (pro)' );
 	});
-//	$("a").click(function (e) {
-//		e.preventDefault();
-//		console.log('click' + e);
-//		console.log(this);
-//		console.log($(this).attr('href'));
-//	});
 
     $('.spoiler').on('click', function(e) {
         if ($(this).hasClass('spoiler_hidden')) {
