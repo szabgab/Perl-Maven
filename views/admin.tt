@@ -27,15 +27,20 @@ Admin page. For authorized users only.
 <form role="form">
   <div class="form-group">
     <label for="admin-search-email">Email address</label>
-    <input type="email" class="form-control" id="admin-search-email" placeholder="Enter email">
+    <input type="text" ng-model="admin_search_email" class="form-control" id="admin-search-email" placeholder="Enter email">
   </div>
- <button type="submit" id="admin-show-details" class="btn btn-default">Show</button>
+ <button ng-click="admin_show_details()"   id="admin-show-details" class="btn btn-default">Show</button>
 </form>
 
-<div class="alert alert-warning" id="need-email">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>Warning!</strong> Need an e-mail address.
+<div id="details">
+  <table>
+  <tr><td>email</td><td>timestamp</td><td>products</td></tr>
+  <tr ng-repeat="p in people">
+    <td>{{p.email}}</td>
+    <td><span ng-show="p.verify_time">{{p.verify_time * 1000 | date}}</span></td>
+    <td>
+        <div ng-repeat="s in p.subscriptions">{{s}}</div>
+    </td>
+  </tr>
 </div>
 
-<div id="details">
-</div>
