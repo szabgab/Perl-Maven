@@ -1,5 +1,6 @@
 installation:
   domain: perlmaven.com
+  free_product: some_free_cooking_product
   main_site: en
     #redirect: 0
   www:

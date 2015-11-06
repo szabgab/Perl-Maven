@@ -4,6 +4,7 @@ use Dancer2 appname => 'Perl::Maven';
 use Dancer2::Plugin::Passphrase qw(passphrase);
 use Email::Valid ();
 use Digest::SHA  ();
+use Data::Dumper qw(Dumper);
 
 use Perl::Maven::WebTools
 	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template pm_user_info);
@@ -146,7 +147,7 @@ get '/pm/subscribe' => sub {
 
 	my $uid = session('uid');
 	my $db  = setting('db');
-	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
+	$db->subscribe_to( uid => $uid, code => mymaven->{free_product} );
 	pm_message('subscribed');
 };
 
@@ -156,7 +157,7 @@ get '/pm/un-subscribe' => sub {
 	my $uid = session('uid');
 
 	my $db = setting('db');
-	$db->unsubscribe_from( uid => $uid, code => 'perl_maven_cookbook' );
+	$db->unsubscribe_from( uid => $uid, code => mymaven->{free_product} );
 	pm_message('unsubscribed');
 };
 
@@ -178,7 +179,7 @@ any '/pm/unsubscribe' => sub {
 
 	# TODO maybe we will want some stonger checking for confirmation?
 	if ( param('confirm') ) {
-		$db->unsubscribe_from( uid => $user->{id}, code => 'perl_maven_cookbook' );
+		$db->unsubscribe_from( uid => $user->{id}, code => mymaven->{free_product} );
 		my $html    = template 'email_after_unsubscribe', {}, { layout => 'email' };
 		my $mymaven = mymaven;
 		my $err     = send_mail(
@@ -352,7 +353,7 @@ get '/pm/account' => sub {
 
 	my %params = (
 		subscriptions   => \@owned_products,
-		subscribed      => $db->is_subscribed( $uid, 'perl_maven_cookbook' ),
+		subscribed      => $db->is_subscribed( $uid, mymaven->{free_product} ),
 		name            => $user->{name},
 		email           => $user->{email},
 		login_whitelist => ( $user->{login_whitelist} ? 1 : 0 ),
@@ -613,8 +614,10 @@ sub verify_registration {
 	if ( not $db->verify_registration($uid) ) {
 		return pm_template 'verify_form', { error => 1, };
 	}
+	my $mymaven = mymaven;
 
-	$db->subscribe_to( uid => $uid, code => 'perl_maven_cookbook' );
+	# TODO handle if this is not successful!
+	$db->subscribe_to( uid => $uid, code => mymaven->{free_product} );
 
 	session uid       => $uid;
 	session logged_in => 1;
@@ -623,8 +626,7 @@ sub verify_registration {
 	my $url = request->base;
 	$url =~ s{/+$}{};
 
-	my $mymaven = mymaven;
-	my $err     = send_mail(
+	my $err = send_mail(
 		{
 			From    => $mymaven->{from},
 			To      => $email,

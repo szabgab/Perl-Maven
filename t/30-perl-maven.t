@@ -7,6 +7,7 @@ use Cwd qw(abs_path getcwd);
 use File::Basename qw(basename);
 use Data::Dumper qw(Dumper);
 use Path::Tiny ();
+use Carp::Always;
 
 use Test::Most;
 use Test::Deep;
@@ -28,7 +29,7 @@ plan tests => 9;
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 
-my $cookbook_url  = '/download/perl_maven_cookbook/perl_maven_cookbook_v0.01.txt';
+my $cookbook_url  = '/download/some_free_product/some_free_product_v0.01.txt';
 my $cookbook_text = basename $cookbook_url;
 
 my $prod1_download_url = '/download/product_a/file_0.2.txt';
@@ -149,7 +150,7 @@ subtest 'subscribe' => sub {
 	#my $mail_regex = qr{<a href="($url/pm/verify/1/\w+)">verify</a>};
 	my $mail_regex = qr{verify\s+\[\s+($url/pm/verify2/\w+)};
 	my ($set_url) = $mail =~ $mail_regex;
-	ok $set_url, 'mail with set url address';
+	ok $set_url, "mail with url address to $set_url";
 
 	#diag $set_url;
 	#diag explain $db->{dbh}->selectall_arrayref('SELECT * FROM user');
@@ -160,7 +161,7 @@ subtest 'subscribe' => sub {
 		'user table';
 	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM product'),
 		[
-		[ 1, 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 ],
+		[ 1, 'some_free_product',         'Perl Maven Cookbook',        0 ],
 		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
 		],
 		'product table';
@@ -173,7 +174,7 @@ subtest 'subscribe' => sub {
 		'user table';
 	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM product'),
 		[
-		[ 1, 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 ],
+		[ 1, 'some_free_product',         'Perl Maven Cookbook',        0 ],
 		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
 		],
 		'product table';
@@ -206,11 +207,13 @@ subtest 'subscribe' => sub {
 		'user table';
 	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM product'),
 		[
-		[ 1, 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 ],
+		[ 1, 'some_free_product',         'Perl Maven Cookbook',        0 ],
 		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
 		],
 		'product table';
 	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM subscription'), [ [ 1, 1 ] ], 'subscription table';
+
+	#diag $w->content;
 	$w->follow_link_ok(
 		{
 			text => $cookbook_text,

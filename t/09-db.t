@@ -140,8 +140,8 @@ subtest products => sub {
 			'name'  => 'Beginner Perl Maven e-book',
 			'price' => '0.01'
 		},
-		'perl_maven_cookbook' => {
-			'code'  => 'perl_maven_cookbook',
+		'some_free_product' => {
+			'code'  => 'some_free_product',
 			'id'    => 1,
 			'name'  => 'Perl Maven Cookbook',
 			'price' => 0

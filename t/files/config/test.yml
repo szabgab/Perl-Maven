@@ -1,5 +1,6 @@
 installation:
   domain: test-pm.com
+  free_product: 'some_free_product'
   main_site: en
     #redirect: 0
   www:

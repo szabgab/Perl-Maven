@@ -91,7 +91,8 @@ subtest testmaven => sub {
 		'conf' => {
 			'show_newsletter_form' => '1'
 		},
-		'dirs' => {
+		free_product => 'some_free_product',
+		'dirs'       => {
 			'download' => "$root/t/files/download",
 			'pro'      => "$root/t/files/pro",
 			'img'      => "$root/t/files/images",

@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::Most tests => 9;
 
+use Data::Dumper qw(Dumper);
 use File::Copy qw(move);
 use Capture::Tiny qw(capture);
 use Cwd qw(cwd);
@@ -30,9 +31,9 @@ subtest dump_products => sub {
 	plan tests => 3;
 
 	my $existing_products = {
-		'perl_maven_cookbook' => {
+		'some_free_product' => {
 			'name'  => 'Perl Maven Cookbook',
-			'code'  => 'perl_maven_cookbook',
+			'code'  => 'some_free_product',
 			'id'    => 1,
 			'price' => 0
 		},
@@ -45,7 +46,7 @@ subtest dump_products => sub {
 	};
 
 	my $products = $db->get_products;
-	is_deeply $products, $existing_products, 'get_products';
+	is_deeply( $products, $existing_products, 'get_products' ) or diag Dumper $products;
 
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --products --perl";
@@ -61,7 +62,7 @@ subtest list_products => sub {
 		system "$admin --products";
 	};
 	is $stdout, q{ 2 beginner_perl_maven_ebook           Beginner Perl Maven e-book        0.01
- 1 perl_maven_cookbook                 Perl Maven Cookbook                 0
+ 1 some_free_product                   Perl Maven Cookbook                 0
 }, '--products';
 	is $stderr, '', 'stderr is empty';
 };
@@ -94,7 +95,7 @@ subtest list_subscribers => sub {
 	plan tests => 2;
 
 	my ( $stdout, $stderr, @result ) = capture {
-		system "$admin --list perl_maven_cookbook";
+		system "$admin --list some_free_product";
 	};
 	is $stdout, '';
 	is $stderr, '', 'stderr is empty';
@@ -114,7 +115,7 @@ subtest add_subscriber => sub {
 	plan tests => 3;
 
 	my ( $stdout, $stderr, @result ) = capture {
-		system "$admin --addsub perl_maven_cookbook --email a\@b.com";
+		system "$admin --addsub some_free_product --email a\@b.com";
 	};
 	like $stdout,   qr{Could not find user 'a\@b.com'};
 	is $stderr,     '', 'stderr is empty';
