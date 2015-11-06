@@ -21,6 +21,7 @@ Admin page. For authorized users only.
 
 <a href="/admin/sessions">Show recent sessions</a>
 <a href="/admin/redirects">Manage Redirects</a>
+<button ng-click="show_searches()">Show searches</button>
 
 <hr>
 <h2>Show user details</h2>
@@ -42,5 +43,14 @@ Admin page. For authorized users only.
         <div ng-repeat="s in p.subscriptions">{{s}}</div>
     </td>
   </tr>
+</div>
+
+<div ng-show="admin_searches">
+<h2>Searches</h2>
+Total: {{admin_searches.count}}<br>
+
+<ul>
+  <li ng-repeat="r in admin_searches.hits">{{r.search}}</li>
+</ul>
 </div>
 

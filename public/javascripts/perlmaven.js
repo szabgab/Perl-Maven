@@ -161,6 +161,19 @@ angular.module('PerlMavenApp', [])
                 console.log('error');
             });
     };
+
+	$scope.show_searches = function() {
+         $http({
+            method: 'GET',
+             url: '/admin/searches'
+         }).then( function (response) {
+            console.log(response.data);
+               $scope.admin_searches = response.data;
+            },
+            function(response) {
+                console.log('error');
+            });
+	};
 })
   .filter('encodeURIComponent', function() {
     return window.encodeURIComponent;

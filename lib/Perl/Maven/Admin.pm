@@ -1,6 +1,9 @@
 package Perl::Maven::Admin;
 use Dancer2 appname => 'Perl::Maven';
 
+#use boolean;
+use Data::Dumper qw(Dumper);
+
 use Perl::Maven::WebTools qw(mymaven logged_in is_admin get_ip valid_ip _generate_code pm_error pm_template);
 use Perl::Maven::Sendmail qw(send_mail);
 
@@ -42,7 +45,31 @@ get '/admin/sessions' => sub {
 	return pm_template 'admin_sessions', { count => $count, hits => \@hits };
 };
 
+get '/admin/searches' => sub {
+	content_type 'text/javascript';
+	my $res = admin_check();
+	return $res if $res;
+
+	my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $database   = $client->get_database('PerlMaven');
+	my $collection = $database->get_collection('logging');
+
+	#my %selector = ( autocomplete => { '$exists' => 1 } );
+	#my $count      = $collection->find( \%selector )->count;
+	#my $cursor     = $collection->find( \%selector )->sort( { time => 1 } )->limit(10);
+	my %selector = ( search => { '$exists' => 1 } );
+	my $count    = $collection->find( \%selector )->count;
+	my $cursor   = $collection->find( \%selector )->sort( { time => 1 } )->limit(10);
+	my @hits;
+	while ( my $c = $cursor->next ) {
+		delete $c->{_id};
+		push @hits, $c;
+	}
+	return to_json { count => $count, hits => \@hits };
+};
+
 get '/admin/user_info.json' => sub {
+	content_type 'text/javascript';
 	my $res = admin_check();
 	return $res if $res;
 

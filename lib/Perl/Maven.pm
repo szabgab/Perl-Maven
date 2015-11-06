@@ -971,8 +971,9 @@ sub log_request {
 	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
 
 	my $ip = get_ip();
+	my $page =
 
-	my %details = (
+		my %details = (
 		sid        => setting('sid'),
 		time       => $time,
 		host       => request->host,
@@ -981,7 +982,17 @@ sub log_request {
 		ip         => $ip,
 		user_agent => scalar( request->user_agent ),
 		status     => response->status,
-	);
+		);
+
+	if ( request->query_string ) {
+		$details{query_string} = request->query_string;
+	}
+	if ( $details{page} =~ m{^/autocomplete.json/(.+)} ) {
+		$details{autocomplete} = $1;
+	}
+	if ( $details{page} =~ m{^/search/(.+)} ) {
+		$details{search} = $1;
+	}
 	my $start_time = setting('start_time');
 
 	if ($start_time) {
@@ -998,7 +1009,6 @@ sub log_request {
 	return if response->status != 200;
 	return if $uri =~ m{^/atom};
 	return if $uri =~ m{^/robots.txt};
-	return if $uri =~ m{^/search.json};
 
 	return if is_bot();
 
