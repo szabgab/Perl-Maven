@@ -1,63 +1,23 @@
 
 // show the job posts one-by-one
-function show_jobs() {
-    //console.log('show_jobs');
-	var done = false;
-    $('.featured_jobs').each(function() {
-		if (done) {
-			return;
-		}
-        //console.log('show');
-		//console.log( $(this).is(':visible') );
-		if (! $(this).is(':visible') ) {
-            $(this).show();
-			done = true;
-	        setTimeout(show_jobs, 1000);
-            return;
-        }
-		//console.log( $(this).is(':visible') );
-    });
-}
-
-function mysearch(keyword) {
-    if (keyword) {
-        window.location = '/search/' + keyword;
-    }
-    return;
-
-    var url = '/search.json';
-    var data = {
-        "keyword" : keyword,
-    };
-    $.ajax({
-        url: url,
-        data: data,
-        dataType: "json",
-        success: display_search_result,
-    });
-}
-
-function display_search_result(data, status, jqXHR) {
-    var count = 0;
-
-    //console.log(data);
-
-    var single;
-    var html = '<ul>';
-    for (var prop in data ) {
-        count++;
-        single = '/' + prop;
-        html += '<li><a href="/' + prop + '">';
-        html += data[prop] + '</a></li>';
-    }
-    html += '</ul>';
-    //console.log(count);
-    if (count == 0) {
-       $('#search_results').html('Not found');
-    } else {
-       $('#search_results').html(html);
-    }
-}
+// function show_jobs() {
+//     //console.log('show_jobs');
+// 	var done = false;
+//     $('.featured_jobs').each(function() {
+// 		if (done) {
+// 			return;
+// 		}
+//         //console.log('show');
+// 		//console.log( $(this).is(':visible') );
+// 		if (! $(this).is(':visible') ) {
+//             $(this).show();
+// 			done = true;
+// 	        setTimeout(show_jobs, 1000);
+//             return;
+//         }
+// 		//console.log( $(this).is(':visible') );
+//     });
+// }
 
 function show_archive(tag, show_abstract) {
     //console.log(window.location);
@@ -142,40 +102,6 @@ $(document).ready(function() {
 	});
 //	$('#abstract').attr('checked', );
 
-	$(".kw-button").click(function (e) {
-	    mysearch(e.target.value);
-	});
-
- 	$("#search_box").keyup(function (e) {
-       var query = $("#search_box").val();
-		//console.log(query);
-
-       $.ajax({
-           url: '/search.json',
-           data: { 'query' :  query},
-           dataType: "json",
-           success: function(data, status, jqXHR) {
-              //console.log('callback');
-              var html = '<h2>Searching for <span id="term">"' + query + '"</span></h2>';
-			html +=  '<h3>Results:</h3>';
-              var i;
-              for (i=0; i < data.length; i++) {
-                  html += '<div><a href="/search/' + data[i] + '">' + data[i] + '</a></div>';
-              }
-              $("#content").html(html);
-              console.log(data);
-	       },
-       });
-       return;
-    });
-
- 	$("#search_box").keyup(function (e) {
- 	    if (e.keyCode == 13) {
- 	        var keyword = $("#search_box").val();
- 	        mysearch(keyword);
- 		}
- 	});
- 
  	$('#admin-search-email').keypress(function(e) {
  		$("#need-email").hide();
  	});
@@ -224,13 +150,41 @@ $(document).ready(function() {
     
     });
 
-	setTimeout(show_jobs, 1000);
-
 	prettyPrint();
 });
  
 angular.module('PerlMavenApp', []);
-angular.module('PerlMavenApp').controller('PerlMavenCtrl', function($scope) {
+angular.module('PerlMavenApp').controller('PerlMavenCtrl', function($scope, $http) {
+    //console.log('start ng');
+	$scope.search_index = function(word) {
+		window.location.href = "/search/" + encodeURIComponent(word);
+	};
+
+	$scope.search = function() {
+		//console.log('search');
+		window.location.href = "/search/" + encodeURIComponent($scope.search_term);
+    };
+	$scope.autocomplete = function() {
+		var query = $scope.search_term;
+		//console.log('autocomplete "' + query + '"');
+		// allow if it is a single character, as we would like to get suggestions on $ and -
+		// but maybe disable if it is a letter or a digit.
+		if (query.length < 1) {
+			$scope.show_autocomplete = false; 
+			return;
+		}
+		$http.get('/autocomplete.json/' + encodeURIComponent(query)).then(
+                function(response) {
+                    //console.log(response.data);
+                    $scope.autocomplete_results = response.data;
+					$scope.show_autocomplete = true;
+					
+                },
+                function(response) {
+                    console.log("error");
+                }
+        );
+	};
 });
 
 

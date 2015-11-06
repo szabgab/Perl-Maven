@@ -348,79 +348,119 @@ get '/jobs/:id' => sub {
 	}
 };
 
-get '/search/:keyword' => sub {
-	my ($keyword) = param('keyword');
-	my $results = _search($keyword);
-	if ( @$results == 1 ) {
-		redirect $results->[0]{url};
+# autocomplete: given one or more letters return the existing, or the most popular search terms
+# search: given one or more letters search various sources
+#    special index file(s)
+#    keywords in pages
+#    match in title
+#    match in abstact
+#    match in text
+
+get '/search/:query' => sub {
+	my ($query) = param('query');
+
+	my $LIMIT = 20;
+
+	my $data = setting('tools')->read_meta_hash('keywords');
+	$query =~ s/^\s+|\s+$//g;
+	my @hits;
+	if ( defined $query ) {
+		# check if there is an exact keyword match
+		my $result = $data->{$query};
+		my %seen;
+		if ($result) {
+			push @hits, @$result;
+		}
+		foreach my $h (@hits) {
+			$seen{$h->{url}} = 1;
+		}
+
+		my $regex = quotemeta lc $query;
+
+		# check if search matches the title:
+		if (@hits < $LIMIT) {
+			foreach my $kw ( keys %$data ) {
+				foreach my $e (@{ $data->{$kw} }) {
+					next if $seen{$e->{url}};
+					push @hits, $e if lc($e->{title}) =~ /$regex/;
+					$seen{$e->{url}} = 1;
+				}
+			}
+		}
+
+		#if (@hits < $LIMIT) {
+		#	foreach my $word ( split /\W+/, lc $keyword ) {
+		#		foreach my $k ( keys %$data ) {
+		#			if ( $word eq lc $k ) {
+		#				push @hits, @{ $data->{$k} };
+		#			}
+		#		}
+		#	}
+		#}
+	}
+
+	if ( @hits > $LIMIT ) {
+		@hits = @hits[ 0 .. $LIMIT - 1 ];
 	}
 
 	return pm_show_page { article => 'search', template => 'search', },
 		{
-		title   => $keyword,
-		results => $results,
-		keyword => $keyword,
+		title   => $query,
+		results => \@hits,
+		query   => $query,
 		};
 };
 
-get '/search.json' => sub {
-	my ($keyword) = param('keyword');
-	return to_json _search($keyword);
-};
+get '/autocomplete.json/:query' => sub {
+	my ($query) = param('query');
 
-sub _search {
-	my ($keyword) = @_;
+	my $LIMIT = 20;
+
+	$query =~ s/^\s+|\s+$//g;
+	return [] if not $query;
 	my $data = setting('tools')->read_meta_hash('keywords');
 
-	$keyword =~ s/^\s+|\s+$//g;
-	if ( defined $keyword ) {
+	my @hits;
 
-		# check if there is an exact keyword match
-		my $result = $data->{$keyword};
-		if ($result) {
-			return $result;
-		}
-
-		# check if search was for the exact title:
-		foreach my $kw ( keys %$data ) {
-			my ($entry) = grep { $_->{title} eq $keyword } @{ $data->{$kw} };
-			if ($entry) {
-				return [$entry];
-			}
-		}
-
-		my @results;
-		foreach my $word ( split /\W+/, lc $keyword ) {
-			foreach my $k ( keys %$data ) {
-				if ( $word eq lc $k ) {
-					push @results, @{ $data->{$k} };
-				}
-			}
-		}
-		return \@results;
-
-		# TODO we should do better here for no exact matches
-		return [];
+    # Include exact match
+	if ($data->{$query}) {
+		push @hits, $query;
 	}
 
-	my ($query) = param('query');
-	if ( defined $query ) {
+	my $regex = quotemeta lc $query;
 
-		$query = quotemeta $query;
-		my @titles;
-		foreach my $v ( values %$data ) {
-			push @titles, map { $_->{title} } @$v;
+	# include the keywords that match
+	# TODO shall we rank shorter first?
+	# shall we rank prefix before other hits?
+	my @match;
+	foreach my $k ( keys %$data ) {
+		next if $k eq $query; # we already have this in the first place
+		if (lc($k) =~ /$regex/) {
+			push @match, $k;
 		}
-		my @hits = uniq sort grep {/$query/i} ( @titles, keys %$data );
-		my $LIMIT = 20;
-		if ( @hits > $LIMIT ) {
-			@hits = @hits[ 0 .. $LIMIT - 1 ];
+	}
+	@match = sort { length $a <=> length $b or $a cmp $b } @match;
+	push @hits, @match;
+
+	if (@hits < $LIMIT) {
+		# add more from other sources as well
+		my %words;
+		foreach my $title ( values %$data ) {
+			foreach my $word (split /\s+/, lc $title) {
+				$words{$word}++ if $word =~ /$regex/;
+			}
 		}
-		return \@hits;
+		push @hits, keys %words;
 	}
 
-	return {};
-}
+	if ( @hits > $LIMIT ) {
+		@hits = @hits[ 0 .. $LIMIT - 1 ];
+	}
+	if (not @hits) {
+		push @hits, $query;
+	}
+	return to_json \@hits;
+};
 
 get '/' => sub {
 	if ( request->host =~ /^meta\./ ) {

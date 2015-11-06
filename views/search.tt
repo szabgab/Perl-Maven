@@ -1,13 +1,13 @@
 
-<h2>Searching for <span id="term">"<% keyword %>"</span></h2>
+<h2>Searching for <span id="term">"<% query %>"</span></h2>
 
 <% ads.top %>
 
 <h3>Results:</h3>
 
 <% FOR r IN results %>
-<div>
-  <a href="<% r.url %>"><% r.title %></a>
-</div>
+<ul>
+  <li><a href="<% r.url %>"><% r.title %></a></li>
+</ul>
 <% END %>
 
