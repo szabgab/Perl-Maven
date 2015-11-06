@@ -268,14 +268,14 @@ hook before_template => sub {
 	if ( in_development() ) {
 		$t->{google_prettify} = q{<link href="/google-code-prettify/prettify.css" rel="stylesheet">};
 		$t->{google_prettify} .= q{<script src="/google-code-prettify/prettify.js"></script>};
-		$t->{jquery_cdn} = '/javascripts';
+		$t->{jquery_cdn}  = '/javascripts';
 		$t->{angular_cdn} = '';
 	}
 	else {
 		$t->{google_prettify}
 			= q{<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>};
 		$t->{jquery_cdn}    = 'https://code.jquery.com';
-		$t->{angular_cdn}    = 'https://ajax.googleapis.com/ajax/libs';
+		$t->{angular_cdn}   = 'https://ajax.googleapis.com/ajax/libs';
 		$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
 	}
 
@@ -366,6 +366,7 @@ get '/search/:query' => sub {
 	$query =~ s/^\s+|\s+$//g;
 	my @hits;
 	if ( defined $query ) {
+
 		# check if there is an exact keyword match
 		my $result = $data->{$query};
 		my %seen;
@@ -373,18 +374,18 @@ get '/search/:query' => sub {
 			push @hits, @$result;
 		}
 		foreach my $h (@hits) {
-			$seen{$h->{url}} = 1;
+			$seen{ $h->{url} } = 1;
 		}
 
 		my $regex = quotemeta lc $query;
 
 		# check if search matches the title:
-		if (@hits < $LIMIT) {
+		if ( @hits < $LIMIT ) {
 			foreach my $kw ( keys %$data ) {
-				foreach my $e (@{ $data->{$kw} }) {
-					next if $seen{$e->{url}};
-					push @hits, $e if lc($e->{title}) =~ /$regex/;
-					$seen{$e->{url}} = 1;
+				foreach my $e ( @{ $data->{$kw} } ) {
+					next if $seen{ $e->{url} };
+					push @hits, $e if lc( $e->{title} ) =~ /$regex/;
+					$seen{ $e->{url} } = 1;
 				}
 			}
 		}
@@ -423,8 +424,8 @@ get '/autocomplete.json/:query' => sub {
 
 	my @hits;
 
-    # Include exact match
-	if ($data->{$query}) {
+	# Include exact match
+	if ( $data->{$query} ) {
 		push @hits, $query;
 	}
 
@@ -435,19 +436,20 @@ get '/autocomplete.json/:query' => sub {
 	# shall we rank prefix before other hits?
 	my @match;
 	foreach my $k ( keys %$data ) {
-		next if $k eq $query; # we already have this in the first place
-		if (lc($k) =~ /$regex/) {
+		next if $k eq $query;    # we already have this in the first place
+		if ( lc($k) =~ /$regex/ ) {
 			push @match, $k;
 		}
 	}
 	@match = sort { length $a <=> length $b or $a cmp $b } @match;
 	push @hits, @match;
 
-	if (@hits < $LIMIT) {
+	if ( @hits < $LIMIT ) {
+
 		# add more from other sources as well
 		my %words;
 		foreach my $title ( values %$data ) {
-			foreach my $word (split /\s+/, lc $title) {
+			foreach my $word ( split /\s+/, lc $title ) {
 				$words{$word}++ if $word =~ /$regex/;
 			}
 		}
@@ -457,7 +459,7 @@ get '/autocomplete.json/:query' => sub {
 	if ( @hits > $LIMIT ) {
 		@hits = @hits[ 0 .. $LIMIT - 1 ];
 	}
-	if (not @hits) {
+	if ( not @hits ) {
 		push @hits, $query;
 	}
 	return to_json \@hits;
