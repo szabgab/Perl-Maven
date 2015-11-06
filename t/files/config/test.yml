@@ -1,25 +1,25 @@
-installation:
-  domain: test-pm.com
-  free_product: 'some_free_product'
-  main_site: en
-    #redirect: 0
-  www:
-    redirect: 'http://test-pm.com/'
-  root: 'test'
-  meta: 'meta'
-  conf:
-    show_newsletter_form: 0
-  title: 'Test Maven'
-  series: 0
-  from: '<test@perlmaven.com>'
-  admin:
-    email: 'Test Maven <admin-test@perlmaven.com>'
-  dirs:
-    img: 'images'
-  sites:
-    test-pm.com:
-      conf:
-        show_newsletter_form: 1
-      dirs:
-        download: 'download'
-        pro: 'pro'
+domains:
+  'test-pm.com':
+    free_product: 'some_free_product'
+    main_site: en
+      #redirect: 0
+    www:
+      redirect: 'http://test-pm.com/'
+    root: 'test'
+    meta: 'meta'
+    conf:
+      show_newsletter_form: 0
+    title: 'Test Maven'
+    series: 0
+    from: '<test@perlmaven.com>'
+    admin:
+      email: 'Test Maven <admin-test@perlmaven.com>'
+    dirs:
+      img: 'images'
+    sites:
+      test-pm.com:
+        conf:
+          show_newsletter_form: 1
+        dirs:
+          download: 'download'
+          pro: 'pro'

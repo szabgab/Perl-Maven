@@ -36,10 +36,11 @@ sub process_domain {
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
 	foreach my $lang ( keys %$sites ) {
-		my $lang_config
-			= $lang eq 'en'
-			? $config
-			: $self->mymaven->config("$lang.$domain");
+		my $lang_config = $config;
+		if ( $lang ne 'en' ) {
+			next if not $self->mymaven->{hosts}{"$lang.$domain"};
+			$lang_config = $self->mymaven->config("$lang.$domain");
+		}
 		$self->process_site( $lang_config, $domain, $lang );
 
 	}

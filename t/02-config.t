@@ -13,23 +13,37 @@ my $root = abs_path('.');
 use Perl::Maven::Config;
 
 subtest mymaven => sub {
-	plan tests => 11;
+	plan tests => 13;
 
 	my $mymaven = Perl::Maven::Config->new('t/files/config/mymaven.yml');
-	my $main    = $mymaven->config('perlmaven.com');
-	my $br      = $mymaven->config('br.perlmaven.com');
-	my $cn      = $mymaven->config('cn.perlmaven.com');
+	is_deeply $mymaven->{hosts},
+		{
+		'br.perlmaven.com'  => 'perlmaven.com',
+		'cn.perlmaven.com'  => 'perlmaven.com',
+		'he.perlmaven.com'  => 'perlmaven.com',
+		'perlmaven.com'     => 'perlmaven.com',
+		'code-maven.com'    => 'code-maven.com',
+		'ru.code-maven.com' => 'code-maven.com',
+		},
+		'hosts';
 
-	is $main->{site}, "$root/t/files/../sites/perlmaven.com/sites/en";
-	is $main->{meta}, '/home/foobar/perlmaven-meta';
-	is $main->{dirs}{mail}, "$root/t/files/../articles/mail";
-	is $main->{dirs}{pro},  '/home/foobar/articles/pro';
+	my $main = $mymaven->config('perlmaven.com');
+	my $br   = $mymaven->config('br.perlmaven.com');
+	my $cn   = $mymaven->config('cn.perlmaven.com');
+	eval { $mymaven->config('qq.perlmaven.com') };
+	is $@, qq{Hostname 'qq.perlmaven.com' not in configuration file\n}, 'missing hostname';
+
+	is $main->{site}, "$root/t/files/../sites/perlmaven.com/sites/en", '{site}';
+	is $main->{meta}, '/home/foobar/perlmaven-meta', '{meta}';
+	is $main->{dirs}{mail}, "$root/t/files/../articles/mail", '{dirs}{mail}';
+	is $main->{dirs}{pro},  '/home/foobar/articles/pro',      '{dirs}{pro}';
 	is_deeply $main->{redirect},
 		{
 		'abc'      => 'def',
 		'szg'      => 'http://szabgab.com/?r=12345',
 		'products' => 'http://perlmaven.com/products',
-		};
+		},
+		'$main->{redirect}';
 
 	is_deeply $br->{redirect}, {
 		'products'    => 'http://perlmaven.com/products',
@@ -37,7 +51,8 @@ subtest mymaven => sub {
 		'abc'         => 'other-page',
 
 		'szg' => 'http://szabgab.com/?r=12345',
-	};
+		},
+		'$br->{redirect}';
 	is_deeply $main->{dirs},
 		{
 		'articles' => '/home/foobar/articles',
@@ -46,9 +61,10 @@ subtest mymaven => sub {
 		'mail'     => "$root/t/files/../articles/mail",
 		'media'    => '/home/foobar/media.perlmaven.com',
 		'pro'      => '/home/foobar/articles/pro'
-		};
+		},
+		'$main->{dirs}';
 
-	is_deeply $br->{dirs}, { 'img' => '/home/foobar/perlmaven.com/sites/en/img' };
+	is_deeply $br->{dirs}, { 'img' => '/home/foobar/perlmaven.com/sites/en/img' }, '$br->{dirs}';
 	is_deeply $main->{conf}, {
 		'comments_disqus_enable' => '1',
 		'comments_disqus_code'   => 'perl5maven',
@@ -76,18 +92,20 @@ subtest mymaven => sub {
 		'show_indexes'           => '1',
 		'show_newsletter_form'   => '0',
 		'show_date'              => 1,
-		};
+		},
+		'$cn->{conf}';
 };
 
 subtest testmaven => sub {
-	plan tests => 1;
+	plan tests => 2;
 
 	my $mymaven = Perl::Maven::Config->new('t/files/config/test.yml');
-	my $main    = $mymaven->config($t::lib::Test::DOMAIN);
+	is_deeply $mymaven->{hosts}, { 'test-pm.com' => 'test-pm.com', }, 'hosts';
+
+	my $main = $mymaven->config($t::lib::Test::DOMAIN);
 
 	#diag explain $main;
-	is_deeply $main,
-		{
+	is_deeply $main, {
 		'conf' => {
 			'show_newsletter_form' => '1'
 		},
@@ -97,7 +115,8 @@ subtest testmaven => sub {
 			'pro'      => "$root/t/files/pro",
 			'img'      => "$root/t/files/images",
 		},
-		'domain'    => $t::lib::Test::DOMAIN,
+
+		#		'domain'    => $t::lib::Test::DOMAIN,
 		'main_site' => 'en',
 		'from'      => '<test@perlmaven.com>',
 		'lang'      => 'en',
@@ -113,7 +132,7 @@ subtest testmaven => sub {
 		'www' => {
 			'redirect' => "http://$t::lib::Test::DOMAIN/"
 		}
-		};
+	};
 
 };
 

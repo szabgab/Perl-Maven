@@ -1,86 +1,91 @@
-installation:
-  domain: perlmaven.com
-  free_product: some_free_cooking_product
-  main_site: en
-    #redirect: 0
-  www:
-    redirect: http://perlmaven.com/
-  root: '../sites/perlmaven.com/'
-  meta: '/home/foobar/perlmaven-meta'
-  title: 'Perl Maven'
-  default_image: '/img/perl_maven_150x212.png'
-  from: 'Perl Maven <test@perlmaven.com>'
-  listid: 'Perl Maven newsletter <demo.perlmaven.com>'
-  prefix: '[Perl Maven]'
-  redirect:
-    'szg': 'http://szabgab.com/?r=12345'
-    'abc': 'def'
-  events:
-    - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
-      flag: 'IL'
-      countries:
-        - 'IL'
-    - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
-      flag: 'DE'
-      countries:
-        - 'DE'
-        - 'AT'
-    - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
-      flag: 'PL'
-      countries:
-        - 'PL'
-    - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
-      flag: 'US'
-      countries:
-        - 'US'
-        - 'CA'
-  dirs:
-    img: '/home/foobar/perlmaven.com/sites/en/img'
-  conf:
-    google_analytics: UA-11111112-3
-    show_newsletter_form: 0
-    show_indexes: 1
-    show_date: 1
-    comments_disqus_enable: 0
-  admin:
-    email: 'Foo Bar <foobar@perlmaven.com>'
-  paypal:
-    email: 'paybar@perlmaven.com'
-  sites:
-    br.perlmaven.com:
-      conf:
-        comments_disqus_enable: 1
-        comments_disqus_code: 'br-test-perlmaven'
-      redirect:
-        'products': 'http://perlmaven.com/products'
-        'old-article': 'new-article'
-        'abc': 'other-page'
-    cn.perlmaven.com:
-      redirect:
-        'products': 'http://perlmaven.com/products'
-    he.perlmaven.com:
-      conf:
-        rtl: 1
-        comments_disqus_enable: 1
-        comments_disqus_code: 'he-test--perlmaven'
-      redirect:
-        'products': 'http://perlmaven.com/products'
-    perlmaven.com:
-      dirs:
-        mail: '../articles/mail'
-        download: '/home/foobar/articles/download'
-        media: '/home/foobar/media.perlmaven.com'
-        pro: '/home/foobar/articles/pro'
-        articles: '/home/foobar/articles'
-      redirect:
-        'products': 'http://perlmaven.com/products'
-      index:
-        - perldoc
-        - pro
-#        videos: '/home/foobar/perlmaven.com/sites/en/pages/videos'
-      conf:
-        comments_disqus_enable: 1
-        comments_disqus_code: 'perl5maven'
-        show_newsletter_form: 1
-
+domains:
+  perlmaven.com:
+    free_product: some_free_cooking_product
+    main_site: en
+      #redirect: 0
+    www:
+      redirect: http://perlmaven.com/
+    root: '../sites/perlmaven.com/'
+    meta: '/home/foobar/perlmaven-meta'
+    title: 'Perl Maven'
+    default_image: '/img/perl_maven_150x212.png'
+    from: 'Perl Maven <test@perlmaven.com>'
+    listid: 'Perl Maven newsletter <demo.perlmaven.com>'
+    prefix: '[Perl Maven]'
+    redirect:
+      'szg': 'http://szabgab.com/?r=12345'
+      'abc': 'def'
+    events:
+      - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
+        flag: 'IL'
+        countries:
+          - 'IL'
+      - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
+        flag: 'DE'
+        countries:
+          - 'DE'
+          - 'AT'
+      - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
+        flag: 'PL'
+        countries:
+          - 'PL'
+      - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
+        flag: 'US'
+        countries:
+          - 'US'
+          - 'CA'
+    dirs:
+      img: '/home/foobar/perlmaven.com/sites/en/img'
+    conf:
+      google_analytics: UA-11111112-3
+      show_newsletter_form: 0
+      show_indexes: 1
+      show_date: 1
+      comments_disqus_enable: 0
+    admin:
+      email: 'Foo Bar <foobar@perlmaven.com>'
+    paypal:
+      email: 'paybar@perlmaven.com'
+    sites:
+      br.perlmaven.com:
+        conf:
+          comments_disqus_enable: 1
+          comments_disqus_code: 'br-test-perlmaven'
+        redirect:
+          'products': 'http://perlmaven.com/products'
+          'old-article': 'new-article'
+          'abc': 'other-page'
+      cn.perlmaven.com:
+        redirect:
+          'products': 'http://perlmaven.com/products'
+      he.perlmaven.com:
+        conf:
+          rtl: 1
+          comments_disqus_enable: 1
+          comments_disqus_code: 'he-test--perlmaven'
+        redirect:
+          'products': 'http://perlmaven.com/products'
+      perlmaven.com:
+        dirs:
+          mail: '../articles/mail'
+          download: '/home/foobar/articles/download'
+          media: '/home/foobar/media.perlmaven.com'
+          pro: '/home/foobar/articles/pro'
+          articles: '/home/foobar/articles'
+        redirect:
+          'products': 'http://perlmaven.com/products'
+        index:
+          - perldoc
+          - pro
+  #        videos: '/home/foobar/perlmaven.com/sites/en/pages/videos'
+        conf:
+          comments_disqus_enable: 1
+          comments_disqus_code: 'perl5maven'
+          show_newsletter_form: 1
+  code-maven.com:
+    free_product: some_free_code_product
+    sites:
+      ru.code-maven.com:
+        redirect:
+          'products': 'http://code-maven.com/products'
 

@@ -12,7 +12,7 @@ use Perl::Maven::CreateMeta;
 my $mymaven = Perl::Maven::Config->new('t/files/config/test.yml');
 $ENV{METAMETA} = 1;
 
-my $domain_name = $mymaven->{config}{installation}{domain};
+my ($domain_name) = keys %{ $mymaven->{config}{domains} };
 is $domain_name, 'test-pm.com';
 
 my $meta = Perl::Maven::CreateMeta->new( mymaven => $mymaven, );

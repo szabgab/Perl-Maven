@@ -35,19 +35,28 @@ sub new {
 
 	die "Missing configuration file '$path'" if not -e $path;
 
-	return bless {
+	my $self = bless {
 		root => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
 		config => scalar LoadFile($path),
 	}, $class;
+
+	foreach my $domain ( keys %{ $self->{config}{domains} } ) {
+		$self->{hosts}{$domain} = $domain;
+		foreach my $host ( keys %{ $self->{config}{domains}{$domain}{sites} } ) {
+			$self->{hosts}{$host} = $domain;
+		}
+	}
+	return $self;
 }
 
 sub config {
 	my ( $self, $fullhost ) = @_;
 
-	my $mymaven = dclone $self->{config}{installation};
-	my $host    = host($fullhost);
-	my $domain  = $mymaven->{domain};
-	my $lang    = substr( $host, 0, -length($domain) - 1 ) || 'en';
+	my $host   = host($fullhost);
+	my $domain = $self->{hosts}{$fullhost};
+	die "Hostname '$fullhost' not in configuration file\n" if not defined $domain;
+	my $mymaven = dclone $self->{config}{domains}{$domain};
+	my $lang = substr( $host, 0, -length($domain) - 1 ) || 'en';
 
 	die 'localhost is not supported'
 		if $host =~ /localhost/;    # avoid stupid mistakes
