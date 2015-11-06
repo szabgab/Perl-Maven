@@ -57,12 +57,10 @@ function display_search_result(data, status, jqXHR) {
     //console.log(count);
     if (count == 0) {
        $('#search_results').html('Not found');
-       $('#popup_search_results').modal('show')
     } else if (count == 1 && show_automatically) {
        window.location = single;
     } else {
        $('#search_results').html(html);
-       $('#popup_search_results').modal('show')
     }
 }
 
@@ -152,23 +150,6 @@ function admin_show_user_details(data, status, jqXHR) {
 
 }
 
-function register_result (data, status, jqXHR) {
-	//console.log(data);
-	if (data['error']) {
-		$('#register-message').html(data['error']);
-		return;
-	}
-
-	// success:
-	$('#popup_visitor').modal('hide');
-    if (data['perl_maven_pro']) {
-		$('#popup_logged_in').modal('show');
-		$('#just-register-message').html('Thank you for registering!');
-	} else {
-		$('#popup_thank_you').modal('show');
-	}
-}
- 
 $(document).ready(function() {
    $('#explain').click(code_explain);
    show_user_info();
@@ -237,22 +218,7 @@ $(document).ready(function() {
 // 		return false;
 // 	});
 // 
-// 	$('#register-button').on('click', function(e) {
-// 		var name = $('#register-name').val();
-// 		var email = $('#register-email').val();
-// 		var password = $('#register-password').val();
-// 		//console.log(email);
-// 		// TODO validate before submit
-// 		$('#register-message').html('');
-// 	    $.ajax({
-//             url: '/pm/register.json',
-//             type: 'POST',
-//             data: {"name" : name, "email" : email, "password" : password},
-//             dataType: "json",
-//             success: register_result,
-//         });
-// 	});
-// 
+
 	$('a[href^="/pro\\/"]').each(function(i, e) {
 		//console.log(this);
 		//console.log( $(this).attr('href') );
@@ -265,13 +231,6 @@ $(document).ready(function() {
 //		console.log(this);
 //		console.log($(this).attr('href'));
 //	});
-
-	$('#free-button').on('click', function(e) {
-		$('#popup_visitor').modal('show');
-	});
-	$('#pro-button').on('click', function(e) {
-		$('#popup_logged_in').modal('show');
-	});
 
     $('.spoiler').on('click', function(e) {
         if ($(this).hasClass('spoiler_hidden')) {
