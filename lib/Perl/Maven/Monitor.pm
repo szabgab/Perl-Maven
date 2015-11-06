@@ -70,7 +70,8 @@ has root  => ( is => 'ro', required => 1 );
 has limit => ( is => 'ro', default  => 100 );
 has hours => ( is => 'ro', default  => 24 );    # shall we restrict this to these numbers 1, 24, 168  ??
 has conf  => ( is => 'ro' );
-has config => ( is => 'rw' );
+has verbose => ( is => 'ro' );
+has config  => ( is => 'rw' );
 
 # TODO apply the regex filter when the user enters the regex and reject the ones we don't want to handle.
 #$partials{$_} = '' for grep {/^\^?[a-zA-Z0-9:-]+\$?$/} keys %{ $sub->{partials} };
@@ -345,7 +346,7 @@ sub mongodb {
 
 sub _log {
 	my ( $self, $msg ) = @_;
-	print "LOG: $msg\n";
+	print "LOG: $msg\n" if $self->verbose;
 }
 
 1;

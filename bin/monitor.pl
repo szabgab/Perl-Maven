@@ -8,7 +8,7 @@ use Getopt::Long qw(GetOptions);
 use Perl::Maven::Monitor;
 
 my %opt;
-GetOptions( \%opt, 'limit=i', 'hours=i', 'conf=s', 'fetch:s', 'report:s', 'help', ) or usage();
+GetOptions( \%opt, 'limit=i', 'hours=i', 'conf=s', 'fetch:s', 'report:s', 'help', 'verbose' ) or usage();
 usage() if delete $opt{help};
 usage() if not defined $opt{fetch} and not defined $opt{report};
 
@@ -33,6 +33,7 @@ Usage: $0
     --conf path/to/config/file
     --fetch [cpan|pypi]   Get data from the pypi RSS feed or from the recent API of MetaCPAN.
     --report [cpan|pypi]  Generate alerts and send reports
+    --verbose             log on the screen
     --help
 USAGE
 	exit;
