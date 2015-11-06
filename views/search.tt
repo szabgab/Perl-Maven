@@ -1,7 +1,9 @@
 
-<h2>Searching for '<% keyword %>'</h2>
+<h2>Searching for <span id="term">"<% keyword %>"</span></h2>
 
 <% ads.top %>
+
+<h3>Results:</h3>
 
 <% FOR r IN results %>
 <div>

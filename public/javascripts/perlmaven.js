@@ -1,6 +1,4 @@
 
-var show_automatically = false;
-
 // show the job posts one-by-one
 function show_jobs() {
     //console.log('show_jobs');
@@ -21,14 +19,13 @@ function show_jobs() {
     });
 }
 
-function mysearch(keyword, auto) {
+function mysearch(keyword) {
     if (keyword) {
         window.location = '/search/' + keyword;
     }
     return;
 
     var url = '/search.json';
-    show_automatically = auto;
     var data = {
         "keyword" : keyword,
     };
@@ -57,8 +54,6 @@ function display_search_result(data, status, jqXHR) {
     //console.log(count);
     if (count == 0) {
        $('#search_results').html('Not found');
-    } else if (count == 1 && show_automatically) {
-       window.location = single;
     } else {
        $('#search_results').html(html);
     }
@@ -148,7 +143,7 @@ $(document).ready(function() {
 //	$('#abstract').attr('checked', );
 
 	$(".kw-button").click(function (e) {
-	    mysearch(e.target.value, false);
+	    mysearch(e.target.value);
 	});
 
  	$("#search_box").keyup(function (e) {
@@ -161,15 +156,14 @@ $(document).ready(function() {
            dataType: "json",
            success: function(data, status, jqXHR) {
               //console.log('callback');
-              var html = '<h2>Searching for <span id="term">' + query + '</span></h2>';
-              html += '<ul>';
+              var html = '<h2>Searching for <span id="term">"' + query + '"</span></h2>';
+			html +=  '<h3>Results:</h3>';
               var i;
               for (i=0; i < data.length; i++) {
-                  html += '<li><a href="/search/' + data[i] + '">' + data[i] + '</a></li>';
+                  html += '<div><a href="/search/' + data[i] + '">' + data[i] + '</a></div>';
               }
-              html += '</ul>';
               $("#content").html(html);
-              //console.log(data);
+              console.log(data);
 	       },
        });
        return;
@@ -178,7 +172,7 @@ $(document).ready(function() {
  	$("#search_box").keyup(function (e) {
  	    if (e.keyCode == 13) {
  	        var keyword = $("#search_box").val();
- 	        mysearch(keyword, true);
+ 	        mysearch(keyword);
  		}
  	});
  
