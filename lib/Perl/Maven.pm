@@ -274,6 +274,7 @@ hook before_template => sub {
 	else {
 		$t->{google_prettify}
 			= q{<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>};
+		$t->{jquery_cdn}    = 'https://code.jquery.com';
 		$t->{angular_cdn}    = 'https://ajax.googleapis.com/ajax/libs';
 		$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
 	}
