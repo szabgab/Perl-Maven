@@ -14,6 +14,8 @@ use Test::WWW::Mechanize::PSGI;
 
 t::lib::Test::setup();
 
+my $EPOCH = re('^\d{10}$');
+
 my $url      = "http://$t::lib::Test::DOMAIN";
 my $EMAIL    = 'gabor@perlmaven.com';
 my $EMAIL2   = 'other@perlmaven.com';
@@ -108,7 +110,7 @@ subtest pages => sub {
 # TODO test the various cases of no or bad e-mail addresses and also duplicate registration (and different case).
 # TODO do this both on the main page and on the /perl-maven-cookbook page
 subtest 'subscribe' => sub {
-	plan tests => 34;
+	plan tests => 43;
 	$w->get_ok("$url/pm/register");
 	$w->content_like(qr/register to our web site/);
 
@@ -153,10 +155,29 @@ subtest 'subscribe' => sub {
 	#diag explain $db->{dbh}->selectall_arrayref('SELECT * FROM user');
 	$w->get_ok("$url/pm/verify2/1234567");
 	$w->content_like( qr{Invalid or expired verification code.}, 'no such code' );
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM user'),
+		[ [ 1, 'gabor@perlmaven.com', undef, undef, undef, $EPOCH, undef, undef, undef, undef, undef ] ],
+		'user table';
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM product'),
+		[
+		[ 1, 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 ],
+		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
+		],
+		'product table';
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM subscription'), [], 'subscription table';
 
 	$w->get_ok($set_url);
-
 	$w->content_unlike(qr{Internal verification error});
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM user'),
+		[ [ 1, 'gabor@perlmaven.com', undef, undef, undef, $EPOCH, undef, $EPOCH, undef, undef, undef ] ],
+		'user table';
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM product'),
+		[
+		[ 1, 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 ],
+		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
+		],
+		'product table';
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM subscription'), [ [ 1, 1 ] ], 'subscription table';
 
 	#diag $w->content;
 	# the new page does not contain a link to the cookbook.
@@ -180,6 +201,16 @@ subtest 'subscribe' => sub {
 	is scalar @mails, 3;
 
 	$w->get_ok("$url/pm/account");
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM user'),
+		[ [ 1, 'gabor@perlmaven.com', undef, undef, undef, $EPOCH, undef, $EPOCH, undef, undef, undef ] ],
+		'user table';
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM product'),
+		[
+		[ 1, 'perl_maven_cookbook',       'Perl Maven Cookbook',        0 ],
+		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
+		],
+		'product table';
+	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM subscription'), [ [ 1, 1 ] ], 'subscription table';
 	$w->follow_link_ok(
 		{
 			text => $cookbook_text,
