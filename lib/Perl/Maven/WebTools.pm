@@ -76,7 +76,9 @@ our @EXPORT_OK
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
-	return $mymaven->config( request->host );
+	my $host = request->host;
+	$host =~ s/\.local:5000//;
+	return $mymaven->config($host);
 }
 
 sub _generate_code {
