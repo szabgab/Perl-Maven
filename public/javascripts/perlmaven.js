@@ -153,8 +153,8 @@ $(document).ready(function() {
 	prettyPrint();
 });
  
-angular.module('PerlMavenApp', []);
-angular.module('PerlMavenApp').controller('PerlMavenCtrl', function($scope, $http) {
+angular.module('PerlMavenApp', [])
+  .controller('PerlMavenCtrl', function($scope, $http) {
     //console.log('start ng');
 	$scope.search_index = function(word) {
 		window.location.href = "/search/" + encodeURIComponent(word);
@@ -185,6 +185,8 @@ angular.module('PerlMavenApp').controller('PerlMavenCtrl', function($scope, $htt
                 }
         );
 	};
+})
+  .filter('encodeURIComponent', function() {
+    return window.encodeURIComponent;
 });
-
 
