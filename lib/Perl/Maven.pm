@@ -774,15 +774,6 @@ get qr{^/media/(.+)} => sub {
 	return 'media error';
 };
 
-get '/modal/:name' => sub {
-	my ($static_file) = param('name');
-	die if $static_file =~ /\.\./;
-	my $p = path( config->{appdir}, 'config/modals', "$static_file.txt" );
-
-	#return $p;
-	send_file( $p, system_path => 1 );
-};
-
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 

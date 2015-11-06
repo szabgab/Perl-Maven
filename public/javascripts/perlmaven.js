@@ -118,19 +118,6 @@ function code_explain() {
     //alert($('#code').val());
 }
 
-function show_user_info() {
-	if ('delayed' in user_info) {
-        $.ajax({
-           url: '/modal/' + user_info['delayed']['what'],
-           dataType: "html",
-           success: function(data, status, jqXHR) {
-               $("#modal").html(data);
-		       setTimeout(function () {$( '#' + user_info['delayed']['what'] ).modal('show')} , user_info['delayed']['when'] );
-           },
-        });
-	}
-}
-
 function admin_show_user_details(data, status, jqXHR) {
 	//console.log(data);
 	var html = '<table>';
@@ -152,7 +139,6 @@ function admin_show_user_details(data, status, jqXHR) {
 
 $(document).ready(function() {
    $('#explain').click(code_explain);
-   show_user_info();
 
 	$(".archive-button").click(function (e) {
 		//console.log( $('#abstract').attr('checked') );
