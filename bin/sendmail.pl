@@ -27,14 +27,16 @@ exit;
 
 sub main {
 
+	my %opt;
+	GetOptions( \%opt, 'to=s@', 'exclude=s@', 'url=s', 'send', 'domain=s' ) or usage();
+	usage() if not $opt{to} or not $opt{url} or not $opt{domain};
+
 	my $cfg     = LoadFile('config.yml');
 	my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
-	my $config  = $mymaven->config('perlmaven.com');
-	$mymaven = $config;
+	die "Domain '$opt{domain}' could not be found in configuration file" if not $mymaven->{domains}{ $opt{domain} };
 
-	my %opt;
-	GetOptions( \%opt, 'to=s@', 'exclude=s@', 'url=s', 'send', ) or usage();
-	usage() if not $opt{to} or not $opt{url};
+	my $config = $mymaven->config( $opt{domain} );
+	$mymaven = $config;
 
 	send_messages(
 		$mymaven,
@@ -144,11 +146,14 @@ sub send_messages {
 
 sub usage {
 	print <<"END_USAGE";
-Usage: $0 --url http://url
-    --send if I really want to send the messages
+Usage: $0
 
+    --url http://url
     --to mail\@address.com
-#    --to all                      (all the subscribers) currently not supported
+    --to produc_name            (all the subscribers of this product)
+    --domain NAME               (the domain name)
+
+    --send if I really want to send the messages
 
     --exclude       Anything that --to can accept - excluded these
 
