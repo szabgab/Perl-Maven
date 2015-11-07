@@ -41,6 +41,25 @@
     <% END %>
   <% END %>
 
+  <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+  
+  
+  <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
+  <% IF conf.rtl %>
+    <link href="/css/rtl.css??<% pm_version %>" rel="stylesheet">
+  <% END %>
+  
+  <% google_prettify %>
+  
+  <link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+  <script src="//vjs.zencdn.net/4.12/video.js"></script>
+  
+  <script src="<% jquery_cdn %>/jquery-1.11.3.min.js"></script>
+  <script src="<% angular_cdn %>/angularjs/1.4.7/angular.min.js"></script>
+  
+  <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
+
 </head>
 <body ng-app="PerlMavenApp" ng-controller="PerlMavenCtrl">
 
