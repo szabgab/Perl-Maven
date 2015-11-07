@@ -1,7 +1,7 @@
 package Perl::Maven::Tools;
 use Moo;
 use List::MoreUtils qw(any none);
-use JSON qw(from_json);
+use Cpanel::JSON::XS qw(decode_json);
 use List::Util qw(min);
 
 our $VERSION = '0.11';
@@ -101,7 +101,7 @@ sub read_json {
 	if ( open my $fh, '<encoding(UTF-8)', $file ) {
 		local $/ = undef;
 		my $json = <$fh>;
-		return from_json $json, { utf8 => 1 };
+		return decode_json $json;
 	}
 	return;
 }

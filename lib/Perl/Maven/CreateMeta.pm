@@ -17,7 +17,7 @@ has pages        => ( is => 'rw' );
 use Data::Dumper qw(Dumper);
 use File::Find::Rule;
 use File::Path qw(mkpath);
-use JSON qw(from_json to_json);
+use Cpanel::JSON::XS qw(decode_json encode_json);
 use YAML::XS qw(LoadFile);
 use POSIX ();
 
@@ -239,7 +239,7 @@ sub process_files {
 
 		#die Dumper $extra_index;
 		foreach my $path (@$extra_index) {
-			my $data = from_json Path::Tiny::path($path)->slurp_utf8;
+			my $data = decode_json Path::Tiny::path($path)->slurp_utf8;
 
 			#die Dumper $data;
 			foreach my $key ( keys %$data ) {
@@ -357,7 +357,7 @@ sub save {
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
 	eval {
-		Path::Tiny::path($path)->spew_utf8( to_json( $data, { utf8 => 1, pretty => 1, canonical => 1 } ) );
+		Path::Tiny::path($path)->spew_utf8( encode_json($data) );
 		1;
 	} or do {
 		my $err //= 'Unknown Error';

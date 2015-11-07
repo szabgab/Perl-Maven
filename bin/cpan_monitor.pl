@@ -10,7 +10,7 @@ use 5.010;
 
 use Data::Dumper;
 use MetaCPAN::API;
-use JSON qw(from_json to_json);
+use Cpanel::JSON::XS qw(decode_json encode_json);
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
 use Path::Tiny qw(path);
@@ -60,7 +60,7 @@ usage('Need to call --setup') if not -e $file;
 
 exit if not $opt{run};
 
-$data = from_json path($file)->slurp_utf8;
+$data = decode_json path($file)->slurp_utf8;
 
 my $mcpan = MetaCPAN::API->new;
 update_subscriptions();
@@ -75,7 +75,7 @@ exit;
 ##################################################################
 
 sub save_file {
-	path($file)->spwe_utf8( to_json( $data, { utf8 => 1, pretty => 1 } ) );
+	path($file)->spwe_utf8( encode_json($data) );
 }
 
 sub _log {

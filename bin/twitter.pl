@@ -6,13 +6,13 @@ use Net::Twitter;
 use Config::Tiny;
 use Data::Dumper qw(Dumper);
 use File::HomeDir;
-use JSON qw(from_json);
+use Cpanel::JSON::XS qw(decode_json);
 use Path::Tiny qw(path);
 
 my $file = 'meta/perlmaven.com/perlmaven.com/meta/archive.json';
 my $url  = 'http://perlmaven.com';
 
-my $data = from_json path($file)->slurp_utf8;
+my $data = decode_json path($file)->slurp_utf8;
 my @entries = map { { filename => $_->{filename}, title => $_->{title}, } }
 	grep { $_->{filename} !~ m{^pro/} } @$data;
 

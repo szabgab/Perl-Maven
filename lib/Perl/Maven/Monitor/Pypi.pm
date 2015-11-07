@@ -5,7 +5,7 @@ use XML::Feed ();
 use boolean;
 use Data::Dumper qw(Dumper);
 use LWP::Simple qw(get);
-use JSON::MaybeXS qw(decode_json encode_json);
+use Cpanel::JSON::XS qw(decode_json);
 
 our $VERSION = '0.11';
 

@@ -2,7 +2,7 @@ package Perl::Maven::Monitor;
 use Moo;
 use 5.010;
 use Data::Dumper qw(Dumper);
-use JSON::MaybeXS qw(decode_json encode_json);
+use Cpanel::JSON::XS qw(decode_json encode_json);
 use Path::Tiny qw(path);
 use MetaCPAN::Client;
 use Email::Stuffer;

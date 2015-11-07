@@ -11,7 +11,7 @@ use MongoDB          ();
 use LWP::Simple qw(getstore);
 use Path::Tiny qw(path);
 use Capture::Tiny qw(capture);
-use JSON::MaybeXS qw(decode_json);
+use Cpanel::JSON::XS qw(decode_json);
 use Path::Iterator::Rule ();
 use File::Temp qw(tempdir);
 use Perl::PrereqScanner;

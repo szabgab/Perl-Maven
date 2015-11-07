@@ -38,6 +38,7 @@ WriteMakefile(
 		'YAML::XS'                    => 0.59,
 		'JSON'                        => 2.90,
 		'JSON::MaybeXS'               => 1.003,
+		'Cpanel::JSON::XS'            => 3.0115,
 		'Web::Feed'                   => 0.02,
 		'Digest::SHA'                 => 5.92,
 
