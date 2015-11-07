@@ -4,12 +4,15 @@ use warnings;
 use Test::Most;
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
+use File::Basename qw(dirname);
 
 use t::lib::Test;
 
 plan tests => 3;
 
 my $root = abs_path('.');
+diag $root;
+my $parent = dirname $root;
 
 use Perl::Maven::Config;
 
@@ -169,23 +172,23 @@ subtest skeleton => sub {
 	#diag Dumper $main;
 	is_deeply $main,
 		{
-		'index' => [ 'pro' ],
+		'index' => ['pro'],
 		'from'  => 'Perl Maven <gabor@perlmaven.com>',
-		'site'  => '/vagrant/../perlmaven.com/sites/en',
+		'site'  => "$parent/../perlmaven.com/sites/en",
 		'www'   => {
 			'redirect' => 'http://perlmaven.com/'
 		},
-		'root'   => '/vagrant/../perlmaven.com',
+		'root'   => "$parent/../perlmaven.com",
 		'prefix' => '[Perl Maven]',
 		'lang'   => 'en',
-		'free'   => [ '/pro/beginner-perl/process-command-line-using-getopt-long-screencast' ],
+		'free'   => ['/pro/beginner-perl/process-command-line-using-getopt-long-screencast'],
 		'dirs'   => {
-			'img'      => '/vagrant/../perlmaven.com/sites/en/img',
-			'articles' => '/vagrant/../articles',
-			'pro'      => '/vagrant/../articles/pro',
-			'mail'     => '/vagrant/../articles/mail',
-			'download' => '/vagrant/../articles/download',
-			'media'    => '/vagrant/../media.perlmaven.com'
+			'img'      => "$parent/../perlmaven.com/sites/en/img",
+			'articles' => "$parent/../articles",
+			'pro'      => "$parent/../articles/pro",
+			'mail'     => "$parent/../articles/mail",
+			'download' => "$parent/../articles/download",
+			'media'    => "$parent/../media.perlmaven.com",
 		},
 		'conf' => {
 			'show_social'            => '1',
@@ -214,7 +217,7 @@ subtest skeleton => sub {
 		'redirect' => {
 			'videos/oop-with-moo' => '/oop-with-moo'
 		},
-		'meta' => '/vagrant/meta/perlmaven.com'
+		'meta' => "$parent/meta/perlmaven.com"
 		};
 };
 
