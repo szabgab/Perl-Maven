@@ -3,10 +3,11 @@ use warnings;
 
 use Test::Most;
 use Cwd qw(abs_path);
+use Data::Dumper qw(Dumper);
 
 use t::lib::Test;
 
-plan tests => 2;
+plan tests => 3;
 
 my $root = abs_path('.');
 
@@ -134,5 +135,86 @@ subtest testmaven => sub {
 		}
 	};
 
+};
+
+subtest skeleton => sub {
+	plan tests => 2;
+
+	my $mymaven = Perl::Maven::Config->new('config_mymaven.yml');
+	is_deeply $mymaven->{hosts},
+		{
+		'perlmaven.com'    => 'perlmaven.com',
+		'br.perlmaven.com' => 'perlmaven.com',
+		'cn.perlmaven.com' => 'perlmaven.com',
+		'ne.perlmaven.com' => 'perlmaven.com',
+		'ro.perlmaven.com' => 'perlmaven.com',
+		'fr.perlmaven.com' => 'perlmaven.com',
+		'cs.perlmaven.com' => 'perlmaven.com',
+		'id.perlmaven.com' => 'perlmaven.com',
+		'te.perlmaven.com' => 'perlmaven.com',
+		'es.perlmaven.com' => 'perlmaven.com',
+		'ru.perlmaven.com' => 'perlmaven.com',
+		'ko.perlmaven.com' => 'perlmaven.com',
+		'eo.perlmaven.com' => 'perlmaven.com',
+		'tw.perlmaven.com' => 'perlmaven.com',
+		'tr.perlmaven.com' => 'perlmaven.com',
+		'it.perlmaven.com' => 'perlmaven.com',
+		'de.perlmaven.com' => 'perlmaven.com',
+		'he.perlmaven.com' => 'perlmaven.com',
+		},
+		'hosts';
+
+	my $main = $mymaven->config('perlmaven.com');
+
+	#diag Dumper $main;
+	is_deeply $main,
+		{
+		'index' => [ 'pro' ],
+		'from'  => 'Perl Maven <gabor@perlmaven.com>',
+		'site'  => '/vagrant/../perlmaven.com/sites/en',
+		'www'   => {
+			'redirect' => 'http://perlmaven.com/'
+		},
+		'root'   => '/vagrant/../perlmaven.com',
+		'prefix' => '[Perl Maven]',
+		'lang'   => 'en',
+		'free'   => [ '/pro/beginner-perl/process-command-line-using-getopt-long-screencast' ],
+		'dirs'   => {
+			'img'      => '/vagrant/../perlmaven.com/sites/en/img',
+			'articles' => '/vagrant/../articles',
+			'pro'      => '/vagrant/../articles/pro',
+			'mail'     => '/vagrant/../articles/mail',
+			'download' => '/vagrant/../articles/download',
+			'media'    => '/vagrant/../media.perlmaven.com'
+		},
+		'conf' => {
+			'show_social'            => '1',
+			'show_archive_selector'  => '1',
+			'archive'                => '1',
+			'show_newsletter_form'   => '1',
+			'show_indexes'           => '1',
+			'show_right'             => '1',
+			'show_date'              => '1',
+			'comments_disqus_enable' => '1',
+			'show_related'           => '1',
+			'comments_disqus_code'   => 'perl5maven',
+			'show_language_links'    => '1'
+		},
+		'paypal' => {
+			'email' => 'gabor@szabgab.com'
+		},
+		'feed_size'         => '10',
+		'main_site'         => 'en',
+		'main_page_entries' => '3',
+		'admin'             => {
+			'email' => 'Gabor Szabo <gabor@szabgab.com>'
+		},
+		'listid'   => 'Perl Maven newsletter <newsletter.perlmaven.com>',
+		'title'    => 'Perl Maven',
+		'redirect' => {
+			'videos/oop-with-moo' => '/oop-with-moo'
+		},
+		'meta' => '/vagrant/meta/perlmaven.com'
+		};
 };
 
