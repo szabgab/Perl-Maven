@@ -29,13 +29,14 @@ GetOptions(
 usage() if $help;
 $ENV{METAMETA} = 1;
 
-my $domain_name = $mymaven->{config}{installation}{domain};
-my $meta        = Perl::Maven::CreateMeta->new(
-	verbose => $verbose,
-	mymaven => $mymaven,
-	books   => $books,
-);
-$meta->process_domain($domain_name);
+foreach my $domain_name ( keys %{ $mymaven->{config}{domains} } ) {
+	my $meta = Perl::Maven::CreateMeta->new(
+		verbose => $verbose,
+		mymaven => $mymaven,
+		books   => $books,
+	);
+	$meta->process_domain($domain_name);
+}
 
 #if ($all) {
 #	for my $domain_name ( keys %{ $mymaven->{config} } ) {
