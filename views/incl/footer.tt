@@ -3,64 +3,63 @@
     <div class="col-md-3">
       <div id="right-side">
         <% IF conf.show_right %>
-         <% IF status != 'show' %>
-          <span class="label label-warning"><% status %></span>
-         <% END %>
+            <% IF status != 'show' %>
+                <span class="label label-warning"><% status %></span>
+            <% END %>
 
 
-         <% IF edit %>
-            <a href="<% edit %>"><button type="button" class="btn btn-success">Suggest a change</button></a>
-         <% END %>
+            <% IF edit %>
+                <a href="<% edit %>"><button type="button" class="btn btn-success">Suggest a change</button></a>
+            <% END %>
 
             <% IF conf.show_jobs %>
-            <div class="featured_jobs">
-               <a href="/jobs/">Looking for a Perl Job ...</a>
-            </div>
-               <% FOR j IN jobs %>
-                 <div class="featured_jobs">
-                    <a href="/jobs/<% j.id %>"><% j.title %></a><br>
-                    <% j.city %>, <% j.state %><br>
-                    <% j.country %>
-                 </div>
-               <% END %>
+                <div class="featured_jobs">
+                   <a href="/jobs/">Looking for a Perl Job ...</a>
+                </div>
+                <% FOR j IN jobs %>
+                  <div class="featured_jobs">
+                     <a href="/jobs/<% j.id %>"><% j.title %></a><br>
+                     <% j.city %>, <% j.state %><br>
+                     <% j.country %>
+                  </div>
+                <% END %>
             <% END %>
 
             <% IF conf.show_consultants %>
-               <div id="newsletter-right-form">
-                  <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
-               </div>
+                <div id="newsletter-right-form">
+                   <h3><a href="/perl-training-consulting">Training and Consulting</a></h3>
+                </div>
             <% END %>
 
-           <% ads.right_top %>
+            <% ads.right_top %>
 
-           <% INCLUDE incl/social_share.tt %>
-           <% ads.right %>
+            <% INCLUDE incl/social_share.tt %>
 
-           <% IF conf.show_related %>
-             <div id="related_all">
-                 <div id="related">
-                   <b>Related articles</b>
-                   <% IF related.size %>
-                     <ul>
-                       <% FOR l IN related %>
-                         <li><a href="<% l.url %>"><% l.text %></a></li>
-                       <% END %>
-                     </ul>
-                   <% END %>
-                 </div>
-                 <% ads.related %>
-             </div>
-           <% END %>
+            <% ads.right_middle %>
 
-           <% INCLUDE incl/languages.tt %>
+            <% IF conf.show_related %>
+                <div id="related_all">
+                    <div id="related">
+                      <b>Related articles</b>
+                      <% IF related.size %>
+                        <ul>
+                          <% FOR l IN related %>
+                            <li><a href="<% l.url %>"><% l.text %></a></li>
+                          <% END %>
+                        </ul>
+                      <% END %>
+                    </div>
+                    <% ads.related %>
+                </div>
+            <% END %>
 
-			<a href="/digger/">digger</a>
+            <% INCLUDE incl/languages.tt %>
 
-           <div id="lower_right">
-           <% ads.lower_right %>
-           </div>
+            <a href="/digger/">digger</a>
 
-
+            <div id="lower_right">
+              <% ads.lower_right %>
+            </div>
          <% END %>
       </div>
     </div><!-- end of right column -->
