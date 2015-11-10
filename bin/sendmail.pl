@@ -33,7 +33,8 @@ sub main {
 
 	my $cfg     = LoadFile('config.yml');
 	my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
-	die "Domain '$opt{domain}' could not be found in configuration file" if not $mymaven->{config}{domains}{ $opt{domain} };
+	die "Domain '$opt{domain}' could not be found in configuration file"
+		if not $mymaven->{config}{domains}{ $opt{domain} };
 
 	my $config = $mymaven->config( $opt{domain} );
 	$mymaven = $config;

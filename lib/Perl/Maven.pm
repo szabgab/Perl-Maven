@@ -47,6 +47,7 @@ hook before => sub {
 
 	my $db = Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
 	set db => $db;
+
 	#set views => ["$appdir/views"]; # Cannot set array!
 
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
