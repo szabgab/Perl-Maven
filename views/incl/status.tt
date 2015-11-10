@@ -1,0 +1,4 @@
+<% IF status != 'show' %>
+    <span class="label label-warning"><% status %></span>
+<% END %>
+

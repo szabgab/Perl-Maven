@@ -47,17 +47,18 @@ hook before => sub {
 
 	my $db = Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
 	set db => $db;
+	#set views => ["$appdir/views"]; # Cannot set array!
 
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
 	# and thus we cannot change the include path before rendering
-	my $engines = config->{engines};
-	$engines->{template_toolkit}{INCLUDE_PATH}
-		= ["$appdir/views"];
-	Dancer2::Template::TemplateToolkit->new(
-		name   => 'template_toolkit',
-		type   => 'template',
-		config => $engines->{template_toolkit}
-	);
+	#my $engines = config->{engines};
+	#$engines->{template_toolkit}{INCLUDE_PATH}
+	#	= ["$appdir/views"];
+	#Dancer2::Template::TemplateToolkit->new(
+	#	name   => 'template_toolkit',
+	#	type   => 'template',
+	#	config => $engines->{template_toolkit}
+	#);
 
 	my $p = $db->get_products;
 
@@ -115,6 +116,8 @@ hook before_template => sub {
 			$t->{conf}{show_ads} = 0;
 		}
 	}
+
+	$t->{right} = mymaven->{right};
 
 	if ( $t->{books} ) {
 		my @logos;

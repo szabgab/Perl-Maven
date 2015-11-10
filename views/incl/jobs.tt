@@ -1,0 +1,12 @@
+<% IF conf.show_jobs %>
+    <div class="featured_jobs">
+       <a href="/jobs/">Looking for a Job ...</a>
+    </div>
+    <% FOR j IN jobs %>
+      <div class="featured_jobs">
+         <a href="/jobs/<% j.id %>"><% j.title %></a><br>
+         <% j.city %>, <% j.state %><br>
+         <% j.country %>
+      </div>
+    <% END %>
+<% END %>

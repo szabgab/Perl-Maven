@@ -21,7 +21,9 @@ engines:
   template:
     template_toolkit:
       encoding:  'utf8'
-      INCLUDE_PATH: 'views'
+      INCLUDE_PATH:
+        - 'views'
+        - 'config/templates'
       start_tag: '<%'
       end_tag:   '%>'
 
