@@ -120,7 +120,7 @@ subtest testmaven => sub {
 			'img'      => "$root/t/files/images",
 		},
 
-		#		'domain'    => $t::lib::Test::DOMAIN,
+		'domain'    => $t::lib::Test::DOMAIN,
 		'main_site' => 'en',
 		'from'      => '<test@perlmaven.com>',
 		'lang'      => 'en',
@@ -178,6 +178,7 @@ subtest skeleton => sub {
 		'www'   => {
 			'redirect' => 'http://perlmaven.com/'
 		},
+		'domain' => 'perlmaven.com',
 		'root'   => "$parent/../perlmaven.com",
 		'prefix' => '[Perl Maven]',
 		'lang'   => 'en',
