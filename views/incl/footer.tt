@@ -1,11 +1,19 @@
     </div>
 
+<% USE Math %>
+
     <div class="col-md-3">
       <div id="right-side">
         <% IF conf.show_right %>
             <% FOR r IN right %>
                 <% IF r.type == 'include' %>
-                    <% INCLUDE $r.file %>
+                    <% IF r.file %>
+                       <% INCLUDE $r.file %>
+                    <% END %>
+                    <% IF r.files %>
+                       <% i = Math.int(Math.rand(r.files.size)) %>
+                       <% INCLUDE $r.files.$i %>
+                    <% END %>
                 <% END %>
             <% END %>
          <% END %>
