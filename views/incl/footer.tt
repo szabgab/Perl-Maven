@@ -8,11 +8,15 @@
             <% FOR r IN right %>
                 <% IF r.type == 'include' %>
                     <% IF r.file %>
-                       <% INCLUDE $r.file %>
+                       <div class="rightbox">
+                         <% INCLUDE $r.file %>
+                       </div>
                     <% END %>
                     <% IF r.files %>
-                       <% i = Math.int(Math.rand(r.files.size)) %>
-                       <% INCLUDE $r.files.$i %>
+                       <div class="rightbox">
+                         <% i = Math.int(Math.rand(r.files.size)) %>
+                         <% INCLUDE $r.files.$i %>
+                       </div>
                     <% END %>
                 <% END %>
             <% END %>

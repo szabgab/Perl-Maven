@@ -1,5 +1,3 @@
-<div class="rightbox">
 <% IF edit %>
     <a href="<% edit %>"><button type="button" class="btn btn-success">Suggest a change</button></a>
 <% END %>
-</div>
