@@ -640,8 +640,7 @@ get '/category' => sub {
 			template => 'categories',
 		},
 		{
-			categories => [ sort keys %$categories ],
-			books      => [ sort keys %$categories ],
+			categories => [ map { { name => $_, count => scalar @{ $categories->{$_} } } } sort keys %$categories ],
 		}
 	);
 };

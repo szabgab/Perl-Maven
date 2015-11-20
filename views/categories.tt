@@ -1,6 +1,6 @@
-<ul>
+<table>
  <% FOR c IN categories %>
-   <li><a href="/category/<% c %>"><% c %></a></li>
+   <tr><td><a href="/category/<% c.name %>"><% c.name %></a></td><td><% c.count %></td></tr>
  <% END %>
-</ul> 
+</table> 
 
