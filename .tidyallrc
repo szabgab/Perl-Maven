@@ -7,3 +7,7 @@ argv = --profile=$ROOT/.perltidyrc
 
 [SortLines]
 select = .gitignore
+
+[JSBeautifier]
+select = public/javascripts/perlmaven.js
+

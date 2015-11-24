@@ -1,4 +1,3 @@
-
 // show the job posts one-by-one
 // function show_jobs() {
 //     //console.log('show_jobs');
@@ -18,7 +17,6 @@
 //         //console.log( $(this).is(':visible') );
 //     });
 // }
-
 function show_archive(tag, show_abstract) {
     //console.log(window.location);
     var url = window.location.origin + window.location.pathname + '?';
@@ -37,7 +35,9 @@ function show_archive(tag, show_abstract) {
 
 function code_explain() {
     var code = $('#code').val();
-    var data = { "code" : code };
+    var data = {
+        "code": code
+    };
     //$('#result').slideToggle('fast', function() {});
     $('#result').show('fast', function() {});
 
@@ -58,12 +58,12 @@ function code_explain() {
         $('#explanation').append(data["explanation"]);
 
         var ppi_dump = data["ppi_dump"].join("\n");
-        $('#ppi_dump').append('<pre>' + ppi_dump  + '</pre>');
+        $('#ppi_dump').append('<pre>' + ppi_dump + '</pre>');
 
         var ppi_explain = '';
-        for(var i=0; i < data["ppi_explain"].length; i++) {
+        for (var i = 0; i < data["ppi_explain"].length; i++) {
             ppi_explain += '<b>' + data["ppi_explain"][i]["code"] + '</b>';
-            ppi_explain += data["ppi_explain"][i]["text"] + '<br>'; 
+            ppi_explain += data["ppi_explain"][i]["text"] + '<br>';
         }
         $('#ppi_explain').append(ppi_explain);
     }).fail(function() {
@@ -74,20 +74,19 @@ function code_explain() {
 }
 
 $(document).ready(function() {
-   $('#explain').click(code_explain);
+    $('#explain').click(code_explain);
 
-    $(".archive-button").click(function (e) {
+    $(".archive-button").click(function(e) {
         //console.log( $('#abstract').attr('checked') );
         show_archive(e.target.value, $('#abstract').is(':checked'));
         e.preventDefault();
     });
-//    $('#abstract').attr('checked', );
-
+    //    $('#abstract').attr('checked', );
     $('a[href^="/pro\\/"]').each(function(i, e) {
         //console.log(this);
         //console.log( $(this).attr('href') );
         //console.log( $(this).html());
-        $(this).html( $(this).html() + ' (pro)' );
+        $(this).html($(this).html() + ' (pro)');
     });
 
     $('.spoiler').on('click', function(e) {
@@ -101,18 +100,17 @@ $(document).ready(function() {
             $(this).addClass('spoiler_hidden');
         }
     });
-    $('.spoiler').each(function () {
+    $('.spoiler').each(function() {
         $(this).attr('content', $(this).html());
         $(this).addClass('spoiler_spoiled');
         $(this).trigger('click');
-    
+
     });
 
     prettyPrint();
 });
- 
-angular.module('PerlMavenApp', [])
-  .controller('PerlMavenCtrl', function($scope, $http) {
+
+angular.module('PerlMavenApp', []).controller('PerlMavenCtrl', function($scope, $http) {
     //console.log('start ng');
     $scope.search_index = function(word) {
         window.location.href = "/search/" + encodeURIComponent(word);
@@ -128,54 +126,51 @@ angular.module('PerlMavenApp', [])
         // allow if it is a single character, as we would like to get suggestions on $ and -
         // but maybe disable if it is a letter or a digit.
         if (query.length < 1) {
-            $scope.show_autocomplete = false; 
+            $scope.show_autocomplete = false;
             return;
         }
         $http.get('/autocomplete.json/' + encodeURIComponent(query)).then(
-                function(response) {
-                    //console.log(response.data);
-                    $scope.autocomplete_results = response.data;
-                    $scope.show_autocomplete = true;
-                    
-                },
-                function(response) {
-                    console.log("error");
-                }
-        );
+        function(response) {
+            //console.log(response.data);
+            $scope.autocomplete_results = response.data;
+            $scope.show_autocomplete = true;
+
+        },
+        function(response) {
+            console.log("error");
+        });
     };
     $scope.admin_show_details = function() {
         console.log('admin_show_details');
         console.log($scope.admin_search_email);
-        if (! $scope.admin_search_email) {
-             console.log('report that we need an e-mail');
+        if (!$scope.admin_search_email) {
+            console.log('report that we need an e-mail');
             return;
         }
-         $http({
+        $http({
             method: 'GET',
-             url: '/admin/user_info.json?email=' + $scope.admin_search_email
-         }).then( function (response) {
+            url: '/admin/user_info.json?email=' + $scope.admin_search_email
+        }).then(function(response) {
             console.log(response.data);
-               $scope.people = response.data.people;
-            },
-            function(response) {
-                console.log('error');
-            });
+            $scope.people = response.data.people;
+        },
+        function(response) {
+            console.log('error');
+        });
     };
 
-	$scope.show_searches = function() {
-         $http({
+    $scope.show_searches = function() {
+        $http({
             method: 'GET',
-             url: '/admin/searches'
-         }).then( function (response) {
+            url: '/admin/searches'
+        }).then(function(response) {
             console.log(response.data);
-               $scope.admin_searches = response.data;
-            },
-            function(response) {
-                console.log('error');
-            });
-	};
-})
-  .filter('encodeURIComponent', function() {
+            $scope.admin_searches = response.data;
+        },
+        function(response) {
+            console.log('error');
+        });
+    };
+}).filter('encodeURIComponent', function() {
     return window.encodeURIComponent;
 });
-
