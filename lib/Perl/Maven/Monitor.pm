@@ -152,7 +152,7 @@ sub recent {
 
 	my $html = <<"HTML";
 =title Monitoring the most recent uploads to CPAN
-=timestamp $time
+=timestamp 2015-11-24T18:00:01
 =indexes CPAN
 =status show
 =author szabgab
