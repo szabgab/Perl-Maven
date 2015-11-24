@@ -3,6 +3,9 @@ use 5.010;
 use Moo::Role;
 use boolean;
 use Data::Dumper qw(Dumper);
+use Cpanel::JSON::XS qw(decode_json);
+
+use LWP::UserAgent;
 
 our $VERSION = '0.11';
 
@@ -36,12 +39,17 @@ sub fetch_cpan {
 		$data{version}      = $r->version;
 		$data{dependency}   = $r->dependency;
 		$data{license}      = $r->license;
+		$data{metadata}     = $r->metadata;
 
 		my $res = $cpan->find_one( { name => $data{name} } );
 		next if $res;    # TODO or shall we quit here?
 
+		$self->travis_ci( \%data );
+
 		$count++;
 		$cpan->insert( \%data );
+
+		#last if $count > 10;
 
 		#die Dumper \%data;
 	}
@@ -51,6 +59,62 @@ sub fetch_cpan {
 		if $count > 0.9 * $self->limit;
 	$self->_log( 'Total number of entries in CPAN: ' . $cpan->count );
 	return;
+}
+
+sub travis_ci {
+	my ( $self, $data ) = @_;
+
+	# TODO: I think in some cases the proper URL is in the "web" field.
+	if ( not $data->{metadata}{resources}{repository}{url} ) {
+		$data->{error} = 'No repository url';
+		return;
+	}
+	my ($repo) = $data->{metadata}{resources}{repository}{url} =~ m{(?:https|http|git)://github.com/(.*?)(?:/|\.git)?$};
+	if ( not $repo ) {
+		$data->{error} = sprintf q{Repository is not on GitHub '%s'}, $data->{metadata}{resources}{repository}{url};
+		return;
+	}
+	$data->{github_repo} = "http://github.com/$repo";
+	my $ua = LWP::UserAgent->new;
+
+	# Try to fetch travis.yml from GitHub
+	my $travis_yml_url = "https://raw.githubusercontent.com/$repo/master/.travis.yml";
+	say "Fetching $travis_yml_url";
+	my $response = $ua->get($travis_yml_url);
+	if ( not $response->is_success ) {
+		$data->{error} = 'travis.yml not found on GitHub';
+		return;
+	}
+
+	# If there is, fetch the status from Travis-CI
+	my $travis_url = "https://api.travis-ci.org/repos/$repo/builds";
+	say "Fetching $travis_url";
+	my $res = $ua->get( $travis_url, 'Accept' => 'application/vnd.travis-ci.2+json' );
+	if ( not $res->is_success ) {
+		$data->{error} = 'Could not fetch the status from Travis-CI';
+		return;
+	}
+	my @builds = eval { @{ decode_json( $res->content )->{builds} } };
+	if ($@) {
+		$data->{error} = "Error fetching travis status: $@";
+		return;
+	}
+	$data->{travis_status}         = __get_travis_status(@builds);
+	$data->{travis_status_checked} = DateTime::Tiny->now;
+	return;
+}
+
+sub __get_travis_status {
+	my @builds = @_;
+
+	return 'unknown' unless @builds;
+	my $state = $builds[0]->{state};
+
+	return $state    if $state =~ /cancel|pend/;
+	return 'error'   if $state =~ /error/;
+	return 'failing' if $state =~ /fail/;
+	return 'passing' if $state =~ /pass/;
+	return 'unknown';
 }
 
 1;

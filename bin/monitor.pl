@@ -8,9 +8,10 @@ use Getopt::Long qw(GetOptions);
 use Perl::Maven::Monitor;
 
 my %opt;
-GetOptions( \%opt, 'limit=i', 'hours=i', 'conf=s', 'fetch:s', 'report:s', 'help', 'verbose' ) or usage();
+GetOptions( \%opt, 'limit=i', 'hours=i', 'conf=s', 'fetch:s', 'report:s', 'help', 'file=s', 'recent:i', 'verbose' )
+	or usage();
 usage() if delete $opt{help};
-usage() if not defined $opt{fetch} and not defined $opt{report};
+usage() unless ( defined $opt{fetch} or defined $opt{report} or defined $opt{recent} );
 
 my $root = dirname dirname abs_path($0);
 
@@ -23,6 +24,11 @@ if ( defined $opt{report} ) {
 	$monitor->report( $opt{report} );
 }
 
+if ( defined $opt{recent} ) {
+	die 'Missing --file FILENAME' if not $opt{file};
+	$monitor->recent( $opt{file}, $opt{recent} );
+}
+
 exit;
 
 sub usage {
@@ -33,6 +39,7 @@ Usage: $0
     --conf path/to/config/file
     --fetch [cpan|pypi]   Get data from the pypi RSS feed or from the recent API of MetaCPAN.
     --report [cpan|pypi]  Generate alerts and send reports
+    --recent [N]          Create HTML report of N most recent uploads
     --verbose             log on the screen
     --help
 USAGE

@@ -84,7 +84,7 @@ has config  => ( is => 'rw' );
 #		$self->limit;
 #}
 
-my @services = qw(cpan);  # pypi
+my @services = qw(cpan);    # pypi
 
 sub BUILD {
 	my ($self) = @_;
@@ -113,6 +113,64 @@ sub fetch {
 		$self->$method;
 	}
 	return;
+}
+
+sub recent {
+	my ( $self, $file, $limit ) = @_;
+	my $collection = $self->mongodb('cpan');
+	my $recent     = $collection->find->sort( { date => -1 } )->limit($limit);
+	my $count      = 0;
+
+	my $time = DateTime::Tiny->now;
+
+	my $html = <<"HTML";
+=title Monitoring the most recent uploads to CPAN
+=timestamp $time
+=indexes CPAN
+=status show
+=author szabgab
+=comments_disqus_enable 1
+
+=abstract start
+
+Monitoring the most recent upload to CPAN.
+
+=abstract end
+
+HTML
+
+	$html .= "<table>\n";
+	$html .= "<tr><th>Distribution</th><th>Travis</th><th>Error</th></tr>\n";
+	while ( my $r = $recent->next ) {
+
+		#print Dumper $r;
+		my $repo = $r->{github_repo} || '';
+		$repo =~ s{http://github.com/}{};
+
+		#say $r->{travis_status};
+		$html .= '<tr>';
+		$html .= "<td>$r->{distribution}</td>";
+		if ( $r->{travis_status} ) {
+			$html
+				.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
+		}
+		elsif ($repo) {
+			$html .= qq{<td><a href="https://travis-ci.org/$repo/">not set up</a></td>};
+		}
+		else {
+			$html .= '<td></td>';
+		}
+		$html .= '<td>' . ( $r->{error} // '' ) . '</td>';
+		$html .= "</tr>\n";
+		$count++;
+	}
+	$html .= "</table>\n";
+	$html = "<div>Total: $count Last updated: $time</div>\n$html";
+	$html
+		.= q{<div>Note: Usernames on Github are case insensitive, but on Travis-CI they are <a href="https://github.com/travis-ci/travis-ci/issues/3198">still case sensitive</a>.};
+	$html
+		.= q{ This can break the above report if the URL give in the META.yml is not in the same case as Travis-CI.</div>};
+	path($file)->spew_utf8($html);
 }
 
 sub prepare {
