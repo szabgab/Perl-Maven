@@ -11,7 +11,7 @@ use Time::Local qw(timegm);
 use MongoDB;
 use DateTime::Tiny;
 
-with('Perl::Maven::Monitor::Pypi');
+#with('Perl::Maven::Monitor::Pypi');
 with('Perl::Maven::Monitor::CPAN');
 
 our $VERSION = '0.11';
@@ -84,7 +84,7 @@ has config  => ( is => 'rw' );
 #		$self->limit;
 #}
 
-my @services = qw(cpan pypi);
+my @services = qw(cpan);  # pypi
 
 sub BUILD {
 	my ($self) = @_;
