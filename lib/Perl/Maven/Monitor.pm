@@ -123,6 +123,33 @@ sub recent {
 
 	my $time = DateTime::Tiny->now;
 
+	my $table = "<table>\n";
+	$table .= "<tr><th>Distribution</th><th>Travis</th><th>Error</th></tr>\n";
+	while ( my $r = $recent->next ) {
+
+		#print Dumper $r;
+		my $repo = $r->{github_repo} || '';
+		$repo =~ s{http://github.com/}{};
+
+		#say $r->{travis_status};
+		$table .= '<tr>';
+		$table .= "<td>$r->{distribution}</td>";
+		if ( $r->{travis_status} ) {
+			$table
+				.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
+		}
+		elsif ($repo) {
+			$table .= qq{<td><a href="https://travis-ci.org/$repo/">not set up</a></td>};
+		}
+		else {
+			$table .= '<td></td>';
+		}
+		$table .= '<td>' . ( $r->{error} // '' ) . '</td>';
+		$table .= "</tr>\n";
+		$count++;
+	}
+	$table .= "</table>\n";
+
 	my $html = <<"HTML";
 =title Monitoring the most recent uploads to CPAN
 =timestamp $time
@@ -137,35 +164,12 @@ Monitoring the most recent upload to CPAN.
 
 =abstract end
 
+
+<div>Total: $count Last updated: $time</div>
+$table
+
 HTML
 
-	$html .= "<table>\n";
-	$html .= "<tr><th>Distribution</th><th>Travis</th><th>Error</th></tr>\n";
-	while ( my $r = $recent->next ) {
-
-		#print Dumper $r;
-		my $repo = $r->{github_repo} || '';
-		$repo =~ s{http://github.com/}{};
-
-		#say $r->{travis_status};
-		$html .= '<tr>';
-		$html .= "<td>$r->{distribution}</td>";
-		if ( $r->{travis_status} ) {
-			$html
-				.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
-		}
-		elsif ($repo) {
-			$html .= qq{<td><a href="https://travis-ci.org/$repo/">not set up</a></td>};
-		}
-		else {
-			$html .= '<td></td>';
-		}
-		$html .= '<td>' . ( $r->{error} // '' ) . '</td>';
-		$html .= "</tr>\n";
-		$count++;
-	}
-	$html .= "</table>\n";
-	$html = "<div>Total: $count Last updated: $time</div>\n$html";
 	$html
 		.= q{<div>Note: Usernames on Github are case insensitive, but on Travis-CI they are <a href="https://github.com/travis-ci/travis-ci/issues/3198">still case sensitive</a>.};
 	$html
