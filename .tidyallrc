@@ -8,7 +8,7 @@ argv = --profile=$ROOT/.perltidyrc
 [SortLines]
 select = .gitignore
 
-# Turn this off till the plugin is accepted and can be used
-#[JSBeautifier]
-#select = public/javascripts/perlmaven.js
+; Turn this off till the plugin is accepted and can be used
+;[JSBeautifier]
+;select = public/javascripts/perlmaven.js
 
