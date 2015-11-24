@@ -133,7 +133,7 @@ sub recent {
 
 		#say $r->{travis_status};
 		$table .= '<tr>';
-		$table .= "<td>$r->{distribution}</td>";
+		$table .= qq{<td><a href="https://metacpan.org/release/$r->{distribution}">$r->{distribution}</a></td>};
 		if ( $r->{travis_status} ) {
 			$table
 				.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
