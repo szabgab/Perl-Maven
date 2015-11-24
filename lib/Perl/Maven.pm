@@ -209,8 +209,8 @@ hook before_template => sub {
 						$t->{next}{title} = $t->{series}{chapters}[$ch]{sub}[ $e + 1 ]{title};
 					}
 					elsif ( $ch < @{ $t->{series}{chapters} } - 1 ) {
-						$t->{next}{url}   = $t->{series}{chapters}[ $ch + 1 ]{sub}[1]{url};
-						$t->{next}{title} = $t->{series}{chapters}[ $ch + 1 ]{sub}[1]{title};
+						$t->{next}{url}   = $t->{series}{chapters}[ $ch + 1 ]{sub}[0]{url};
+						$t->{next}{title} = $t->{series}{chapters}[ $ch + 1 ]{sub}[0]{title};
 					}
 					last CHAPTER;
 				}
