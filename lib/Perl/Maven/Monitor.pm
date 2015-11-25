@@ -138,33 +138,25 @@ sub recent {
 			$table .= qq{<td><a href="$repository_url"><span class="label label-success">VCS</span></a></td>};
 		}
 		else {
-			$table .= qq{<td><a href="/add-repo"><span class="label label-danger">NO</span></a></td>};
+			$table
+				.= qq{<td><a href="/how-to-add-link-to-version-control-system-of-a-cpan-distributions"><span class="label label-danger">Add link!</span></a></td>};
 		}
 		if ( $r->{_cm_}{travis_yml} ) {
-			$table .= qq{<td><a href="https://travis-ci.org/$repo/">Travis</a></td>};
+			$table
+				.= qq{<td><a href="https://travis-ci.org/$repo/"><span class="label label-success">Travis</span></a></a></td>};
 		}
 		elsif ($repo) {
-			$table .= qq{<td><a href="https://travis-ci.org/$repo/">Missing</a></td>};
+			$table
+				.= qq{<td><a href="/enable-travis-ci-for-continous-integration"><span class="label label-danger">Enable!</span></a></a></td>};
 		}
 		else {
-			$table .= '<td>Irrelevant</td>';
+			$table .= '<td><span class="label label-default">Irrelevant</span></td>';
 		}
 
-		#if ( $r->{travis_status} ) {
-		#	$table
-		#		.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
-		#}
-		#elsif ($repo) {
-		#	$table .= qq{<td><a href="https://travis-ci.org/$repo/">not set up</a></td>};
-		#}
-		#else {
-		#	$table .= '<td></td>';
-		#}
-		#$table .= '<td>' . ( $r->{error} // '' ) . '</td>';
-		$table .= "</tr>\n";
+		$table .= qq{</tr>\n};
 		$count++;
 	}
-	$table .= "</table>\n";
+	$table .= qq{</table>\n};
 
 	my $html = <<"HTML";
 =title Monitoring the most recent uploads to CPAN
