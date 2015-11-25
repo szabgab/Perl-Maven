@@ -124,27 +124,43 @@ sub recent {
 	my $time = DateTime::Tiny->now;
 
 	my $table = "<table>\n";
-	$table .= "<tr><th>Distribution</th><th>Travis</th><th>Error</th></tr>\n";
+	$table .= "<tr><th>Distribution</th><th>Repository</th><th>Travis</th></tr>\n";
 	while ( my $r = $recent->next ) {
 
 		#print Dumper $r;
-		my $repo = $r->{github_repo} || '';
-		$repo =~ s{http://github.com/}{};
+		my $repository_url = $r->{_cm_}{repository_url} || '';
+		my ($repo) = $repository_url =~ m{https://github.com/(.*)};
 
 		#say $r->{travis_status};
 		$table .= '<tr>';
 		$table .= qq{<td><a href="https://metacpan.org/release/$r->{distribution}">$r->{distribution}</a></td>};
-		if ( $r->{travis_status} ) {
-			$table
-				.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
-		}
-		elsif ($repo) {
-			$table .= qq{<td><a href="https://travis-ci.org/$repo/">not set up</a></td>};
+		if ( $r->{_cm_}{repository_url} ) {
+			$table .= qq{<td><a href="$repository_url"><span class="label label-success">VCS</span></a></td>};
 		}
 		else {
-			$table .= '<td></td>';
+			$table .= qq{<td><a href="/add-repo"><span class="label label-danger">NO</span></a></td>};
 		}
-		$table .= '<td>' . ( $r->{error} // '' ) . '</td>';
+		if ( $r->{_cm_}{travis_yml} ) {
+			$table .= qq{<td><a href="https://travis-ci.org/$repo/">Travis</a></td>};
+		}
+		elsif ($repo) {
+			$table .= qq{<td><a href="https://travis-ci.org/$repo/">Missing</a></td>};
+		}
+		else {
+			$table .= '<td>Irrelevant</td>';
+		}
+
+		#if ( $r->{travis_status} ) {
+		#	$table
+		#		.= qq{<td><a href="https://travis-ci.org/$repo/"><img src="/img/build-$r->{travis_status}.png"></a></td>};
+		#}
+		#elsif ($repo) {
+		#	$table .= qq{<td><a href="https://travis-ci.org/$repo/">not set up</a></td>};
+		#}
+		#else {
+		#	$table .= '<td></td>';
+		#}
+		#$table .= '<td>' . ( $r->{error} // '' ) . '</td>';
 		$table .= "</tr>\n";
 		$count++;
 	}

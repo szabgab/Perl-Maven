@@ -64,17 +64,27 @@ sub fetch_cpan {
 sub travis_ci {
 	my ( $self, $data ) = @_;
 
-	# TODO: I think in some cases the proper URL is in the "web" field.
-	if ( not $data->{metadata}{resources}{repository}{url} ) {
-		$data->{error} = 'No repository url';
+	#print Dumper $data->{metadata}{resources}{repository};
+	my $repo_url = $data->{metadata}{resources}{repository}{web} || $data->{metadata}{resources}{repository}{url};
+	if ( not $repo_url ) {
+
+		#$data->{error} = 'No repository url';
 		return;
 	}
-	my ($repo) = $data->{metadata}{resources}{repository}{url} =~ m{(?:https|http|git)://github.com/(.*?)(?:/|\.git)?$};
+	$repo_url =~ s{^git://github.com/(.*)\.git$}{https://github.com/$1};
+	$repo_url =~ s{^https?://github.com/(.*?)/?}{https://github.com/$1};
+
+	#say $repo_url;
+	$data->{_cm_}{repository_url} = $repo_url;
+
+	my ($repo) = $repo_url =~ m{^https://github.com/(.*)$};
 	if ( not $repo ) {
-		$data->{error} = sprintf q{Repository is not on GitHub '%s'}, $data->{metadata}{resources}{repository}{url};
+
+		#$data->{error} = sprintf q{Repository is not on GitHub '%s'}, $data->{metadata}{resources}{repository}{url};
 		return;
 	}
-	$data->{github_repo} = "http://github.com/$repo";
+
+	#$data->{_cm_}{github_repo} = "http://github.com/$repo";
 	my $ua = LWP::UserAgent->new;
 
 	# Try to fetch travis.yml from GitHub
@@ -82,25 +92,28 @@ sub travis_ci {
 	$self->_log("Fetching $travis_yml_url");
 	my $response = $ua->get($travis_yml_url);
 	if ( not $response->is_success ) {
-		$data->{error} = 'travis.yml not found on GitHub';
+		$data->{_cm_}{travis_yml} = boolean::false;
+
+		#$data->{error} = 'travis.yml not found on GitHub';
 		return;
 	}
+	$data->{_cm_}{travis_yml} = boolean::true;
 
 	# If there is, fetch the status from Travis-CI
-	my $travis_url = "https://api.travis-ci.org/repos/$repo/builds";
-	$self->_log("Fetching $travis_url");
-	my $res = $ua->get( $travis_url, 'Accept' => 'application/vnd.travis-ci.2+json' );
-	if ( not $res->is_success ) {
-		$data->{error} = 'Could not fetch the status from Travis-CI';
-		return;
-	}
-	my @builds = eval { @{ decode_json( $res->content )->{builds} } };
-	if ($@) {
-		$data->{error} = "Error fetching travis status: $@";
-		return;
-	}
-	$data->{travis_status}         = __get_travis_status(@builds);
-	$data->{travis_status_checked} = DateTime::Tiny->now;
+	#my $travis_url = "https://api.travis-ci.org/repos/$repo/builds";
+	#$self->_log("Fetching $travis_url");
+	#my $res = $ua->get( $travis_url, 'Accept' => 'application/vnd.travis-ci.2+json' );
+	#if ( not $res->is_success ) {
+	#	$data->{error} = 'Could not fetch the status from Travis-CI';
+	#	return;
+	#}
+	#my @builds = eval { @{ decode_json( $res->content )->{builds} } };
+	#if ($@) {
+	#	$data->{error} = "Error fetching travis status: $@";
+	#	return;
+	#}
+	#$data->{travis_status}         = __get_travis_status(@builds);
+	#$data->{travis_status_checked} = DateTime::Tiny->now;
 	return;
 }
 
