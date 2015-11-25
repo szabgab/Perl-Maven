@@ -79,7 +79,7 @@ sub travis_ci {
 
 	# Try to fetch travis.yml from GitHub
 	my $travis_yml_url = "https://raw.githubusercontent.com/$repo/master/.travis.yml";
-	say "Fetching $travis_yml_url";
+	$self->_log("Fetching $travis_yml_url");
 	my $response = $ua->get($travis_yml_url);
 	if ( not $response->is_success ) {
 		$data->{error} = 'travis.yml not found on GitHub';
@@ -88,7 +88,7 @@ sub travis_ci {
 
 	# If there is, fetch the status from Travis-CI
 	my $travis_url = "https://api.travis-ci.org/repos/$repo/builds";
-	say "Fetching $travis_url";
+	$self->_log("Fetching $travis_url");
 	my $res = $ua->get( $travis_url, 'Accept' => 'application/vnd.travis-ci.2+json' );
 	if ( not $res->is_success ) {
 		$data->{error} = 'Could not fetch the status from Travis-CI';
