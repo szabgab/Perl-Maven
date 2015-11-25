@@ -139,7 +139,7 @@ sub recent {
 		}
 		else {
 			$table
-				.= qq{<td><a href="/how-to-add-link-to-version-control-system-of-a-cpan-distributions"><span class="label label-danger">Add link!</span></a></td>};
+				.= q{<td><a href="/how-to-add-link-to-version-control-system-of-a-cpan-distributions"><span class="label label-danger">Add link!</span></a></td>};
 		}
 		if ( $r->{_cm_}{travis_yml} ) {
 			$table
@@ -147,10 +147,10 @@ sub recent {
 		}
 		elsif ($repo) {
 			$table
-				.= qq{<td><a href="/enable-travis-ci-for-continous-integration"><span class="label label-danger">Enable!</span></a></a></td>};
+				.= q{<td><a href="/enable-travis-ci-for-continous-integration"><span class="label label-danger">Enable!</span></a></a></td>};
 		}
 		else {
-			$table .= '<td><span class="label label-default">Irrelevant</span></td>';
+			$table .= q{<td><span class="label label-default">Irrelevant</span></td>};
 		}
 
 		$table .= qq{</tr>\n};
