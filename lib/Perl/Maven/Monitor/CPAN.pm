@@ -77,7 +77,7 @@ sub fetch_cpan {
 				$cpan->delete_one( { cpan => { name => $data{cpan}{name} } } );
 			}
 			else {
-				$cpan->delete( { cpan => { name => $data{cpan}{name} } } );
+				$cpan->remove( { cpan => { name => $data{cpan}{name} } } );
 			}
 		}
 
