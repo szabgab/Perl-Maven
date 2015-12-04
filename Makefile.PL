@@ -41,6 +41,7 @@ WriteMakefile(
 		'Cpanel::JSON::XS'            => 3.0115,
 		'Web::Feed'                   => 0.02,
 		'Digest::SHA'                 => 5.92,
+		'Data::Structure::Util'       => 0,
 
 		'Crypt::URandom'          => 0,              # recommended by Dancer2
 		'Math::Random::ISAAC::XS' => 0,              # recommended by Dancer2
