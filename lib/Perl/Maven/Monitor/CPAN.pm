@@ -5,6 +5,10 @@ use boolean;
 use Data::Dumper qw(Dumper);
 use Cpanel::JSON::XS qw(decode_json);
 
+#use Storable qw(dclone);
+use Data::Structure::Util qw(unbless);
+use version;
+
 use LWP::UserAgent;
 
 our $VERSION = '0.11';
@@ -26,23 +30,56 @@ sub fetch_cpan {
 		    #my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
 		    #my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
 		    #last if $time < $now - 60 * 60 * $self->hours;
-		my $rd = DateTime::Tiny->from_string( $r->date );    #2015-04-05T12:10:00
+		    #my $rd = DateTime::Tiny->from_string( $r->date );    #2015-04-05T12:10:00
+		    #die Dumper $r;
 
-		my %data;
-		$data{distribution} = $r->distribution;
-		$data{name}         = $r->name;
-		$data{author}       = $r->author;
-		$data{abstract}     = ( $r->abstract // '' );
-		$data{date}         = $rd;
-		$data{first}        = $r->first ? boolean::true : boolean::false;
-		$data{modules}      = $r->provides;
-		$data{version}      = $r->version;
-		$data{dependency}   = $r->dependency;
-		$data{license}      = $r->license;
-		$data{metadata}     = $r->metadata;
+		#my $raw = unbless $r->{data};
+		#say Dumper $raw->{metadata};
+		#say $raw->{metadata}{authorized};
+		#next;
 
-		my $res = $cpan->find_one( { name => $data{name} } );
-		next if $res;    # TODO or shall we quit here?
+		my %data = ( cpan => $r->{data} );
+
+		#$data{distribution} = $r->distribution;
+		#$data{name}         = $r->name;
+		#$data{author}       = $r->author;
+		#$data{abstract}     = ( $r->abstract // '' );
+		#$data{date}         = $rd;
+		#$data{first}        = $r->first ? boolean::true : boolean::false;
+		#$data{modules}      = $r->provides;
+		#$data{version}      = $r->version;
+		#$data{dependency}   = $r->dependency;
+		#$data{license}      = $r->license;
+		#$data{metadata}     = $r->metadata;
+
+		$self->_log( 'Distribution: ' . $r->distribution );
+		$self->_log("Current version: $data{cpan}{version}");
+		my $res = $cpan->find_one( { 'cpan.metadata.name' => $data{cpan}{metadata}{name} } );
+		if ($res) {
+			$self->_log("Previous version: $res->{cpan}{version}");
+
+			my ( $old, $new );
+			eval {
+				$old = version->parse( $res->{cpan}{version} );
+				$new = version->parse( $data{cpan}{version} );
+			};
+			if ($@) {
+				$self->_log("ERROR parsing version number: $@");
+				next;
+			}
+
+			if ( $old >= $new ) {
+				next;
+			}
+			$self->_log('Delete previous version');
+			if ( version->parse($MongoDB::VERSION) >= version->parse('v1.0.0') ) {
+				$self->_log('new way');
+				$cpan->delete_one( { cpan => { name => $data{cpan}{name} } } );
+			}
+			else {
+				$cpan->delete( { cpan => { name => $data{cpan}{name} } } );
+			}
+		}
 
 		$self->travis_ci( \%data );
 
@@ -65,7 +102,8 @@ sub travis_ci {
 	my ( $self, $data ) = @_;
 
 	#print Dumper $data->{metadata}{resources}{repository};
-	my $repo_url = $data->{metadata}{resources}{repository}{web} || $data->{metadata}{resources}{repository}{url};
+	my $repo_url
+		= $data->{cpan}{metadata}{resources}{repository}{web} || $data->{cpan}{metadata}{resources}{repository}{url};
 	if ( not $repo_url ) {
 
 		#$data->{error} = 'No repository url';
