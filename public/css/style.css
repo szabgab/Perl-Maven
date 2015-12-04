@@ -451,3 +451,10 @@ video {
    text-align: center;
 }
 
+.even {
+  background-color: #DDD;
+}
+.odd {
+  background-color: #FFF;
+}
+

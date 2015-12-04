@@ -417,6 +417,19 @@ get '/search/:query' => sub {
 		};
 };
 
+get '/api/1/recent' => sub {
+	my @recent;
+	my $limit = 100;
+	eval {
+		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+		my $database   = $client->get_database('PerlMaven');
+		my $collection = $database->get_collection('cpan');
+		@recent = map { delete $_->{_id}; $_ } $collection->find->sort( { date => -1 } )->limit($limit)->all;
+	};
+	push_header 'Content-type' => 'application/json';
+	return to_json \@recent, { convert_blessed => 1 };
+};
+
 get '/autocomplete.json/:query' => sub {
 	my ($query) = param('query');
 
