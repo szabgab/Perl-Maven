@@ -54,7 +54,7 @@ sub fetch_cpan {
 
 		$self->_log( 'Distribution: ' . $r->distribution );
 		$self->_log("Current version: $data{cpan}{version}");
-		my $res = $cpan->find_one( { 'cpan.metadata.name' => $data{cpan}{metadata}{name} } );
+		my $res = $cpan->find_one( { 'cpan.distribution' => $data{cpan}{distribution} } );
 		if ($res) {
 			$self->_log("Previous version: $res->{cpan}{version}");
 
@@ -72,7 +72,7 @@ sub fetch_cpan {
 				next;
 			}
 			$self->_log('Delete previous version');
-			$cpan->delete_one( { cpan => { name => $data{cpan}{name} } } );
+			$cpan->delete_one( { cpan => { distribution => $data{cpan}{distribution} } } );
 		}
 
 		$self->travis_ci( \%data );

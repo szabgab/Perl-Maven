@@ -456,7 +456,7 @@ get '/api/1/recent' => sub {
 		}
 	};
 	push_header 'Content-type' => 'application/json';
-	my $json = Cpanel::JSON::XS->new;
+	my $json = Cpanel::JSON::XS->new->utf8;
 	$json->convert_blessed(1);
 	return $json->encode( \@recent );
 };
