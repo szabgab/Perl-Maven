@@ -425,7 +425,24 @@ get '/api/1/recent' => sub {
 		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 		my $database   = $client->get_database('PerlMaven');
 		my $collection = $database->get_collection('cpan');
-		@recent = map { delete $_->{_id}; $_ } $collection->find->sort( { date => -1 } )->limit($limit)->all;
+		my $res        = $collection->find->sort( { date => -1 } )->limit($limit);
+		while ( my $r = $res->next ) {
+			my $repository_url = $r->{_cm_}{repository_url} || '';
+			my %data = (
+				repository_url => $r->{_cm_}{repository_url},
+				distribution   => $r->{cpan}{distribution},
+				abstract       => $r->{cpan}{abstract},
+				date           => $r->{cpan}{date},
+				license        => $r->{cpan}{license},
+
+			   # // var repo_url = d.cpan.metadata.resources.repository.web || d.cpan.metadata.resources.repository.url;
+			);
+			my ($repo) = $repository_url =~ m{https://github.com/(.*)};
+			if ($repo) {
+				$data{repo} = $repo;
+			}
+			push @recent, \%data;
+		}
 	};
 	push_header 'Content-type' => 'application/json';
 	my $json = Cpanel::JSON::XS->new;
