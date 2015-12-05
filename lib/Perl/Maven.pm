@@ -430,6 +430,7 @@ get '/api/1/recent' => sub {
 			my $repository_url = $r->{_cm_}{repository_url} || '';
 			my %data = (
 				repository_url => $r->{_cm_}{repository_url},
+				travis_yml     => $r->{_cm_}{travis_yml},
 				distribution   => $r->{cpan}{distribution},
 				abstract       => $r->{cpan}{abstract},
 				date           => $r->{cpan}{date},
