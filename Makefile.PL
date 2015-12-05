@@ -20,6 +20,7 @@ WriteMakefile(
 
 		'Dancer2::Plugin::Passphrase' => '2.0.5',
 		'DateTime'                    => 1.12,
+		'DateTime::Tiny'              => 0,          #test fails and we should probably stop using it
 		'DBD::SQLite'                 => 1.42,
 		'DBI'                         => 1.631,
 		'DBIx::RunSQL'                => 0.12,
@@ -63,6 +64,11 @@ WriteMakefile(
 
 		'EBook::MOBI' => 0,
 
+		'Net::Twitter'  => 0,
+		'Config::Tiny'  => 0,
+		'File::HomeDir' => 0,
+		'JSON::XS'      => 0,    # should be replaced!
+
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,
 		'Test::WWW::Mechanize::PSGI' => 0.35,
@@ -73,6 +79,10 @@ WriteMakefile(
 		# For deployment
 		'Starman'         => 0.4009,
 		'Daemon::Control' => 0.001005,
+
+		# not really needed but good to have on the server:
+		'App::Ack'        => 0,
+		'Module::Version' => 0,
 
 		#'MetaCPAN::API'    => 0,    # for bin/cpan_monitor.pl
 		#'MetaCPAN::Client' => 0,    # for bin/monitor.pl
