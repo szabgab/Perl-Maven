@@ -72,13 +72,7 @@ sub fetch_cpan {
 				next;
 			}
 			$self->_log('Delete previous version');
-			if ( version->parse($MongoDB::VERSION) >= version->parse('v1.0.0') ) {
-				$self->_log('new way');
-				$cpan->delete_one( { cpan => { name => $data{cpan}{name} } } );
-			}
-			else {
-				$cpan->remove( { cpan => { name => $data{cpan}{name} } } );
-			}
+			$cpan->delete_one( { cpan => { name => $data{cpan}{name} } } );
 		}
 
 		$self->travis_ci( \%data );
