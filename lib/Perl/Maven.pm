@@ -425,7 +425,17 @@ get '/api/1/recent' => sub {
 		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 		my $database   = $client->get_database('PerlMaven');
 		my $collection = $database->get_collection('cpan');
-		my $res        = $collection->find->sort( { 'cpan.date' => -1 } )->limit($limit);
+		my $res        = $collection->find->sort(
+			{ 'cpan.date' => -1 },
+			{
+				'_cm_.repository_url' => 1,
+				'_cm_.travis_yml'     => 1,
+				'cpan.distribution'   => 1,
+				'cpan.abstract'       => 1,
+				'cpan.date'           => 1,
+				'cpan.license'        => 1,
+			}
+		)->limit($limit);
 		while ( my $r = $res->next ) {
 			my $repository_url = $r->{_cm_}{repository_url} || '';
 			my %data = (
