@@ -71,8 +71,8 @@ sub fetch_cpan {
 			if ( $old >= $new ) {
 				next;
 			}
-			$self->_log('Delete previous version');
-			$cpan->delete_one( { cpan => { distribution => $data{cpan}{distribution} } } );
+			$self->_log('Delete previous versions');
+			$cpan->delete_many( { 'cpan.distribution' => $data{cpan}{distribution} } );
 		}
 
 		$self->travis_ci( \%data );
