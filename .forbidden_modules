@@ -1,0 +1,11 @@
+# This was mostly used as an example for an article
+Switch           Use if, elsif instead of the deprecated Switch module
+Fatal            Use autodie instead of Fatal
+JSON             Use Cpanel::JSON::XS instead of JSON
+JSON::MaybeXS    Use Cpanel::JSON::XS instead of JSON::MaybeXS
+JSON::Syck       Use Cpanel::JSON::XS instead of JSON::Syck
+JSON::PP         Use Cpanel::JSON::XS instead of JSON::PP
+# DateTime         Use DateTime::Tiny or Time::Moment instead
+YAML             Use YAML::XS instead of YAML
+lib              Only scripts should change @INC. Modules should not.
+

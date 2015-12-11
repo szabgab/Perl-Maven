@@ -32,3 +32,6 @@ severity = 5
 
 #[ValuesAndExpressions::ProhibitNoisyQuotes]
 #severity = 5
+
+[Modules::ProhibitEvilModules]
+modules_file = .forbidden_modules
