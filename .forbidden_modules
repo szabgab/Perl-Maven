@@ -7,5 +7,5 @@ JSON::Syck       Use Cpanel::JSON::XS instead of JSON::Syck
 JSON::PP         Use Cpanel::JSON::XS instead of JSON::PP
 # DateTime         Use DateTime::Tiny or Time::Moment instead
 YAML             Use YAML::XS instead of YAML
-lib              Only scripts should change @INC. Modules should not.
+# lib              Only scripts should change @INC. Modules should not.
 
