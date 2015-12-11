@@ -4,6 +4,7 @@ use Moo::Role;
 use boolean;
 use Data::Dumper qw(Dumper);
 use Cpanel::JSON::XS qw(decode_json);
+use Path::Tiny qw(path);
 
 #use Storable qw(dclone);
 use Data::Structure::Util qw(unbless);
@@ -11,7 +12,39 @@ use version;
 
 use LWP::UserAgent;
 
+sub ua {
+	my ($self) = @_;
+	my ($github_token) = path('github-token')->lines( { chomp => 1 } );
+	$self->_log("token '$github_token'");
+	return LWP::UserAgent->new(
+		agent         => 'http://perlmaven.com/',
+		Authorization => "token $github_token",
+	);
+}
+
 our $VERSION = '0.11';
+
+sub get_api {
+	my ( $self, $repo, $call ) = @_;
+	my $url = "https://api.github.com/repos/$repo";
+	if ($call) {
+		$url .= $call;
+	}
+	my $ua = $self->ua;
+	$self->_log("get $url");
+	my $res = $ua->get($url);
+	if ( !$res->is_success ) {
+		warn "Error for project $repo : could not get $url: " . $res->status_line;
+		warn $res->content;
+		return;
+	}
+	my $data = eval { decode_json( $res->content ) };
+	if ($@) {
+		warn $@;
+		return {};
+	}
+	return $data;
+}
 
 sub fetch_cpan {
 	my ($self) = @_;
@@ -95,7 +128,9 @@ sub fetch_cpan {
 sub travis_ci {
 	my ( $self, $data ) = @_;
 
-	#print Dumper $data->{metadata}{resources}{repository};
+#print Dumper $data->{metadata}{resources}{repository};
+#$self->_log("web: $data->{cpan}{metadata}{resources}{repository}{web}") if $data->{cpan}{metadata}{resources}{repository}{web};
+#$self->_log("url: $data->{cpan}{metadata}{resources}{repository}{url}") if $data->{cpan}{metadata}{resources}{repository}{url};
 	my $repo_url
 		= $data->{cpan}{metadata}{resources}{repository}{web} || $data->{cpan}{metadata}{resources}{repository}{url};
 	if ( not $repo_url ) {
@@ -103,8 +138,11 @@ sub travis_ci {
 		#$data->{error} = 'No repository url';
 		return;
 	}
-	$repo_url =~ s{^git://github.com/(.*)\.git$}{https://github.com/$1};
+	$repo_url =~ s/\.git$//;
+	$repo_url =~ s{^git://github.com/(.*)$}{https://github.com/$1};
 	$repo_url =~ s{^https?://github.com/(.*?)/?}{https://github.com/$1};
+
+	#$self->_log("repo_url: $repo_url") if $repo_url;
 
 	#say $repo_url;
 	$data->{_cm_}{repository_url} = $repo_url;
@@ -116,20 +154,52 @@ sub travis_ci {
 		return;
 	}
 
-	#$data->{_cm_}{github_repo} = "http://github.com/$repo";
-	my $ua = LWP::UserAgent->new;
+	my $commits = $self->get_api( $repo, "/commits" );
+
+	#die Dumper $commits;
+	my $latest
+		= ref $commits eq 'ARRAY' ? $commits->[0] : $commits;    # if it's a single commit, we get the hashref directly
+	my $updated = $latest->{commit}->{committer}->{date};
+
+	#$project->{last_updated} = $updated;
+
+	my $tree = $self->get_api( $repo, "/git/trees/$latest->{sha}?recursive=1" );
+
+	#die Dumper $tree;
+	my %files = map { $_->{path} => 1 } @{ $tree->{tree} };
+
+	# TODO: we probably don't need the whole structure, and probably not all the files.
+
+#die Dumper \%files;
+# sample tree structure:
+#                  {
+#                    'sha' => 'da35a7638f9b2d3174dc3f131d295bbcb0768c96',
+#                    'path' => '.gitignore',
+#                    'type' => 'blob',
+#                    'size' => 35,
+#                    'url' => 'https://api.github.com/repos/perlancar/perl-Config-Apachish-Reader/git/blobs/da35a7638f9b2d3174dc3f131d295bbcb0768c96',
+#                    'mode' => '100644'
+#                  },
+
+	# Interesting files:
+	# .gitignore
+	# .notyet      type=tree (directory)
+	# dist.ini
+	# weaver.ini
+	# .travis.yml
+	# .perlcriticrc
+	# .perltidyrc
+	# .tidyallrc
+	$data->{github} = $tree->{tree};
+
+	my $ua = $self->ua;
 
 	# Try to fetch travis.yml from GitHub
-	my $travis_yml_url = "https://raw.githubusercontent.com/$repo/master/.travis.yml";
-	$self->_log("Fetching $travis_yml_url");
-	my $response = $ua->get($travis_yml_url);
-	if ( not $response->is_success ) {
-		$data->{_cm_}{travis_yml} = boolean::false;
-
-		#$data->{error} = 'travis.yml not found on GitHub';
-		return;
-	}
-	$data->{_cm_}{travis_yml} = boolean::true;
+	#my $travis_yml_url = "https://raw.githubusercontent.com/$repo/master/.travis.yml";
+	#$self->_log("Fetching $travis_yml_url");
+	#my $response = $ua->get($travis_yml_url);
+	#if ( not $response->is_success ) {
+	$data->{_cm_}{travis_yml} = $files{'.travis.yml'} ? boolean::true : boolean::false;
 
 	# If there is, fetch the status from Travis-CI
 	#my $travis_url = "https://api.travis-ci.org/repos/$repo/builds";
