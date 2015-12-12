@@ -14,7 +14,7 @@ use LWP::UserAgent;
 
 sub ua {
 	my ($self) = @_;
-	my ($github_token) = path('github-token')->lines( { chomp => 1 } );
+	my ($github_token) = path('config/github-token')->lines( { chomp => 1 } );
 	$self->_log("token '$github_token'");
 	return LWP::UserAgent->new(
 		agent         => 'http://perlmaven.com/',
