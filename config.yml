@@ -23,6 +23,7 @@ engines:
       encoding:  'utf8'
       INCLUDE_PATH:
         - 'views'
+        - 'config/templates'
       start_tag: '<%'
       end_tag:   '%>'
 
