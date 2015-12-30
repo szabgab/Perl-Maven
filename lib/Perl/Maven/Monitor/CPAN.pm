@@ -12,6 +12,8 @@ use version;
 
 use LWP::UserAgent;
 
+has distribution => ( is => 'rw' );
+
 sub ua {
 	my ($self) = @_;
 	my ($github_token) = path('config/github-token')->lines( { chomp => 1 } );
@@ -34,7 +36,10 @@ sub get_api {
 	$self->_log("get $url");
 	my $res = $ua->get($url);
 	if ( !$res->is_success ) {
-		warn "Error for project $repo : could not get $url: " . $res->status_line;
+		warn 'Warning for module http://metacpan.org/release/'
+			. $self->distribution
+			. " GitHub repo: http://github.com/$repo : could not get $url: "
+			. $res->status_line;
 		warn $res->content;
 		return;
 	}
@@ -85,6 +90,7 @@ sub fetch_cpan {
 		#$data{license}      = $r->license;
 		#$data{metadata}     = $r->metadata;
 
+		$self->distribution( $r->distribution );
 		$self->_log( 'Distribution: ' . $r->distribution );
 		$self->_log("Current version: $data{cpan}{version}");
 		my $res = $cpan->find_one( { 'cpan.distribution' => $data{cpan}{distribution} } );
