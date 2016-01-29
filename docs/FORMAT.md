@@ -89,10 +89,42 @@ is displayed on the front pages and is included in the RSS/Atom feed.
 
 `<b></b>` is used to mark other important pieces. 
 
-Code snippets are wrapped in 
+
+Code snippets and full Examples
+--------------------------------
+
+Code snippets can be included in the body of the article,
+within these tags. It is better not to leave empty rows at the beginning
+and the end of the examples.
 
     <code lang="perl">
     </code>
+
+Full-blown examples (including use strict, use warnings etc.) can be added
+in separate files in the examples/ subdirectory.
+and then they can be included using this:
+
+   <include file="examples/filename.pl">
+
+creating a subdirectory for an example that consists of several files is a good idea.
+If there are multiple versions of the file then it is better to
+create directories and put the file in those directories like this:
+
+   article_name/
+        version_1/
+              script.pl
+              lib/MyModule.pm
+        version_2/
+              script.pl
+              lib/MyModule.pm
+
+even if some of the files need to be duplicated.
+
+HTML examples (mostly on Code-Maven.com) can also use the
+
+   <try file="examples/filename.pl">
+
+
 
 
 Separate controls to include files in the following places:
@@ -105,6 +137,7 @@ Separate controls to include files in the following places:
     /atom              (uses the 'archive' meta file)
     /keywords and /search  (using the 'keywords' meta file)
     /sitemap.xml       (uses the 'sitemap' meta file)
+
 
 
 
