@@ -116,7 +116,7 @@ elsif ( $opt{list} ) {
 	my $emails = $db->get_subscribers( $opt{list} );
 
 	foreach my $e ( sort { $a->[0] cmp $b->[0] } @$emails ) {
-		say "$e->[0]";
+		printf "%4s %s\n", $e->[1], $e->[0];
 	}
 }
 elsif ( $opt{deluser} ) {
