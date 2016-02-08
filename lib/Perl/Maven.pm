@@ -119,7 +119,12 @@ hook before_template => sub {
 		}
 	}
 
-	$t->{right} = mymaven->{right};
+	my @right = @{ mymaven->{right} || [] };
+	if ($t->{conf}{show_ads}) {
+		$t->{right} = \@right;
+	} else {
+		$t->{right} = [ grep { not $_{ad} } @right ];
+	}
 
 	if ( $t->{books} ) {
 		my @logos;
