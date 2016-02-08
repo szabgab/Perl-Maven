@@ -7,7 +7,8 @@
         <% IF conf.show_right %>
                        <% IF author_html %>
                            <div class="rightbox">
-                               <img src="/img/<% author_img %>"  />
+                               <h3>Author: <% author_name %></h3>
+                               <img src="/img/<% author_img %>"  /><br>
                                <% author_html %>
                            </div>
                        <% END %>
