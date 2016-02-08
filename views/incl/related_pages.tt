@@ -1,14 +1,12 @@
-<% IF conf.show_related %>
+<% IF conf.show_related and related.size %>
     <div id="related_all">
         <div id="related">
           <b>Related articles</b>
-          <% IF related.size %>
             <ul>
               <% FOR l IN related %>
                 <li><a href="<% l.url %>"><% l.text %></a></li>
               <% END %>
             </ul>
-          <% END %>
         </div>
     </div>
 <% END %>
