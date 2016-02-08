@@ -119,6 +119,12 @@ hook before_template => sub {
 		}
 	}
 
+	# If these pages are sales piches then we should not show other ads.
+	if (request->path =~ m{^/pro/}) {
+		$t->{conf}{show_ads} = 0;
+	}
+
+	# Don't show right-hand ads to pro subscribers
 	my @right = @{ mymaven->{right} || [] };
 	if ($t->{conf}{show_ads}) {
 		$t->{right} = \@right;
