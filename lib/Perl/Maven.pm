@@ -123,7 +123,7 @@ hook before_template => sub {
 	if ($t->{conf}{show_ads}) {
 		$t->{right} = \@right;
 	} else {
-		$t->{right} = [ grep { not $_{ad} } @right ];
+		$t->{right} = [ grep { not $_->{ad} } @right ];
 	}
 
 	if ( $t->{books} ) {
