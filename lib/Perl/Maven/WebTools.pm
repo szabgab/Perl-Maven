@@ -261,6 +261,7 @@ sub pm_show_page {
 	if ( $nick and $authors{$nick} ) {
 		$tt->{author_name} = $authors{$nick}{author_name};
 		$tt->{author_img}  = $authors{$nick}{author_img};
+		$tt->{author_html} = $authors{$nick}{author_html};
 		$tt->{author_google_plus_profile}
 			= $authors{$nick}{author_google_plus_profile};
 	}
@@ -310,6 +311,10 @@ sub read_authors {
 				author_img                 => ( $img || 'white_square.png' ),
 				author_google_plus_profile => $google_plus_profile,
 			};
+			my $personal = mymaven->{root} . "/authors/$nick.txt";
+			if (-e $personal) {
+				$authors{$nick}{author_html} = Path::Tiny::path( $personal )->slurp_utf8;
+			}
 		}
 	};
 	return;

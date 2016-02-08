@@ -5,6 +5,12 @@
     <div class="col-md-3">
       <div id="right-side">
         <% IF conf.show_right %>
+                       <% IF author_html %>
+                           <div class="rightbox">
+                               <img src="/img/<% author_img %>"  />
+                               <% author_html %>
+                           </div>
+                       <% END %>
             <% FOR r IN right %>
                 <% IF r.type == 'include' %>
                     <% IF r.file %>
