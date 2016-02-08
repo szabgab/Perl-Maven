@@ -230,6 +230,7 @@ sub pm_show_abstract {
 	#
 	#		if logged in but not subscribed, tell the user to subscribe
 	delete $tt->{mycontent};
+	_add_author($tt);
 	return template 'propage', $tt;
 }
 
@@ -256,18 +257,8 @@ sub pm_show_page {
 	}
 	( $tt->{date} ) = split /T/, $tt->{timestamp};
 
-	my $nick = $tt->{author};
-	read_authors() if not %authors;
-	if ( $nick and $authors{$nick} ) {
-		$tt->{author_name} = $authors{$nick}{author_name};
-		$tt->{author_img}  = $authors{$nick}{author_img};
-		$tt->{author_html} = $authors{$nick}{author_html};
-		$tt->{author_google_plus_profile}
-			= $authors{$nick}{author_google_plus_profile};
-	}
-	else {
-		delete $tt->{author};
-	}
+	_add_author($tt);
+
 	my $translator = $tt->{translator};
 	if ( $translator and $authors{$translator} ) {
 		$tt->{translator_name} = $authors{$translator}{author_name};
@@ -285,6 +276,23 @@ sub pm_show_page {
 	$tt->{$_} = $data->{$_} for keys %$data;
 
 	return template $params->{template}, $tt;
+}
+
+sub _add_author {
+	my ($tt) = @_;
+
+	my $nick = $tt->{author};
+	read_authors() if not %authors;
+	if ( $nick and $authors{$nick} ) {
+		$tt->{author_name} = $authors{$nick}{author_name};
+		$tt->{author_img}  = $authors{$nick}{author_img};
+		$tt->{author_html} = $authors{$nick}{author_html};
+		$tt->{author_google_plus_profile}
+			= $authors{$nick}{author_google_plus_profile};
+	}
+	else {
+		delete $tt->{author};
+	}
 }
 
 sub authors {
