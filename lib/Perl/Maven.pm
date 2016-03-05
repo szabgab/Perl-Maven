@@ -124,20 +124,22 @@ hook before_template => sub {
 		$t->{conf}{show_ads} = 0;
 	}
 
+	$t->{domain} = mymaven->{domain};
+
 	sub _conv {
-		my ($file) = @_;
+		my ( $domain, $file ) = @_;
 		return $file if $file =~ m{^incl/};
-		return "sites/perlmaven.com/templates/$file";
+		return "sites/$domain/templates/$file";
 	}
 
 	# Don't show right-hand ads to pro subscribers
 	my @right = @{ mymaven->{right} || [] };
 	foreach my $r (@right) {
 		if ( $r->{file} ) {
-			$r->{file} = _conv( $r->{file} );
+			$r->{file} = _conv( $t->{domain}, $r->{file} );
 		}
 		if ( $r->{files} ) {
-			$r->{files} = [ map { _conv($_) } @{ $r->{files} } ];
+			$r->{files} = [ map { _conv( $t->{domain}, $_ ) } @{ $r->{files} } ];
 		}
 	}
 
@@ -197,7 +199,6 @@ hook before_template => sub {
 		}
 	}
 
-	$t->{domain}    = mymaven->{domain};
 	$t->{resources} = read_resources();
 
 	# linking to translations
