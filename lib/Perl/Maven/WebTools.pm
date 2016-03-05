@@ -320,8 +320,8 @@ sub read_authors {
 				author_google_plus_profile => $google_plus_profile,
 			};
 			my $personal = mymaven->{root} . "/authors/$nick.txt";
-			if (-e $personal) {
-				$authors{$nick}{author_html} = Path::Tiny::path( $personal )->slurp_utf8;
+			if ( -e $personal ) {
+				$authors{$nick}{author_html} = Path::Tiny::path($personal)->slurp_utf8;
 			}
 		}
 	};
