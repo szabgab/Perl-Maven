@@ -10,7 +10,7 @@ my $old     = 0;
 my $deleted = 0;
 while ( my $f = readdir $dh ) {
 	next if $f =~ /^\./;
-	next if $f !~ /\d{10}\.yml$/;
+	next if $f !~ /\.yml$/;
 	$total++;
 	if ( -M "sessions/$f" > $days ) {
 		$old++;
