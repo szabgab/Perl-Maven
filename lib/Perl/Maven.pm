@@ -120,15 +120,32 @@ hook before_template => sub {
 	}
 
 	# If these pages are sales piches then we should not show other ads.
-	if (request->path =~ m{^/pro/}) {
+	if ( request->path =~ m{^/pro/} ) {
 		$t->{conf}{show_ads} = 0;
+	}
+
+	sub _conv {
+		my ($file) = @_;
+		return $file if $file =~ m{^incl/};
+		return "sites/perlmaven.com/templates/$file";
 	}
 
 	# Don't show right-hand ads to pro subscribers
 	my @right = @{ mymaven->{right} || [] };
-	if ($t->{conf}{show_ads}) {
+	foreach my $r (@right) {
+		if ( $r->{file} ) {
+			$r->{file} = _conv( $r->{file} );
+		}
+		if ( $r->{files} ) {
+			$r->{files} = [ map { _conv($_) } @{ $r->{files} } ];
+		}
+	}
+
+	#die Dumper \@right;
+	if ( $t->{conf}{show_ads} ) {
 		$t->{right} = \@right;
-	} else {
+	}
+	else {
 		$t->{right} = [ grep { not $_->{ad} } @right ];
 	}
 
