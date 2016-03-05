@@ -29,7 +29,7 @@ GetOptions(
 usage() if $help;
 $ENV{METAMETA} = 1;
 
-foreach my $domain_name ( keys %{ $mymaven->{config}{domains} } ) {
+foreach my $domain_name ( sort keys %{ $mymaven->{config}{domains} } ) {
 	my $meta = Perl::Maven::CreateMeta->new(
 		verbose => $verbose,
 		mymaven => $mymaven,

@@ -25,13 +25,17 @@ use Perl::Maven::Page;
 
 my %ts;    # mapping timestamp => filename to ensure uniqueness
 
+# I think this was added only to make the order of pages in the archive stable.
+# In that case it should be probaby uniqueness per hostname, or better yet,
+# have a secondary ordering for the archive using the filename.
+
 sub process_domain {
 	my ( $self, $domain ) = @_;
 
-	say "** Processing domain $domain";
+	$self->_log("** Processing domain $domain");
 
 	my $config = $self->mymaven->config($domain);
-	say "   Saving to $config->{meta}";
+	$self->_log("   Saving to $config->{meta}");
 
 	my $sites = LoadFile("$config->{root}/sites.yml");
 
@@ -46,8 +50,8 @@ sub process_domain {
 	}
 	my @meta_archive
 		= reverse sort { $a->{timestamp} cmp $b->{timestamp} } @{ $self->meta_archive };
-	save( 'archive', "$config->{meta}/meta.$domain/meta", \@meta_archive );
-	save( 'translations', "$config->{meta}", $self->translations );
+	$self->save( 'archive', "$config->{meta}/meta.$domain/meta", \@meta_archive );
+	$self->save( 'translations', "$config->{meta}", $self->translations );
 
 	my %stats;
 	$self->stats->{pagecount}{$_} ||= 0 for keys %$sites;
@@ -61,7 +65,7 @@ sub process_domain {
 		$sites->{$lang}{latest}    = $self->latest->{$lang};
 		push @{ $stats{sites} }, $sites->{$lang};
 	}
-	save( 'stats', "$config->{meta}", \%stats );
+	$self->save( 'stats', "$config->{meta}", \%stats );
 
 	$self->consultants( $domain, $config );
 }
@@ -69,6 +73,9 @@ sub process_domain {
 sub process_series {
 	my ( $self, $config ) = @_;
 
+	my $series_file = $self->mymaven->config('series');
+	$self->_log("series file: $series_file");
+	exit;
 	return if not -e 'config/series.yml';
 	my $series = LoadFile('config/series.yml');
 	my %series_map;
@@ -82,7 +89,7 @@ sub process_series {
 	foreach my $main ( keys %$series ) {
 
 		#next if $main ne 'dancer';
-		say "Procesing series $main";
+		$self->_log("Procesing series $main");
 		die "This main page '$main' is already in use" if $series_map{$main};
 		$series_map{$main}      = $main;
 		$series->{$main}{title} = $self->pages->{$main}{title};
@@ -201,11 +208,12 @@ sub process_site {
 
 	my $pages = $self->get_pages( $config, @sources );
 
-	my ( $keywords, $archive, $sitemap, $categories ) = $self->process_files( $pages, $config->{extra_index}, $lang );
-	save( 'categories', $dest, $categories );
-	save( 'archive',    $dest, $archive );
-	save( 'keywords',   $dest, $keywords );
-	save( 'sitemap',    $dest, $sitemap );
+	my ( $keywords, $archive, $sitemap, $categories )
+		= $self->process_files( $domain, $pages, $config->{extra_index}, $lang );
+	$self->save( 'categories', $dest, $categories );
+	$self->save( 'archive',    $dest, $archive );
+	$self->save( 'keywords',   $dest, $keywords );
+	$self->save( 'sitemap',    $dest, $sitemap );
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
 	#$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_ } @$pages } );
@@ -215,8 +223,8 @@ sub process_site {
 		if ( $config->{series} ) {
 			my ( $series, $series_map ) = $self->process_series($config);
 			if ($series) {
-				save( 'series',        $dest, $series );
-				save( 'lookup_series', $dest, $series_map );
+				$self->save( 'series',        $dest, $series );
+				$self->save( 'lookup_series', $dest, $series_map );
 			}
 		}
 	}
@@ -224,8 +232,16 @@ sub process_site {
 	return;
 }
 
+sub _log {
+	my ( $self, $txt ) = @_;
+	if ( $self->verbose ) {
+		say $txt;
+	}
+	return;
+}
+
 sub process_files {
-	my ( $self, $pages, $extra_index, $lang ) = @_;
+	my ( $self, $domain, $pages, $extra_index, $lang ) = @_;
 
 	# TODO:
 	# =indexes are supposed to be mostly Perl keywords and other concepts
@@ -253,17 +269,17 @@ sub process_files {
 	foreach my $p (@$pages) {
 		next if $p->{redirect};
 		my $filename = substr( $p->{url_path}, 0, -4 );
-		if ( $self->verbose ) {
-			say "Processing $filename";
-		}
+
+		#$self->_log("Processing $filename");
 		if ( $p->{original} ) {
 			$self->translations->{ $p->{original} }{$lang} = $filename;
 		}
 
-		if ( $ts{ $p->{timestamp} } and $filename !~ /perldoc/ ) {
-			die "Duplicate =timestamp '$p->{timestamp}' in $ts{ $p->{timestamp} } and in $lang/pages/$filename\n";
+		if ( $ts{$domain}{ $p->{timestamp} } and $filename !~ /perldoc/ ) {
+			die
+				"Duplicate =timestamp '$p->{timestamp}' in $ts{$domain}{ $p->{timestamp} } and in $lang/pages/$filename\n";
 		}
-		$ts{ $p->{timestamp} } = "$lang/pages/$filename";
+		$ts{$domain}{ $p->{timestamp} } = "$lang/pages/$filename";
 
 		foreach my $f (qw(indexes tags)) {
 			next if not $p->{$f};
@@ -351,11 +367,13 @@ sub process_files {
 }
 
 sub save {
-	my ( $file, $dest, $data ) = @_;
+	my ( $self, $file, $dest, $data ) = @_;
 
 	mkpath $dest;
 	die "'$dest' does not exist" if not -d $dest;
 	my $path = "$dest/$file.json";
+
+	#$self->_log("Save $path");
 	eval {
 		Path::Tiny::path($path)->spew_utf8( encode_json($data) );
 		1;
@@ -372,12 +390,14 @@ sub get_pages {
 	my @pages;
 	foreach my $s (@sources) {
 		die Dumper $s if not $s->{path};
-		say $s->{path};
+
+		#$self->_log("get_pages: $s->{path}");
 		foreach my $file ( File::Find::Rule->file()->name('*.txt')->relative()->in( $s->{path} ) ) {
 
-			say "Reading $file" if $self->verbose;
+			#$self->_log("Reading $file");
 			my $path = "$s->{path}/$file";
-			say "Path $path" if $self->verbose;
+
+			#$self->_log("Path $path");
 			my $data = eval {
 				Perl::Maven::Page->new( media => '', root => $config->{root}, file => $path )
 					->read->process->merge_conf( $config->{conf} )->data;
@@ -435,7 +455,7 @@ sub consultants {
 
 	#die Dumper $config;
 	my $list_path = $config->{dirs}{articles} . '/consultants.txt';
-	say "Consultants $list_path";
+	$self->_log("Consultants $list_path");
 
 	my @people;
 	open my $fh, '<encoding(UTF-8)', $list_path
@@ -468,7 +488,7 @@ sub consultants {
 
 		push @people, \%p;
 	}
-	save( 'consultants', $config->{meta}, \@people );
+	$self->save( 'consultants', $config->{meta}, \@people );
 }
 
 sub codify {
