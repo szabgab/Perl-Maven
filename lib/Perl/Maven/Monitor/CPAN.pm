@@ -160,7 +160,7 @@ sub travis_ci {
 		return;
 	}
 
-	my $commits = $self->get_api( $repo, "/commits" );
+	my $commits = $self->get_api( $repo, '/commits' );
 
 	#die Dumper $commits;
 	my $latest
