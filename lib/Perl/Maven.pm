@@ -195,7 +195,7 @@ hook before_template => sub {
 			#next if not mymaven->{ads}{$place};
 			my $ads  = mymaven->{ads}{$place};
 			my $file = $ads->[ rand @$ads ];
-			$t->{ads}{$place} = Path::Tiny::path( path( config->{appdir}, 'config/ads', $file ) )->slurp_utf8;
+			$t->{ads}{$place} = Path::Tiny::path( path( config->{appdir}, "config/$t->{domain}/ads", $file ) )->slurp_utf8;
 		}
 	}
 
