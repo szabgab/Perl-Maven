@@ -56,6 +56,8 @@ CREATE TRIGGER user_cleanup
   BEFORE DELETE ON user FOR EACH ROW
   BEGIN
    DELETE FROM subscription WHERE uid=OLD.id;
+   DELETE FROM verification WHERE uid=OLD.id;
+   DELETE FROM login_whitelist WHERE uid=OLD.id;
   END;
 
 
