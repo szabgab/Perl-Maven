@@ -514,6 +514,15 @@ sub register {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
 
+	# I've seen many registrations using these domains that bounced immediately
+	# Let's not bother with them.
+	# TODO move this to configuration file
+	my %BLACK_LIST = map { $_ => 1 } qw(asooemail.com asdfmail.net);
+	my ( $user, $domain ) = split /@/, $data{email};
+	if ( $BLACK_LIST{$domain} ) {
+		return _registration_form( %data, error => 'invalid_mail' );
+	}
+
 	my $db   = setting('db');
 	my $user = $db->get_user_by_email( $data{email} );
 
