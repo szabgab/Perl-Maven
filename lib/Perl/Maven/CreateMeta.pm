@@ -73,11 +73,10 @@ sub process_domain {
 sub process_series {
 	my ( $self, $config ) = @_;
 
-	my $series_file = $self->mymaven->config('series');
+	my $series_file = $config->{'series_file'};
 	$self->_log("series file: $series_file");
-	exit;
-	return if not -e 'config/series.yml';
-	my $series = LoadFile('config/series.yml');
+	return if not -e $series_file;
+	my $series = LoadFile($series_file);
 	my %series_map;
 	if ( $self->books ) {
 		mkdir 'books';
@@ -220,7 +219,7 @@ sub process_site {
 	$self->pages( { map { substr( $_->{url_path}, 0, -4 ) => $_ } @$pages } );
 
 	if ( $lang eq 'en' ) {
-		if ( $config->{series} ) {
+		if ( $config->{series_file} ) {
 			my ( $series, $series_map ) = $self->process_series($config);
 			if ($series) {
 				$self->save( 'series',        $dest, $series );

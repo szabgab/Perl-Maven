@@ -22,6 +22,7 @@ See also L<Perl::Maven>.
 our $VERSION = '0.11';
 
 use Cwd qw(abs_path);
+use Carp ();
 use Data::Dumper qw(Dumper);
 use File::Basename qw(dirname);
 use Hash::Merge::Simple qw(merge);
@@ -54,7 +55,7 @@ sub config {
 
 	my $host   = host($fullhost);
 	my $domain = $self->{hosts}{$fullhost};
-	die "Hostname '$fullhost' not in configuration file\n" if not defined $domain;
+	Carp::confess("Hostname '$fullhost' not in configuration file\n") if not defined $domain;
 	my $mymaven = dclone $self->{config}{domains}{$domain};
 	$mymaven->{domain} = $domain;
 	my $lang = substr( $host, 0, -length($domain) - 1 ) || 'en';
