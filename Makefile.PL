@@ -19,6 +19,7 @@ WriteMakefile(
 		'Dancer2'             => 0.156001,
 
 		'Dancer2::Plugin::Passphrase' => '2.0.5',
+		'Dancer2::Session::Cookie'    => 0,
 		'DateTime'                    => 1.12,
 		'DateTime::Tiny'              => 0,          #test fails and we should probably stop using it
 		'DBD::SQLite'                 => 1.42,
