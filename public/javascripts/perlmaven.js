@@ -116,8 +116,9 @@ $(document).ready(function() {
 			return;
 		}
 		if (e.key === 'Enter') {
-			//console.log('enter', word);
+			console.log('enter', word);
         	window.location.href = "/search/" + encodeURIComponent(word);
+			return false;
 		} else {
 			// we can implement the autocomplete here if it is a good idea
 		}
