@@ -107,6 +107,22 @@ $(document).ready(function() {
 
     });
 
+	$('#search_box').keypress(function (e) {
+		//console.log('click', e, new Date);
+		var word = $('#search_box').val();
+		word = $.trim( word );
+		//console.log("'" + word + "'");
+		if (word === '') {
+			return;
+		}
+		if (e.key === 'Enter') {
+			//console.log('enter', word);
+        	window.location.href = "/search/" + encodeURIComponent(word);
+		} else {
+			// we can implement the autocomplete here if it is a good idea
+		}
+	});
+
     prettyPrint();
 });
 

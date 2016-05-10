@@ -6,7 +6,7 @@
   <div id="indexes">
     <ul>
       <% FOR k IN indexes %>
-         <li><button class="btn btn-mini btn-primary kw-button" type="button" ng-click="search_index('<% k %>')"><% k %></button></li>
+         <li><a class="btn btn-mini btn-primary kw-button" type="button" href="/search/<% k %>"><% k %></a></li>
       <% END %>
     </ul>
   </div>

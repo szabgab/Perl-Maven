@@ -1,13 +1,13 @@
 <% INCLUDE incl/header.tt %>
 
-<div ng-show="show_autocomplete">
+<div id="show_autocomplete">
 <h2>Search for <span id="term">'{{search_term}}'</span></h2>
 <ul>
    <li ng-repeat="r in autocomplete_results"><a href="/search/{{r | encodeURIComponent}}">{{r}}</a></li>
 </ul>
 </div>
 
-<div ng-hide="show_autocomplete">
+<div id="show_content">
 <% content %>
 </div>
 

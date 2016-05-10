@@ -458,3 +458,11 @@ video {
   background-color: #FFF;
 }
 
+#show_autocomplete {
+    display: none;
+}
+
+#show_content {
+	display: block;
+}
+

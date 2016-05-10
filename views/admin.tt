@@ -2,6 +2,8 @@
 Admin page. For authorized users only.
 </p>
 
+<script src="<% angular_cdn %>/angularjs/1.4.7/angular.min.js"></script>
+<div ng-app="PerlMavenApp" ng-controller="PerlMavenCtrl">
 
 <table>
 <tr><td>Product code</td><td>Number of subscribers</td></tr>
@@ -54,3 +56,5 @@ Total: {{admin_searches.count}}<br>
 </ul>
 </div>
 
+
+</div>
