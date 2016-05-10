@@ -3,6 +3,7 @@ Admin page. For authorized users only.
 </p>
 
 <script src="<% angular_cdn %>/angularjs/1.4.7/angular.min.js"></script>
+<script src="/javascripts/admin.js?<% pm_version %>"></script>
 <div ng-app="PerlMavenApp" ng-controller="PerlMavenCtrl">
 
 <table>
