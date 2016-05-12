@@ -217,7 +217,11 @@ DOWNLOADS
 				# TODO language based on extension?
 				my ($extension) = $path =~ /\.([^.]+)$/;
 				my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
-				$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
+				if ($extension eq 'txt') {
+					$cont .= qq{<pre>\n};
+				} else {
+					$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
+				}
 				my $code = path($path)->slurp_utf8;
 				$code =~ s/&/&amp;/g;
 				$code =~ s/</&lt;/g;
