@@ -951,7 +951,7 @@ sub _feed {
 
 	$subtitle ||= '';
 
-	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => mymaven->{feed_size} );
+	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => 3*mymaven->{feed_size} );
 
 	my $mymaven = mymaven;
 
@@ -965,7 +965,7 @@ sub _feed {
 	foreach my $p (@$pages) {
 		my %e;
 
-		next if $url =~ m{/pro/} and not $pro;
+		next if $p->{filename} =~ m{^pro/} and not $pro;
 
 		my $host = $p->{url} ? $p->{url} : $url;
 
@@ -999,6 +999,7 @@ sub _feed {
 			$e{author}{name} = authors->{ $p->{author} }{author_name};
 		}
 		push @entries, \%e;
+		last if @entries >= mymaven->{feed_size};
 	}
 
 	my $pmf = Web::Feed->new(
