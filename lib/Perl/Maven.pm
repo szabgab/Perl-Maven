@@ -675,15 +675,31 @@ get '/rss' => sub {
 	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
 
 	return $tag
-		? rss( 'archive', $tag )
-		: rss('archive');
+		? rss( 'archive', $tag, '', 0)
+		: rss('archive', undef, '', 0);
 };
 get '/atom' => sub {
 	my $tag = param('tag');
 	return $tag
-		? atom( 'archive', $tag )
-		: atom('archive');
+		? atom( 'archive', $tag, '', 0)
+		: atom('archive', undef, '', 0);
 };
+
+get '/rss-full' => sub {
+	my $tag = param('tag');
+	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
+
+	return $tag
+		? rss( 'archive', $tag, '', 1)
+		: rss('archive', undef, '', 1);
+};
+get '/atom-full' => sub {
+	my $tag = param('tag');
+	return $tag
+		? atom( 'archive', $tag, '', 1)
+		: atom('archive', undef, '', 1);
+};
+
 
 get '/tv/atom' => sub {
 	return atom( 'archive', 'interview', ' - Interviews' );
@@ -931,7 +947,7 @@ sub read_resources {
 }
 
 sub _feed {
-	my ( $what, $tag, $subtitle ) = @_;
+	my ( $what, $tag, $subtitle, $pro ) = @_;
 
 	$subtitle ||= '';
 
@@ -948,6 +964,8 @@ sub _feed {
 	my @entries;
 	foreach my $p (@$pages) {
 		my %e;
+
+		next if $url =~ m{/pro/} and not $pro;
 
 		my $host = $p->{url} ? $p->{url} : $url;
 
@@ -1005,18 +1023,18 @@ sub _feed {
 }
 
 sub atom {
-	my ( $what, $tag, $subtitle ) = @_;
+	my ( $what, $tag, $subtitle, $pro ) = @_;
 
-	my $pmf = _feed( $what, $tag, $subtitle );
+	my $pmf = _feed( $what, $tag, $subtitle, $pro );
 
 	content_type 'application/atom+xml';
 	return $pmf->atom;
 }
 
 sub rss {
-	my ( $what, $tag, $subtitle ) = @_;
+	my ( $what, $tag, $subtitle, $pro ) = @_;
 
-	my $pmf = _feed( $what, $tag, $subtitle );
+	my $pmf = _feed( $what, $tag, $subtitle, $pro );
 
 	content_type 'application/rss+xml';
 	return $pmf->rss;
