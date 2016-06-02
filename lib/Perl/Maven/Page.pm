@@ -194,7 +194,7 @@ DOWNLOADS
 			my $include = $self->_process_include($line);
 			if ($include) {
 				$data{abstract} .= $include;
-				next;
+				#next;
 			}
 
 			if ( $line =~ /^\s*$/ ) {
