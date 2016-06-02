@@ -196,49 +196,12 @@ DOWNLOADS
 			}
 		}
 
-		# <include file="examples/node_hello_world.js">
-		my %ext = (
-			py   => 'python',
-			rb   => 'ruby',
-			php  => 'php',
-			pl   => 'perl',
-			pm   => 'perl',
-			js   => 'javascript',
-			html => 'html',
-			xml  => 'xml',
-		);
-		if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
-			my $what         = $1;
-			my $include_file = $2;
-			my $path         = $self->root . "/$include_file";
-			if ( -e $path ) {
-				$cont .= "<b>$include_file</b><br>";
-
-				# TODO language based on extension?
-				my ($extension) = $path =~ /\.([^.]+)$/;
-				my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
-				if ($extension eq 'txt') {
-					$cont .= qq{<pre>\n};
-				} else {
-					$cont .= qq{<pre class="prettyprint linenums $language_code">\n};
-				}
-				my $code = path($path)->slurp_utf8;
-				$code =~ s/&/&amp;/g;
-				$code =~ s/</&lt;/g;
-				$code =~ s/>/&gt;/g;
-				$cont .= $code;
-				$cont .= qq{</pre>\n};
-
-				if ( $what eq 'try' ) {
-					$cont .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
-				}
-			}
-			else {
-				die "Could not find '$path'";
-
-			}
+		my $include = $self->_process_include($line);
+		if ($include) {
+			$cont .= $include;
 			next;
 		}
+
 		if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
 			my $language = $1 || '';
 			$in_code = 1;
@@ -320,6 +283,56 @@ DOWNLOADS
 	$self->data( \%data );
 	return $self;
 }
+
+sub _process_include {
+	my ($self, $line) = @_;
+
+	# <include file="examples/node_hello_world.js">
+	my %ext = (
+		py   => 'python',
+		rb   => 'ruby',
+		php  => 'php',
+		pl   => 'perl',
+		pm   => 'perl',
+		js   => 'javascript',
+		html => 'html',
+		xml  => 'xml',
+	);
+
+	my $include = '';
+	if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
+		my $what         = $1;
+		my $include_file = $2;
+		my $path         = $self->root . "/$include_file";
+		if ( -e $path ) {
+			$include .= "<b>$include_file</b><br>";
+
+			# TODO language based on extension?
+			my ($extension) = $path =~ /\.([^.]+)$/;
+			my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
+			if ($extension eq 'txt') {
+				$include .= qq{<pre>\n};
+			} else {
+				$include .= qq{<pre class="prettyprint linenums $language_code">\n};
+			}
+			my $code = path($path)->slurp_utf8;
+			$code =~ s/&/&amp;/g;
+			$code =~ s/</&lt;/g;
+			$code =~ s/>/&gt;/g;
+			$include .= $code;
+			$include .= qq{</pre>\n};
+
+			if ( $what eq 'try' ) {
+				$include .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
+			}
+		}
+		else {
+			die "Could not find '$path'";
+		}
+	}
+	return $include;
+}
+
 
 sub merge_conf {
 	my ( $self, $ro_conf ) = @_;
