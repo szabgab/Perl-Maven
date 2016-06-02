@@ -249,7 +249,7 @@ DOWNLOADS
 	}
 
 	# die if not $data{abstract} ???
-	my $MAX_ABSTRACT = 1400;
+	my $MAX_ABSTRACT = 4400;
 	if ( length $data{abstract} > $MAX_ABSTRACT ) {
 		die sprintf(
 			'Abstract of %s is too long. It has %s characters. (allowed %s)',
