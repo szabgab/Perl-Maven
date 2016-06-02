@@ -191,6 +191,12 @@ DOWNLOADS
 
 		if ( $data{abstract_start} and not $data{abstract_end} ) {
 			$data{abstract} .= $line;
+			my $include = $self->_process_include($line);
+			if ($include) {
+				$data{abstract} .= $include;
+				next;
+			}
+
 			if ( $line =~ /^\s*$/ ) {
 				$data{abstract} .= "<p>\n";
 			}
