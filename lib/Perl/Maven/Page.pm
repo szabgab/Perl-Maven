@@ -59,7 +59,6 @@ sub process {
 
 	my %data = ( abstract => '', );
 	my $cont = '';
-	my $in_code;
 
 	# ? signals an optional field
 	# @ signals a multi-value, a comma-separated list of values
@@ -197,6 +196,15 @@ DOWNLOADS
 				#next;
 			}
 
+			my $code = $self->_process_code($line);
+			if (defined $code) {
+				if ($code) {
+					$cont .= $self->{code};
+				}
+				#next;
+			}
+
+
 			if ( $line =~ /^\s*$/ ) {
 				$data{abstract} .= "<p>\n";
 			}
@@ -208,28 +216,11 @@ DOWNLOADS
 			next;
 		}
 
-		if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
-			my $language = $1 || '';
-			$in_code = 1;
-			if ( $language eq 'perl' ) {
-				$cont .= qq{<pre class="prettyprint linenums language-perl">\n};
+		my $code = $self->_process_code($line);
+		if (defined $code) {
+			if ($code) {
+				$cont .= $self->{code};
 			}
-			else {
-				# Without linenumst IE10 does not respect newlines and smashes everything together
-				# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
-				# in IE10 and in general some pages.
-				$cont .= qq{<pre class="linenums">\n};
-			}
-			next;
-		}
-		if ( $line =~ m{^</code>} ) {
-			$in_code = undef;
-			$cont .= qq{</pre>\n};
-			next;
-		}
-		if ($in_code) {
-			$line =~ s{<}{&lt;}g;
-			$cont .= $line;
 			next;
 		}
 
@@ -289,6 +280,38 @@ DOWNLOADS
 	$self->data( \%data );
 	return $self;
 }
+
+sub _process_code {
+	my ($line) = @_;
+
+	if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
+		my $language = $1 || '';
+		$self->{in_code} = 1;
+		$self->{code} = '';
+		if ( $language eq 'perl' ) {
+			$self->{code} .= qq{<pre class="prettyprint linenums language-perl">\n};
+		}
+		else {
+			# Without linenumst IE10 does not respect newlines and smashes everything together
+			# prettyprint removed to avoid coloring when it is not perl code, but I am not sure this won't break
+			# in IE10 and in general some pages.
+			$self->{code} .= qq{<pre class="linenums">\n};
+		}
+		return 0;
+	}
+	if ( $line =~ m{^</code>} ) {
+		$self->{in_code} = undef;
+		$self->{code} .= qq{</pre>\n};
+		return 1;
+	}
+	if ($self->{in_code}) {
+		$line =~ s{<}{&lt;}g;
+		$self->{code} .= $line;
+		return 0;
+	}
+	return;
+}
+
 
 sub _process_include {
 	my ($self, $line) = @_;
