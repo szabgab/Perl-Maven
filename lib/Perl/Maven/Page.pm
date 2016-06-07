@@ -58,7 +58,7 @@ sub process {
 	my ($self) = @_;
 
 	my %data = ( abstract => '', );
-	my $cont = '';
+	my $self->{mycontent} = '';
 
 	# ? signals an optional field
 	# @ signals a multi-value, a comma-separated list of values
@@ -212,24 +212,24 @@ DOWNLOADS
 
 		my $include = $self->_process_include($line);
 		if ($include) {
-			$cont .= $include;
+			$self->{mycontent} .= $include;
 			next;
 		}
 
 		my $code = $self->_process_code($line);
 		if (defined $code) {
 			if ($code) {
-				$cont .= $self->{code};
+				$self->{mycontent} .= $self->{code};
 			}
 			next;
 		}
 
 		if ( $line =~ /^\s*$/ ) {
-			$cont .= "<p>\n";
+			$self->{mycontent} .= "<p>\n";
 		}
-		$cont .= $line;
+		$self->{mycontent} .= $line;
 	}
-	$data{mycontent} = $cont;
+	$data{mycontent} = $self->{mycontent};
 
 	if ( $data{abstract_start} ) {
 		die "Too many times =abstract start: $data{abstract_start}"
@@ -249,7 +249,7 @@ DOWNLOADS
 		);
 	}
 
-	my %links = $cont =~ m{<a href="([^"]+)">([^<]+)<}g;
+	my %links = $self->{mycontent} =~ m{<a href="([^"]+)">([^<]+)<}g;
 	foreach my $url ( keys %links ) {
 		if ( $url =~ /\.(avi|ogv|mp4|webm|mp3)$/ ) {
 			delete $links{$url};
