@@ -197,6 +197,7 @@ DOWNLOADS
 				next;
 			}
 			$self->{data}{abstract} .= $line;
+			next;
 		}
 
 		next if $self->_process_include($line, 0);
