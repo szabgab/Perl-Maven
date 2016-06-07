@@ -282,7 +282,7 @@ DOWNLOADS
 }
 
 sub _process_code {
-	my ($line) = @_;
+	my ($self, $line) = @_;
 
 	if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
 		my $language = $1 || '';
