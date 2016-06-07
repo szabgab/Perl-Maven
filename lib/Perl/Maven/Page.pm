@@ -57,8 +57,8 @@ sub read {
 sub process {
 	my ($self) = @_;
 
-	my %data = ( abstract => '', );
-	$self->{mycontent} = '';
+	$self->{data}{abstract} = '';
+	$self->{data}{mycontent} = '';
 
 	# ? signals an optional field
 	# @ signals a multi-value, a comma-separated list of values
@@ -85,9 +85,10 @@ sub process {
 		}
 		$fields{$c} = \%h;
 	}
-	foreach my $k ( keys %data ) {
-		$fields{$k} = {};
-	}
+	my %data;
+	#foreach my $k ( keys %data ) {
+	#	$fields{$k} = {};
+	#}
 
 	my $file = $self->file;
 
@@ -184,72 +185,51 @@ DOWNLOADS
 		$line =~ s{<hl>}{<span class="inline_code">}g;
 		$line =~ s{</hl>}{</span>}g;
 		if ( $line =~ /^=abstract (start|end)/ ) {
-			$data{"abstract_$1"}++;
+			$self->{data}{"abstract_$1"}++;
 			next;
 		}
 
-		if ( $data{abstract_start} and not $data{abstract_end} ) {
-			$data{abstract} .= $line;
-			my $include = $self->_process_include($line);
-			if ($include) {
-				$data{abstract} .= $include;
-				#next;
-			}
-
-			my $code = $self->_process_code($line);
-			if (defined $code) {
-				if ($code) {
-					$data{abstract} .= $self->{code};
-				}
-				#next;
-			}
-
-
+		if ( $self->{data}{abstract_start} and not $self->{data}{abstract_end} ) {
+			next if $self->_process_include($line, 1);
+			next if $self->_process_code($line, 1);
 			if ( $line =~ /^\s*$/ ) {
-				$data{abstract} .= "<p>\n";
+				$self->{data}{abstract} .= "<p>\n";
+				next;
 			}
+			$self->{data}{abstract} .= $line;
 		}
 
-		my $include = $self->_process_include($line);
-		if ($include) {
-			$self->{mycontent} .= $include;
-			next;
-		}
-
-		my $code = $self->_process_code($line);
-		if (defined $code) {
-			if ($code) {
-				$self->{mycontent} .= $self->{code};
-			}
-			next;
-		}
+		next if $self->_process_include($line, 0);
+		next if $self->_process_code($line, 0);
 
 		if ( $line =~ /^\s*$/ ) {
-			$self->{mycontent} .= "<p>\n";
+			$self->{data}{mycontent} .= "<p>\n";
+			next;
 		}
-		$self->{mycontent} .= $line;
+		$self->{data}{mycontent} .= $line;
 	}
-	$data{mycontent} = $self->{mycontent};
+	$data{mycontent} = $self->{data}{mycontent};
+	$data{abstract} = $self->{data}{abstract};
 
-	if ( $data{abstract_start} ) {
-		die "Too many times =abstract start: $data{abstract_start}"
-			if $data{abstract_start} > 1;
-		die '=abstract started but not ended' if not $data{abstract_end};
-		die "Too many times =abstract edn: $data{abstract_end}"
-			if $data{abstract_end} > 1;
+	if ( $self->{data}{abstract_start} ) {
+		die "Too many times =abstract start: $self->{data}{abstract_start}"
+			if $self->{data}{abstract_start} > 1;
+		die '=abstract started but not ended' if not $self->{data}{abstract_end};
+		die "Too many times =abstract end: $self->{data}{abstract_end}"
+			if $self->{data}{abstract_end} > 1;
 	}
 
 	# die if not $data{abstract} ???
 	my $MAX_ABSTRACT = 4400;
-	if ( length $data{abstract} > $MAX_ABSTRACT ) {
+	if ( length $self->{data}{abstract} > $MAX_ABSTRACT ) {
 		die sprintf(
 			'Abstract of %s is too long. It has %s characters. (allowed %s)',
-			$self->file, length $data{abstract},
+			$self->file, length $self->{data}{abstract},
 			$MAX_ABSTRACT
 		);
 	}
 
-	my %links = $self->{mycontent} =~ m{<a href="([^"]+)">([^<]+)<}g;
+	my %links = $self->{data}{mycontent} =~ m{<a href="([^"]+)">([^<]+)<}g;
 	foreach my $url ( keys %links ) {
 		if ( $url =~ /\.(avi|ogv|mp4|webm|mp3)$/ ) {
 			delete $links{$url};
@@ -282,7 +262,7 @@ DOWNLOADS
 }
 
 sub _process_code {
-	my ($self, $line) = @_;
+	my ($self, $line, $abstract) = @_;
 
 	if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
 		my $language = $1 || '';
@@ -297,24 +277,29 @@ sub _process_code {
 			# in IE10 and in general some pages.
 			$self->{code} .= qq{<pre class="linenums">\n};
 		}
-		return 0;
+		return 1;
 	}
 	if ( $line =~ m{^</code>} ) {
 		$self->{in_code} = undef;
 		$self->{code} .= qq{</pre>\n};
+		if ($abstract) {
+			$self->{data}{abstract} .= $self->{code};
+		} else {
+			$self->{data}{mycontent} .= $self->{code};
+		}
 		return 1;
 	}
 	if ($self->{in_code}) {
 		$line =~ s{<}{&lt;}g;
 		$self->{code} .= $line;
-		return 0;
+		return 1;
 	}
 	return;
 }
 
 
 sub _process_include {
-	my ($self, $line) = @_;
+	my ($self, $line, $abstract) = @_;
 
 	# <include file="examples/node_hello_world.js">
 	my %ext = (
@@ -359,7 +344,12 @@ sub _process_include {
 			die "Could not find '$path'";
 		}
 	}
-	return $include;
+	if ($abstract) {
+		$self->{data}{abstract} .= $include;
+	} else {
+		$self->{mycontent}{abstract} .= $include;
+	}
+	return $include ? 1 : 0;
 }
 
 

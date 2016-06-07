@@ -1,4 +1,5 @@
 <div role="main" id="main">
+<% abstract %>
 <% mycontent %>
 </div>
 
