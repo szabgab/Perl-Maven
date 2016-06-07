@@ -58,7 +58,7 @@ sub process {
 	my ($self) = @_;
 
 	my %data = ( abstract => '', );
-	my $self->{mycontent} = '';
+	$self->{mycontent} = '';
 
 	# ? signals an optional field
 	# @ signals a multi-value, a comma-separated list of values
