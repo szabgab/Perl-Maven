@@ -199,7 +199,7 @@ DOWNLOADS
 			my $code = $self->_process_code($line);
 			if (defined $code) {
 				if ($code) {
-					$cont .= $self->{code};
+					$data{abstract} .= $self->{code};
 				}
 				#next;
 			}
