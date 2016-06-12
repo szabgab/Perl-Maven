@@ -348,7 +348,7 @@ sub _process_include {
 	if ($abstract) {
 		$self->{data}{abstract} .= $include;
 	} else {
-		$self->{mycontent} .= $include;
+		$self->{data}{mycontent} .= $include;
 	}
 	return $include ? 1 : 0;
 }
