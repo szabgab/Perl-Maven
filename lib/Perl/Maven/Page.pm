@@ -183,8 +183,8 @@ DOWNLOADS
 		}
 
 		if ($line =~ /<podcast>/) {
-			if ($fields{mp3}) {
-				my ($file, $size, $mins) = @{$fields{mp3}};
+			if ($data{mp3}) {
+				my ($file, $size, $mins) = @{$data{mp3}};
 				my $mb = int($size / (1024*1024));
 				$line = qq{
 					<div id="download">
