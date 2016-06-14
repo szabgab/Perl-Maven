@@ -182,6 +182,25 @@ DOWNLOADS
 			$line .= "</div>\n";
 		}
 
+		if ($line =~ /<podcast>/) {
+			if ($fields{mp3}) {
+				my ($file, $size, $mins) = @{$fields{mp3}};
+				my $mb = int($size / (1024*1024));
+				$line = qq{
+					<div id="download">
+					Download:
+					<a href="$file">mp3</a> ($mb Mb) $mins mins
+					</div>
+
+					<audio controls>
+					<source src="$file" type="audio/mpeg">
+					</audio>
+				};
+			} else {
+				$line = '';
+			}
+		}
+
 		$line =~ s{<hl>}{<span class="inline_code">}g;
 		$line =~ s{</hl>}{</span>}g;
 		if ( $line =~ /^=abstract (start|end)/ ) {
