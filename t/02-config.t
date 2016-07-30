@@ -35,7 +35,7 @@ subtest mymaven => sub {
 	my $br   = $mymaven->config('br.perlmaven.com');
 	my $cn   = $mymaven->config('cn.perlmaven.com');
 	eval { $mymaven->config('qq.perlmaven.com') };
-	is $@, qq{Hostname 'qq.perlmaven.com' not in configuration file\n}, 'missing hostname';
+	like $@, qr{Hostname 'qq.perlmaven.com' not in configuration file\n}, 'missing hostname';
 
 	is $main->{site}, "$root/t/files/../sites/perlmaven.com/sites/en", '{site}';
 	is $main->{meta}, '/home/foobar/perlmaven-meta', '{meta}';
