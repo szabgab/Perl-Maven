@@ -517,8 +517,39 @@ sub register {
 	# I've seen many registrations using these domains that bounced immediately
 	# Let's not bother with them.
 	# TODO move this to configuration file
-	my %BLACK_LIST = map { $_ => 1 }
-		qw(asooemail.com asdfmail.net qwkcmail.net mailsdfsdf.net asdooeemail.com apoimail.com dfoofmail.com fghmail.net rtotlmail.com qwkcmail.com asdfasdfmail.com rtotlmail.net bestemail.bid);
+	# Domains used to register on the PerlMaven/CodeMaven sites that bounced:
+	my %BLACK_LIST = map { $_ => 1 } qw(
+		asooemail.com
+		asdfmail.net
+		qwkcmail.net
+		mailsdfsdf.net
+		asdooeemail.com
+		apoimail.com
+		dfoofmail.com
+		fghmail.net
+		rtotlmail.com
+		qwkcmail.com
+		asdfasdfmail.com
+		rtotlmail.net
+		bestemail.bid
+		besthostever.xyz
+		free-4-everybody.bid
+		free-mail.bid
+		geekemailfreak.bid
+		jaggernaut-email.bid
+		mail4you.bid
+		mail-4-you.bid
+		netsolutions.top
+		pigeon-mail.bid
+		snailmail.bid
+		yourfreemail.bid
+		web2web.top
+		vvajiz.com
+		livemail.top
+		freechatemails.bid
+		snipe-mail.bid
+		email4everybody.bid
+	);
 	my ( $username, $domain ) = split /@/, $data{email};
 	if ( $BLACK_LIST{$domain} ) {
 		return _registration_form( %data, error => 'invalid_mail' );
