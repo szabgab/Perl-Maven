@@ -1,7 +1,7 @@
 package Perl::Maven;
 use Dancer2;
 
-use Dancer2::Plugin::Passphrase qw(passphrase);
+use Dancer2::Plugin::Passphrase; # qw(passphrase);
 
 our $VERSION = '0.11';
 my $PM_VERSION = 16;    # Version number to force JavaScript and CSS files reload
