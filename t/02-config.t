@@ -128,6 +128,7 @@ subtest testmaven => sub {
 		'root'      => "$root/t/files/test",
 		'meta'      => "$root/t/files/meta",
 		'title'     => 'Test Maven',
+		'feed_size' => 10,
 		'series'    => 0,
 		'site'      => "$root/t/files/test/sites/en",
 		'admin'     => {
