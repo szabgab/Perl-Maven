@@ -57,7 +57,7 @@ sub read {
 sub process {
 	my ($self) = @_;
 
-	$self->{data}{abstract} = '';
+	$self->{data}{abstract}  = '';
 	$self->{data}{mycontent} = '';
 
 	# ? signals an optional field
@@ -86,6 +86,7 @@ sub process {
 		$fields{$c} = \%h;
 	}
 	my %data;
+
 	#foreach my $k ( keys %data ) {
 	#	$fields{$k} = {};
 	#}
@@ -182,10 +183,10 @@ DOWNLOADS
 			$line .= "</div>\n";
 		}
 
-		if ($line =~ /<podcast>/) {
-			if ($data{mp3}) {
-				my ($file, $size, $mins) = @{$data{mp3}};
-				my $mb = int($size / (1024*1024));
+		if ( $line =~ /<podcast>/ ) {
+			if ( $data{mp3} ) {
+				my ( $file, $size, $mins ) = @{ $data{mp3} };
+				my $mb = int( $size / ( 1024 * 1024 ) );
 				$line = qq{
 					<div id="download">
 					Download:
@@ -196,7 +197,8 @@ DOWNLOADS
 					<source src="$file" type="audio/mpeg">
 					</audio>
 				};
-			} else {
+			}
+			else {
 				$line = '';
 			}
 		}
@@ -209,8 +211,8 @@ DOWNLOADS
 		}
 
 		if ( $self->{data}{abstract_start} and not $self->{data}{abstract_end} ) {
-			next if $self->_process_include($line, 1);
-			next if $self->_process_code($line, 1);
+			next if $self->_process_include( $line, 1 );
+			next if $self->_process_code( $line, 1 );
 			if ( $line =~ /^\s*$/ ) {
 				$self->{data}{abstract} .= "<p>\n";
 				next;
@@ -219,8 +221,8 @@ DOWNLOADS
 			next;
 		}
 
-		next if $self->_process_include($line, 0);
-		next if $self->_process_code($line, 0);
+		next if $self->_process_include( $line, 0 );
+		next if $self->_process_code( $line, 0 );
 
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
@@ -229,7 +231,7 @@ DOWNLOADS
 		$self->{data}{mycontent} .= $line;
 	}
 	$data{mycontent} = $self->{data}{mycontent};
-	$data{abstract} = $self->{data}{abstract};
+	$data{abstract}  = $self->{data}{abstract};
 
 	if ( $self->{data}{abstract_start} ) {
 		die "Too many times =abstract start: $self->{data}{abstract_start}"
@@ -282,12 +284,12 @@ DOWNLOADS
 }
 
 sub _process_code {
-	my ($self, $line, $abstract) = @_;
+	my ( $self, $line, $abstract ) = @_;
 
 	if ( $line =~ m{^<code(?: lang="([^"]+)")?>} ) {
 		my $language = $1 || '';
 		$self->{in_code} = 1;
-		$self->{code} = '';
+		$self->{code}    = '';
 		if ( $language eq 'perl' ) {
 			$self->{code} .= qq{<pre class="prettyprint linenums language-perl">\n};
 		}
@@ -304,12 +306,13 @@ sub _process_code {
 		$self->{code} .= qq{</pre>\n};
 		if ($abstract) {
 			$self->{data}{abstract} .= $self->{code};
-		} else {
+		}
+		else {
 			$self->{data}{mycontent} .= $self->{code};
 		}
 		return 1;
 	}
-	if ($self->{in_code}) {
+	if ( $self->{in_code} ) {
 		$line =~ s{<}{&lt;}g;
 		$self->{code} .= $line;
 		return 1;
@@ -317,9 +320,8 @@ sub _process_code {
 	return;
 }
 
-
 sub _process_include {
-	my ($self, $line, $abstract) = @_;
+	my ( $self, $line, $abstract ) = @_;
 
 	# <include file="examples/node_hello_world.js">
 	my %ext = (
@@ -344,9 +346,10 @@ sub _process_include {
 			# TODO language based on extension?
 			my ($extension) = $path =~ /\.([^.]+)$/;
 			my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
-			if ($extension eq 'txt') {
+			if ( $extension eq 'txt' ) {
 				$include .= qq{<pre>\n};
-			} else {
+			}
+			else {
 				$include .= qq{<pre class="prettyprint linenums $language_code">\n};
 			}
 			my $code = path($path)->slurp_utf8;
@@ -366,12 +369,12 @@ sub _process_include {
 	}
 	if ($abstract) {
 		$self->{data}{abstract} .= $include;
-	} else {
+	}
+	else {
 		$self->{data}{mycontent} .= $include;
 	}
 	return $include ? 1 : 0;
 }
-
 
 sub merge_conf {
 	my ( $self, $ro_conf ) = @_;

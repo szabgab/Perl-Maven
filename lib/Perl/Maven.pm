@@ -1,10 +1,10 @@
 package Perl::Maven;
 use Dancer2;
 
-use Dancer2::Plugin::Passphrase; # qw(passphrase);
+use Dancer2::Plugin::Passphrase;    # qw(passphrase);
 
 our $VERSION = '0.11';
-my $PM_VERSION = 16;    # Version number to force JavaScript and CSS files reload
+my $PM_VERSION = 16;                # Version number to force JavaScript and CSS files reload
 
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
@@ -16,7 +16,7 @@ use POSIX       ();
 use Time::HiRes ();
 use YAML::XS qw(LoadFile);
 use MongoDB;
-use Path::Tiny ();         # the path function would clash with the path function of Dancer
+use Path::Tiny ();                  # the path function would clash with the path function of Dancer
 use Cpanel::JSON::XS ();
 
 use Web::Feed;
@@ -675,14 +675,14 @@ get '/rss' => sub {
 	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
 
 	return $tag
-		? rss( 'archive', $tag, '', 0)
-		: rss('archive', undef, '', 0);
+		? rss( 'archive', $tag,  '', 0 )
+		: rss( 'archive', undef, '', 0 );
 };
 get '/atom' => sub {
 	my $tag = param('tag');
 	return $tag
-		? atom( 'archive', $tag, '', 0)
-		: atom('archive', undef, '', 0);
+		? atom( 'archive', $tag,  '', 0 )
+		: atom( 'archive', undef, '', 0 );
 };
 
 get '/rss-full' => sub {
@@ -690,16 +690,15 @@ get '/rss-full' => sub {
 	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
 
 	return $tag
-		? rss( 'archive', $tag, '', 1)
-		: rss('archive', undef, '', 1);
+		? rss( 'archive', $tag,  '', 1 )
+		: rss( 'archive', undef, '', 1 );
 };
 get '/atom-full' => sub {
 	my $tag = param('tag');
 	return $tag
-		? atom( 'archive', $tag, '', 1)
-		: atom('archive', undef, '', 1);
+		? atom( 'archive', $tag,  '', 1 )
+		: atom( 'archive', undef, '', 1 );
 };
-
 
 get '/tv/atom' => sub {
 	return atom( 'archive', 'interview', ' - Interviews' );
@@ -951,7 +950,7 @@ sub _feed {
 
 	$subtitle ||= '';
 
-	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => 3*mymaven->{feed_size} );
+	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => 3 * mymaven->{feed_size} );
 
 	my $mymaven = mymaven;
 

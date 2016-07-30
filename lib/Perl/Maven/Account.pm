@@ -1,7 +1,7 @@
 package Perl::Maven::Account;
 use Dancer2 appname => 'Perl::Maven';
 
-use Dancer2::Plugin::Passphrase; #qw(passphrase);
+use Dancer2::Plugin::Passphrase;    #qw(passphrase);
 use Email::Valid ();
 use Digest::SHA  ();
 use Data::Dumper qw(Dumper);
@@ -551,6 +551,7 @@ sub register {
 		email4everybody.bid
 	);
 	my ( $username, $domain ) = split /@/, $data{email};
+
 	if ( $BLACK_LIST{$domain} ) {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
