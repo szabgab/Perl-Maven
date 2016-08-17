@@ -1121,6 +1121,7 @@ sub log_request {
 
 sub log_to_mongodb {
 	my ($data) = @_;
+	return if not mymaven->{mongodb_logging};
 
 	eval {
 		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
