@@ -2,6 +2,7 @@
 =timestamp 2014-01-15T07:30:01
 =indexes files, and, other::values
 =status draft
+=tags perl
 =author szabgab
 =archive 1
 =comments_disqus_enable 0
