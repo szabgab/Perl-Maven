@@ -183,6 +183,45 @@ DOWNLOADS
 			$line .= "</div>\n";
 		}
 
+		if ( $line =~ m{<transcript>} ) {
+			$self->{data}{transcript} = 1;
+			$self->{data}{mycontent} .= q{
+				<h2>Transcript</h2>
+				<div id="transcript">
+			};
+			next;
+		}
+		if ( $line =~ m{</transcript>} ) {
+			$self->{data}{mycontent} .= q{</div>\n};
+			delete $self->{data}{transcript};
+			next;
+		}
+		if ( $self->{data}{transcript} ) {
+			if ( $line =~ m{<entry\s+([\d:]+)\s+(.*?)\s*>} ) {
+				$self->{data}{mycontent} .= qq{
+					<div class="speaker-section">
+ 					   <span class="timestamp">$1</span>
+ 					   <span class="speaker-info">$2</span>
+ 					   <div class="text">
+				};
+				next;
+			}
+			if ( $line =~ m{</entry} ) {
+				$self->{data}{mycontent} .= q{
+					   </div>
+					</div>
+				};
+				next;
+			}
+			if ( $line =~ /^\s*$/ ) {
+				$self->{data}{mycontent} .= qq{<p>\n};
+			}
+			else {
+				$self->{data}{mycontent} .= $line;
+			}
+			next;
+		}
+
 		if ( $line =~ /<podcast>/ ) {
 			if ( $data{mp3} ) {
 				my ( $file, $size, $mins ) = @{ $data{mp3} };
