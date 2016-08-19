@@ -51,7 +51,7 @@ my $visitor = Test::WWW::Mechanize::PSGI->new( app => $app );
 diag 'subscribe to free newsletter, let them download the cookbook';
 
 subtest static => sub {
-	plan tests => 14;
+	plan tests => 15;
 
 	$visitor->get_ok("$url/robots.txt");
 	is $visitor->content, <<"END";
@@ -63,6 +63,39 @@ END
 	is $visitor->content, Path::Tiny::path('t/files/images/favicon.ico')->slurp;
 	$visitor->get_ok("$url/atom");
 	$visitor->get_ok("$url/rss");
+
+	#diag $visitor->content;
+	is $visitor->content,
+		q{<?xml version="1.0"?><rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<channel>
+  <title>Test Maven</title>
+  <link>http://test-pm.com/</link>
+  <language>en-us</language>
+  <copyright>2014 Gabor Szabo</copyright>
+  <description>The Perl Maven show is about the Perl programming language and about the people using it.</description>
+  <itunes:subtitle>A show about Perl and Perl users</itunes:subtitle>
+  <itunes:author>Gabor Szabo</itunes:author>
+  <itunes:summary>The Perl Maven show is about the Perl programming language and about the people using it.</itunes:summary>
+  <itunes:owner>
+    <itunes:name>Gabor Szabo</itunes:name>
+    <itunes:email>szabgab@gmail.com</itunes:email>
+  </itunes:owner>
+  <itunes:category text="Technology" />
+  <item>
+    <title>Testing with Perl</title>
+  <description type="html"><![CDATA[<p>
+A series of articles about testing, and test automation using Perl.
+<p>
+]]></description>
+  <guid>http://test-pm.com/testing</guid>
+  <link rel="alternate" type="text/html" href="http://test-pm.com/testing" />  </item>
+</channel>
+</rss>
+};
+
+	#$visitor->get_ok("$url/rss?tag=abc");
+	#diag $visitor->content;
+
 	$visitor->get_ok("$url/tv/atom");
 	$visitor->get_ok("$url/sitemap.xml");
 	$visitor->get_ok("$url/css/style.css");
