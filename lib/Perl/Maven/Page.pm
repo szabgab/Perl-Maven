@@ -192,7 +192,7 @@ DOWNLOADS
 			next;
 		}
 		if ( $line =~ m{</transcript>} ) {
-			$self->{data}{mycontent} .= q{</div>\n};
+			$self->{data}{mycontent} .= qq{</div>\n};
 			delete $self->{data}{transcript};
 			next;
 		}
