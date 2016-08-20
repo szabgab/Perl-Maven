@@ -200,9 +200,9 @@ DOWNLOADS
 			if ( $line =~ m{<entry\s+([\d:]+)\s+(.*?)\s*>} ) {
 				$self->{data}{mycontent} .= qq{
 					<div class="speaker-section">
- 					   <span class="timestamp">$1</span>
+ 					   <span class="transcript-timestamp">$1</span>
  					   <span class="speaker-info">$2</span>
- 					   <div class="text">
+ 					   <div class="transcript-text">
 				};
 				next;
 			}
