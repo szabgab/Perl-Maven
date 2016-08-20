@@ -466,3 +466,23 @@ video {
 	display: block;
 }
 
+
+#transcript {
+}
+.transcript-talk {
+}
+.transcript-timestamp {
+   background-color: #EEE;
+}
+.transcript-speaker-unknown {
+   background-color: red;
+}
+.transcript-speaker-host1 {
+   background-color: #90C3D4;
+}
+.transcript-speaker-guest1 {
+   background-color: #90D4A9;
+}
+.transcript-text {
+}
+

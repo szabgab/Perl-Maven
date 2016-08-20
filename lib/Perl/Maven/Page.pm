@@ -184,7 +184,7 @@ DOWNLOADS
 		}
 
 		if ( $line =~ m{<transcript>} ) {
-			$self->{data}{transcript} = 1;
+			$self->{data}{transcript} = {};
 			$self->{data}{mycontent} .= q{
 				<h2>Transcript</h2>
 				<div id="transcript">
@@ -197,11 +197,25 @@ DOWNLOADS
 			next;
 		}
 		if ( $self->{data}{transcript} ) {
+			if ( $line =~ /<(\S+)\s+(\S+)\s+(.*?)\s*>/ ) {
+				$self->{data}{transcript}{$1} = {
+					class => $2,
+					name  => $3,
+				};
+			}
+
 			if ( $line =~ m{<entry\s+([\d:]+)\s+(.*?)\s*>} ) {
+				my ( $timestamp, $speaker ) = ( $1, $2 );
+				my $name = 'Unknown';
+				$class = 'unknown';
+				if ( $self->{data}{transcript}{$speaker} ) {
+					$name  = $self->{data}{transcript}{$speaker}{name};
+					$class = $self->{data}{transcript}{$speaker}{class};
+				}
 				$self->{data}{mycontent} .= qq{
-					<div class="speaker-section">
- 					   <span class="transcript-timestamp">$1</span>
- 					   <span class="speaker-info">$2</span>
+					<div class="transcript-talk">
+ 					   <span class="transcript-timestamp">$timestamp</span>
+ 					   <span class="transcript-speaker-$class">$name</span>
  					   <div class="transcript-text">
 				};
 				next;
