@@ -998,7 +998,9 @@ sub _feed {
 			$e{author}{name} = authors->{ $p->{author} }{author_name};
 		}
 		push @entries, \%e;
-		last if @entries >= mymaven->{feed_size};
+		# TODO: we will want the main rss feed to be limited,
+		# but the rss feed of the podcast to be unlimited.
+		last if defined mymaven->{feed_size} and @entries >= mymaven->{feed_size};
 	}
 
 	my $pmf = Web::Feed->new(
