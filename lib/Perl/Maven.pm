@@ -950,7 +950,13 @@ sub _feed {
 
 	$subtitle ||= '';
 
-	my $pages = setting('tools')->read_meta_array( $what, filter => $tag, limit => 3 * mymaven->{feed_size} );
+	my $pages;
+	if ($tag) {
+		$pages = setting('tools')->read_meta_array("rss_$tag");
+	}
+	else {
+		$pages = setting('tools')->read_meta_array($what);
+	}
 
 	my $mymaven = mymaven;
 

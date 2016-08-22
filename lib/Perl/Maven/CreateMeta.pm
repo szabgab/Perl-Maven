@@ -217,6 +217,7 @@ sub process_site {
 		foreach my $tag ( @{ $entry->{tags} } ) {
 			my $key = lc $tag;
 			$key =~ s/ +/_/g;
+			$key =~ s/-/_/g;
 			push @{ $kw{$key} }, $entry;
 		}
 	}
