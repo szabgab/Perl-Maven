@@ -976,7 +976,16 @@ sub _feed {
 
 	my $url = request->base;
 	$url =~ s{/$}{};
-	my $title = $mymaven->{title};
+	my $title       = $mymaven->{title};
+	my $description = "";
+
+	if ( $mymaven->{feeds} ) {
+		if ( $tag and $mymaven->{feeds}{$tag} ) {
+			if ( $mymaven->{feeds}{$tag}{description} ) {
+				$description = $mymaven->{feeds}{$tag}{description};
+			}
+		}
+	}
 
 	my @entries;
 	foreach my $p (@$pages) {
@@ -1023,20 +1032,18 @@ sub _feed {
 	}
 
 	my $pmf = Web::Feed->new(
-		url       => $url,                  # atom, rss
-		path      => 'atom',                # atom
-		title     => "$title$subtitle",     # atom, rss
-		updated   => $ts,                   # atom,
-		entries   => \@entries,             # atom,
-		language  => 'en-us',               #       rss
-		copyright => '2014 Gabor Szabo',    #       rss
-		description => 'The Perl Maven show is about the Perl programming language and about the people using it.'
-		,                                   # rss, itunes(rss)
-
-		subtitle => 'A show about Perl and Perl users',    # itunes(rss)
-		author   => 'Gabor Szabo',                         # itunes(rss)
+		url         => $url,                                  # atom, rss
+		path        => 'atom',                                # atom
+		title       => "$title$subtitle",                     # atom, rss
+		updated     => $ts,                                   # atom,
+		entries     => \@entries,                             # atom,
+		language    => 'en-us',                               #       rss
+		copyright   => '2014 Gabor Szabo',                    #       rss
+		description => $description,                          # rss, itunes(rss)
+		subtitle    => 'A show about Perl and Perl users',    # itunes(rss)
+		author      => 'Gabor Szabo',                         # itunes(rss)
 	);
-	$pmf->{summary}      = $pmf->{description};            # itunes(rss)
+	$pmf->{summary}      = $pmf->{description};               # itunes(rss)
 	$pmf->{itunes_name}  = 'Gabor Szabo';
 	$pmf->{itunes_email} = 'szabgab@gmail.com';
 
