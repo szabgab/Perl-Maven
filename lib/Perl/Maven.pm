@@ -671,13 +671,16 @@ get '/sitemap.xml' => sub {
 	$xml .= qq{</urlset>\n};
 	return $xml;
 };
+
+get '/rss/:tag' => sub {
+	my $tag = param('tag');
+	return redirect '/rss/tv' if $tag and $tag eq 'interview';
+	return rss( 'archive', $tag, '', 0 );
+};
 get '/rss' => sub {
 	my $tag = param('tag');
-	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
-
-	return $tag
-		? rss( 'archive', $tag,  '', 0 )
-		: rss( 'archive', undef, '', 0 );
+	return redirect "/rss/$tag" if $tag;
+	rss( 'archive', undef, '', 0 );
 };
 get '/atom' => sub {
 	my $tag = param('tag');
