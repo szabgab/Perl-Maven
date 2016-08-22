@@ -42,6 +42,8 @@ require Perl::Maven::CodeExplain;
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
 
+my %SPECIAL = map { $_ => 1 } qw(tv cmos);    # TODO get from mymaven
+
 hook before => sub {
 	set start_time => Time::HiRes::time;
 
@@ -874,13 +876,19 @@ sub _send_file {
 	);
 }
 
-get '/tv' => sub {
-	pm_show_page(
-		{ article => 'tv', template => 'archive' },
-		{
-			pages => setting('tools')->read_meta_array( 'archive', filter => 'interview' )
-		}
-	);
+get '/:name' => sub {
+	my $name = param('name');
+	if ( $SPECIAL{$name} ) {
+		pm_show_page(
+			{ article => $name, template => 'archive' },
+			{
+				pages => setting('tools')->read_meta_array( 'archive', filter => $name )
+			}
+		);
+	}
+	else {
+		pass;
+	}
 };
 
 get qr{^/media/(.+)} => sub {
