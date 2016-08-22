@@ -980,9 +980,10 @@ sub _feed {
 	my $description = "";
 
 	if ( $mymaven->{feeds} ) {
-		if ( $tag and $mymaven->{feeds}{$tag} ) {
-			if ( $mymaven->{feeds}{$tag}{description} ) {
-				$description = $mymaven->{feeds}{$tag}{description};
+		my $hand = $tag || '__main__';
+		if ( $mymaven->{feeds}{$hand} ) {
+			if ( $mymaven->{feeds}{$hand}{description} ) {
+				$description = $mymaven->{feeds}{$hand}{description};
 			}
 		}
 	}
