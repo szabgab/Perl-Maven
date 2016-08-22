@@ -206,7 +206,7 @@ DOWNLOADS
 
 			if ( $line =~ m{<entry\s+([\d:]+)\s+(.*?)\s*>} ) {
 				my ( $timestamp, $speaker ) = ( $1, $2 );
-				my $name = 'Unknown';
+				my $name  = 'Unknown';
 				my $class = 'unknown';
 				if ( $self->{data}{transcript}{$speaker} ) {
 					$name  = $self->{data}{transcript}{$speaker}{name};
