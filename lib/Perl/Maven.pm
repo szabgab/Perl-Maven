@@ -18,6 +18,7 @@ use YAML::XS qw(LoadFile);
 use MongoDB;
 use Path::Tiny ();                  # the path function would clash with the path function of Dancer
 use Cpanel::JSON::XS ();
+use Encode qw(encode);
 
 use Web::Feed;
 
@@ -1037,7 +1038,7 @@ sub atom {
 	my $pmf = _feed( $what, $tag, $subtitle, $pro );
 
 	content_type 'application/atom+xml';
-	return $pmf->atom;
+	return encode( 'UTF-8', $pmf->atom );
 }
 
 sub rss {
@@ -1046,7 +1047,7 @@ sub rss {
 	my $pmf = _feed( $what, $tag, $subtitle, $pro );
 
 	content_type 'application/rss+xml';
-	return $pmf->rss;
+	return encode( 'UTF-8', $pmf->rss );
 }
 
 sub is_free {
