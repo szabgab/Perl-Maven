@@ -212,7 +212,18 @@ sub process_site {
 	$self->save( 'categories', $dest, $categories );
 	$self->save( 'archive',    $dest, $archive );
 	$self->save( 'keywords',   $dest, $keywords );
-	$self->save( 'sitemap',    $dest, $sitemap );
+	my %kw;
+	foreach my $entry (@$archive) {
+		foreach my $tag ( @{ $entry->{tags} } ) {
+			my $key = lc $tag;
+			$key =~ s/ +/_/g;
+			push @{ $kw{$key} }, $entry;
+		}
+	}
+	foreach my $tag ( sort keys %kw ) {
+		$self->save( "rss_$tag", $dest, $kw{$tag} );
+	}
+	$self->save( 'sitemap', $dest, $sitemap );
 	push @{ $self->meta_archive }, map { $_->{url} = "http://$site"; $_ } @$archive;
 
 	#$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_ } @$pages } );
