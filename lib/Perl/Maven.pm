@@ -1025,6 +1025,7 @@ sub _feed {
 		if ( $p->{author} ) {
 			$e{author}{name} = authors->{ $p->{author} }{author_name};
 		}
+
 		push @entries, \%e;
 
 		# TODO: we will want the main rss feed to be limited,
@@ -1043,7 +1044,16 @@ sub _feed {
 		description => $description,                          # rss, itunes(rss)
 		subtitle    => 'A show about Perl and Perl users',    # itunes(rss)
 		author      => 'Gabor Szabo',                         # itunes(rss)
+		category    => "Technology",                          # itunes
+        image       => q{http://code-maven.com/img/code_maven_128.png}, # itunes
+		keywords    => ['code-maven', 'open source', 'software', 'development', 'news'], #itunes
 	);
+   #<itunes:category text="Technology">
+   #   <itunes:category text="Software How-To"/>
+   #   <itunes:category text="Tech News"/>
+   # </itunes:category>
+
+
 	$pmf->{summary}      = $pmf->{description};               # itunes(rss)
 	$pmf->{itunes_name}  = 'Gabor Szabo';
 	$pmf->{itunes_email} = 'szabgab@gmail.com';
