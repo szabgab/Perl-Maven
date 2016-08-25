@@ -1009,7 +1009,7 @@ sub _feed {
 		my $link = qq{$url/$p->{filename}};
 
 		my $abstract = $p->{abstract};
-		if ( mymaven->{special}{$tag} ) {
+		if ( $tag and mymaven->{special}{$tag} ) {
 			$abstract .= qq{\n<a href="$link">Links and transcript</a>\n};
 		}
 
