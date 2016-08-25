@@ -248,6 +248,11 @@ sub pm_show_page {
 	}
 
 	my $tt = read_tt( $path, $pre_process );
+
+	if ( $tt->{tags} and mymaven->{special} ) {
+		( $tt->{feed} ) = grep { mymaven->{special}{$_} } @{ $tt->{tags} };
+	}
+
 	return redirect $tt->{redirect} if $tt->{redirect};
 	if ( not $tt->{status}
 		or ( $tt->{status} !~ /^(show|draft|done)$/ ) )
