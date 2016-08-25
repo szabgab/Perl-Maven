@@ -94,7 +94,7 @@ END
     <title>Testing with Perl</title>
     <link rel="alternate" type="text/html" href="http://test-pm.com/testing" />
     <guid>http://test-pm.com/testing</guid>
-  <description type="html"><![CDATA[<p>
+    <description type="html"><![CDATA[<p>
 A series of articles about testing, and test automation using Perl.
 <p>
 ]]></description>

@@ -41,7 +41,7 @@ WriteMakefile(
 		'JSON'                        => 2.90,
 		'JSON::MaybeXS'               => 1.003,
 		'Cpanel::JSON::XS'            => 3.0115,
-		'Web::Feed'                   => 0.02,
+		'Web::Feed'                   => 0.07,
 		'Digest::SHA'                 => 5.92,
 		'Data::Structure::Util'       => 0,
 
