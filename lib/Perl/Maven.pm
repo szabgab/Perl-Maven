@@ -1005,8 +1005,16 @@ sub _feed {
 			$title = "Pro: $title";
 		}
 
+		$url = $p->{url} ? $p->{url} : $url;
+		my $link = qq{$url/$p->{filename}};
+
+		my $abstract = $p->{abstract};
+		if ( mymaven->{special}{$tag} ) {
+			$abstract .= qq{\n<a href="$link">Links and transcript</a>\n};
+		}
+
 		$e{title}   = $title;
-		$e{summary} = qq{<![CDATA[$p->{abstract}]]>};
+		$e{summary} = qq{<![CDATA[$abstract]]>};
 		$e{updated} = $p->{timestamp};
 
 		if ( $p->{mp3} ) {    # itunes(rss)
@@ -1018,11 +1026,10 @@ sub _feed {
 			$e{itunes}{duration}  = $p->{mp3}[2];
 		}
 
-		$url = $p->{url} ? $p->{url} : $url;
-		$e{link} = qq{$url/$p->{filename}};
+		$e{link} = $link;
 
-		$e{id} = $p->{id} ? $p->{id} : "$url/$p->{filename}";
-		$e{content} = qq{<![CDATA[$p->{abstract}]]>};
+		$e{id} = $p->{id} ? $p->{id} : $link;
+		$e{content} = qq{<![CDATA[$abstract]]>};
 		if ( $p->{author} ) {
 			$e{author}{name} = authors->{ $p->{author} }{author_name};
 		}
