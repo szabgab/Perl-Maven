@@ -16,6 +16,8 @@ domains:
     feeds:
       __main__:
         description: "Test description for feed"
+        subtitle: A show about Perl and Perl users
+        copyright: 2014 Gabor Szabo
     admin:
       email: 'Test Maven <admin-test@perlmaven.com>'
     dirs:

@@ -685,8 +685,8 @@ get '/rss' => sub {
 get '/atom' => sub {
 	my $tag = param('tag');
 	return $tag
-		? atom( 'archive', $tag,  '', 0 )
-		: atom( 'archive', undef, '', 0 );
+		? atom( 'archive', $tag,  0 )
+		: atom( 'archive', undef, 0 );
 };
 
 get '/rss-full' => sub {
@@ -694,18 +694,18 @@ get '/rss-full' => sub {
 	return redirect '/rss?tag=tv' if $tag and $tag eq 'interview';
 
 	return $tag
-		? rss( 'archive', $tag,  '', 1 )
-		: rss( 'archive', undef, '', 1 );
+		? rss( 'archive', $tag,  1 )
+		: rss( 'archive', undef, 1 );
 };
 get '/atom-full' => sub {
 	my $tag = param('tag');
 	return $tag
-		? atom( 'archive', $tag,  '', 1 )
-		: atom( 'archive', undef, '', 1 );
+		? atom( 'archive', $tag,  1 )
+		: atom( 'archive', undef, 1 );
 };
 
 get '/tv/atom' => sub {
-	return atom( 'archive', 'interview', ' - Interviews' );
+	return atom( 'archive', 'interview' );
 };
 
 # temporary solution
@@ -956,9 +956,7 @@ sub read_resources {
 }
 
 sub _feed {
-	my ( $what, $tag, $subtitle, $pro ) = @_;
-
-	$subtitle ||= '';
+	my ( $what, $tag, $pro ) = @_;
 
 	my $pages;
 	if ($tag) {
@@ -982,10 +980,8 @@ sub _feed {
 		if ( $mymaven->{feeds}{$hand} ) {
 
 			# rss, itunes(rss)
-			foreach my $f (qw(description)) {
-				if ( $mymaven->{feeds}{$hand}{$f} ) {
-					$fields{$f} = $mymaven->{feeds}{$hand}{$f};
-				}
+			foreach my $f (qw(description subtitle copyright)) {
+				$fields{$f} = $mymaven->{feeds}{$hand}{$f} || '';
 			}
 		}
 	}
@@ -1037,18 +1033,16 @@ sub _feed {
 
 	my $pmf = Web::Feed->new(
 		%fields,
-		url       => $url,                                                                  # atom, rss
-		path      => 'atom',                                                                # atom
-		title     => "$title$subtitle",                                                     # atom, rss
-		updated   => $ts,                                                                   # atom,
-		entries   => \@entries,                                                             # atom,
-		language  => 'en-us',                                                               #       rss
-		copyright => '2014 Gabor Szabo',                                                    #       rss
-		subtitle  => 'A show about Perl and Perl users',                                    # itunes(rss)
-		author    => 'Gabor Szabo',                                                         # itunes(rss)
-		category  => 'Technology',                                                          # itunes
-		image     => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
-		keywords  => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    #itunes
+		url      => $url,                                                                  # atom, rss
+		path     => 'atom',                                                                # atom
+		title    => $title,                                                                # atom, rss
+		updated  => $ts,                                                                   # atom,
+		entries  => \@entries,                                                             # atom,
+		language => 'en-us',                                                               #       rss
+		author   => 'Gabor Szabo',                                                         # itunes(rss)
+		category => 'Technology',                                                          # itunes
+		image    => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
+		keywords => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    # itunes
 	);
 
 	#<itunes:category text="Technology">
@@ -1064,18 +1058,18 @@ sub _feed {
 }
 
 sub atom {
-	my ( $what, $tag, $subtitle, $pro ) = @_;
+	my ( $what, $tag, $pro ) = @_;
 
-	my $pmf = _feed( $what, $tag, $subtitle, $pro );
+	my $pmf = _feed( $what, $tag, $pro );
 
 	content_type 'application/atom+xml';
 	return encode( 'UTF-8', $pmf->atom );
 }
 
 sub rss {
-	my ( $what, $tag, $subtitle, $pro ) = @_;
+	my ( $what, $tag, $pro ) = @_;
 
-	my $pmf = _feed( $what, $tag, $subtitle, $pro );
+	my $pmf = _feed( $what, $tag, $pro );
 
 	content_type 'application/rss+xml';
 	return encode( 'UTF-8', $pmf->rss );

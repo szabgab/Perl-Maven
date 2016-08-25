@@ -131,7 +131,9 @@ subtest testmaven => sub {
 		'feed_size' => 2,
 		'feeds'     => {
 			'__main__' => {
-				'description' => 'Test description for feed'
+				'description' => 'Test description for feed',
+				'subtitle'    => 'A show about Perl and Perl users',
+				'copyright'   => '2014 Gabor Szabo',
 			}
 		},
 		'series' => 0,
