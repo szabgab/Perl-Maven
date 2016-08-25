@@ -975,7 +975,7 @@ sub _feed {
 	my $url = request->base;
 	$url =~ s{/$}{};
 	my $title       = $mymaven->{title};
-	my $description = "";
+	my $description = q{};
 
 	if ( $mymaven->{feeds} ) {
 		my $hand = $tag || '__main__';
@@ -1042,7 +1042,7 @@ sub _feed {
 		description => $description,                                                          # rss, itunes(rss)
 		subtitle    => 'A show about Perl and Perl users',                                    # itunes(rss)
 		author      => 'Gabor Szabo',                                                         # itunes(rss)
-		category    => "Technology",                                                          # itunes
+		category    => 'Technology',                                                          # itunes
 		image       => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
 		keywords    => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    #itunes
 	);

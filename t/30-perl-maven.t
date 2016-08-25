@@ -65,33 +65,47 @@ END
 	$visitor->get_ok("$url/rss");
 
 	#diag $visitor->content;
-	is $visitor->content,
-		q{<?xml version="1.0"?><rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+	my $expected = q{<?xml version="1.0"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
   <title>Test Maven</title>
   <link>http://test-pm.com/</link>
+  <pubDate>2016-08-25T12:33:30 GMT</pubDate>
+  <description>Test description for feed</description>
   <language>en-us</language>
   <copyright>2014 Gabor Szabo</copyright>
-  <description>The Perl Maven show is about the Perl programming language and about the people using it.</description>
   <itunes:subtitle>A show about Perl and Perl users</itunes:subtitle>
   <itunes:author>Gabor Szabo</itunes:author>
-  <itunes:summary>The Perl Maven show is about the Perl programming language and about the people using it.</itunes:summary>
+  <itunes:summary>Test description for feed</itunes:summary>
+  <itunes:image href="http://code-maven.com/img/code_maven_128.png" />
+  <itunes:keywords>code-maven, open source, software, development, news</itunes:keywords>
   <itunes:owner>
     <itunes:name>Gabor Szabo</itunes:name>
     <itunes:email>szabgab@gmail.com</itunes:email>
   </itunes:owner>
+  <itunes:explicit>no</itunes:explicit>
   <itunes:category text="Technology" />
   <item>
     <title>Testing with Perl</title>
+    <link rel="alternate" type="text/html" href="http://test-pm.com/testing" />
+    <guid>http://test-pm.com/testing</guid>
   <description type="html"><![CDATA[<p>
 A series of articles about testing, and test automation using Perl.
 <p>
 ]]></description>
-  <guid>http://test-pm.com/testing</guid>
-  <link rel="alternate" type="text/html" href="http://test-pm.com/testing" />  </item>
+  </item>
 </channel>
 </rss>
 };
+
+	#my $n = 200;
+	#diag length $expected;
+	#is substr($visitor->content, 0, $n), substr($expected, 0, $n);
+	my @expected = grep { $_ !~ /pubDate/ } split /\n/, $expected;
+	my @received = split /\n/, $visitor->content;
+	my ($pubDate) = grep {/pubDate/} @received;
+	@received = grep { $_ !~ /pubDate/ } @received;
+	is_deeply \@received, \@expected;
 
 	#$visitor->get_ok("$url/rss?tag=abc");
 	#diag $visitor->content;

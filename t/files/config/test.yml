@@ -12,7 +12,10 @@ domains:
     title: 'Test Maven'
     series: 0
     from: '<test@perlmaven.com>'
-    feed_size: 10
+    feed_size: 2
+    feeds:
+      __main__:
+        description: "Test description for feed"
     admin:
       email: 'Test Maven <admin-test@perlmaven.com>'
     dirs:

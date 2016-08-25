@@ -108,7 +108,7 @@ subtest testmaven => sub {
 
 	my $main = $mymaven->config($t::lib::Test::DOMAIN);
 
-	#diag explain $main;
+	#diag Dumper $main->{feeds};
 	is_deeply $main, {
 		'conf' => {
 			'show_newsletter_form' => '1'
@@ -128,10 +128,15 @@ subtest testmaven => sub {
 		'root'      => "$root/t/files/test",
 		'meta'      => "$root/t/files/meta",
 		'title'     => 'Test Maven',
-		'feed_size' => 10,
-		'series'    => 0,
-		'site'      => "$root/t/files/test/sites/en",
-		'admin'     => {
+		'feed_size' => 2,
+		'feeds'     => {
+			'__main__' => {
+				'description' => 'Test description for feed'
+			}
+		},
+		'series' => 0,
+		'site'   => "$root/t/files/test/sites/en",
+		'admin'  => {
 			'email' => 'Test Maven <admin-test@perlmaven.com>'
 		},
 		'www' => {
