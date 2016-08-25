@@ -974,14 +974,18 @@ sub _feed {
 
 	my $url = request->base;
 	$url =~ s{/$}{};
-	my $title       = $mymaven->{title};
-	my $description = q{};
+	my $title = $mymaven->{title};
 
+	my %fields;
 	if ( $mymaven->{feeds} ) {
 		my $hand = $tag || '__main__';
 		if ( $mymaven->{feeds}{$hand} ) {
-			if ( $mymaven->{feeds}{$hand}{description} ) {
-				$description = $mymaven->{feeds}{$hand}{description};
+
+			# rss, itunes(rss)
+			foreach my $f (qw(description)) {
+				if ( $mymaven->{feeds}{$hand}{$f} ) {
+					$fields{$f} = $mymaven->{feeds}{$hand}{$f};
+				}
 			}
 		}
 	}
@@ -1032,19 +1036,19 @@ sub _feed {
 	}
 
 	my $pmf = Web::Feed->new(
-		url         => $url,                                                                  # atom, rss
-		path        => 'atom',                                                                # atom
-		title       => "$title$subtitle",                                                     # atom, rss
-		updated     => $ts,                                                                   # atom,
-		entries     => \@entries,                                                             # atom,
-		language    => 'en-us',                                                               #       rss
-		copyright   => '2014 Gabor Szabo',                                                    #       rss
-		description => $description,                                                          # rss, itunes(rss)
-		subtitle    => 'A show about Perl and Perl users',                                    # itunes(rss)
-		author      => 'Gabor Szabo',                                                         # itunes(rss)
-		category    => 'Technology',                                                          # itunes
-		image       => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
-		keywords    => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    #itunes
+		%fields,
+		url       => $url,                                                                  # atom, rss
+		path      => 'atom',                                                                # atom
+		title     => "$title$subtitle",                                                     # atom, rss
+		updated   => $ts,                                                                   # atom,
+		entries   => \@entries,                                                             # atom,
+		language  => 'en-us',                                                               #       rss
+		copyright => '2014 Gabor Szabo',                                                    #       rss
+		subtitle  => 'A show about Perl and Perl users',                                    # itunes(rss)
+		author    => 'Gabor Szabo',                                                         # itunes(rss)
+		category  => 'Technology',                                                          # itunes
+		image     => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
+		keywords  => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    #itunes
 	);
 
 	#<itunes:category text="Technology">
