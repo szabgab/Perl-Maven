@@ -42,8 +42,6 @@ require Perl::Maven::CodeExplain;
 require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
 
-my %SPECIAL = map { $_ => 1 } qw(tv cmos);    # TODO get from mymaven
-
 hook before => sub {
 	set start_time => Time::HiRes::time;
 
@@ -878,11 +876,11 @@ sub _send_file {
 
 get '/:name' => sub {
 	my $name = param('name');
-	if ( $SPECIAL{$name} ) {
+	if ( mymaven->{special}{$name} ) {
 		pm_show_page(
 			{ article => $name, template => 'archive' },
 			{
-				pages => setting('tools')->read_meta_array( 'archive', filter => $name )
+				pages => setting('tools')->read_meta_array( 'archive', filter => $name ),
 			}
 		);
 	}
@@ -1034,27 +1032,27 @@ sub _feed {
 	}
 
 	my $pmf = Web::Feed->new(
-		url         => $url,                                  # atom, rss
-		path        => 'atom',                                # atom
-		title       => "$title$subtitle",                     # atom, rss
-		updated     => $ts,                                   # atom,
-		entries     => \@entries,                             # atom,
-		language    => 'en-us',                               #       rss
-		copyright   => '2014 Gabor Szabo',                    #       rss
-		description => $description,                          # rss, itunes(rss)
-		subtitle    => 'A show about Perl and Perl users',    # itunes(rss)
-		author      => 'Gabor Szabo',                         # itunes(rss)
-		category    => "Technology",                          # itunes
-        image       => q{http://code-maven.com/img/code_maven_128.png}, # itunes
-		keywords    => ['code-maven', 'open source', 'software', 'development', 'news'], #itunes
+		url         => $url,                                                                  # atom, rss
+		path        => 'atom',                                                                # atom
+		title       => "$title$subtitle",                                                     # atom, rss
+		updated     => $ts,                                                                   # atom,
+		entries     => \@entries,                                                             # atom,
+		language    => 'en-us',                                                               #       rss
+		copyright   => '2014 Gabor Szabo',                                                    #       rss
+		description => $description,                                                          # rss, itunes(rss)
+		subtitle    => 'A show about Perl and Perl users',                                    # itunes(rss)
+		author      => 'Gabor Szabo',                                                         # itunes(rss)
+		category    => "Technology",                                                          # itunes
+		image       => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
+		keywords    => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    #itunes
 	);
-   #<itunes:category text="Technology">
-   #   <itunes:category text="Software How-To"/>
-   #   <itunes:category text="Tech News"/>
-   # </itunes:category>
 
+	#<itunes:category text="Technology">
+	#   <itunes:category text="Software How-To"/>
+	#   <itunes:category text="Tech News"/>
+	# </itunes:category>
 
-	$pmf->{summary}      = $pmf->{description};               # itunes(rss)
+	$pmf->{summary}      = $pmf->{description};    # itunes(rss)
 	$pmf->{itunes_name}  = 'Gabor Szabo';
 	$pmf->{itunes_email} = 'szabgab@gmail.com';
 
