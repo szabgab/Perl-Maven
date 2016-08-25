@@ -134,6 +134,9 @@ subtest testmaven => sub {
 				'description' => 'Test description for feed',
 				'subtitle'    => 'A show about Perl and Perl users',
 				'copyright'   => '2014 Gabor Szabo',
+				'author'      => 'Gabor Szabo',
+				'image'       => 'http://code-maven.com/img/code_maven_128.png',
+				'keywords'    => [ 'code-maven', 'open source', 'software', 'development', 'news', ],
 			}
 		},
 		'series' => 0,

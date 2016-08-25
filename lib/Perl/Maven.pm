@@ -980,8 +980,11 @@ sub _feed {
 		if ( $mymaven->{feeds}{$hand} ) {
 
 			# rss, itunes(rss)
-			foreach my $f (qw(description subtitle copyright)) {
+			foreach my $f (qw(description subtitle copyright author image)) {
 				$fields{$f} = $mymaven->{feeds}{$hand}{$f} || '';
+			}
+			foreach my $f (qw(keywords)) {
+				$fields{$f} = $mymaven->{feeds}{$hand}{$f} || [];
 			}
 		}
 	}
@@ -1033,16 +1036,13 @@ sub _feed {
 
 	my $pmf = Web::Feed->new(
 		%fields,
-		url      => $url,                                                                  # atom, rss
-		path     => 'atom',                                                                # atom
-		title    => $title,                                                                # atom, rss
-		updated  => $ts,                                                                   # atom,
-		entries  => \@entries,                                                             # atom,
-		language => 'en-us',                                                               #       rss
-		author   => 'Gabor Szabo',                                                         # itunes(rss)
-		category => 'Technology',                                                          # itunes
-		image    => q{http://code-maven.com/img/code_maven_128.png},                       # itunes
-		keywords => [ 'code-maven', 'open source', 'software', 'development', 'news' ],    # itunes
+		url      => $url,            # atom, rss
+		path     => 'atom',          # atom
+		title    => $title,          # atom, rss
+		updated  => $ts,             # atom,
+		entries  => \@entries,       # atom,
+		language => 'en-us',         #       rss
+		category => 'Technology',    # itunes
 	);
 
 	#<itunes:category text="Technology">
