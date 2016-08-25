@@ -25,7 +25,12 @@ my $EMAIL4   = 'foobar@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', 'secret', 'qwerty' );
 my @NAMES    = ( 'Foo Bar', );
 
-plan tests => 9;
+plan tests => 13;
+
+ok -e 't/files/meta/meta.test-pm.com';
+ok -e 't/files/meta/stats.json';
+ok -e 't/files/meta/test-pm.com';
+ok -e 't/files/meta/translations.json';
 
 $ENV{EMAIL_SENDER_TRANSPORT} = 'Test';
 

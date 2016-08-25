@@ -31,6 +31,8 @@ sub setup {
 
 	$db->add_product( { code => 'some_free_product',         name => 'Perl Maven Cookbook',        price => 0 } );
 	$db->add_product( { code => 'beginner_perl_maven_ebook', name => 'Beginner Perl Maven e-book', price => 0.01 } );
+
+	system "$^X bin/create_meta.pl" and die;
 }
 
 sub read_file {

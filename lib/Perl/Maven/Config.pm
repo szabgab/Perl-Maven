@@ -34,6 +34,7 @@ sub new {
 
 	$path = $ENV{MYMAVEN_YML} || $path;
 
+	die 'Missing configuration filename' if not $path;
 	die "Missing configuration file '$path'" if not -e $path;
 
 	my $self = bless {
