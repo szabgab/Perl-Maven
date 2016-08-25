@@ -16,18 +16,21 @@ binmode( STDERR, ':encoding(UTF-8)' );
 
 # Run with any value on the command line to get debugging info
 
-my $cfg     = LoadFile('config.yml');
-my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
-
 GetOptions(
-	'verbose' => \my $verbose,
-	'books'   => \my $books,
-	'help'    => \my $help,
+	'verbose'  => \my $verbose,
+	'books'    => \my $books,
+	'help'     => \my $help,
+	'config=s' => \my $config,
 
 	#	'all'      => \my $all,
 );
 usage() if $help;
 $ENV{METAMETA} = 1;
+
+$config ||= 'config.yml';
+
+my $cfg     = LoadFile($config);
+my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 
 foreach my $domain_name ( sort keys %{ $mymaven->{config}{domains} } ) {
 	my $meta = Perl::Maven::CreateMeta->new(
