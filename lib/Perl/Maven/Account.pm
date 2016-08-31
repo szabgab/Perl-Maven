@@ -193,7 +193,7 @@ any '/pm/unsubscribe' => sub {
 			}
 		);
 
-		pm_message('unsubscribed');
+		return pm_message('unsubscribed');
 	}
 
 	return template 'confirm_unsubscribe',
