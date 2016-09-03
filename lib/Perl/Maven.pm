@@ -1022,7 +1022,7 @@ sub _feed {
 			$e{itunes}{summary}   = $e{summary};
 			$e{enclosure}{url}    = "$host$p->{mp3}[0]";
 			$e{enclosure}{length} = $p->{mp3}[1];
-			$e{enclosure}{type}   = 'audio/x-mp3';
+			$e{enclosure}{type}   = 'audio/mpeg';
 			$e{itunes}{duration}  = $p->{mp3}[2];
 		}
 
