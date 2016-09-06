@@ -183,6 +183,63 @@ DOWNLOADS
 			$line .= "</div>\n";
 		}
 
+		if ( $line =~ m{\[transcript\]} ) {
+			$self->{data}{transcriptx} = {};
+			$self->{data}{mycontent} .= q{
+				<h2>Transcript</h2>
+				<div id="transcript">
+			};
+			next;
+		}
+		if ( $line =~ m{\[/transcript\]} ) {
+			$self->{data}{mycontent} .= qq{        </div>\n};
+			$self->{data}{mycontent} .= qq{    </div>\n};
+			$self->{data}{mycontent} .= qq{</div>\n};
+			delete $self->{data}{transcriptx};
+			next;
+		}
+		if ( $self->{data}{transcriptx} ) {
+			if ( $line =~ /\[(\S+)\s+(\S+)\s+(.*?)\s*\]/ ) {
+				$self->{data}{transcriptx}{$1} = {
+					class => $2,
+					name  => $3,
+				};
+				next;
+			}
+
+			if ( $line =~ m{^\[([\d:]+)\]\s+(.*?):\s*(.*)} ) {
+				if ( $self->{data}{transcript_entry} ) {
+					$self->{data}{mycontent} .= q{
+					   		</div>
+						</div>
+					};
+				}
+
+				my ( $timestamp, $speaker, $text ) = ( $1, $2, $3 );
+				my $name  = 'Unknown';
+				my $class = 'unknown';
+				if ( $self->{data}{transcriptx}{$speaker} ) {
+					$name  = $self->{data}{transcriptx}{$speaker}{name};
+					$class = $self->{data}{transcriptx}{$speaker}{class};
+				}
+				$self->{data}{mycontent} .= qq{
+					<div class="transcript-talk">
+ 					   <span class="transcript-timestamp">$timestamp</span>
+ 					   <span class="transcript-speaker-$class">$name</span>
+ 					   <div class="transcript-text">
+                       $text
+				};
+				next;
+			}
+			if ( $line =~ /^\s*$/ ) {
+				$self->{data}{mycontent} .= qq{<p>\n};
+			}
+			else {
+				$self->{data}{mycontent} .= $line;
+			}
+			next;
+		}
+
 		if ( $line =~ m{<transcript>} ) {
 			$self->{data}{transcript} = {};
 			$self->{data}{mycontent} .= q{
@@ -202,6 +259,7 @@ DOWNLOADS
 					class => $2,
 					name  => $3,
 				};
+				next;
 			}
 
 			if ( $line =~ m{<entry\s+([\d:]+)\s+(.*?)\s*>} ) {
