@@ -15,10 +15,12 @@
 <% INCLUDE incl/navigation.tt %>
 
 <% IF feed %>
+<!--
    <div class="podcast-promotion">
      You can subscribe with your favorite Podcast listener via the
      <a href="/rss/<% feed %>">RSS feed</a> <a href="/rss/<% feed %>"><img src="/img/feed-icon16x16.png" alt="RSS feed" /></a>
    </div>
+-->
 <% END %>
 
 <% INCLUDE incl/content.tt %>
