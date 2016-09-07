@@ -241,60 +241,6 @@ DOWNLOADS
 			next;
 		}
 
-		if ( $line =~ m{<transcript>} ) {
-			$self->{data}{transcripty} = {};
-			$self->{data}{mycontent} .= q{
-				<h2>Transcript</h2>
-				<div id="transcript">
-			};
-			next;
-		}
-		if ( $line =~ m{</transcript>} ) {
-			$self->{data}{mycontent} .= qq{</div>\n};
-			delete $self->{data}{transcripty};
-			next;
-		}
-		if ( $self->{data}{transcripty} ) {
-			if ( $line =~ /<(\S+)\s+(\S+)\s+(.*?)\s*>/ ) {
-				$self->{data}{transcripty}{$1} = {
-					class => $2,
-					name  => $3,
-				};
-				#next;
-			}
-
-			if ( $line =~ m{<entry\s+([\d:]+)\s+(.*?)\s*>} ) {
-				my ( $timestamp, $speaker ) = ( $1, $2 );
-				my $name  = 'Unknown';
-				my $class = 'unknown';
-				if ( $self->{data}{transcripty}{$speaker} ) {
-					$name  = $self->{data}{transcripty}{$speaker}{name};
-					$class = $self->{data}{transcripty}{$speaker}{class};
-				}
-				$self->{data}{mycontent} .= qq{
-					<div class="transcript-talk">
- 					   <span class="transcript-timestamp">$timestamp</span>
- 					   <span class="transcript-speaker-$class">$name</span>
- 					   <div class="transcript-text">
-				};
-				next;
-			}
-			if ( $line =~ m{</entry} ) {
-				$self->{data}{mycontent} .= q{
-					   </div>
-					</div>
-				};
-				next;
-			}
-			if ( $line =~ /^\s*$/ ) {
-				$self->{data}{mycontent} .= qq{<p>\n};
-			}
-			else {
-				$self->{data}{mycontent} .= $line;
-			}
-			next;
-		}
-
 		if ( $line =~ /<podcast>/ ) {
 			if ( $data{mp3} ) {
 				my ( $file, $size, $mins ) = @{ $data{mp3} };
