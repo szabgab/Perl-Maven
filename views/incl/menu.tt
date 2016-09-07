@@ -41,11 +41,11 @@
             <% END %>
 
             <% IF e.searchbox %>
-              <li><form id="search_form"><input id="search_box" type="text" data-provide="typeahead" data-items="4" ></form></li>
+              <li><form id="search_form"><input id="search_box" type="text" data-provide="typeahead" data-items="4" aria-label="Enter your search term"></form></li>
             <% END %>
 
             <% IF e.atom %>
-              <li><a href="/atom" rel="alternate" type="application/atom+xml"><img src="/img/feed-icon16x16.png" id="atom-icon" alt="" /></a></li>
+              <li><a href="/atom" rel="alternate" type="application/atom+xml"><img src="/img/feed-icon16x16.png" id="atom-icon" alt="Atom feed" /></a></li>
             <% END %>
           <% END %>
         </ul>
