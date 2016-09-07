@@ -207,7 +207,7 @@ DOWNLOADS
 				next;
 			}
 
-			if ( $line =~ m{^\[([\d:]+)\]\s+(.*?):\s*(.*)} ) {
+			if ( $line =~ m{^\s*\[([\d:]+)\]\s+(.*?):(.*)} ) {
 				if ( $self->{data}{transcript_entry} ) {
 					$self->{data}{mycontent} .= q{
 					   		</div>
