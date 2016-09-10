@@ -140,7 +140,7 @@ sub process {
 			my ( $type, $file, $youtube ) = ( $1, $2, $3 );
 			if ($youtube) {
 				$line
-					= qq{<iframe width="1023" height="576" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>};
+					= qq{<iframe class="youtube" src="http://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>};
 			}
 			else {
 				$line = '';
@@ -173,7 +173,7 @@ SCREENCAST
 
 			if (@downloads) {
 				$line .= <<"DOWNLOADS";
-<div id="download">
+<div class="download">
 Download:
 @downloads
 </div>
@@ -246,7 +246,7 @@ DOWNLOADS
 				my ( $file, $size, $mins ) = @{ $data{mp3} };
 				my $mb = int( $size / ( 1024 * 1024 ) );
 				$line = qq{
-					<div id="download">
+					<div class="download">
 					Download:
 					<a href="$file">mp3</a> ($mb Mb) $mins mins
 					</div>

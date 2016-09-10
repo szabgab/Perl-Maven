@@ -493,3 +493,22 @@ video {
    background-color: orange;
 }
 
+@media (min-width: 1600px) {
+   .youtube {
+      width: 1023px;
+      height: 576px;
+   }
+}
+@media (min-width: 1000px) {
+   .youtube {
+      width: 640px;
+      height: 360px;
+   }
+}
+@media (min-width: 800px) {
+   .youtube {
+      width: 560px;
+      height: 315px;
+   }
+}
+
