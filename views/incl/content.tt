@@ -1,5 +1,10 @@
 <div role="main" id="main">
-<% abstract %>
+
+<div id="abstract">
+  <% IF img %><img id="abstract_img" src="<% img %>" alt="<% alt %>" /><% END %>
+  <div id="abstract_text"> <% abstract %></div>
+</div>
+
 <% mycontent %>
 </div>
 
