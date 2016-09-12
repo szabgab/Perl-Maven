@@ -2,6 +2,10 @@
 
 <% ads.top %>
 
+<% IF img %>
+<img src="<% img %>" alt="<% alt %>" />
+<% END %>
+
 <% IF conf.show_indexes %>
   <div id="indexes">
     <ul>
