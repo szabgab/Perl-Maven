@@ -512,3 +512,6 @@ video {
    }
 }
 
+#abstract_img {
+   max-width: 600px;
+}
