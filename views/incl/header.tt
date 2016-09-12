@@ -63,9 +63,8 @@
   <meta name="twitter:site" content="@szabgab" />
   <meta name="twitter:creator" content="@szabgab" />
   <meta name="twitter:title" content="<% title %>" />
-  <meta name="twitter:description" content="<% abstract %>" />
+  <meta name="twitter:description" content="" />
   <meta name="twitter:image" content="<% default_image %>" />
-
 </head>
 <body>
 
