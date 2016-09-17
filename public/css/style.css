@@ -516,7 +516,7 @@ video {
    max-width: 600px;
 }
 
-#thumbnail_img {
-   max-width: 60px;
+img.thumbnail_img {
+   max-width: 80px;
 }
 

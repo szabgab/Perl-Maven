@@ -21,18 +21,16 @@
           <td class="pro"><% IF p.tags.pro %>Pro<% ELSE %>&nbsp;<% END %></td>
           <td class="interview"><% IF p.tags.interview %>Interview<% ELSE %>&nbsp;<% END %></td>
           <td class="screencast"><% IF p.tags.screencast %>Screencast<% ELSE %>&nbsp;<% END %></td>
-          <% IF p.img %><td class="thumbnail"><img class="thumbnail_img" src="<% p.img %>" alt="<% p.alt %>" /></td><% END %>
+          <td class="thumbnail"><% IF p.img %><img class="thumbnail_img" src="<% p.img %>" alt="<% p.alt %>" /><% END %></td>
           <td class="date"><% p.date %></td>
           <td class="title"><a href="<% IF p.url %><% p.url %><% END %>/<% p.filename %>"><% p.title %></a>
              <% IF p.redirect %>(R)<% END %>
+             <% IF abstract %>
+                   <% p.abstract %>
+             <% END %>
+
           </td>
       </tr>
-      <% IF abstract %>
-        <tr>
-            <td colspan="4"></td>
-            <td><% p.abstract %></td>
-        </tr>
-      <% END %>
     <% END %>
   </table>
 </div>
