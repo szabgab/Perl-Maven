@@ -515,3 +515,8 @@ video {
 #abstract_img {
    max-width: 600px;
 }
+
+#thumbnail_img {
+   max-width: 60px;
+}
+

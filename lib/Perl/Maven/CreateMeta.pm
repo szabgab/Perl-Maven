@@ -347,9 +347,11 @@ sub process_files {
 			if ( $p->{autotags} ) {
 				push @{ $e->{tags} }, $p->{autotags};
 			}
-			if ( $p->{mp3} ) {
-				$e->{mp3} = $p->{mp3};
-			}
+            for my $f (qw(mp3 img alt)) {
+			    if ( $p->{$f} ) {
+			    	$e->{$f} = $p->{$f};
+			    }
+            }
 			push @archive, $e;
 		}
 
