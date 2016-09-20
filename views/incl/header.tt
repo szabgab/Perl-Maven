@@ -32,7 +32,11 @@
   <!-- The Open Graph protocol -->
   <meta property="og:title" content="<% title %>"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:image" content="<% default_image %>"/>
+  <% IF img %>
+      <meta property="og:image" content="<% img %>"/>
+  <% ELSE %>
+      <meta property="og:image" content="<% img | default_image %>"/>
+  <% END %>
   <meta property="og:site_name" content="<% brand_name %>"/>
   <meta property="og:description" content="<% description %>"/>
   <% IF videos %>
