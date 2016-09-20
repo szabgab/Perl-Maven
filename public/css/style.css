@@ -520,3 +520,6 @@ img.thumbnail_img {
    max-width: 80px;
 }
 
+audio {
+   width: 100%;
+}
