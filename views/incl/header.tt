@@ -33,7 +33,7 @@
   <meta property="og:title" content="<% title %>"/>
   <meta property="og:type" content="article"/>
   <% IF img %>
-      <meta property="og:image" content="<% img %>"/>
+      <meta property="og:image" content="http://<% domain %><% img %>"/>
   <% ELSE %>
       <meta property="og:image" content="<% default_image %>"/>
   <% END %>
@@ -69,7 +69,7 @@
   <meta name="twitter:title" content="<% title %>" />
   <meta name="twitter:description" content="<% description %>" />
   <% IF img %>
-     <meta name="twitter:image" content="<% img %>" />
+     <meta name="twitter:image" content="http://<% domain %><% img %>" />
   <% ELSE %>
      <meta name="twitter:image" content="<% default_image %>" />
   <% END %>
