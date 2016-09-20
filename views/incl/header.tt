@@ -35,7 +35,7 @@
   <% IF img %>
       <meta property="og:image" content="<% img %>"/>
   <% ELSE %>
-      <meta property="og:image" content="<% img | default_image %>"/>
+      <meta property="og:image" content="<% default_image %>"/>
   <% END %>
   <meta property="og:site_name" content="<% brand_name %>"/>
   <meta property="og:description" content="<% description %>"/>
