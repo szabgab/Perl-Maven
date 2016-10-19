@@ -1,5 +1,5 @@
 <% IF conf.show_language_links %>
-  <% IF languages.size %>
+  <% IF languages.size > 1 %>
   <div id="sites">
     <ul>
     <% FOR lang IN languages %>
