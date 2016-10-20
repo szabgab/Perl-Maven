@@ -1,0 +1,49 @@
+starman
+ack-grep
+libdata-structure-util-perl
+libperl-prereqscanner-perl
+libdaemon-control-perl
+libdbd-sqlite3-perl
+libscope-upper-perl
+libarchive-any-perl
+libtest-www-mechanize-psgi-perl
+libtest-script-perl
+libnet-twitter-perl
+libtest-most-perl
+libsvg-perl
+libdbi-perl
+libcarp-always-perl
+libmongodb-perl
+libpath-tiny-perl
+libdancer2-perl
+libemail-stuffer-perl
+libemail-valid-perl
+libjson-perl
+libyaml-perl
+libmoox-options-perl
+libtemplate-perl
+libdatetime-tiny-perl
+
+
+
+prereqs of some of the missing:
+libdata-entropy-perl
+libcrypt-rijndael-perl
+
+
+While running on Ubuntu/xenial  16.04 we have
+
+Warning: prerequisite Acme::MetaSyntactic 1.012 not found.
+Warning: prerequisite Business::PayPal 0.13 not found.
+Warning: prerequisite Code::Explain 0.02 not found.
+Warning: prerequisite DBIx::RunSQL 0.12 not found.
+Warning: prerequisite Dancer2::Plugin::Passphrase 2.0.5 not found.     - Request submitted.
+Warning: prerequisite Dancer2::Session::Cookie 0 not found.
+Warning: prerequisite EBook::MOBI 0 not found.
+Warning: prerequisite MetaCPAN::Client 0 not found.
+Warning: prerequisite Module::Version 0 not found.
+Warning: prerequisite Template 2.25 not found. We have 2.24.
+Warning: prerequisite Test::WWW::Mechanize 1.44 not found. We have 1.42.
+Warning: prerequisite URL::Encode::XS 0 not found.
+Warning: prerequisite Web::Feed 0.07 not found.
+Warning: prerequisite YAML::XS 0.59 not found. We have 0.41.
