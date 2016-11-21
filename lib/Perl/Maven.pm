@@ -327,7 +327,7 @@ hook before_template => sub {
 get '/robots.txt' => sub {
 	my $host = request->host;
 	my $txt  = <<"END_TXT";
-Sitemap: http://$host/sitemap.xml
+Sitemap: https://$host/sitemap.xml
 Disallow: /media/*
 END_TXT
 
@@ -342,7 +342,7 @@ get '/contributor/:name' => sub {
 		if ( $host ne 'perlmaven.com' ) {    #TODO remove hardcoding
 			$host =~ s/^\w+\.//;
 		}
-		return redirect "http://meta.$host/contributor/$name";
+		return redirect "https://meta.$host/contributor/$name";
 	}
 
 	return "$name could not be found" if not authors->{$name};
@@ -653,6 +653,7 @@ get '/sitemap.xml' => sub {
 	my $pages = setting('tools')->read_meta_array('sitemap');
 	my $url   = request->base;
 	$url =~ s{/$}{};
+	$url =~ s{http://}{https://}; # ???
 	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
