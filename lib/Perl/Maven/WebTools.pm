@@ -122,7 +122,7 @@ sub get_ip {
 
 	# direct access
 	my $ip = request->remote_address;
-	if ( $ip eq '::ffff:127.0.0.1' ) {
+	if ( $ip eq '::ffff:127.0.0.1' or $ip eq '127.0.0.1' ) {
 
 		# forwarded by Nginx
 		my $forwarded = request->forwarded_for_address;
