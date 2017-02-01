@@ -592,6 +592,8 @@ sub register {
 		"Please finish the $mymaven->{title} registration",
 		{
 			code => $code,
+			ip   => get_ip(),
+			url  => request->base,
 		},
 	);
 	if ($err) {
