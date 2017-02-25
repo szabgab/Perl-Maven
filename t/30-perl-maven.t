@@ -17,7 +17,7 @@ t::lib::Test::setup();
 
 my $EPOCH = re('^\d{10}$');
 
-my $url      = "http://$t::lib::Test::DOMAIN";
+my $url      = "https://$t::lib::Test::DOMAIN";
 my $EMAIL    = 'gabor@perlmaven.com';
 my $EMAIL2   = 'other@perlmaven.com';
 my $EMAIL3   = 'zorg@perlmaven.com';
@@ -74,7 +74,7 @@ END
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
   <title>Test Maven</title>
-  <link>http://test-pm.com/</link>
+  <link>https://test-pm.com/</link>
   <pubDate>2016-08-25T12:33:30 GMT</pubDate>
   <description>Test description for feed</description>
   <language>en-us</language>
@@ -92,12 +92,13 @@ END
   <itunes:category text="Technology" />
   <item>
     <title>Testing with Perl</title>
-    <link rel="alternate" type="text/html" href="http://test-pm.com/testing" />
-    <guid>http://test-pm.com/testing</guid>
-    <description type="html"><![CDATA[<p>
+    <link>https://test-pm.com/testing</link>
+    <guid>https://test-pm.com/testing</guid>
+    <description><![CDATA[<p>
 A series of articles about testing, and test automation using Perl.
 <p>
 ]]></description>
+    <author>Gabor Szabo</author>
   </item>
 </channel>
 </rss>
