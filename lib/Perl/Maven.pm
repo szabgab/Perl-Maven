@@ -653,7 +653,7 @@ get '/sitemap.xml' => sub {
 	my $pages = setting('tools')->read_meta_array('sitemap');
 	my $url   = request->base;
 	$url =~ s{/$}{};
-	$url =~ s{http://}{https://}; # ???
+	$url =~ s{http://}{https://};    # ???
 	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
