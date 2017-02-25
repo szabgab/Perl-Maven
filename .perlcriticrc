@@ -6,11 +6,11 @@ verbose = %f: [%p] %m at line %l, column %c.\n%d\n
 theme = core
 
 [TestingAndDebugging::RequireUseStrict]
-equivalent_modules = Moo Moo::Role Dancer Dancer2
+#equivalent_modules = Moo Moo::Role Dancer Dancer2
 
 [TestingAndDebugging::RequireUseWarnings]
 severity = 5
-equivalent_modules = Moo Moo::Role Dancer Dancer2
+#equivalent_modules = Moo Moo::Role Dancer Dancer2
 
 #[-ControlStructures::ProhibitPostfixControls]
 #[-Documentation::RequirePodLinksIncludeText]
