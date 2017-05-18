@@ -1,4 +1,7 @@
 package Perl::Maven::Account;
+use 5.010;
+use strict;
+use warnings;
 use Dancer2 appname => 'Perl::Maven';
 
 use Dancer2::Plugin::Passphrase;    #qw(passphrase);

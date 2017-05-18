@@ -1,4 +1,7 @@
 package Perl::Maven::AnalyzeWeb;
+use 5.010;
+use strict;
+use warnings;
 use Dancer2 appname => 'Perl::Maven';
 use MongoDB;
 use Data::Dumper qw(Dumper);

@@ -1,4 +1,7 @@
 package Perl::Maven::Admin;
+use 5.010;
+use strict;
+use warnings;
 use Dancer2 appname => 'Perl::Maven';
 
 #use boolean;

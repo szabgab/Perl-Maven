@@ -1,5 +1,7 @@
 package Perl::Maven::Analyze;
 use 5.010;
+use strict;
+use warnings;
 use Moo;
 use MooX::Options;
 
