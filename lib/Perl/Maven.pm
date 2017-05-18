@@ -1146,6 +1146,7 @@ sub log_request {
 	}
 
 	log_to_mongodb( \%details );
+	log_to_datadog( \%details );
 
 	return if response->status != 200;
 	return if $uri =~ m{^/atom};
@@ -1176,6 +1177,19 @@ sub log_to_mongodb {
 		$collection->insert($data);
 	};
 	error("Could not log to MongoDB: $@") if $@;
+}
+
+sub log_to_datadog {
+	my ($data) = @_;
+
+	eval "use Net::Dogstatsd";
+	return if $@;
+
+	my $dogstatsd = Net::Dogstatsd->new();
+	my $socket = $dogstatsd->get_socket();
+	$dogstatsd->increment(
+        name  => 'web.page_views',
+	);
 }
 
 sub in_development {
