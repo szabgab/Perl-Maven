@@ -1182,7 +1182,7 @@ sub log_to_mongodb {
 sub log_to_datadog {
 	my ($data) = @_;
 
-	eval "use Net::Dogstatsd";
+	eval "use Net::Dogstatsd"; # no critic
 	return if $@;
 
 	my $dogstatsd = Net::Dogstatsd->new();
