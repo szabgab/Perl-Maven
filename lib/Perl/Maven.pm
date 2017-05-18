@@ -1186,10 +1186,8 @@ sub log_to_datadog {
 	return if $@;
 
 	my $dogstatsd = Net::Dogstatsd->new();
-	my $socket = $dogstatsd->get_socket();
-	$dogstatsd->increment(
-        name  => 'web.page_views',
-	);
+	my $socket    = $dogstatsd->get_socket();
+	$dogstatsd->increment( name => 'web.page_views', );
 }
 
 sub in_development {
