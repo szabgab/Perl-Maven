@@ -1192,6 +1192,10 @@ sub log_to_datadog {
 		name  => 'web.elapsed_time',
 		value => $data->{elapsed_time},
 	);
+	$dogstatsd->histogram(
+		name  => 'web.elapsed_time_histogram',
+		value => $data->{elapsed_time},
+	);
 }
 
 sub in_development {
