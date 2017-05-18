@@ -1182,12 +1182,16 @@ sub log_to_mongodb {
 sub log_to_datadog {
 	my ($data) = @_;
 
-	eval "use Net::Dogstatsd"; # no critic
+	eval "use Net::Dogstatsd";    # no critic
 	return if $@;
 
 	my $dogstatsd = Net::Dogstatsd->new();
 	my $socket    = $dogstatsd->get_socket();
 	$dogstatsd->increment( name => 'web.page_views', );
+	$dogstatsd->gauge(
+		name  => 'web.elapsed_time',
+		value => $data->{elapsed_time},
+	);
 }
 
 sub in_development {
