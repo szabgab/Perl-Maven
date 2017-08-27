@@ -11,7 +11,7 @@ use t::lib::Test;
 t::lib::Test::setup();
 
 use Perl::Maven::DB;
-my $db        = Perl::Maven::DB->new('pm.db');
+my $db        = Perl::Maven::DB->new('test_abc.db');
 my $TIMESTAMP = re('^\d{10}$');
 
 subtest users => sub {

@@ -13,7 +13,7 @@ BEGIN {
 }
 
 use Perl::Maven::DB;
-my $db = Perl::Maven::DB->new('pm.db');
+my $db = Perl::Maven::DB->new('test_abc.db');
 
 my $admin = "$^X -Ilib bin/admin.pl";
 
