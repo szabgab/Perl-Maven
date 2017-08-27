@@ -100,6 +100,7 @@ subtest bad_timestamp => sub {
 	};
 	like $@,
 		qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback};
+	qr{Validation failed for type named DayOfMonth declared in package DateTime::Types};
 };
 
 subtest abstract_not_ending => sub {
