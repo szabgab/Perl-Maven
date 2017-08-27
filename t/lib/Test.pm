@@ -23,7 +23,7 @@ sub setup {
 
 	unlink glob 'sessions/*';
 
-	my $dbfile = "$dir/pm.db";
+	my $dbfile = "$dir/test_abc.db";
 	$ENV{PERL_MAVEN_DB} = $dbfile;
 
 	system "$^X bin/setup.pl $dbfile" and die;

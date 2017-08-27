@@ -45,7 +45,7 @@ use Dancer2;    # importing: set
 set( appdir => getcwd() );
 use Perl::Maven;
 use Perl::Maven::DB;
-my $db = Perl::Maven::DB->new('pm.db');
+my $db = Perl::Maven::DB->new('test_abc.db');
 
 my $app = Dancer2->psgi_app;
 

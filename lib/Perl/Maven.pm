@@ -50,7 +50,7 @@ hook before => sub {
 
 	my $appdir = abs_path config->{appdir};
 
-	my $db = Perl::Maven::DB->new( config->{appdir} . '/pm.db' );
+	my $db = Perl::Maven::DB->new( config->{appdir} . '/' . mymaven->{dbfile} );
 	set db => $db;
 
 	#set views => ["$appdir/views"]; # Cannot set array!
