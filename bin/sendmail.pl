@@ -85,7 +85,7 @@ sub send_messages {
 	my ( $mymaven, $header, $opt ) = @_;
 
 	my %todo;
-	my $db = Perl::Maven::DB->new($config->{dbfile});
+	my $db = Perl::Maven::DB->new($mymaven->{dbfile});
 
 	# TODO remove the hard coding here
 	my $unsubscribe_link = grep { $_ eq 'perl_maven_cookbook' } @{ $opt->{to} };
