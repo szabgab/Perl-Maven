@@ -7,7 +7,7 @@ use DBI;
 
 our $VERSION = '0.11';
 
-#my $instance;
+my %instance;
 
 sub new {
 	my ( $class, $dbfile ) = @_;
@@ -16,7 +16,7 @@ sub new {
 		$dbfile = $ENV{PERL_MAVEN_DB};
 	}
 
-	#return $instance if $instance;
+	return $instance{$dbfile} if $instance{$dbfile};
 
 	die "Database file is missing '$dbfile'" if not -e $dbfile;
 
@@ -30,9 +30,9 @@ sub new {
 		}
 	);
 
-	my $instance = bless { dbh => $dbh, }, $class;
+	$instance{$dbfile} = bless { dbh => $dbh, }, $class;
 
-	return $instance;
+	return $instance{$dbfile};
 }
 
 sub add_registration {
