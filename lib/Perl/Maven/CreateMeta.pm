@@ -299,7 +299,7 @@ sub process_files {
 			foreach my $w (@words) {
 
 				#$keywords{$w} ||= {};
-				warn "Duplicate '$w' in '$filename'\n" . Dumper $keywords{$w}
+				warn "Duplicate '$w' in '$filename'\n" # . Dumper $keywords{$w}
 					if $keywords{$w}
 					and grep { $_->{url} eq "/$filename" } @{ $keywords{$w} };
 				push @{ $keywords{$w} },
