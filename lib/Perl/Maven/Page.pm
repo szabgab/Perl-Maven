@@ -134,6 +134,8 @@ sub process {
 		die "$@  in file $file\n";
 	}
 
+        my $embedded_ad = 0;
+
 	while ( @{ $self->raw } ) {
 		my $line = shift @{ $self->raw };
 		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*?)"\s+(?:youtube="(.*?)"\s+)?/>\s*$} ) {
@@ -284,6 +286,11 @@ DOWNLOADS
 
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
+			if (not $embedded_ad and $self->{inline} and @{$self->{inline}} and length($self->{data}{mycontent}) > 1000) {
+                my ($inline) = $self->{inline}[ int rand scalar @{ $self->{inline} }  ];
+				$self->{data}{mycontent} .= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
+				$embedded_ad = 1;
+			}
 			next;
 		}
 		$self->{data}{mycontent} .= $line;
