@@ -203,6 +203,7 @@ sub read_tt {
 
 	my $tt = eval {
 		Perl::Maven::Page->new(
+                        inline => mymaven->{inline},
 			media => mymaven->{dirs}{media},
 			root  => mymaven->{root},
 			file  => $file,

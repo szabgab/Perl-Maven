@@ -19,6 +19,7 @@ has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
 has raw => ( is => 'rw', default => sub { [] } );
 has pre => ( is => 'ro', default => sub { {} } );
+has inline => ( is => 'ro', default => sub { [] } );
 
 my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect? perl6url? perl6title? img? alt?);
@@ -286,8 +287,9 @@ DOWNLOADS
 
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
-			if (not $embedded_ad and $self->{inline} and @{$self->{inline}} and length($self->{data}{mycontent}) > 1000) {
-                my ($inline) = $self->{inline}[ int rand scalar @{ $self->{inline} }  ];
+                        my $inlines = $self->inline;
+			if (not $embedded_ad and $inlines and @{$inlines} and length($self->{data}{mycontent}) > 1000) {
+                            my ($inline) = $inlines->[ int rand scalar @$inlines  ];
 				$self->{data}{mycontent} .= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
 				$embedded_ad = 1;
 			}
