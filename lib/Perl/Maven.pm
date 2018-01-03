@@ -336,6 +336,7 @@ get '/robots.txt' => sub {
 
 	my $txt  = <<"END_TXT";
 Sitemap: https://$host/sitemap.xml
+$sitemaps
 Disallow: /media/*
 END_TXT
 
