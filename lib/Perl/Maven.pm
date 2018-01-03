@@ -328,12 +328,12 @@ hook before_template => sub {
 
 # Dynamic robots.txt generation to allow dynamic Sitemap URL
 get '/robots.txt' => sub {
+	my $host = request->host;
     my $sitemaps = '';
     if ($host eq 'code-maven.com') {
-        $sitemaps = qq{Sitemap: https://$host/slides/sitemap.xml\n}
+        $sitemaps = qq{Sitemap: https://$host/slides/sitemap.xml\n};
     }
 
-	my $host = request->host;
 	my $txt  = <<"END_TXT";
 Sitemap: https://$host/sitemap.xml
 Disallow: /media/*
