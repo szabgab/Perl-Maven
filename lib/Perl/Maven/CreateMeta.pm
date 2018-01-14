@@ -300,7 +300,7 @@ sub process_files {
 
 				#$keywords{$w} ||= {};
 
-                # Why did we want to warn about these?
+				# Why did we want to warn about these?
 				#warn "Duplicate '$w' in '$filename'\n" # . Dumper $keywords{$w}
 				#	if $keywords{$w}
 				#	and grep { $_->{url} eq "/$filename" } @{ $keywords{$w} };

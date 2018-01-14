@@ -51,13 +51,13 @@ if ( basename($0) eq 'perl_maven_mongo_hits' ) {
 		{
 			'$and' => [ { time => { '$gt', $time - 60 * 60 * 24 } }, { status => 200 } ]
 		}
-		)->count;
+	)->count;
 	say 'logged_in.value '
 		. $collection->find(
 		{
 			'$and' => [ { time => { '$gt', $time - 60 * 60 * 24 } }, { uid => { '$exists' => boolean::true } } ]
 		}
-		)->count;
+	)->count;
 	exit;
 }
 

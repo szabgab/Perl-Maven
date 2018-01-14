@@ -17,8 +17,8 @@ has root  => ( is => 'ro', required => 1 );
 has file  => ( is => 'ro', required => 1 );
 has tools => ( is => 'ro', required => 0 );
 has data  => ( is => 'rw' );
-has raw => ( is => 'rw', default => sub { [] } );
-has pre => ( is => 'ro', default => sub { {} } );
+has raw    => ( is => 'rw', default => sub { [] } );
+has pre    => ( is => 'ro', default => sub { {} } );
 has inline => ( is => 'ro', default => sub { [] } );
 
 my @page_options
@@ -135,7 +135,7 @@ sub process {
 		die "$@  in file $file\n";
 	}
 
-        my $embedded_ad = 0;
+	my $embedded_ad = 0;
 
 	while ( @{ $self->raw } ) {
 		my $line = shift @{ $self->raw };
@@ -287,10 +287,11 @@ DOWNLOADS
 
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
-                        my $inlines = $self->inline;
-			if (not $embedded_ad and $inlines and @{$inlines} and length($self->{data}{mycontent}) > 1000) {
-                            my ($inline) = $inlines->[ int rand scalar @$inlines  ];
-				$self->{data}{mycontent} .= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
+			my $inlines = $self->inline;
+			if ( not $embedded_ad and $inlines and @{$inlines} and length( $self->{data}{mycontent} ) > 1000 ) {
+				my ($inline) = $inlines->[ int rand scalar @$inlines ];
+				$self->{data}{mycontent}
+					.= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
 				$embedded_ad = 1;
 			}
 			next;

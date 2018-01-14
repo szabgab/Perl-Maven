@@ -203,12 +203,12 @@ sub read_tt {
 
 	my $tt = eval {
 		Perl::Maven::Page->new(
-                        inline => mymaven->{inline},
-			media => mymaven->{dirs}{media},
-			root  => mymaven->{root},
-			file  => $file,
-			tools => setting('tools'),
-			pre   => $pre_process,
+			inline => mymaven->{inline},
+			media  => mymaven->{dirs}{media},
+			root   => mymaven->{root},
+			file   => $file,
+			tools  => setting('tools'),
+			pre    => $pre_process,
 		)->read->process->merge_conf( mymaven->{conf} )->data;
 	};
 	if ($@) {

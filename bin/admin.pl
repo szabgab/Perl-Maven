@@ -10,8 +10,8 @@ use lib 'lib';
 
 use Perl::Maven::DB;
 my $dbfile = shift;
-if (not $dbfile or $dbfile !~ /\.db$/ or not -e $dbfile) {
-    die "First parameter must be name of the db file pm.db or cm.db\n";
+if ( not $dbfile or $dbfile !~ /\.db$/ or not -e $dbfile ) {
+	die "First parameter must be name of the db file pm.db or cm.db\n";
 }
 
 my $db = Perl::Maven::DB->new($dbfile);

@@ -191,7 +191,7 @@ sub generate_html_pypi {
 		$html .= q{<tr>};
 		$html .= sprintf q{<td><a href="https://pypi.python.org/pypi/%s">%s</a></td>}, $r->{distribution},
 			$r->{distribution};
-		$html .= sprintf q{<td>%s</td>}, ( $r->{author}   // '' );
+		$html .= sprintf q{<td>%s</td>}, ( $r->{author} // '' );
 		$html .= sprintf q{<td>%s</td>}, ( $r->{abstract} // '' );
 		$html .= qq{</tr>\n};
 	}

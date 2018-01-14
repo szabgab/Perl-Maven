@@ -7,5 +7,5 @@ use lib 'lib';
 use Perl::Maven::DB;
 
 my $dbfile = shift // 'pm.db';
-my $db = Perl::Maven::DB->setup($dbfile);
+my $db     = Perl::Maven::DB->setup($dbfile);
 

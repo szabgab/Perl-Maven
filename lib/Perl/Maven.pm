@@ -328,13 +328,13 @@ hook before_template => sub {
 
 # Dynamic robots.txt generation to allow dynamic Sitemap URL
 get '/robots.txt' => sub {
-	my $host = request->host;
-    my $sitemaps = '';
-    if ($host eq 'code-maven.com') {
-        $sitemaps = qq{Sitemap: https://$host/slides/sitemap.xml\n};
-    }
+	my $host     = request->host;
+	my $sitemaps = '';
+	if ( $host eq 'code-maven.com' ) {
+		$sitemaps = qq{Sitemap: https://$host/slides/sitemap.xml\n};
+	}
 
-	my $txt  = <<"END_TXT";
+	my $txt = <<"END_TXT";
 Sitemap: https://$host/sitemap.xml
 $sitemaps
 Disallow: /media/*
@@ -880,7 +880,7 @@ sub _send_file {
 	send_file(
 		path( mymaven->{dirs}{img}, $file ),
 		content_type => ( $content_type_map{$ext} // $ext ),
-		system_path => 1,
+		system_path  => 1,
 	);
 }
 
