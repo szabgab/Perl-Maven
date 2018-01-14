@@ -1188,6 +1188,8 @@ sub log_to_mongodb {
 sub log_to_datadog {
 	my ($data) = @_;
 
+    return; # we don't use it now and it generates tons of warning during tests
+
 	eval "use Net::Dogstatsd";    ## no critic
 	return if $@;
 
