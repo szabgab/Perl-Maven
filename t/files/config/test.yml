@@ -1,5 +1,6 @@
 domains:
   'test-pm.com':
+    dbfile: 'test_abc.db'
     free_product: 'some_free_product'
     main_site: en
       #redirect: 0
