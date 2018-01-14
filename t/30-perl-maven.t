@@ -61,6 +61,7 @@ subtest static => sub {
 	$visitor->get_ok("$url/robots.txt");
 	is $visitor->content, <<"END";
 Sitemap: $url/sitemap.xml
+
 Disallow: /media/*
 END
 
