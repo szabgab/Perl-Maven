@@ -127,6 +127,14 @@ though the links between the language will lead to the production site.
 Contribution
 ===============
 
+
+To tidy the Perl code, run:
+
+```
+tidyall -a --refresh-cache
+```
+
+
 Before contributing anything beyond really simple fixes, please open an issue and then
 in each commit message mention that issue. That will make it easier later to map changes
 to features.
