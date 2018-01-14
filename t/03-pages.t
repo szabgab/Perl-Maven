@@ -98,8 +98,10 @@ subtest bad_timestamp => sub {
 	my $data = eval {
 		Perl::Maven::Page->new( media => 't/file/media', root => 't/files', file => $path )->read->process->data;
 	};
+
+# In newer versions of Perl we get the second error message see https://travis-ci.org/szabgab/Perl-Maven/builds/328651689
 	like $@,
-		qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback};
+		qr{The 'day' parameter \("32"\) to DateTime::new did not pass the 'an integer which is a possible valid day of month' callback|Validation failed for type named DayOfMonth declared in package DateTime::Types .* with value 32};
 	qr{Validation failed for type named DayOfMonth declared in package DateTime::Types};
 };
 
