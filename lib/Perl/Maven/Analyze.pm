@@ -20,9 +20,9 @@ use Perl::PrereqScanner;
 
 our $VERSION = '0.11';
 
-option limit => ( is => 'ro', default => 1, format => 'i' );
-option verbose => ( is => 'ro', default => 0 );
-option conf => ( is => 'ro', required => 0, format => 's', doc => 'Path to configuration JSON file' );
+option limit   => ( is => 'ro', default  => 1, format => 'i' );
+option verbose => ( is => 'ro', default  => 0 );
+option conf    => ( is => 'ro', required => 0, format => 's', doc => 'Path to configuration JSON file' );
 option dir =>
 	( is => 'ro', required => 0, format => 's', doc => 'Path to directory that holds the source code of the projects' );
 
