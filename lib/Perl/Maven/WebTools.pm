@@ -266,6 +266,7 @@ sub pm_show_page {
 	_add_author($tt);
 
 	my $translator = $tt->{translator};
+	_read_authors();
 	if ( $translator and $authors{$translator} ) {
 		$tt->{translator_name} = $authors{$translator}{author_name};
 		$tt->{translator_img}  = $authors{$translator}{author_img};
@@ -288,7 +289,7 @@ sub _add_author {
 	my ($tt) = @_;
 
 	my $nick = $tt->{author};
-	read_authors() if not %authors;
+	_read_authors();
 	if ( $nick and $authors{$nick} ) {
 		$tt->{author_name} = $authors{$nick}{author_name};
 		$tt->{author_img}  = $authors{$nick}{author_img};
@@ -302,14 +303,16 @@ sub _add_author {
 }
 
 sub authors {
-	if ( not %authors ) {
-		read_authors();
-	}
+	_read_authors();
 	return \%authors;
 }
 
-sub read_authors {
-	return if %authors;
+sub _read_authors {
+
+	# TODO: The list of author is currently a global which means two sites on the same server can get messed up.
+	# for now we are re-reading the whole thing again and again.
+	# Later we can prefix the authors hash with the mymaven->{root} and then we can have two or more separate subhashes.
+	#return if %authors;
 
 	# Path::Tiny would throw an exception if it could not open the file
 	# but we for Perl::Maven this file is optional
