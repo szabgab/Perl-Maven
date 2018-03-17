@@ -1,5 +1,6 @@
-###Status
+## Status
 [![Build Status](https://travis-ci.org/szabgab/Perl-Maven.png)](https://travis-ci.org/szabgab/Perl-Maven)
+[![Coverage Status](https://coveralls.io/repos/github/szabgab/Perl-Maven/badge.svg?branch=master)](https://coveralls.io/github/szabgab/Perl-Maven?branch=master)
 
 The source code of http://perlmaven.com/
 VERSION 0.11
