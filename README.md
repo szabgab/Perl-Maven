@@ -102,6 +102,17 @@ Run the application using ```plackup -r```
 And visit the main page at ```http://example.com:5000/```
 
 
+Setting up a new site
+- Add configuration to mymaven.yml
+- symlink from views/sites/domain to the template directory of the site
+
+In the root of perlmaven.com add a symlink to lead to the pro directory to make the include files work
+
+```
+cd ~/work/perlmaven.com
+ln -s ../perlmaven-pro pro
+```
+
 
 
 perlmaven.com
