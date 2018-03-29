@@ -61,7 +61,7 @@
   
   <script src="<% jquery_cdn %>/jquery-1.11.3.min.js"></script>
   <script>
-     var top_poster = "<% top_poster %>";
+     var top_poster = '<% top_poster %>';
   </script>
  
   <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
