@@ -129,6 +129,7 @@ hook before_template => sub {
 	}
 
 	$t->{domain} = mymaven->{domain};
+	$t->{top_poster} = mymaven->{top_poster};
 
 	sub _conv {
 		my ( $domain, $file ) = @_;

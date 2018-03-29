@@ -155,8 +155,6 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 	height: 130px;
 }
 
-
-
 #top-poster {
 	background-color: orange;
 	padding: 10px;
@@ -164,6 +162,7 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 	-webkit-border-radius: 15px;
 	border-radius: 15px;
     display: none;
+    clear: both;
 }
 
 .prettyprint {

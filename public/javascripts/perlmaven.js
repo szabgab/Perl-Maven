@@ -76,6 +76,12 @@ function code_explain() {
 $(document).ready(function() {
     $('#explain').click(code_explain);
 
+    if (top_poster) {
+        $('#top-poster').html(top_poster);
+        $('#top-poster').show();
+        //$('#top-poster').css('display', 'block');
+    }
+
     $(".archive-button").click(function(e) {
         //console.log( $('#abstract').attr('checked') );
         show_archive(e.target.value, $('#abstract').is(':checked'));
