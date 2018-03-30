@@ -128,7 +128,7 @@ hook before_template => sub {
 		$t->{conf}{show_ads} = 0;
 	}
 
-	$t->{domain} = mymaven->{domain};
+	$t->{domain}     = mymaven->{domain};
 	$t->{top_poster} = mymaven->{top_poster};
 
 	sub _conv {
@@ -644,11 +644,21 @@ get '/about' => sub {
 
 get '/archive' => sub {
 	my $tag = param('tag');
+
 	my $pages
 		= $tag
 		? setting('tools')->read_meta_array( 'archive', filter => $tag )
 		: setting('tools')->read_meta_array('archive');
 	_replace_tags($pages);
+
+	# add series
+	my $lookup_series = setting('tools')->read_meta('lookup_series');
+	foreach my $page (@$pages) {
+		my $series = $lookup_series->{ $page->{filename} };
+		if ($series) {
+			$page->{series} = $series;
+		}
+	}
 
 	pm_show_page(
 		{ article => 'archive', template => 'archive', },

@@ -28,7 +28,11 @@
              <% IF abstract %>
                    <% p.abstract %>
              <% END %>
-
+          </td>
+          <td>
+             <% IF p.series %>
+                 <a href="/<% p.series %>"><% p.series %></a>
+             <% END %>
           </td>
       </tr>
     <% END %>
