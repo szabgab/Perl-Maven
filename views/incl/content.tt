@@ -1,12 +1,15 @@
 <div role="main" id="main">
 
-<div id="top-poster"></div>
+  <div id="top-poster"></div>
 
-<div id="abstract">
-  <% IF img %><img id="abstract_img" src="<% img %>" alt="<% alt %>" /><% END %>
-  <div id="abstract_text"> <% abstract %></div>
-</div>
+  <div id="abstract">
+    <% IF img %><img id="abstract_img" src="<% img %>" alt="<% alt %>" /><% END %>
+    <div id="abstract_text"> <% abstract %></div>
+  </div>
+  <div id="after-abstract"></div>
+  
+  <% mycontent %>
 
-<% mycontent %>
+  <div id="after-content"></div>
 </div>
 
