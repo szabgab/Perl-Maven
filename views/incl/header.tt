@@ -47,6 +47,7 @@
 
   <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
   <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js" rel="stylesheet">
   
   
   <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
