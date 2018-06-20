@@ -47,7 +47,6 @@
 
   <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
   <link href="<% bootstrap_cdn %>/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
-  <script src="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   
   
   <link href="/css/style.css?<% pm_version %>" rel="stylesheet">
@@ -61,6 +60,7 @@
   <script src="//vjs.zencdn.net/4.12/video.js"></script>
   
   <script src="<% jquery_cdn %>/jquery-3.3.1.min.js"></script>
+  <script src="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
   <script type="text/javascript" src="/js/maven.js"></script>
 
