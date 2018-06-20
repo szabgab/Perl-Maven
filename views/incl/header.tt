@@ -53,7 +53,7 @@
   <% IF conf.rtl %>
     <link href="/css/rtl.css??<% pm_version %>" rel="stylesheet">
   <% END %>
-  <link href="/site/css/site.css?<% pm_version %>" rel="stylesheet">
+  <link href="/static/css/site.css?<% pm_version %>" rel="stylesheet">
   
   <% google_prettify %>
   
