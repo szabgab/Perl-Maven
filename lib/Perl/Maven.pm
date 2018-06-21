@@ -128,7 +128,8 @@ hook before_template => sub {
 		$t->{conf}{show_ads} = 0;
 	}
 
-	$t->{domain}     = mymaven->{domain};
+	$t->{domain} = mymaven->{domain};
+
 	sub _conv {
 		my ( $domain, $file ) = @_;
 		return $file if $file =~ m{^incl/};
