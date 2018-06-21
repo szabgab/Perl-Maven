@@ -1,0 +1,9 @@
+This page does not exist.
+<p>
+But wait, then what are yous howing here?
+<p>
+It is just a placeholder becaue recently Dancer2 started to complain in the debug log about
+
+<pre>
+file error - 404.tt: not found
+</pre>
