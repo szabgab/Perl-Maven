@@ -2,6 +2,7 @@ package Perl::Maven::Page;
 use Moo;
 
 use 5.014;
+use Carp qw(confess);
 use DateTime;
 use Data::Dumper qw(Dumper);
 use Storable qw(dclone);
@@ -404,11 +405,13 @@ sub _process_include {
 	);
 
 	my $include_content = '';
-	if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
+	if ( $line =~ m{^\s*<(include|try|linkto)\s+file="([^"]+)">\s*$} ) {
 		my $what         = $1;
 		my $include_file = $2;
 		my $path         = $self->root . "/$include_file";
-		my $link_to      = "$mymaven->{github}/tree/main/$include_file";
+
+		# $mymaven->{github}
+		my $link_to = "https://github.com/szabgab/code-maven.com/tree/main/$include_file";
 		if ( -e $path ) {
 			if ( $what eq 'linkto' ) {
 				$include_content .= qq{<b><a href="$link_to">$include_file</a></b>};
