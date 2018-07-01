@@ -403,32 +403,32 @@ sub _process_include {
 		xml  => 'xml',
 	);
 
-	my $include = '';
+	my $include_content = '';
 	if ( $line =~ m{^\s*<(include|try)\s+file="([^"]+)">\s*$} ) {
 		my $what         = $1;
 		my $include_file = $2;
 		my $path         = $self->root . "/$include_file";
 		if ( -e $path ) {
-			$include .= "<b>$include_file</b><br>";
+			$include_content .= "<b>$include_file</b><br>";
 
 			# TODO language based on extension?
 			my ($extension) = $path =~ /\.([^.]+)$/;
 			my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
 			if ( $extension eq 'txt' ) {
-				$include .= qq{<pre>\n};
+				$include_content .= qq{<pre>\n};
 			}
 			else {
-				$include .= qq{<pre class="prettyprint linenums $language_code">\n};
+				$include_content .= qq{<pre class="prettyprint linenums $language_code">\n};
 			}
 			my $code = path($path)->slurp_utf8;
 			$code =~ s/&/&amp;/g;
 			$code =~ s/</&lt;/g;
 			$code =~ s/>/&gt;/g;
-			$include .= $code;
-			$include .= qq{</pre>\n};
+			$include_content .= $code;
+			$include_content .= qq{</pre>\n};
 
 			if ( $what eq 'try' ) {
-				$include .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
+				$include_content .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
 			}
 		}
 		else {
@@ -436,12 +436,12 @@ sub _process_include {
 		}
 	}
 	if ($abstract) {
-		$self->{data}{abstract} .= $include;
+		$self->{data}{abstract} .= $include_content;
 	}
 	else {
-		$self->{data}{mycontent} .= $include;
+		$self->{data}{mycontent} .= $include_content;
 	}
-	return $include ? 1 : 0;
+	return $include_content ? 1 : 0;
 }
 
 sub merge_conf {
