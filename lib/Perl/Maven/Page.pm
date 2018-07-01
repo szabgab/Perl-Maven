@@ -56,7 +56,7 @@ sub read {
 }
 
 sub process {
-	my ($self) = @_;
+	my ( $self, $mymaven ) = @_;
 
 	$self->{data}{abstract}  = '';
 	$self->{data}{mycontent} = '';
@@ -272,7 +272,7 @@ DOWNLOADS
 		}
 
 		if ( $self->{data}{abstract_start} and not $self->{data}{abstract_end} ) {
-			next if $self->_process_include( $line, 1 );
+			next if $self->_process_include( $mymaven, $line, 1 );
 			next if $self->_process_code( $line, 1 );
 			if ( $line =~ /^\s*$/ ) {
 				$self->{data}{abstract} .= "<p>\n";
@@ -282,7 +282,7 @@ DOWNLOADS
 			next;
 		}
 
-		next if $self->_process_include( $line, 0 );
+		next if $self->_process_include( $mymaven, $line, 0 );
 		next if $self->_process_code( $line, 0 );
 
 		if ( $line =~ /^\s*$/ ) {
@@ -389,7 +389,7 @@ sub _process_code {
 }
 
 sub _process_include {
-	my ( $self, $line, $abstract ) = @_;
+	my ( $self, $mymaven, $line, $abstract ) = @_;
 
 	# <include file="examples/node_hello_world.js">
 	my %ext = (
@@ -408,27 +408,33 @@ sub _process_include {
 		my $what         = $1;
 		my $include_file = $2;
 		my $path         = $self->root . "/$include_file";
+		my $link_to      = "$mymaven->{github}/tree/main/$include_file";
 		if ( -e $path ) {
-			$include_content .= "<b>$include_file</b><br>";
-
-			# TODO language based on extension?
-			my ($extension) = $path =~ /\.([^.]+)$/;
-			my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
-			if ( $extension eq 'txt' ) {
-				$include_content .= qq{<pre>\n};
+			if ( $what eq 'linkto' ) {
+				$include_content .= qq{<b><a href="$link_to">$include_file</a></b>};
 			}
 			else {
-				$include_content .= qq{<pre class="prettyprint linenums $language_code">\n};
-			}
-			my $code = path($path)->slurp_utf8;
-			$code =~ s/&/&amp;/g;
-			$code =~ s/</&lt;/g;
-			$code =~ s/>/&gt;/g;
-			$include_content .= $code;
-			$include_content .= qq{</pre>\n};
+				$include_content .= "<b>$include_file</b><br>";
 
-			if ( $what eq 'try' ) {
-				$include_content .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
+				# TODO language based on extension?
+				my ($extension) = $path =~ /\.([^.]+)$/;
+				my $language_code = $ext{$extension} ? "language-$ext{$extension}" : '';
+				if ( $extension eq 'txt' ) {
+					$include_content .= qq{<pre>\n};
+				}
+				else {
+					$include_content .= qq{<pre class="prettyprint linenums $language_code">\n};
+				}
+				my $code = path($path)->slurp_utf8;
+				$code =~ s/&/&amp;/g;
+				$code =~ s/</&lt;/g;
+				$code =~ s/>/&gt;/g;
+				$include_content .= $code;
+				$include_content .= qq{</pre>\n};
+
+				if ( $what eq 'try' ) {
+					$include_content .= qq{<a href="/try/$include_file" target="_new">Try!</a>};
+				}
 			}
 		}
 		else {
