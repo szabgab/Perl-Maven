@@ -63,7 +63,7 @@
   <script src="<% jquery_cdn %>/jquery-3.3.1.min.js"></script>
   <script src="<% bootstrap_cdn %>/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="/javascripts/perlmaven.js?<% pm_version %>"></script>
-  <script type="text/javascript" src="/js/maven.js"></script>
+  <script src="/js/maven.js"></script>
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@szabgab" />
