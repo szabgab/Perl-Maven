@@ -106,7 +106,9 @@ On mid-sized screens (e.g. notebook) we cannot see the lower ad. Disabling for n
 #creators img {
 	width: 130px;
 	height: 130px;
-}
+    float: left;
+    margin-right: 5px;    
+}   
 
 #translator {
 }
