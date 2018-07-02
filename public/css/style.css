@@ -457,6 +457,11 @@ video {
   color: #FFF;
 }
 
+.auhtor-rightbox {
+   margin-bottom: 5px;
+   text-align: center;
+}
+
 .rightbox {
    margin-bottom: 5px;
    text-align: center;
