@@ -457,9 +457,12 @@ video {
   color: #FFF;
 }
 
-.auhtor-rightbox {
+.author-rightbox {
    margin-bottom: 5px;
    text-align: center;
+}
+.author-rightbox img {
+   float: left;
 }
 
 .rightbox {
