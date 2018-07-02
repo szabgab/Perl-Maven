@@ -1,3 +1,4 @@
+<% IF prev or next %>
 <div class="prev-next">
 <h2>
 <% IF prev %>
@@ -11,4 +12,4 @@
   </span>
 <% END %></h2>
 </div>
-
+<% END %>
