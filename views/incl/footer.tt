@@ -8,7 +8,7 @@
                        <% IF author_html %>
                            <div class="rightbox">
                                <h3>Author: <% author_name %></h3>
-                               <img src="/img/<% author_img %>"  /><br>
+                               <img src="/img/<% author_img %>" alt="" /><br>
                                <% author_html %>
                            </div>
                        <% END %>
