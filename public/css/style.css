@@ -459,10 +459,11 @@ video {
 
 .author-rightbox {
    margin-bottom: 5px;
-   text-align: center;
+   text-align: left;
 }
 .author-rightbox img {
    float: left;
+   margin-right: 5px;
 }
 
 .rightbox {
