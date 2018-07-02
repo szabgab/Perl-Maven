@@ -27,7 +27,9 @@
 
       <% IF author %>
         <img src="/img/<% author_img %>" alt="<% author_name %>" />
+<!--
         <% author_html %>
+-->
         <div class="author_text">
            <% resources.text.written_by %><br>
            <% IF author_google_plus_profile %>
