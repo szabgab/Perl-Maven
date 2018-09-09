@@ -8,7 +8,7 @@ use Getopt::Long qw(GetOptions);
 
 use Cwd qw(abs_path cwd);
 use File::Basename qw(dirname);
-use Dancer2;
+#use Dancer2;
 use YAML::XS qw(LoadFile);
 use Digest::SHA;
 
@@ -53,7 +53,7 @@ sub build_content {
 	my ( $url,  $query_string ) = @_;
 	my ( $host, $path_info )    = $url =~ m{https?://([^/]+)(/.*)};
 
-	my $dancer = Dancer2->psgi_app;
+	my $dancer = Perl::Maven->psgi_app;
 
 	my $env = {
 		'REMOTE_ADDR'     => '127.0.0.1',
