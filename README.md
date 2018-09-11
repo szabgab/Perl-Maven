@@ -3,6 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/szabgab/Perl-Maven/badge.svg?branch=master)](https://coveralls.io/github/szabgab/Perl-Maven?branch=master)
 
 The source code of http://perlmaven.com/
+
 VERSION 0.11
 
 Theoretically this code should be usable to run other sites
@@ -23,10 +24,9 @@ suggest bug fixes, features, changes etc.
 Setup
 ==========
 
-clone the Perl-Maven repository ( https://github.com/szabgab/Perl-Maven )
-(or fork in and clone the forked version)
+Clone the Perl-Maven repository (or fork in and clone the forked version):
 
-```$ git clone https://github.com/szabgab/Perl-Maven.git```
+    $ git clone https://github.com/szabgab/Perl-Maven.git
 
 Create the database:
 
@@ -38,81 +38,74 @@ Create configuration directory and configuration file:
     $ cp mymaven.yml.skel config/mymaven.yml
 
 Configure DNS name resolving of example.com.local to 127.0.0.1
-(On Linux/Unix add the following line to /etc/hosts :
+
+On Linux/Unix add the following line to `/etc/hosts`:
 
     127.0.0.1 example.com www.example.com de.example.com
 
-This page shows the location of the hosts file on other operating systems, including
-various versions of MS Windows
-http://en.wikipedia.org/wiki/Hosts_%28file%29
-
+[This page](http://en.wikipedia.org/wiki/Hosts_%28file%29) shows the location of the hosts
+file on other operating systems, including various versions of MS Windows.
 
 Create the directory for the pages:
 
-   mkdir -p ../example.com/site/en/pages
-   mkdir -p ../example.com/site/en/img
-   mkdir -p ../example.com/sites/de/pages
+    $ mkdir -p ../example.com/site/en/pages
+    $ mkdir -p ../example.com/site/en/img
+    $ mkdir -p ../example.com/sites/de/pages
 
 Copy images
 
-  cp public/img/*  ../example.com/sites/en/img/
+    $ cp public/img/*  ../example.com/sites/en/img/
 
-Create ```../example.com/sites/en/img/favicon.ico```
+Create `../example.com/sites/en/img/favicon.ico`
 
 Menu:
 
-   cp resources.yml.skel ../example.com/sites/en/resources.yml
+    $ cp resources.yml.skel ../example.com/sites/en/resources.yml
 
+Create `../example.com/sites.yml` with the following content:
 
-Create ```../example.com/sites.yml``` with the following content:
+```yaml
+en:
+  url: http://example.com/
+  english: English
+  name: English
+de:
+  url: http://de.example.com/
+  english: German
+  name: Deutsch
+```
 
-  en:
-    url: http://example.com/
-    english: English
-    name: English
-  de:
-    url: http://de.example.com/
-    english: German
-    name: Deutsch
+Create `../example.com/site/en/pages/index.txt` with the following content:
 
-Create ```../example.com/site/en/pages/index.txt``` with the following content:
-
-
-  =title Example site
-  =timestamp 2013-07-16T00:00:02
-  =status show
-  =show_date 0
-  =author 0
-  =archive 0
-  =comments_disqus_enable 0
-  =show_related 0
-  
-  <h2>Welcome to your own Perl-Maven based site</h2>
-
-
-
+    =title Example site
+    =timestamp 2013-07-16T00:00:02
+    =status show
+    =show_date 0
+    =author 0
+    =archive 0
+    =comments_disqus_enable 0
+    =show_related 0
+    
+    <h2>Welcome to your own Perl-Maven based site</h2>
 
 Generate the meta files:
 
-  $ cd Perl-Maven
-  $ perl bin/create_meta.pl
+    $ cd Perl-Maven
+    $ perl bin/create_meta.pl
 
-Run the application using ```plackup -r```
+Run the application using `plackup -r`
 
-And visit the main page at ```http://example.com:5000/```
+And visit the main page at `http://example.com:5000/`
 
 
 Setting up a new site
-- Add configuration to mymaven.yml
-- symlink from views/sites/domain to the template directory of the site
+- Add configuration to `mymaven.yml`
+- symlink from `views/sites/domain` to the template directory of the site
 
 In the root of perlmaven.com add a symlink to lead to the pro directory to make the include files work
 
-```
-cd ~/work/perlmaven.com
-ln -s ../perlmaven-pro pro
-```
-
+    $ cd ~/work/perlmaven.com
+    $ ln -s ../perlmaven-pro pro
 
 
 perlmaven.com
@@ -121,8 +114,7 @@ perlmaven.com
 clone the repository of the articles https://github.com/szabgab/perlmaven.com
 into a directory next to the Perl-Maven directory
 
-```$ git clone https://github.com/szabgab/perlmaven.com.git```
-
+    $ git clone https://github.com/szabgab/perlmaven.com.git
 
     somdedir/
         Perl-Maven/
@@ -131,21 +123,19 @@ into a directory next to the Perl-Maven directory
 You should be able to see the English website.
 
 If you also create DNS mapping for 
-127.0.0.1 ko.perlmaven.com.local
-Then you can visit http://ko.perlmaven.com.local:3000/
-though the links between the language will lead to the production site.
+
+    127.0.0.1 ko.perlmaven.com.local
+
+Then you can visit http://ko.perlmaven.com.local:3000/ though the links between the language
+will lead to the production site.
 
 
 Contribution
 ===============
 
-
 To tidy the Perl code, run:
 
-```
-tidyall -a --refresh-cache
-```
-
+    $ tidyall -a --refresh-cache
 
 Before contributing anything beyond really simple fixes, please open an issue and then
 in each commit message mention that issue. That will make it easier later to map changes
@@ -156,6 +146,7 @@ Third-party sources
 ------------------------
 
 The flags are from  https://www.gosquared.com/resources/flag-icons/
+
 Found them on http://www.iconarchive.com/show/flag-icons-by-gosquared.2.html
 
 Video player:
@@ -164,6 +155,7 @@ https://github.com/videojs/video.js/blob/stable/docs/guides/setup.md
 
 Multilingual site
 -----------------
+
 The http://perlmaven.com/ site provides multi-lingual capabilities.
 The default site on that URL is in English, but there are localized versions
 of the site on URLs such as http://br.perlmaven.com/ http://cn.perlmaven.com/
@@ -172,17 +164,19 @@ http://he.perlmaven.com/
 
 Adding a new language (site)
 -----------------------------
+
 * Get the language code from wikimedia
 * Create the sites/CC/ from skeleton
-* Add the language to sites.yml
-* Add site to the  app.psgi and restart Starman on the server
-* Updating the mymaven.yml configuration file is optional
+* Add the language to `sites.yml`
+* Add site to the  `app.psgi` and restart Starman on the server
+* Updating the `mymaven.yml` configuration file is optional
 
 
 Registration and purchase process
 =================================
 
 Register:
+
   - user types in e-mail
   - system send e-mail with confirmation code
   - when user clicks on link the account is verified,
@@ -199,8 +193,9 @@ Register:
 Munin integration
 ===================
 
-1) Install the following packages to the system perl  libdbi-perl libdbd-sqlite3-perl libdbd-sqlite-perl libjson-xs-perl libmongodb-perl
-2)
+1) Install the following packages to the system `perl libdbi-perl libdbd-sqlite3-perl libdbd-sqlite-perl libjson-xs-perl libmongodb-perl`
+
+2) Create symlinks:
 
 ```
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_subscribers_per_product  /etc/munin/plugins/
@@ -215,13 +210,12 @@ sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/p
 sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/plugins/perl_maven_mongo_elapsed_time
 ```
 
-Add to crontab something like this (except of the username, and the path to perl):
+3) Add to crontab something like this (except of the username, and the path to perl):
 
 ```
 */5 * * * * (cd /home/foobar/work/Perl-Maven/; /home/foobar/dwimperl-linux-5.20.1-10-x86_64/perl/bin/perl etc/munin/perl_maven_logs collect)
 ```
 
-3) Restart the munin node(!)
+4) Restart the munin node(!)
+
 ```sudo service munin-node restart```
-
-
