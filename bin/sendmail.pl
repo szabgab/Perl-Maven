@@ -21,6 +21,8 @@ use Perl::Maven::Config;
 use Perl::Maven::DB;
 use Perl::Maven::Sendmail qw(send_mail html2text);
 
+my $dancer = Perl::Maven->psgi_app;
+
 main();
 exit;
 ################################################################################
@@ -52,8 +54,6 @@ sub main {
 sub build_content {
 	my ( $url,  $query_string ) = @_;
 	my ( $host, $path_info )    = $url =~ m{https?://([^/]+)(/.*)};
-
-	my $dancer = Perl::Maven->psgi_app;
 
 	my $env = {
 		'REMOTE_ADDR'     => '127.0.0.1',
