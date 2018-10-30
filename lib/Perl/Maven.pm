@@ -406,9 +406,13 @@ get '/search/:query' => sub {
 	my ($query) = param('query');
 
     # XSS protection?
-    if ($query =~ /<\S/) {
-        $query = 'oups';
-    }
+    #if ($query =~ /<\S/) {
+    #    $query = 'oups';
+    #}
+    my $escaped_query = $query;
+    $escaped_query =~ s{&}{&amp;}g;
+    $escaped_query =~ s{<}{&lt;}g;
+    $escaped_query =~ s{>}{&gt;}g;
 
 	my $LIMIT = 20;
 
@@ -457,9 +461,9 @@ get '/search/:query' => sub {
 
 	return pm_show_page { article => 'search', template => 'search', },
 		{
-		title   => $query,
+		title   => $escaped_query,
 		results => \@hits,
-		query   => $query,
+		query   => $escaped_query,
 		};
 };
 
