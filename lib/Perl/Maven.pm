@@ -405,6 +405,11 @@ get '/jobs/:id' => sub {
 get '/search/:query' => sub {
 	my ($query) = param('query');
 
+    # XSS protection?
+    if ($query =~ /<\S/) {
+        $query = 'oups';
+    }
+
 	my $LIMIT = 20;
 
 	my $data = setting('tools')->read_meta_hash('keywords');
