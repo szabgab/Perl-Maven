@@ -135,6 +135,7 @@ Contribution
 
 To tidy the Perl code, run:
 
+    $ cpanm Code::TidyAll
     $ tidyall -a --refresh-cache
 
 Before contributing anything beyond really simple fixes, please open an issue and then
