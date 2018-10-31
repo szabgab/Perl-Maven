@@ -405,14 +405,14 @@ get '/jobs/:id' => sub {
 get '/search/:query' => sub {
 	my ($query) = param('query');
 
-    # XSS protection?
-    #if ($query =~ /<\S/) {
-    #    $query = 'oups';
-    #}
-    my $escaped_query = $query;
-    $escaped_query =~ s{&}{&amp;}g;
-    $escaped_query =~ s{<}{&lt;}g;
-    $escaped_query =~ s{>}{&gt;}g;
+	# XSS protection?
+	#if ($query =~ /<\S/) {
+	#    $query = 'oups';
+	#}
+	my $escaped_query = $query;
+	$escaped_query =~ s{&}{&amp;}g;
+	$escaped_query =~ s{<}{&lt;}g;
+	$escaped_query =~ s{>}{&gt;}g;
 
 	my $LIMIT = 20;
 
