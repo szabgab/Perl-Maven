@@ -23,7 +23,7 @@ my $res  = $test->request( GET 'http://perlmaven.com/' );    # HTTP::Response
 
 say 'ERROR: code is     ' . $res->code . ' instead of 200'   if $res->code != 200;
 say 'ERROR: messages is ' . $res->message . ' instead of OK' if $res->message ne 'OK';
-say 'ERROR: incorrect content'                               if $res->content !~ m{<h2>Perl tutorials and courses</h2>};
+say 'ERROR: incorrect content' if $res->content !~ m{<h2>Perl tutorials and courses</h2>};
 
 #say $res->content;
 

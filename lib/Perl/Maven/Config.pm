@@ -38,7 +38,7 @@ sub new {
 	die "Missing configuration file '$path'" if not -e $path;
 
 	my $self = bless {
-		root => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
+		root   => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
 		config => scalar LoadFile($path),
 	}, $class;
 

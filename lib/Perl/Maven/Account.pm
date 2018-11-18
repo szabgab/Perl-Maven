@@ -574,7 +574,7 @@ sub register {
 	}
 
 	my $code = _generate_code();
-	my $uid = $db->add_registration( { email => $data{email} } );
+	my $uid  = $db->add_registration( { email => $data{email} } );
 	$db->save_verification(
 		code      => $code,
 		action    => 'verify_email',
@@ -615,7 +615,7 @@ sub register {
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
 
-	my $html = template $template, $params, { layout => 'email', };
+	my $html    = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
 	return send_mail(
 		{
