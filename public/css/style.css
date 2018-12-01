@@ -545,3 +545,9 @@ img.thumbnail_img {
 audio {
    width: 100%;
 }
+
+@media (max-width: 1200px) {
+    #left-column {
+        display: none;
+    }
+}
