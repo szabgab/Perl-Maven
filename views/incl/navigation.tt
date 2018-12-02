@@ -6,7 +6,13 @@
     <a href="<% prev.url %>" title="<% prev.title %>"><span class="glyphicon glyphicon-chevron-left"></span> Prev</a>
   </span>
 <% END %>
-<% IF next %>
+<% IF toc %>
+  <span class="label label-lg label-success toc">
+    <a href="<% toc.url %>" title="<% toc.title %>">TOC <span class="glyphicon glyphicon-chevron-up"></span> </a>
+  </span>
+<% END %></h2>
+</div>
+<% END %><% IF next %>
   <span class="label label-lg label-success next">
     <a href="<% next.url %>" title="<% next.title %>">Next <span class="glyphicon glyphicon-chevron-right"></span> </a>
   </span>

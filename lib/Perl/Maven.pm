@@ -227,6 +227,10 @@ hook before_template => sub {
 			foreach my $e ( 0 .. @{ $t->{series}{chapters}[$ch]{sub} } - 1 ) {
 				if ( $t->{series}{chapters}[$ch]{sub}[$e]{url} eq $path ) {
 					$t->{series}{chapters}[$ch]{sub}[$e]{current} = 1;
+					if ( $ch > 0 and $e > 0 ) {
+					    $t->{toc}{url}   = $t->{series}{chapters}[0]{sub}[0]{url};
+					    $t->{toc}{title} = $t->{series}{chapters}[0]{sub}[0]{title};
+                    }
 					if ( $e > 0 ) {
 						$t->{prev}{url}   = $t->{series}{chapters}[$ch]{sub}[ $e - 1 ]{url};
 						$t->{prev}{title} = $t->{series}{chapters}[$ch]{sub}[ $e - 1 ]{title};
