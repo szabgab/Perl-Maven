@@ -174,7 +174,7 @@ hook before_template => sub {
 	# we assume that the whole complex is written in one leading language
 	# and some of the pages are to other languages The domain-site give the name of the
 	# default language and this is the same content that is displayed on the site
-	# without a hostname: 	# http://domain.com
+	# without a hostname: 	# https://domain.com
 	my $original_language = mymaven->{main_site};
 	my $language          = mymaven->{lang};
 	$t->{"lang_$language"} = 1;
@@ -282,8 +282,8 @@ hook before_template => sub {
 	}
 
 	# For cases where our language code does not match the standard:
-	# See http://support.google.com/webmasters/bin/answer.py?hl=en&answer=189077&topic=2370587&ctx=topic
-	# http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+	# See https://support.google.com/webmasters/bin/answer.py?hl=en&answer=189077&topic=2370587&ctx=topic
+	# https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 	my %ISO_LANG = (
 		br => 'pt',
 		cn => 'zh-Hans',
@@ -588,7 +588,7 @@ get '/' => sub {
 
 get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
-	delete $kw->{keys};    # TODO: temporarily deleted as this break TT http://www.perlmonks.org/?node_id=1022446
+	delete $kw->{keys};    # TODO: temporarily deleted as this break TT https://www.perlmonks.org/?node_id=1022446
 						   #die Dumper $kw->{__WARN__};
 	pm_show_page( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
@@ -690,7 +690,7 @@ get '/sitemap.xml' => sub {
 	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
-	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
+	$xml .= qq{<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
 		$xml .= qq{  <url>\n};
 		$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};

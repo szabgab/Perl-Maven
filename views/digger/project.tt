@@ -1,7 +1,7 @@
 <h2>Project <% project %></h2>
 <a href="<% digger %>"</a>Home</a>
 <a href="<% digger %>projects">Projects</a>
-<a href="http://metacpan.org/release/<% project %>"><% project %> on MetaCPAN</a>
+<a href="https://metacpan.org/release/<% project %>"><% project %> on MetaCPAN</a>
 
 <ul>
   <% FOR f IN files %>

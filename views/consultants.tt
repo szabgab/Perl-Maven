@@ -8,13 +8,13 @@
           <img src="/img/<% p.img %>" alt="<% p.name %>" />
         <% END %>
       </div>
-      
+
       <div class="details">
         <ul>
           <li><a href="<% p.url %>"><% p.name %></a></li>
           <li>
             <% IF p.twitter %>
-             <a href="http://twitter.com/<% p.twitter %>"><img src="/img/twitter.png" alt="Twitter" /></a>
+             <a href="https://twitter.com/<% p.twitter %>"><img src="/img/twitter.png" alt="Twitter" /></a>
             <% END %>
             <% IF p.gplus %>
              <a href="https://plus.google.com/<% p.gplus %>"><img src="/img/googleplus.png" alt="Google+" /></a>
@@ -23,7 +23,7 @@
               <a href="<% p.linkedin %>"><img src="/img/linkedin.png" alt="LinkedIN" /></a>
             <% END %>
             <% IF p.pause %>
-              <a href="http://metacpan.org/author/<% p.pause %>"><% p.pause %></a>
+              <a href="https://metacpan.org/author/<% p.pause %>"><% p.pause %></a>
             <% END %>
           </li>
           <li>
@@ -47,12 +47,12 @@
           </li>
         </ul>
       </div>
-    
-    
+
+
       <div class="text">
         <% p.html %>
       </div>
-    
+
        <hr>
     </div>
   <% END %>

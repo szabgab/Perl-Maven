@@ -9,7 +9,7 @@
        </li>
     <% END %>
        <li><hr></li>
-       <li><a href="http://<% domain %>/about#translations">about the translations</a></li>
+       <li><a href="https://<% domain %>/about#translations">about the translations</a></li>
     </ul>
   </div>
   <% END %>

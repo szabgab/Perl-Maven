@@ -15,7 +15,7 @@ t::lib::Test::setup();
 
 my $articles = '../articles';
 
-my $url = "http://$t::lib::Test::DOMAIN";
+my $url = "https://$t::lib::Test::DOMAIN";
 
 plan( tests => 4 );
 

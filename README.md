@@ -43,7 +43,7 @@ On Linux/Unix add the following line to `/etc/hosts`:
 
     127.0.0.1 example.com www.example.com de.example.com
 
-[This page](http://en.wikipedia.org/wiki/Hosts_%28file%29) shows the location of the hosts
+[This page](https://en.wikipedia.org/wiki/Hosts_%28file%29) shows the location of the hosts
 file on other operating systems, including various versions of MS Windows.
 
 Create the directory for the pages:
@@ -66,11 +66,11 @@ Create `../example.com/sites.yml` with the following content:
 
 ```yaml
 en:
-  url: http://example.com/
+  url: https://example.com/
   english: English
   name: English
 de:
-  url: http://de.example.com/
+  url: https://de.example.com/
   english: German
   name: Deutsch
 ```

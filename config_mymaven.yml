@@ -16,7 +16,7 @@ domains:
     main_site: en
       #redirect: 0
     www:
-      redirect: http://perlmaven.com/
+      redirect: https://perlmaven.com/
     root: '../perlmaven.com'
     meta: 'meta/perlmaven.com'
     title: 'Perl Maven'
@@ -55,7 +55,7 @@ domains:
           google_analytics_code: 2
           google_analytics_name: 'br.perlmaven.com'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
           'como-substituir-uma-string-em-um-arquivo-com-perl': 'como-substituir-uma-string-em-um-arquivo-usando-perl'
           'operatores-textuais': 'operadores-textuais'
       cn.perlmaven.com:
@@ -63,7 +63,7 @@ domains:
           google_analytics_code: 1
           google_analytics_name: 'cn.perlmaven.com'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
       cs.perlmaven.com:
       de.perlmaven.com:
       eo.perlmaven.com:
@@ -78,7 +78,7 @@ domains:
           comments_disqus_enable: 1
           comments_disqus_code: 'he-perlmaven'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
       id.perlmaven.com:
       it.perlmaven.com:
         conf:
@@ -91,7 +91,7 @@ domains:
           comments_disqus_enable: 1
           comments_disqus_code: 'ko-perlmaven'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
       ne.perlmaven.com:
       ro.perlmaven.com:
       ru.perlmaven.com:
@@ -103,7 +103,7 @@ domains:
           comments_disqus_enable: 1
           comments_disqus_code: 'te-perlmaven'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
       tr.perlmaven.com:
       tw.perlmaven.com:
       perlmaven.com:

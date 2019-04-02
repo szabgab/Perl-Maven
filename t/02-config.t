@@ -44,17 +44,17 @@ subtest mymaven => sub {
 	is_deeply $main->{redirect},
 		{
 		'abc'      => 'def',
-		'szg'      => 'http://szabgab.com/?r=12345',
-		'products' => 'http://perlmaven.com/products',
+		'szg'      => 'https://szabgab.com/?r=12345',
+		'products' => 'https://perlmaven.com/products',
 		},
 		'$main->{redirect}';
 
 	is_deeply $br->{redirect}, {
-		'products'    => 'http://perlmaven.com/products',
+		'products'    => 'https://perlmaven.com/products',
 		'old-article' => 'new-article',
 		'abc'         => 'other-page',
 
-		'szg' => 'http://szabgab.com/?r=12345',
+		'szg' => 'https://szabgab.com/?r=12345',
 		},
 		'$br->{redirect}';
 	is_deeply $main->{dirs},
@@ -136,7 +136,7 @@ subtest testmaven => sub {
 				'subtitle'    => 'A show about Perl and Perl users',
 				'copyright'   => '2014 Gabor Szabo',
 				'author'      => 'Gabor Szabo',
-				'image'       => 'http://code-maven.com/img/code_maven_128.png',
+				'image'       => 'https://code-maven.com/img/code_maven_128.png',
 				'keywords'    => [ 'code-maven', 'open source', 'software', 'development', 'news', ],
 			}
 		},
@@ -146,7 +146,7 @@ subtest testmaven => sub {
 			'email' => 'Test Maven <admin-test@perlmaven.com>'
 		},
 		'www' => {
-			'redirect' => "http://$t::lib::Test::DOMAIN/"
+			'redirect' => "https://$t::lib::Test::DOMAIN/"
 		}
 	};
 
@@ -188,7 +188,7 @@ subtest skeleton => sub {
 		'from'  => 'Perl Maven <gabor@perlmaven.com>',
 		'site'  => "$parent/../perlmaven.com/sites/en",
 		'www'   => {
-			'redirect' => 'http://perlmaven.com/'
+			'redirect' => 'https://perlmaven.com/'
 		},
 		'domain' => 'perlmaven.com',
 		'root'   => "$parent/../perlmaven.com",

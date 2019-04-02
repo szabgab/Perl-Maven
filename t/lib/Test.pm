@@ -15,7 +15,7 @@ use Perl::Maven::DB;
 # and in
 #    t/files/config/test.yml
 our $DOMAIN = 'test-pm.com';
-our $URL    = "http://$DOMAIN/";
+our $URL    = "https://$DOMAIN/";
 
 sub setup {
 	my $dir = tempdir( CLEANUP => 1 );

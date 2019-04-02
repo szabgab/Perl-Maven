@@ -1,8 +1,8 @@
 en:
-  url: http://test-pm.com/
+  url: https://test-pm.com/
   english: English
   name: English
 br:
-  url: http://br.test-pm.com/
+  url: https://br.test-pm.com/
   english: (Brazilian) Portuguese
   name: Português

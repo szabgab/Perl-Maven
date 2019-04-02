@@ -150,7 +150,7 @@ sub usage {
 	print <<"END_USAGE";
 Usage: $0
 
-    --url http://url
+    --url https://url
     --to mail\@address.com
     --to produc_name            (all the subscribers of this product)
     --domain NAME               (the domain name)

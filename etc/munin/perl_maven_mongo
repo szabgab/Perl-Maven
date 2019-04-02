@@ -113,7 +113,7 @@ sub average {
   "status": NumberLong("200"),
   "elapsed_time": 0.32529497146606445,
   "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36",
-  "referrer": "http://perlmaven.com.local:5000/abc",
+  "referrer": "https://perlmaven.com.local:5000/abc",
   "sid": "621662267931985042589654628876",
   "host": "perlmaven.com.local:5000",
   "page": "/"

@@ -4,7 +4,7 @@ domains:
     main_site: en
       #redirect: 0
     www:
-      redirect: http://perlmaven.com/
+      redirect: https://perlmaven.com/
     root: '../sites/perlmaven.com/'
     meta: '/home/foobar/perlmaven-meta'
     title: 'Perl Maven'
@@ -13,23 +13,23 @@ domains:
     listid: 'Perl Maven newsletter <demo.perlmaven.com>'
     prefix: '[Perl Maven]'
     redirect:
-      'szg': 'http://szabgab.com/?r=12345'
+      'szg': 'https://szabgab.com/?r=12345'
       'abc': 'def'
     events:
-      - link: '<a href="http://perl.org.il/">Israeli Perl Mongers</a>'
+      - link: '<a href="https://perl.org.il/">Israeli Perl Mongers</a>'
         flag: 'IL'
         countries:
           - 'IL'
-      - link: '<a href="http://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
+      - link: '<a href="https://act.yapc.eu/gpw2014/">German Perl Workshop (GPW 2014)</a> - March 26-28, 2014, Hannover, Germany'
         flag: 'DE'
         countries:
           - 'DE'
           - 'AT'
-      - link: '<a href="http://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
+      - link: '<a href="https://act.yapc.eu/plpw2014/">Polish Perl Workshop</a> - 16-18 May, 2014, Poznan, Poland'
         flag: 'PL'
         countries:
           - 'PL'
-      - link: '<a href="http://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
+      - link: '<a href="https://www.yapcna.org/yn2014/">YAPC::NA 2014</a> - June 23–25, 2014, Orlando, FL'
         flag: 'US'
         countries:
           - 'US'
@@ -52,19 +52,19 @@ domains:
           comments_disqus_enable: 1
           comments_disqus_code: 'br-test-perlmaven'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
           'old-article': 'new-article'
           'abc': 'other-page'
       cn.perlmaven.com:
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
       he.perlmaven.com:
         conf:
           rtl: 1
           comments_disqus_enable: 1
           comments_disqus_code: 'he-test--perlmaven'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
       perlmaven.com:
         dirs:
           mail: '../articles/mail'
@@ -73,7 +73,7 @@ domains:
           pro: '/home/foobar/articles/pro'
           articles: '/home/foobar/articles'
         redirect:
-          'products': 'http://perlmaven.com/products'
+          'products': 'https://perlmaven.com/products'
         index:
           - perldoc
           - pro
@@ -87,5 +87,5 @@ domains:
     sites:
       ru.code-maven.com:
         redirect:
-          'products': 'http://code-maven.com/products'
+          'products': 'https://code-maven.com/products'
 

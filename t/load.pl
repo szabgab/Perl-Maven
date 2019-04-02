@@ -8,7 +8,7 @@ use warnings;
 # nytprofhtml --open
 
 BEGIN {
-	$ENV{HTTP_HOST} = 'http://perlmaven.com/';
+	$ENV{HTTP_HOST} = 'https://perlmaven.com/';
 }
 
 use Plack::Test;
@@ -17,7 +17,7 @@ use Path::Tiny qw(path);
 
 my $app  = do 'app.psgi';
 my $test = Plack::Test->create($app);
-my $res  = $test->request( GET 'http://perlmaven.com/' );    # HTTP::Response
+my $res  = $test->request( GET 'https://perlmaven.com/' );    # HTTP::Response
 
 #my $res = $test->request(GET '/'); # HTTP::Response
 

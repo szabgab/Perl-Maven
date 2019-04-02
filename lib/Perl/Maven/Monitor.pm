@@ -168,8 +168,8 @@ sub generate_html_cpan {
 
 	for my $r (@$data) {
 		$html .= q{<tr>};
-		$html .= sprintf q{<td><a href="http://metacpan.org/release/%s">%s</a></td>}, $r->{distribution}, $r->{name};
-		$html .= sprintf q{<td><a href="http://metacpan.org/author/%s">%s</a></td>}, $r->{author}, $r->{author};
+		$html .= sprintf q{<td><a href="https://metacpan.org/release/%s">%s</a></td>}, $r->{distribution}, $r->{name};
+		$html .= sprintf q{<td><a href="https://metacpan.org/author/%s">%s</a></td>}, $r->{author}, $r->{author};
 		$html .= sprintf q{<td>%s</td>}, ( $r->{abstract} // '' );
 		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->{date};
 		$html .= qq{</tr>\n};

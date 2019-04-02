@@ -72,7 +72,7 @@ END
 
 	#diag $visitor->content;
 	my $expected = q{<?xml version="1.0"?>
-<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<rss xmlns:itunes="https://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 <channel>
   <title>Test Maven</title>
   <link>https://test-pm.com/</link>
@@ -83,7 +83,7 @@ END
   <itunes:subtitle>A show about Perl and Perl users</itunes:subtitle>
   <itunes:author>Gabor Szabo</itunes:author>
   <itunes:summary>Test description for feed</itunes:summary>
-  <itunes:image href="http://code-maven.com/img/code_maven_128.png" />
+  <itunes:image href="https://code-maven.com/img/code_maven_128.png" />
   <itunes:keywords>code-maven, open source, software, development, news</itunes:keywords>
   <itunes:owner>
     <itunes:name>Gabor Szabo</itunes:name>
