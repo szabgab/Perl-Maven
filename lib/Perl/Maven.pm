@@ -1005,6 +1005,11 @@ sub _feed {
 	my $ts = DateTime->now;
 
 	my $url = request->base;
+
+    # This should come from some other place, but for now let's fix it here:
+    $url =~ s{^http://perlmaven.com}{https://perlmaven.com};
+    $url =~ s{^http://code-maven.com}{https://code-maven.com};
+
 	$url =~ s{/$}{};
 	my $title = $mymaven->{title};
 
