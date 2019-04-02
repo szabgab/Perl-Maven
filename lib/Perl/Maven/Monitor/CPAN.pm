@@ -15,7 +15,7 @@ use LWP::UserAgent;
 has distribution => ( is => 'rw' );
 
 sub ua {
-	my ($self)         = @_;
+	my ($self) = @_;
 	my ($github_token) = path('config/github-token')->lines( { chomp => 1 } );
 	$self->_log("token '$github_token'");
 	return LWP::UserAgent->new(
@@ -64,12 +64,12 @@ sub fetch_cpan {
 	my $count = 0;
 
 	while ( my $r = $recent->next ) {    # https://metacpan.org/pod/MetaCPAN::Client::Release
-			#die Dumper $r;
-			#my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
-			#my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
-			#last if $time < $now - 60 * 60 * $self->hours;
-			#my $rd = DateTime::Tiny->from_string( $r->date );    #2015-04-05T12:10:00
-			#die Dumper $r;
+		    #die Dumper $r;
+		    #my ( $year, $month, $day, $hour, $min, $sec ) = split /\D/, $r->date;    #2015-04-05T12:10:00
+		    #my $time = timegm( $sec, $min, $hour, $day, $month - 1, $year );
+		    #last if $time < $now - 60 * 60 * $self->hours;
+		    #my $rd = DateTime::Tiny->from_string( $r->date );    #2015-04-05T12:10:00
+		    #die Dumper $r;
 
 		#my $raw = unbless $r->{data};
 		#say Dumper $raw->{metadata};

@@ -213,7 +213,7 @@ hook before_template => sub {
 	my %links;
 
 	my $lookup_series = setting('tools')->read_meta('lookup_series');
-	my $series        = $lookup_series->{ substr( $path, 1 ) };
+	my $series = $lookup_series->{ substr( $path, 1 ) };
 	if ($series) {
 		my $all_series = setting('tools')->read_meta('series');
 		$t->{series} = $all_series->{$series};
@@ -360,7 +360,7 @@ get '/contributor/:name' => sub {
 	}
 
 	return "$name could not be found" if not authors->{$name};
-	my $data     = setting('tools')->read_meta('archive');
+	my $data = setting('tools')->read_meta('archive');
 	my @articles = grep { $_->{author} eq $name or ( $_->{translator} and $_->{translator} eq $name ) } @$data;
 
 	return pm_show_page(
@@ -492,7 +492,7 @@ get '/api/1/recent' => sub {
 		)->limit($limit);
 		while ( my $r = $res->next ) {
 			my $repository_url = $r->{_cm_}{repository_url} || '';
-			my %data           = (
+			my %data = (
 				repository_url => $r->{_cm_}{repository_url},
 				travis_yml     => $r->{_cm_}{travis_yml},
 				distribution   => $r->{cpan}{distribution},
@@ -589,7 +589,7 @@ get '/' => sub {
 get '/keywords' => sub {
 	my $kw = setting('tools')->read_meta_hash('keywords');
 	delete $kw->{keys};    # TODO: temporarily deleted as this break TT https://www.perlmonks.org/?node_id=1022446
-						   #die Dumper $kw->{__WARN__};
+	                       #die Dumper $kw->{__WARN__};
 	pm_show_page( { article => 'keywords', template => 'keywords', }, { kw => $kw } );
 };
 
@@ -899,7 +899,7 @@ sub _send_file {
 	my ($file) = @_;
 
 	return if $file !~ /^[\w-]+\.(\w+)$/;
-	my $ext              = $1;
+	my $ext = $1;
 	my %content_type_map = ( svg => 'image/svg+xml', ico => 'image/x-icon' );
 	send_file(
 		path( mymaven->{dirs}{img}, $file ),
@@ -974,12 +974,12 @@ sub read_sites {
 # This is text messages and translated text messages.
 sub read_resources {
 	my $default_file = mymaven->{root} . '/resources.yml';
-	my $defaults     = eval { LoadFile $default_file};
+	my $defaults = eval { LoadFile $default_file};
 
 	#error("Could not load '$default_file' $@") if $@;
 
 	my $resources_file = mymaven->{site} . '/resources.yml';
-	my $data           = eval { LoadFile $resources_file};
+	my $data = eval { LoadFile $resources_file};
 	error("Could not load '$resources_file' $@") if $@;
 	$data ||= {};
 
@@ -1006,9 +1006,9 @@ sub _feed {
 
 	my $url = request->base;
 
-    # This should come from some other place, but for now let's fix it here:
-    $url =~ s{^http://perlmaven.com}{https://perlmaven.com};
-    $url =~ s{^http://code-maven.com}{https://code-maven.com};
+	# This should come from some other place, but for now let's fix it here:
+	$url =~ s{^http://perlmaven.com}{https://perlmaven.com};
+	$url =~ s{^http://code-maven.com}{https://code-maven.com};
 
 	$url =~ s{/$}{};
 	my $title = $mymaven->{title};
@@ -1067,7 +1067,7 @@ sub _feed {
 
 		$e{link} = $link;
 
-		$e{id}      = $p->{id} ? $p->{id} : $link;
+		$e{id} = $p->{id} ? $p->{id} : $link;
 		$e{content} = qq{<![CDATA[$abstract]]>};
 		if ( $p->{author} ) {
 			$e{author}{name} = authors->{ $p->{author} }{author_name};
@@ -1142,7 +1142,7 @@ sub log_request {
 	return if $uri =~ m{^/download/};
 
 	my $time = time;
-	my $dir  = path( config->{appdir}, 'logs' );
+	my $dir = path( config->{appdir}, 'logs' );
 	mkdir $dir if not -e $dir;
 	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
 
