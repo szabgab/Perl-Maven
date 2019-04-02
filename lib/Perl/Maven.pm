@@ -690,7 +690,7 @@ get '/sitemap.xml' => sub {
 	content_type 'application/xml';
 
 	my $xml = qq{<?xml version="1.0" encoding="UTF-8"?>\n};
-	$xml .= qq{<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n};
+	$xml .= qq{<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n};
 	foreach my $p (@$pages) {
 		$xml .= qq{  <url>\n};
 		$xml .= qq{    <loc>$url/$p->{filename}</loc>\n};
