@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/szabgab/Perl-Maven.png)](https://travis-ci.org/szabgab/Perl-Maven)
 [![Coverage Status](https://coveralls.io/repos/github/szabgab/Perl-Maven/badge.svg?branch=master)](https://coveralls.io/github/szabgab/Perl-Maven?branch=master)
 
-The source code of http://perlmaven.com/
+The source code of https://perlmaven.com/
 
 VERSION 0.11
 
@@ -85,7 +85,7 @@ Create `../example.com/site/en/pages/index.txt` with the following content:
     =archive 0
     =comments_disqus_enable 0
     =show_related 0
-    
+
     <h2>Welcome to your own Perl-Maven based site</h2>
 
 Generate the meta files:
@@ -122,11 +122,11 @@ into a directory next to the Perl-Maven directory
 
 You should be able to see the English website.
 
-If you also create DNS mapping for 
+If you also create DNS mapping for
 
     127.0.0.1 ko.perlmaven.com.local
 
-Then you can visit http://ko.perlmaven.com.local:3000/ though the links between the language
+Then you can visit https://ko.perlmaven.com.local:3000/ though the links between the language
 will lead to the production site.
 
 
@@ -158,10 +158,10 @@ https://github.com/videojs/video.js/blob/stable/docs/guides/setup.md
 Multilingual site
 -----------------
 
-The http://perlmaven.com/ site provides multi-lingual capabilities.
+The https://perlmaven.com/ site provides multi-lingual capabilities.
 The default site on that URL is in English, but there are localized versions
-of the site on URLs such as http://br.perlmaven.com/ http://cn.perlmaven.com/
-http://he.perlmaven.com/
+of the site on URLs such as https://br.perlmaven.com/ https://cn.perlmaven.com/
+https://he.perlmaven.com/
 
 
 Adding a new language (site)

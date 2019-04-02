@@ -19,7 +19,7 @@ sub ua {
 	my ($github_token) = path('config/github-token')->lines( { chomp => 1 } );
 	$self->_log("token '$github_token'");
 	return LWP::UserAgent->new(
-		agent         => 'http://perlmaven.com/',
+		agent         => 'https://perlmaven.com/',
 		Authorization => "token $github_token",
 	);
 }
@@ -36,9 +36,9 @@ sub get_api {
 	$self->_log("get $url");
 	my $res = $ua->get($url);
 	if ( !$res->is_success ) {
-		warn 'Warning for module http://metacpan.org/release/'
+		warn 'Warning for module https://metacpan.org/release/'
 			. $self->distribution
-			. " GitHub repo: http://github.com/$repo : could not get $url: "
+			. " GitHub repo: https://github.com/$repo : could not get $url: "
 			. $res->status_line;
 		warn $res->content;
 		return;
