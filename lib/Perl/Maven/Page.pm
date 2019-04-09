@@ -429,6 +429,7 @@ sub _process_include {
 					$include_content .= qq{<pre class="prettyprint linenums $language_code">\n};
 				}
 				my $code = path($path)->slurp_utf8;
+				warn "WARN: Undefinded content in '$path'" if not defined $code;
 				$code =~ s/&/&amp;/g;
 				$code =~ s/</&lt;/g;
 				$code =~ s/>/&gt;/g;
