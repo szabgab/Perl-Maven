@@ -246,7 +246,7 @@ sub process_site {
 sub _log {
 	my ( $self, $txt ) = @_;
 	if ( $self->verbose ) {
-		say $txt;
+		say STDERR $txt;
 	}
 	return;
 }
