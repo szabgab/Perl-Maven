@@ -392,6 +392,7 @@ sub _process_code {
 sub _process_include {
 	my ( $self, $mymaven, $line, $abstract ) = @_;
 
+    my $page_file = $self->file;
 	# <include file="examples/node_hello_world.js">
 	my %ext = (
 		py   => 'python',
@@ -429,7 +430,7 @@ sub _process_include {
 					$include_content .= qq{<pre class="prettyprint linenums $language_code">\n};
 				}
 				my $code = path($path)->slurp_utf8;
-				warn "WARN: Undefinded content in '$path'" if not defined $code;
+				die "Undefinded content in '$path' included in $page_file" if not defined $code;
 				$code =~ s/&/&amp;/g;
 				$code =~ s/</&lt;/g;
 				$code =~ s/>/&gt;/g;
