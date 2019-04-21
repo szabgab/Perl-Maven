@@ -290,17 +290,12 @@ DOWNLOADS
 
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
-			my $inlines = $self->inline;
-			if ( not $embedded_ad and $inlines and @{$inlines} and length( $self->{data}{mycontent} ) > $EMBEDDED_AD_LOCATION ) {
-				my ($inline) = $inlines->[ int rand scalar @$inlines ];
-				$self->{data}{mycontent}
-					.= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
-				$embedded_ad = 1;
-			}
+            $embedded_ad = $self->embed_ad($embedded_ad, $EMBEDDED_AD_LOCATION);
 			next;
 		}
 		$self->{data}{mycontent} .= $line;
 	}
+    $embedded_ad = $self->embed_ad($embedded_ad, 0);
 	$data{mycontent} = $self->{data}{mycontent};
 	$data{abstract}  = $self->{data}{abstract};
 
@@ -351,6 +346,18 @@ DOWNLOADS
 
 	$self->data( \%data );
 	return $self;
+}
+
+sub embed_ad {
+	my ($self, $embedded_ad, $ad_location) = @_;
+	my $inlines = $self->inline;
+	if ( not $embedded_ad and $inlines and @{$inlines} and length( $self->{data}{mycontent} ) > $ad_location ) {
+		my ($inline) = $inlines->[ int rand scalar @$inlines ];
+		$self->{data}{mycontent}
+			.= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
+		$embedded_ad = 1;
+	}
+    return $embedded_ad;
 }
 
 sub _process_code {
