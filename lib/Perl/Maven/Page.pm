@@ -12,6 +12,8 @@ use Path::Tiny qw(path);
 use Template;
 
 our $VERSION = '0.11';
+my $MAX_ABSTRACT = 4400;
+my $EMBEDDED_AD_LOCATION = 1000;
 
 has media  => ( is => 'ro', required => 1 );
 has root   => ( is => 'ro', required => 1 );
@@ -289,7 +291,7 @@ DOWNLOADS
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
 			my $inlines = $self->inline;
-			if ( not $embedded_ad and $inlines and @{$inlines} and length( $self->{data}{mycontent} ) > 1000 ) {
+			if ( not $embedded_ad and $inlines and @{$inlines} and length( $self->{data}{mycontent} ) > $EMBEDDED_AD_LOCATION ) {
 				my ($inline) = $inlines->[ int rand scalar @$inlines ];
 				$self->{data}{mycontent}
 					.= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
@@ -311,7 +313,6 @@ DOWNLOADS
 	}
 
 	# die if not $data{abstract} ???
-	my $MAX_ABSTRACT = 4400;
 	if ( length $self->{data}{abstract} > $MAX_ABSTRACT ) {
 		die sprintf(
 			'Abstract of %s is too long. It has %s characters. (allowed %s)',
