@@ -12,7 +12,7 @@ use Path::Tiny qw(path);
 use Template;
 
 our $VERSION = '0.11';
-my $MAX_ABSTRACT = 4400;
+my $MAX_ABSTRACT         = 4400;
 my $EMBEDDED_AD_LOCATION = 1000;
 
 has media  => ( is => 'ro', required => 1 );
@@ -290,12 +290,12 @@ DOWNLOADS
 
 		if ( $line =~ /^\s*$/ ) {
 			$self->{data}{mycontent} .= "<p>\n";
-            $embedded_ad = $self->embed_ad($embedded_ad, $EMBEDDED_AD_LOCATION);
+			$embedded_ad = $self->embed_ad( $embedded_ad, $EMBEDDED_AD_LOCATION );
 			next;
 		}
 		$self->{data}{mycontent} .= $line;
 	}
-    $embedded_ad = $self->embed_ad($embedded_ad, 0);
+	$embedded_ad = $self->embed_ad( $embedded_ad, 0 );
 	$data{mycontent} = $self->{data}{mycontent};
 	$data{abstract}  = $self->{data}{abstract};
 
@@ -349,7 +349,7 @@ DOWNLOADS
 }
 
 sub embed_ad {
-	my ($self, $embedded_ad, $ad_location) = @_;
+	my ( $self, $embedded_ad, $ad_location ) = @_;
 	my $inlines = $self->inline;
 	if ( not $embedded_ad and $inlines and @{$inlines} and length( $self->{data}{mycontent} ) > $ad_location ) {
 		my ($inline) = $inlines->[ int rand scalar @$inlines ];
@@ -357,7 +357,7 @@ sub embed_ad {
 			.= qq{<div style="text-align:center"><a href="$inline->{url}"><img src="$inline->{img}" /></a></div>\n};
 		$embedded_ad = 1;
 	}
-    return $embedded_ad;
+	return $embedded_ad;
 }
 
 sub _process_code {
@@ -400,7 +400,8 @@ sub _process_code {
 sub _process_include {
 	my ( $self, $mymaven, $line, $abstract ) = @_;
 
-    my $page_file = $self->file;
+	my $page_file = $self->file;
+
 	# <include file="examples/node_hello_world.js">
 	my %ext = (
 		py   => 'python',
