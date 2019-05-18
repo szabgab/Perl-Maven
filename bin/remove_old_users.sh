@@ -40,7 +40,7 @@ echo "Deleting..."
 echo "delete from user where verify_time is NULL AND id NOT IN (SELECT uid FROM subscription);" | $sqlite $db
 
 echo "Vacuuming..."
-echo "VACUUM" | $sqlite $db
+echo "VACUUM;" | $sqlite $db
 
 echo "Total number of users:"
 echo "select count(*) from user;" | $sqlite $db
