@@ -140,6 +140,12 @@ sub process {
 
 	my $embedded_ad = 0;
 
+	# Don't embed inline ad in e-mail.
+	# In a rather hackish way, mark such pages as if they already had an embedded ad to avoid adding another ad
+	if ($file =~ m{/mail/}) {
+		$embedded_ad = 1;
+	}
+
 	while ( @{ $self->raw } ) {
 		my $line = shift @{ $self->raw };
 		if ( $line =~ m{^\s*<(screencast|slidecast)\s+file="(.*?)"\s+(?:youtube="(.*?)"\s+)?/>\s*$} ) {
