@@ -4,11 +4,11 @@
 
 <% IF promo %>
 <div id="promo">
-While many of the Perl Maven articles are <a href="/archive?tag=free">free</a>, this article is only available for Perl Maven Pro subscribers.
+While many of the Code-Maven articles are <a href="/archive?tag=free">free</a>, this article is only available for Code-Maven Pro subscribers.
 
-<h2>Perl Maven Pro - screencasts with articles</h2>
+<h2>The Code Maven Pro library of screencasts and articles</h2>
 <p>
-As a Perl Maven Pro subscriber you will enjoy a library of articles and screencasts.
+As a Code Maven Pro subscriber you will enjoy a library of articles and screencasts.
 </p>
 <p>
 Ad free browsing!
@@ -16,19 +16,18 @@ Ad free browsing!
 <p>
 The articles contain topics such as Web Application Development,
 Object Oriented programming, testing, deployment,
-code walkthroughs, best practices, and many more subjects in Perl,
-and in related technologies.
+code walkthroughs, best practices, and many more subjects in various programming languages such as
+Python, Go, JavaScript,  Perl, and in related technologies.
 </p>
 <p>
-The related technologies over HTML5, CSS3, JavaScript, Git, Subversion, vim,
-Unix/Linux shell, SQL and NoSQL just to name a few topic that I, as a Perl programmer
-find useful.
+The related technologies over HTML5, CSS3, Git, vim,
+Unix/Linux shell, SQL and NoSQL just to name a few topics.
 </p>
 <p>
 Subscriptions include all previous pro episodes.
 </p>
 <p>
-In order to subscribe to the Perl Maven Pro, first
+In order to subscribe to the Code Maven Pro, first
 <a href="/pm/register">register</a> and <a href="/pm/login">login</a>
 to the web site, and then pay via PayPal:
 </p>
@@ -40,7 +39,7 @@ or
 </p>
 
 <p>
-If you already have <b>Perl Maven Pro subscription</b>, you will need to <a href="/pm/login">login</a> to access the articles.
+If you already have <b>Code Maven Pro subscription</b>, you will need to <a href="/pm/login">login</a> to access the articles.
 </p>
 </div>
 <% END %>
