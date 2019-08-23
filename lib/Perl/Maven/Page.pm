@@ -142,7 +142,7 @@ sub process {
 
 	# Don't embed inline ad in e-mail.
 	# In a rather hackish way, mark such pages as if they already had an embedded ad to avoid adding another ad
-	if ($file =~ m{/mail/}) {
+	if ( $file =~ m{/mail/} ) {
 		$embedded_ad = 1;
 	}
 
