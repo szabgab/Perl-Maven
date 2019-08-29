@@ -27,7 +27,7 @@ has inline => ( is => 'ro', default  => sub { [] } );
 my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect? perl6url? perl6title? img? alt? sample?);
 my @common_options
-	= qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? show_ads?);
+	= qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? show_ads? embedded_ad?);
 my @header = ( @page_options, @common_options );
 my @merge_options = map { my $t = $_; $t =~ s/[?@]//g; $t } @common_options;
 
