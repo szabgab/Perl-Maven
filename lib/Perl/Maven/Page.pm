@@ -140,6 +140,11 @@ sub process {
 
 	my $embedded_ad = 0;
 
+	# If the configuration tells us not to include embedded ads, then pretend they were already embedded.
+	if (not $self->{conf}{embedded_ad}) {
+		$embedded_ad = 1;
+	}
+
 	# Don't embed inline ad in e-mail.
 	# In a rather hackish way, mark such pages as if they already had an embedded ad to avoid adding another ad
 	if ( $file =~ m{/mail/} ) {
