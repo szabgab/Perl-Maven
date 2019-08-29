@@ -141,7 +141,7 @@ sub process {
 	my $embedded_ad = 0;
 
 	# If the configuration tells us not to include embedded ads, then pretend they were already embedded.
-	if (not $self->{conf}{embedded_ad}) {
+	if (not $mymaven->{conf}{embedded_ad}) {
 		$embedded_ad = 1;
 	}
 
