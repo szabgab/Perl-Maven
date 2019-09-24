@@ -110,8 +110,8 @@ sub process_series {
 				'CreationDate' => [localtime],
 			);
 			$PDF{title_font} = $pdf->font( 'BaseFont' => 'Helvetica' );
-			$PDF{root} = $pdf->new_page( 'MediaBox' => $pdf->get_page_size('A4') );
-			$PDF{page} = $PDF{root}->new_page;
+			$PDF{root}       = $pdf->new_page( 'MediaBox' => $pdf->get_page_size('A4') );
+			$PDF{page}       = $PDF{root}->new_page;
 
 			$mobi = EBook::MOBI->new();
 			$mobi->set_author($author);
@@ -521,7 +521,7 @@ sub _clean_html {
 
 	# Remove images till I manage to install Image::Imlib2 and then  EBook::MOBI::Image
 	$html =~ s{<img\s+src="/img/([^"]+)"\s* (\s*(alt|title)=\"[^"]*"\s*)* /?>}{}gx;
-	$html =~ s{<video.*?video>}{}sg;    # remove videos
+	$html =~ s{<video.*?video>}{}sg;                                                  # remove videos
 	$html =~ s{<div id="download">\s*Download:\s*</div>}{}g;
 
 	# <span class="inline_code">cpanm --verbose Dancer</span>

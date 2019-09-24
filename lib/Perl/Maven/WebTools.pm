@@ -76,14 +76,14 @@ our @EXPORT_OK
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
-	my $host = request->host;
+	my $host    = request->host;
 	$host =~ s/\.local:5000//;
 	return $mymaven->config($host);
 }
 
 sub _generate_code {
 	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
-	my $code = time;
+	my $code  = time;
 	$code .= $chars[ rand( scalar @chars ) ] for 1 .. 20;
 	return $code;
 }
@@ -134,7 +134,7 @@ sub get_ip {
 }
 
 sub valid_ip {
-	my $uid = session('uid') or die 'No uid found';
+	my $uid  = session('uid') or die 'No uid found';
 	my $user = setting('db')->get_user_by_id($uid);
 
 	# if white-listing is not turned on, then every IP is valid
@@ -339,7 +339,7 @@ sub _read_authors {
 
 sub pm_user_info {
 	my %data = ( logged_in => logged_in(), );
-	my $uid = session('uid');
+	my $uid  = session('uid');
 	if ($uid) {
 		my $db = setting('db');
 		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );

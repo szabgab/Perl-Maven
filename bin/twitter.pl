@@ -12,7 +12,7 @@ use Path::Tiny qw(path);
 my $file = 'meta/perlmaven.com/perlmaven.com/meta/archive.json';
 my $url  = 'https://perlmaven.com';
 
-my $data = decode_json path($file)->slurp_utf8;
+my $data    = decode_json path($file)->slurp_utf8;
 my @entries = map { { filename => $_->{filename}, title => $_->{title}, } }
 	grep { $_->{filename} !~ m{^pro/} } @$data;
 

@@ -262,7 +262,7 @@ sub stats {
 	my ($self) = @_;
 
 	my $products = $self->get_products;
-	my $subs = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
+	my $subs     = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
 	foreach my $code ( keys %$products ) {
 		my $pid = $products->{$code}{id};
 		$products->{$code}{cnt} = ( $subs->{$pid}{cnt} || 0 );
