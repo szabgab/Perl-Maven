@@ -6,7 +6,7 @@ installation:
   title: 'Example based on Perl-Maven'
   from: 'Foo Bar <foobar@example.com>'
   listid: 'Example newsletter <newsletter.example.com>'
-  prefix: '[Example]' 
+  prefix: '[Example]'
   unsubscribe_salt: foobar123456789
   conf:
     enable_popups: 0

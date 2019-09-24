@@ -8,7 +8,7 @@ Perl::Maven::Config - read the mymaven.yml configuration file
 
 =head1 DESCRPTION
 
-  my $mymaven = Perl::Maven::Config->new('/path/to/mymaven.yml'); 
+  my $mymaven = Perl::Maven::Config->new('/path/to/mymaven.yml');
   my $cfg = $mymaven->config('hostname.org');
   $cfg->{site}
 
@@ -56,7 +56,8 @@ sub config {
 
 	my $host   = host($fullhost);
 	my $domain = $self->{hosts}{$fullhost};
-	Carp::confess("Hostname '$fullhost' not in configuration file\n") if not defined $domain;
+
+	Carp::confess("Hostname '$host' not in configuration file\n") if not defined $domain;
 	my $mymaven = dclone $self->{config}{domains}{$domain};
 	$mymaven->{domain} = $domain;
 	my $lang = substr( $host, 0, -length($domain) - 1 ) || 'en';
