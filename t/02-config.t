@@ -14,7 +14,11 @@ my $root = abs_path('.');
 diag $root;
 
 my $parent = dirname $root;
-#$parent = '';
+
+# Inside the Docker image we need en empty string here:
+if ( not $ENV{TRAVIS} ) {
+	$parent = '';
+}
 
 use Perl::Maven::Config;
 
