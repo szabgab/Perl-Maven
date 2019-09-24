@@ -33,7 +33,6 @@ libcrypt-rijndael-perl
 
 While running on Ubuntu/xenial  16.04 we have
 
-Warning: prerequisite Acme::MetaSyntactic 1.012 not found.
 Warning: prerequisite Business::PayPal 0.13 not found.
 Warning: prerequisite Code::Explain 0.02 not found.
 Warning: prerequisite DBIx::RunSQL 0.12 not found.

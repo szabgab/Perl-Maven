@@ -12,7 +12,6 @@ WriteMakefile(
 		: () ),
 	PL_FILES  => {},
 	PREREQ_PM => {
-		'Acme::MetaSyntactic' => 1.012,      # or even Task::MetaSyntactic
 		'Business::PayPal'    => 0.13,
 		'Carp::Always'        => 0,
 		'Code::Explain'       => 0.02,

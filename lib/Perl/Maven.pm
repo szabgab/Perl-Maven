@@ -36,8 +36,6 @@ use Perl::Maven::Account;
 prefix '/digger';
 require Perl::Maven::AnalyzeWeb;
 
-prefix '/foobar';
-require Perl::Maven::MetaSyntactic;
 prefix '/';
 
 require Perl::Maven::Consultants;
