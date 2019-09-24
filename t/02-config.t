@@ -13,8 +13,8 @@ plan tests => 3;
 my $root = abs_path('.');
 diag $root;
 
-#my $parent = dirname $root;
-my $parent = '';
+my $parent = dirname $root;
+#$parent = '';
 
 use Perl::Maven::Config;
 
