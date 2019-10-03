@@ -221,3 +221,14 @@ sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/p
 4) Restart the munin node(!)
 
 ```sudo service munin-node restart```
+
+
+## Docker
+
+```
+docker build -t perlmaven .
+```
+
+```
+docker run --rm -it -p5000:5000 -v$(pwd):/opt perlmaven
+```
