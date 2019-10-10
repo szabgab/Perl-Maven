@@ -1009,13 +1009,16 @@ sub _feed {
 	$url =~ s{^http://code-maven.com}{https://code-maven.com};
 
 	$url =~ s{/$}{};
-	my $title = $mymaven->{title};
+	my $feed_title = $mymaven->{title};
 
 	my %fields;
 	if ( $mymaven->{feeds} ) {
 		my $hand = $tag || '__main__';
 		if ( $mymaven->{feeds}{$hand} ) {
 
+			if ($mymaven->{feeds}{$hand}{title}) {
+				$feed_title = $mymaven->{feeds}{$hand}{title};
+			}
 			# rss, itunes(rss)
 			foreach my $f (qw(description subtitle copyright author image)) {
 				$fields{$f} = $mymaven->{feeds}{$hand}{$f} || '';
@@ -1082,7 +1085,7 @@ sub _feed {
 		%fields,
 		url      => $url,            # atom, rss
 		path     => 'atom',          # atom
-		title    => $title,          # atom, rss
+		title    => $feed_title,     # atom, rss
 		updated  => $ts,             # atom,
 		entries  => \@entries,       # atom,
 		language => 'en-us',         #       rss
