@@ -231,7 +231,7 @@ sub process_site {
 
 	if ( $lang eq 'en' ) {
 		if ( $config->{series_file} ) {
-			my ( $series, $series_map ) = $self->process_series($config, $config->{'series_file'};);
+			my ( $series, $series_map ) = $self->process_series($config, $config->{'series_file'});
 			if ($series) {
 				$self->save( 'series',        $dest, $series );
 				$self->save( 'lookup_series', $dest, $series_map );
