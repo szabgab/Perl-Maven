@@ -57,7 +57,7 @@ sub config {
 	my $host   = host($fullhost);
 	my $domain = $self->{hosts}{$fullhost};
 
-	Carp::confess("Hostname '$host' not in configuration file\n") if not defined $domain;
+	Carp::confess("Hostname '$host' not in configuration file\n" . Dumper $self) if not defined $domain;
 	my $mymaven = dclone $self->{config}{domains}{$domain};
 	$mymaven->{domain} = $domain;
 	my $lang = substr( $host, 0, -length($domain) - 1 ) || 'en';
