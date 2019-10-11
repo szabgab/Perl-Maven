@@ -231,4 +231,5 @@ docker build -t perlmaven .
 
 ```
 docker run --rm -it -p5000:5000 -v$(pwd):/opt perlmaven
+plackup -r
 ```
