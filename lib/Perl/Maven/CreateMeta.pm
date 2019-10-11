@@ -71,9 +71,8 @@ sub process_domain {
 }
 
 sub process_series {
-	my ( $self, $config ) = @_;
+	my ( $self, $config, $series_file ) = @_;
 
-	my $series_file = $config->{'series_file'};
 	$self->_log("series file: $series_file");
 	return if not -e $series_file;
 	my $series = LoadFile($series_file);
@@ -232,13 +231,15 @@ sub process_site {
 
 	if ( $lang eq 'en' ) {
 		if ( $config->{series_file} ) {
-			my ( $series, $series_map ) = $self->process_series($config);
+			my ( $series, $series_map ) = $self->process_series($config, $config->{'series_file'};);
 			if ($series) {
 				$self->save( 'series',        $dest, $series );
 				$self->save( 'lookup_series', $dest, $series_map );
 			}
 		}
-	}
+	} elsif ($lang eq 'he') {
+        print Dumper $config;
+    }
 
 	return;
 }
