@@ -148,7 +148,7 @@ post '/pm/coupon' => sub {
 
 	my $db     = setting('db');
 	my $uid    = session('uid');
-	my $coupon = get_coupon_by_code($code);
+	my $coupon = $db->get_coupon_by_code($code);
 	if ( not $coupon ) {
 		return pm_message('no_such_coupon');
 	}
