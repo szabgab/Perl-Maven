@@ -197,7 +197,7 @@ sub get_subscribers {
 sub is_subscribed {
 	my ( $self, $id, $code ) = @_;
 
-	my $subscriptions = $self->get_valid_subscriptions_by_id($id);
+	my $subscriptions = $self->get_valid_subscriptions_by_uid($id);
 	return scalar grep { $_ eq $code } @$subscriptions;
 }
 
