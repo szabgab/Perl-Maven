@@ -15,7 +15,7 @@ BEGIN {
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new('test_abc.db');
 
-my $admin = "$^X -Ilib bin/admin.pl $ENV{PERL_MAVEN_DB}";
+my $admin = "$^X -Ilib bin/admin.pl";
 
 subtest usage => sub {
 	plan tests => 2;
