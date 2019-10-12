@@ -229,14 +229,8 @@ sub process_site {
 	#$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_ } @$pages } );
 	$self->pages( { map { substr( $_->{url_path}, 0, -4 ) => $_ } @$pages } );
 
-    my $series_file;
-	if ( $lang eq 'en' ) {
-		$series_file = $config->{series_file};
-	} else {
-		$series_file = $config->{$site}{series_file};
-    }
-    print "$lang - $site - $series_file\n";
-    #print Dumper $config;
+	my $series_file = $config->{series_file};
+	#print Dumper $config;
 	if ( $series_file ) {
 		my ( $series, $series_map ) = $self->process_series($config, $series_file);
 		if ($series) {
