@@ -135,9 +135,9 @@ get '/pm/coupon' => sub {
 		return redirect '/pm/login';
 	}
 	template 'coupon';
-	}
+};
 
-	post '/pm/coupon' => sub {
+post '/pm/coupon' => sub {
 	if ( not logged_in() ) {
 		return redirect '/pm/login';
 	}
@@ -159,9 +159,9 @@ get '/pm/coupon' => sub {
 # add a subscription with the proper data
 
 	pm_message('coupon_used');
-	}
+};
 
-	post '/pm/update-user' => sub {
+post '/pm/update-user' => sub {
 	if ( not logged_in() ) {
 		session url => request->path;
 		return redirect '/pm/login';
@@ -174,7 +174,7 @@ get '/pm/coupon' => sub {
 	$db->update_user( $uid, name => $name );
 
 	pm_message('user_updated');
-	};
+};
 
 get '/pm/subscribe' => sub {
 	return redirect '/pm/login' if not logged_in();
