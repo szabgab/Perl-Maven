@@ -21,6 +21,8 @@ before_install:
   - cpanm --notest Test::Code::TidyAll
   - cpanm --notest Test::Perl::Critic
   - cpanm --notest Test::Version
+# Let's make the installation much faster by not testing anything
+  - cpanm --notest --installdeps .
 services:
   - mongodb
 after_success:
