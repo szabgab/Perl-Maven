@@ -22,6 +22,7 @@ CREATE TABLE product (
 CREATE TABLE subscription (
   uid    INTEGER NOT NULL,
   pid    INTEGER NOT NULL,
+  expiration VARCHAR(11),
   FOREIGN KEY (uid) REFERENCES user(id),
   FOREIGN KEY (pid) REFERENCES product(id),
   CONSTRAINT uid_pid UNIQUE (uid, pid)

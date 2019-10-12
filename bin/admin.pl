@@ -9,7 +9,7 @@ use Getopt::Long qw(GetOptions);
 use lib 'lib';
 
 use Perl::Maven::DB;
-my $dbfile = shift;
+my $dbfile = 'pm.db'; # TODO integrate with the mymaven.yml
 if ( not $dbfile or $dbfile !~ /\.db$/ or not -e $dbfile ) {
 	die "First parameter must be name of the db file pm.db or cm.db\n";
 }
