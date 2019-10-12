@@ -136,7 +136,7 @@ sub process_series {
 				$series_map{ $chapter->{sub}[$i] } = $main;
 				my $page = $self->pages->{ $chapter->{sub}[$i] };
 				if ( not $page ) {
-					die "Page Not found: '$chapter->{sub}[$i]'";
+					die "Page Not found: '$chapter->{sub}[$i]' while processing '$series_file'" . Dumper [keys %{ $self->pages }];
 				}
 				$chapter->{sub}[$i] = {
 					url   => "/$chapter->{sub}[$i]",
