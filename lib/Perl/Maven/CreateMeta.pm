@@ -532,5 +532,8 @@ sub _clean_html {
 	return $html;
 }
 
+# vim:noexpandtab
+
+
 1;
 
