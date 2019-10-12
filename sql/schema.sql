@@ -53,6 +53,19 @@ CREATE TABLE verification (
   details     BLOB
 );
 
+CREATE TABLE coupons (
+  id          INTEGER PRIMARY KEY,
+  code        VARCHAR(100) UNIQUE NOT NULL,
+  pid         INTEGER NOT NULL,
+  price       INTEGER NOT NULL,
+  start_time  VARCHAR(11),
+  end_time    VARCHAR(11),
+  max_uses    INTEGER,
+  comment     BLOB,
+  live        VARCHAR(1) DEFAULT 1,
+  FOREIGN KEY (pid) REFERENCES product(id)
+);
+
 CREATE TRIGGER user_cleanup
   BEFORE DELETE ON user FOR EACH ROW
   BEGIN
