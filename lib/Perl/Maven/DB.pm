@@ -83,7 +83,7 @@ sub get_user_by_email {
 
 	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE email=?', undef, $email );
 	if ($hr) {
-		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
+		$hr->{subscriptions} = $self->get_valid_subscriptions( $hr->{email} );
 	}
 
 	return $hr;
@@ -94,7 +94,7 @@ sub get_user_by_id {
 
 	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
 	if ($hr) {
-		$hr->{subscriptions} = $self->get_subscriptions( $hr->{email} );
+		$hr->{subscriptions} = $self->get_valid_subscriptions( $hr->{email} );
 	}
 
 	return $hr;
@@ -114,7 +114,7 @@ sub get_people {
 			id            => $_->[0],
 			email         => $_->[1],
 			verify_time   => $_->[2],
-			subscriptions => $self->get_subscriptions( $_->[1] )
+			subscriptions => $self->get_valid_subscriptions( $_->[1] )
 		}
 	} @$ar;
 	return \@users;
@@ -136,12 +136,12 @@ sub set_password {
 	);
 }
 
-sub get_subscriptions {
+sub get_valid_subscriptions {
 	my ( $self, $email ) = @_;
 
 	my $sth = $self->{dbh}->prepare(
 		q{
-		SELECT product.code
+		SELECT product.code, expiration
 		FROM product, user, subscription
 		WHERE user.id=subscription.uid
 			AND user.email=?
@@ -149,10 +149,13 @@ sub get_subscriptions {
 	}
 	);
 
+	my $now = time;
 	$sth->execute($email);
 	my @products;
-	while ( my ($p) = $sth->fetchrow_array ) {
-		push @products, $p;
+	while ( my ($prod, $exp) = $sth->fetchrow_array ) {
+		if (not $exp or $exp > $now) {
+			push @products, $prod;
+		}
 	}
 
 	return \@products;
@@ -361,6 +364,8 @@ sub delete_verification_code {
 	my ( $self, $code ) = @_;
 	return $self->{dbh}->do( 'DELETE FROM verification WHERE code=?', undef, $code );
 }
+
+# vim:noexpandtab
 
 1;
 
