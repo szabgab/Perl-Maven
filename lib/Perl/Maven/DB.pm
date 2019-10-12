@@ -83,7 +83,7 @@ sub get_user_by_email {
 
 	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE email=?', undef, $email );
 	if ($hr) {
-		$hr->{subscriptions} = $self->get_valid_subscriptions( $hr->{email} );
+		$hr->{subscriptions} = $self->get_valid_subscriptions_by_email( $hr->{email} );
 	}
 
 	return $hr;
@@ -94,7 +94,7 @@ sub get_user_by_id {
 
 	my $hr = $self->{dbh}->selectrow_hashref( 'SELECT * FROM user WHERE id=?', undef, $id );
 	if ($hr) {
-		$hr->{subscriptions} = $self->get_valid_subscriptions( $hr->{email} );
+		$hr->{subscriptions} = $self->get_valid_subscriptions_by_email( $hr->{email} );
 	}
 
 	return $hr;
@@ -114,7 +114,7 @@ sub get_people {
 			id            => $_->[0],
 			email         => $_->[1],
 			verify_time   => $_->[2],
-			subscriptions => $self->get_valid_subscriptions( $_->[1] )
+			subscriptions => $self->get_valid_subscriptions_by_email( $_->[1] )
 		}
 	} @$ar;
 	return \@users;
@@ -137,20 +137,12 @@ sub set_password {
 }
 
 sub get_valid_subscriptions {
-	my ( $self, $email ) = @_;
+	my ( $self, $sql, $param ) = @_;
 
-	my $sth = $self->{dbh}->prepare(
-		q{
-		SELECT product.code, expiration
-		FROM product, user, subscription
-		WHERE user.id=subscription.uid
-			AND user.email=?
-			AND product.id=subscription.pid
-	}
-	);
+	my $sth = $self->{dbh}->prepare($sql);
 
 	my $now = time;
-	$sth->execute($email);
+	$sth->execute($param);
 	my @products;
 	while ( my ($prod, $exp) = $sth->fetchrow_array ) {
 		if (not $exp or $exp > $now) {
@@ -159,6 +151,32 @@ sub get_valid_subscriptions {
 	}
 
 	return \@products;
+}
+
+sub get_valid_subscriptions_by_uid {
+	my ( $self, $uid ) = @_;
+
+	my $sql = q{
+		SELECT product.code, expiration
+		FROM product, user, subscription
+		WHERE user.id=subscription.uid
+			AND user.id=?
+			AND product.id=subscription.pid
+	};
+	return $self->get_valid_subscriptions($sql, $uid);
+}
+
+sub get_valid_subscriptions_by_email {
+	my ( $self, $email ) = @_;
+
+	my $sql = q{
+		SELECT product.code, expiration
+		FROM product, user, subscription
+		WHERE user.id=subscription.uid
+			AND user.email=?
+			AND product.id=subscription.pid
+	};
+	return $self->get_valid_subscriptions($sql, $email);
 }
 
 sub get_subscribers {
@@ -179,18 +197,8 @@ sub get_subscribers {
 sub is_subscribed {
 	my ( $self, $id, $code ) = @_;
 
-	my ($subscribed) = $self->{dbh}->selectrow_array(
-		q{
-		SELECT COUNT(*)
-		FROM subscription, product, user
-		WHERE user.id=subscription.uid
-			AND user.id=?
-			AND product.code=?
-			AND product.id=subscription.pid
-	}, undef, $id, $code
-	);
-
-	return $subscribed;
+	my $subscriptions = $self->get_valid_subscriptions_by_id($id)
+	return scalar grep { $_ eq $code } @$nubscriptions;
 }
 
 sub subscribe_to {
