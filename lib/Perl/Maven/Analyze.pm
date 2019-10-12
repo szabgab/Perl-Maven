@@ -99,7 +99,7 @@ sub analyze_project {
 	# list all the files
 	# go over files one
 	$self->_log("DIR $dir");
-	my $rule  = Path::Iterator::Rule->new;
+	my $rule = Path::Iterator::Rule->new;
 	my @files = $rule->all( $dir, { relative => 1 } );
 	$self->_log( 'Files: ' . Dumper \@files );
 
@@ -208,7 +208,7 @@ sub fetch_cpan {
 # from Perl::Maven::Monitor
 sub mongodb {
 	my ( $self, $collection ) = @_;
-	my $client   = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	my $client = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 	my $database = $client->get_database('PerlMaven');
 	return $database->get_collection($collection);
 }

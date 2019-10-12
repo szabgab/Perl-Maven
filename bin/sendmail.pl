@@ -53,8 +53,8 @@ sub main {
 }
 
 sub build_content {
-	my ( $url, $query_string ) = @_;
-	my ( $host, $path_info ) = $url =~ m{https?://([^/]+)(/.*)};
+	my ( $url,  $query_string ) = @_;
+	my ( $host, $path_info )    = $url =~ m{https?://([^/]+)(/.*)};
 
 	my $env = {
 		'REMOTE_ADDR'     => '127.0.0.1',
@@ -70,7 +70,7 @@ sub build_content {
 	my $r = $dancer->($env);
 
 	#die $r->[0]; # http status
-	my $utf8 = $r->[2][0];    # html
+	my $utf8 = $r->[2][0];                           # html
 	my ($title) = $utf8 =~ m{<title>(.*)</title>};
 
 	die 'missing title' if not $title;

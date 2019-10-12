@@ -163,7 +163,7 @@ sub process {
 				$line = '';
 			}
 
-			my $path  = substr $file, length('/media');
+			my $path = substr $file, length('/media');
 			my %types = (
 				mp4  => 'mp4',
 				webm => 'webm',
@@ -306,7 +306,7 @@ DOWNLOADS
 		}
 		$self->{data}{mycontent} .= $line;
 	}
-	$embedded_ad     = $self->embed_ad( $embedded_ad, 0 );
+	$embedded_ad = $self->embed_ad( $embedded_ad, 0 );
 	$data{mycontent} = $self->{data}{mycontent};
 	$data{abstract}  = $self->{data}{abstract};
 
@@ -344,7 +344,7 @@ DOWNLOADS
 	# TODO: this should not be read into memory for every page!
 	$data{related} = [];
 	if ( not $ENV{METAMETA} and %links ) {
-		my $site    = $self->tools->read_meta_array('sitemap');
+		my $site = $self->tools->read_meta_array('sitemap');
 		my %sitemap = map { '/' . $_->{filename} => $_->{title} } @$site;
 		foreach my $url ( sort keys %links ) {
 			push @{ $data{related} },

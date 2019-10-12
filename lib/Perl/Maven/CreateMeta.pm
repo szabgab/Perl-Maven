@@ -109,8 +109,8 @@ sub process_series {
 				'CreationDate' => [localtime],
 			);
 			$PDF{title_font} = $pdf->font( 'BaseFont' => 'Helvetica' );
-			$PDF{root}       = $pdf->new_page( 'MediaBox' => $pdf->get_page_size('A4') );
-			$PDF{page}       = $PDF{root}->new_page;
+			$PDF{root} = $pdf->new_page( 'MediaBox' => $pdf->get_page_size('A4') );
+			$PDF{page} = $PDF{root}->new_page;
 
 			$mobi = EBook::MOBI->new();
 			$mobi->set_author($author);
@@ -136,7 +136,8 @@ sub process_series {
 				$series_map{ $chapter->{sub}[$i] } = $main;
 				my $page = $self->pages->{ $chapter->{sub}[$i] };
 				if ( not $page ) {
-					die "Page Not found: '$chapter->{sub}[$i]' while processing '$series_file'" . Dumper [keys %{ $self->pages }];
+					die "Page Not found: '$chapter->{sub}[$i]' while processing '$series_file'"
+						. Dumper [ keys %{ $self->pages } ];
 				}
 				$chapter->{sub}[$i] = {
 					url   => "/$chapter->{sub}[$i]",
@@ -230,9 +231,10 @@ sub process_site {
 	$self->pages( { map { substr( $_->{url_path}, 0, -4 ) => $_ } @$pages } );
 
 	my $series_file = $config->{series_file};
+
 	#print Dumper $config;
-	if ( $series_file ) {
-		my ( $series, $series_map ) = $self->process_series($config, $series_file);
+	if ($series_file) {
+		my ( $series, $series_map ) = $self->process_series( $config, $series_file );
 		if ($series) {
 			$self->save( 'series',        $dest, $series );
 			$self->save( 'lookup_series', $dest, $series_map );
@@ -520,7 +522,7 @@ sub _clean_html {
 
 	# Remove images till I manage to install Image::Imlib2 and then  EBook::MOBI::Image
 	$html =~ s{<img\s+src="/img/([^"]+)"\s* (\s*(alt|title)=\"[^"]*"\s*)* /?>}{}gx;
-	$html =~ s{<video.*?video>}{}sg;                                                  # remove videos
+	$html =~ s{<video.*?video>}{}sg;    # remove videos
 	$html =~ s{<div id="download">\s*Download:\s*</div>}{}g;
 
 	# <span class="inline_code">cpanm --verbose Dancer</span>
@@ -533,7 +535,6 @@ sub _clean_html {
 }
 
 # vim:noexpandtab
-
 
 1;
 

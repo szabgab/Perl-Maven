@@ -144,8 +144,8 @@ sub get_valid_subscriptions {
 	my $now = time;
 	$sth->execute($param);
 	my @products;
-	while ( my ($prod, $exp) = $sth->fetchrow_array ) {
-		if (not $exp or $exp > $now) {
+	while ( my ( $prod, $exp ) = $sth->fetchrow_array ) {
+		if ( not $exp or $exp > $now ) {
 			push @products, $prod;
 		}
 	}
@@ -163,7 +163,7 @@ sub get_valid_subscriptions_by_uid {
 			AND user.id=?
 			AND product.id=subscription.pid
 	};
-	return $self->get_valid_subscriptions($sql, $uid);
+	return $self->get_valid_subscriptions( $sql, $uid );
 }
 
 sub get_valid_subscriptions_by_email {
@@ -176,7 +176,7 @@ sub get_valid_subscriptions_by_email {
 			AND user.email=?
 			AND product.id=subscription.pid
 	};
-	return $self->get_valid_subscriptions($sql, $email);
+	return $self->get_valid_subscriptions( $sql, $email );
 }
 
 sub get_subscribers {
@@ -268,7 +268,6 @@ sub get_coupon_by_code {
 	return $data;
 }
 
-
 sub add_product {
 	my ( $self, $args ) = @_;
 
@@ -281,7 +280,7 @@ sub stats {
 	my ($self) = @_;
 
 	my $products = $self->get_products;
-	my $subs     = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
+	my $subs = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
 	foreach my $code ( keys %$products ) {
 		my $pid = $products->{$code}{id};
 		$products->{$code}{cnt} = ( $subs->{$pid}{cnt} || 0 );

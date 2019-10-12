@@ -38,7 +38,7 @@ sub new {
 	die "Missing configuration file '$path'" if not -e $path;
 
 	my $self = bless {
-		root   => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
+		root => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
 		config => scalar LoadFile($path),
 	}, $class;
 
@@ -57,7 +57,7 @@ sub config {
 	my $host   = host($fullhost);
 	my $domain = $self->{hosts}{$fullhost};
 
-	Carp::confess("Hostname '$host' not in configuration file\n" . Dumper $self) if not defined $domain;
+	Carp::confess( "Hostname '$host' not in configuration file\n" . Dumper $self) if not defined $domain;
 	my $mymaven = dclone $self->{config}{domains}{$domain};
 	$mymaven->{domain} = $domain;
 	my $lang = substr( $host, 0, -length($domain) - 1 ) || 'en';
@@ -86,8 +86,8 @@ sub config {
 	delete $mymaven->{sites};
 
 	#die Dumper $mymaven;
-	$mymaven->{root}     = $self->_update_root( $mymaven->{root} );
-	$mymaven->{meta}     = $self->_update_root( $mymaven->{meta} );
+	$mymaven->{root} = $self->_update_root( $mymaven->{root} );
+	$mymaven->{meta} = $self->_update_root( $mymaven->{meta} );
 	$mymaven->{dirs}{$_} = $self->_update_root( $mymaven->{dirs}{$_} ) for keys %{ $mymaven->{dirs} };
 
 	#die Dumper $mymaven;

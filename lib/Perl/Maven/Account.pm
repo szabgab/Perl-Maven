@@ -135,33 +135,33 @@ get '/pm/coupon' => sub {
 		return redirect '/pm/login';
 	}
 	template 'coupon';
-}
+	}
 
-post '/pm/coupon' => sub {
+	post '/pm/coupon' => sub {
 	if ( not logged_in() ) {
 		return redirect '/pm/login';
 	}
 	my $code = param('code') || '';
-    if (not $code) {
+	if ( not $code ) {
 		return pm_message('missing_coupon');
-    }
+	}
 
-	my $db  = setting('db');
-	my $uid = session('uid');
-    my $coupon = get_coupon_by_code($code);
-    if (not $coupon) {
+	my $db     = setting('db');
+	my $uid    = session('uid');
+	my $coupon = get_coupon_by_code($code);
+	if ( not $coupon ) {
 		return pm_message('no_such_coupon');
-    }
-    return Dumper $coupon;
-    # check if the coupon code is valid, (there is such a code, we are within the timeframe and have not use all the available coupons.
-    # if the user already has a valid subscription then report that and quit
-    # add a subscription with the proper data
+	}
+	return Dumper $coupon;
+
+# check if the coupon code is valid, (there is such a code, we are within the timeframe and have not use all the available coupons.
+# if the user already has a valid subscription then report that and quit
+# add a subscription with the proper data
 
 	pm_message('coupon_used');
-}
+	}
 
-
-post '/pm/update-user' => sub {
+	post '/pm/update-user' => sub {
 	if ( not logged_in() ) {
 		session url => request->path;
 		return redirect '/pm/login';
@@ -174,7 +174,7 @@ post '/pm/update-user' => sub {
 	$db->update_user( $uid, name => $name );
 
 	pm_message('user_updated');
-};
+	};
 
 get '/pm/subscribe' => sub {
 	return redirect '/pm/login' if not logged_in();
@@ -605,7 +605,7 @@ sub register {
 	}
 
 	my $code = _generate_code();
-	my $uid  = $db->add_registration( { email => $data{email} } );
+	my $uid = $db->add_registration( { email => $data{email} } );
 	$db->save_verification(
 		code      => $code,
 		action    => 'verify_email',
@@ -646,7 +646,7 @@ sub register {
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
 
-	my $html    = template $template, $params, { layout => 'email', };
+	my $html = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
 	return send_mail(
 		{

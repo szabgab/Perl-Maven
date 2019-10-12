@@ -37,7 +37,7 @@ post '/explain' => sub {
 			require Code::Explain;
 			my $ce = Code::Explain->new( code => $code );
 			$data{explanation} = $ce->explain();
-			$data{ppi_dump}    = [ map { _escape($_) } $ce->ppi_dump ];
+			$data{ppi_dump} = [ map { _escape($_) } $ce->ppi_dump ];
 			$data{ppi_explain}
 				= [ map { $_->{code} = _escape( $_->{code} ); $_ } $ce->ppi_explain ];
 		}

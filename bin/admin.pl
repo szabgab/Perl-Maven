@@ -9,7 +9,7 @@ use Getopt::Long qw(GetOptions);
 use lib 'lib';
 
 use Perl::Maven::DB;
-my $dbfile = $ENV{PERL_MAVEN_DB} || 'pm.db'; # TODO integrate with the mymaven.yml
+my $dbfile = $ENV{PERL_MAVEN_DB} || 'pm.db';    # TODO integrate with the mymaven.yml
 if ( not $dbfile or $dbfile !~ /\.db$/ or not -e $dbfile ) {
 	die "First parameter must be name of the db file pm.db or cm.db\n";
 }
@@ -68,7 +68,7 @@ elsif ( $opt{stats} ) {
 	printf $format, q{Total 'purchases':},     $stats->{all_subs};
 	printf $format, q{Distinct # of clients:}, $stats->{distinct_subs};
 	print "\n";
-	printf $format, 'All the users',            $stats->{all_users};
+	printf $format, 'All the users', $stats->{all_users};
 	printf $format, 'Verified', ( $stats->{all_users} - $stats->{not_verified} );
 	printf $format, 'NOT Verified',             $stats->{not_verified};
 	printf $format, 'Verified but NO password', $stats->{no_password};

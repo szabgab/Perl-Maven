@@ -67,7 +67,7 @@ any '/paypal' => sub {
 	$body .= "<h2>IPN content</h2>\n";
 	$body .= "<pre>\n$content\n</pre>\n";
 
-	my $id     = param('custom');
+	my $id = param('custom');
 	my $paypal = paypal( id => $id );
 
 	my ( $txnstatus, $reason ) = $paypal->ipnvalidate( \%query );
@@ -203,9 +203,9 @@ sub paypal_buy {
 		#	$button_text = qq{$usd USD per year};
 		#}
 		if ( $type eq 'annual' ) {    # TODO remove hardcoding
-									  #$params{a1} = 60;
-									  #$params{p1} = 1;
-									  #$params{t1} = 'Y';
+			                          #$params{a1} = 60;
+			                          #$params{p1} = 1;
+			                          #$params{t1} = 'Y';
 			$usd         = 90;
 			$params{a3}  = $usd;
 			$params{t3}  = 'Y';                     # yearly
@@ -249,7 +249,7 @@ sub paypal_buy {
 
 	my $paypal_data = session('paypal') || {};
 
-	my $uid  = logged_in() ? session('uid') : '';
+	my $uid = logged_in() ? session('uid') : '';
 	my %data = (
 		what     => $what,
 		quantity => $quantity,
@@ -268,7 +268,7 @@ sub paypal_buy {
 sub log_paypal {
 	my ( $action, $data ) = @_;
 
-	my $ts      = time;
+	my $ts = time;
 	my $logfile = config->{appdir} . '/logs/paypal_' . POSIX::strftime( '%Y%m%d', gmtime($ts) );
 
 	#debug $logfile;
