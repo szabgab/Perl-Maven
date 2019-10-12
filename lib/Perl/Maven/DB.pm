@@ -261,6 +261,14 @@ sub get_product_by_code {
 	return $data;
 }
 
+sub get_coupon_by_code {
+	my ( $self, $code ) = @_;
+	my ($data)
+		= $self->{dbh}->selectrow_array( q{SELECT * FROM coupons WHERE code=?}, undef, $code );
+	return $data;
+}
+
+
 sub add_product {
 	my ( $self, $args ) = @_;
 

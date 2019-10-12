@@ -1,0 +1,9 @@
+<p>
+<h2>Use coupon</h2>
+<form method="POST" action="/pm/coupon" name="user">
+Code: <input name="code" value="<% code %>" /><br>
+<input type="submit" value="Use" />
+</form>
+</p>
+
+

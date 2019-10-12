@@ -54,6 +54,9 @@ my %RESOURCES = (
 	reset_password_sent     => 'E-mail sent with code to reset password.',
 	password_set            => 'The password was set successfully. <a href="/pm/account">account</a>',
 	user_updated            => 'Updated. <a href="/pm/account">account</a>',
+	coupon_used             => 'The coupon was validated. Enjoy!',
+    missing_coupon          => 'No coupon was provided',
+    no_such_coupon          => 'The provided coupon does not exist',
 	unsubscribed            => 'Unsubscribed from the Perl Maven newsletter.',
 	subscribed =>
 		'Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/pm/account">account</a>.',
