@@ -179,6 +179,8 @@ sub process_series {
 sub process_site {
 	my ( $self, $config, $domain, $lang ) = @_;
 
+	$self->_log("   Process $domain $lang");
+
 	my $site   = ( $lang eq 'en' ? '' : "$lang." ) . $domain;
 	my $source = $config->{root} . '/sites/' . $lang . '/pages';
 	my $dest   = $config->{meta} . "/$site/meta";
@@ -196,6 +198,7 @@ sub process_site {
 		},
 	);
 	foreach my $dir ( @{ $config->{index} } ) {
+		$self->_log("       Process $dir");
 		my $path = $config->{dirs}{$dir};
 		push @sources,
 			{
