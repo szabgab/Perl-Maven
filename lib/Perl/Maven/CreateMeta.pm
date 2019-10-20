@@ -198,8 +198,8 @@ sub process_site {
 		},
 	);
 	foreach my $dir ( @{ $config->{index} } ) {
-		$self->_log("       Process directory='$dir'");
 		my $path = $config->{dirs}{$dir};
+		$self->_log("       Process directory='$dir' in path='$path'");
 		push @sources,
 			{
 			autotags => $dir,
