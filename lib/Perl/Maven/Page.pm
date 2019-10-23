@@ -157,7 +157,7 @@ sub process {
 			my ( $type, $file, $youtube ) = ( $1, $2, $3 );
 			if ($youtube) {
 				$line
-					= qq{<iframe class="youtube" src="https://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>};
+					= qq{<iframe width="1120" height="630" class="youtube" src="https://www.youtube.com/embed/$youtube" frameborder="0" allowfullscreen></iframe>};
 			}
 			else {
 				$line = '';
