@@ -171,7 +171,7 @@ post '/pm/coupon' => sub {
 		return pm_message('user_has_valid_subscription');
 	}
 
-	$db->delete_expired_subscription_by_uid( $uid, $subscption_code );
+	$db->delete_expired_subscription_by_uid( $uid, $subscription_code  );
 
 	# add a subscription with the proper data
 	$db->subscribe_to( uid => $uid, code => $subscription_code, expiration => $coupon->{end_time} );
