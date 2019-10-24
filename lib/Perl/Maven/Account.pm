@@ -175,7 +175,7 @@ post '/pm/coupon' => sub {
 
 	# add a subscription with the proper data
 	$db->subscribe_to( uid => $uid, code => $subscription_code, expiration => $coupon->{end_time} );
-	return Dumper $coupon;
+	#return Dumper $coupon;
 
 	pm_message('coupon_used');
 };
