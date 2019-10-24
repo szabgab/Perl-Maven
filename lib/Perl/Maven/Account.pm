@@ -146,17 +146,36 @@ post '/pm/coupon' => sub {
 		return pm_message('missing_coupon');
 	}
 
-	my $db     = setting('db');
-	my $uid    = session('uid');
+	my $db  = setting('db');
+	my $uid = session('uid');
+
+	# check if the coupon code is valid, (there is such a code, we are within the timeframe
 	my $coupon = $db->get_coupon_by_code($code);
 	if ( not $coupon ) {
 		return pm_message('no_such_coupon');
 	}
-	return Dumper $coupon;
+	my $now = time;
+	if ( $coupon->{start_time} > $now ) {
+		return pm_message('coupon_not_started_yet');
+	}
+	if ( $coupon->{end_time} < $now ) {
+		return pm_message('coupon_has_expired');
+	}
 
-# check if the coupon code is valid, (there is such a code, we are within the timeframe and have not use all the available coupons.
-# if the user already has a valid subscription then report that and quit
-# add a subscription with the proper data
+	# TODO: check if we have not used all the available coupons.
+
+	my $subscription_code = 'perl_maven_pro';    #TODO get this from the $coupon->{pid}
+	     # check if the user already has a valid subscription then report that and quit
+	my $subscriptions = $db->get_valid_subscriptions_by_uid($uid);
+	if ( scalar grep { $_ eq $subscription_code } @$subscriptions ) {
+		return pm_message('user_has_valid_subscription');
+	}
+
+	$db->delete_expired_subscription_by_uid( $uid, $subscption_code );
+
+	# add a subscription with the proper data
+	$db->subscribe_to( uid => $uid, code => $subscription_code, expiration => $coupon->{end_time} );
+	return Dumper $coupon;
 
 	pm_message('coupon_used');
 };

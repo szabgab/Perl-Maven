@@ -153,6 +153,15 @@ sub get_valid_subscriptions {
 	return \@products;
 }
 
+sub delete_expired_subscription_by_uid {
+	my ( $self, $uid, $pid ) = @_;
+
+	# TODO shall we only delete if it really expired?
+	my $sql = q{DELETE FROM subscription WHERE uid=? AND pid=?};
+	$self->{dbh}->do($sql);
+	return;
+}
+
 sub get_valid_subscriptions_by_uid {
 	my ( $self, $uid ) = @_;
 
@@ -213,7 +222,9 @@ sub subscribe_to {
 	}
 	return 'no_such_email' if not $uid;
 
-	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid) VALUES (?, ?)', undef, $uid, $pid );
+	my $expiration = $args{expiration};
+
+	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid, expiration) VALUES (?, ?)', undef, $uid, $pid, $expiration );
 
 	return;
 }
@@ -263,9 +274,9 @@ sub get_product_by_code {
 
 sub get_coupon_by_code {
 	my ( $self, $code ) = @_;
-	my ($data)
-		= $self->{dbh}->selectrow_array( q{SELECT * FROM coupons WHERE code=?}, undef, $code );
-	return $data;
+	my $data = $self->{dbh}->selectall_hashref( q{SELECT * FROM coupons WHERE code=?}, 'code', undef, $code );
+	return $data->{$code};
+
 }
 
 sub add_product {
