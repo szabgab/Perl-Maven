@@ -453,6 +453,7 @@ video {
 }
 .prev-next .next {
    float: right;
+   margin-left: 20px;
 }
 
 .buy-button a {
