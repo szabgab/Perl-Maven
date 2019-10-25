@@ -79,7 +79,7 @@ sub read_meta_array {
 			@pages = grep { Perl::Maven::Tools::_any( $p{filter}, $_->{tags} ) } @pages;
 		}
 	}
-	if ( $p{limit} ) {
+	if ( defined $p{limit} ) {
 		my $limit = min( $p{limit}, scalar @pages );
         if ($limit > 0) {
 		    @pages = @pages[ 0 .. $limit - 1 ];
