@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Data::Dumper qw(Dumper);
 use Exporter qw(import);
-use DataTime;
+use DateTime;
 
 our $VERSION = '0.11';
 our @EXPORT  = qw(tmplog);
@@ -27,7 +27,7 @@ See also L<Perl::Maven>.
 sub tmplog {
 	my @data = @_;
 
-	my $now  = DataTime->now;
+	my $now  = DateTime::Tiny->now;
 	my $file = '/tmp/perl-maven.log';
 	if ( open my $fh, '>>encoding(UTF-8)', $file ) {
 		print $fh "---------------------------------- $now\n";
