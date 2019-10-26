@@ -7,7 +7,7 @@ my $TIMEOUT = 60 * 60 * 24 * 365;
 
 our $VERSION = '0.11';
 
-my %authors;
+my %all_the_authors;
 
 my %RESOURCES = (
 	password_short =>
@@ -315,17 +315,19 @@ sub _add_author {
 
 sub authors {
 	_read_authors();
-	return \%authors;
+	return $all_the_authors{myhost()};
 }
 
 sub _read_authors {
+    my $host = myhost();
 
 	#tmplog(myhost, mymaven);
 
 	# TODO: The list of author is currently a global which means two sites on the same server can get messed up.
 	# for now we are re-reading the whole thing again and again.
 	# Later we can prefix the authors hash with the mymaven->{root} and then we can have two or more separate subhashes.
-	#return if %authors;
+	#
+	#return if %all_the_authors;
 
 	# Path::Tiny would throw an exception if it could not open the file
 	# but we for Perl::Maven this file is optional
@@ -336,14 +338,14 @@ sub _read_authors {
 		foreach my $line ( $fh->lines_utf8 ) {
 			chomp $line;
 			my ( $nick, $name, $img, $google_plus_profile ) = split /;/, $line;
-			$authors{$nick} = {
+			$all_the_authors{$host}{$nick} = {
 				author_name                => $name,
 				author_img                 => ( $img || 'white_square.png' ),
 				author_google_plus_profile => $google_plus_profile,
 			};
 			my $personal = mymaven->{root} . "/authors/$nick.txt";
 			if ( -e $personal ) {
-				$authors{$nick}{author_html} = Path::Tiny::path($personal)->slurp_utf8;
+				$all_the_authors{$host}{$nick}{author_html} = Path::Tiny::path($personal)->slurp_utf8;
 			}
 		}
 	};
