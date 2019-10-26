@@ -343,7 +343,7 @@ sub _read_authors {
 				author_img                 => ( $img || 'white_square.png' ),
 				author_google_plus_profile => $google_plus_profile,
 			};
-			my $personal = mymaven->{root} . "/authors/$nick.txt";
+			my $personal = mymaven->{root} . "/authors/$host/$nick.txt";
 			if ( -e $personal ) {
 				$all_the_authors{$host}{$nick}{author_html} = Path::Tiny::path($personal)->slurp_utf8;
 			}
