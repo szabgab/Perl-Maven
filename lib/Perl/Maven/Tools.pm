@@ -81,11 +81,12 @@ sub read_meta_array {
 	}
 	if ( defined $p{limit} ) {
 		my $limit = min( $p{limit}, scalar @pages );
-        if ($limit > 0) {
-		    @pages = @pages[ 0 .. $limit - 1 ];
-        } else {
-            @pages = ();
-        }
+		if ( $limit > 0 ) {
+			@pages = @pages[ 0 .. $limit - 1 ];
+		}
+		else {
+			@pages = ();
+		}
 	}
 
 	@pages = reverse sort { $a->{timestamp} cmp $b->{timestamp} } @pages;

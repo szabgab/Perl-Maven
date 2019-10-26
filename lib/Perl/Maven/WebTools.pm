@@ -84,13 +84,12 @@ our @EXPORT_OK
 sub myhost {
 	my $host = request->host;
 	$host =~ s/\.local:5000//;
-    return $host;
+	return $host;
 }
-
 
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
-	return $mymaven->config(myhost());
+	return $mymaven->config( myhost() );
 }
 
 sub _generate_code {
@@ -278,7 +277,7 @@ sub pm_show_page {
 	_add_author($tt);
 
 	my $translator = $tt->{translator};
-	my $authors = authors();
+	my $authors    = authors();
 	if ( $translator and $authors->{$translator} ) {
 		$tt->{translator_name} = $authors->{$translator}{author_name};
 		$tt->{translator_img}  = $authors->{$translator}{author_img};
@@ -300,7 +299,7 @@ sub pm_show_page {
 sub _add_author {
 	my ($tt) = @_;
 
-	my $nick = $tt->{author};
+	my $nick    = $tt->{author};
 	my $authors = authors();
 	if ( $nick and $authors->{$nick} ) {
 		$tt->{author_name} = $authors->{$nick}{author_name};
@@ -320,7 +319,8 @@ sub authors {
 }
 
 sub _read_authors {
-    #tmplog(myhost, mymaven);
+
+	#tmplog(myhost, mymaven);
 
 	# TODO: The list of author is currently a global which means two sites on the same server can get messed up.
 	# for now we are re-reading the whole thing again and again.

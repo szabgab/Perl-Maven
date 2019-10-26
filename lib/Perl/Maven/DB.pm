@@ -224,7 +224,8 @@ sub subscribe_to {
 
 	my $expiration = $args{expiration};
 
-	$self->{dbh}->do( 'INSERT INTO subscription (uid, pid, expiration) VALUES (?, ?, ?)', undef, $uid, $pid, $expiration );
+	$self->{dbh}
+		->do( 'INSERT INTO subscription (uid, pid, expiration) VALUES (?, ?, ?)', undef, $uid, $pid, $expiration );
 
 	return;
 }

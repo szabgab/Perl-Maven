@@ -6,7 +6,7 @@ use Exporter qw(import);
 use DataTime::Tiny;
 
 our $VERSION = '0.11';
-our @EXPORT = qw(tmplog);
+our @EXPORT  = qw(tmplog);
 
 =head1 NAME
 
@@ -25,24 +25,23 @@ See also L<Perl::Maven>.
 =cut
 
 sub tmplog {
-    my @data = @_;
+	my @data = @_;
 
-    my $now = DataTime::Tiny->now;
-    my $file = '/tmp/perl-maven.log';
-    if (open my $fh, '>>encoding(UTF-8)', $file ) {
-        print $fh "---------------------------------- $now\n";
-        for my $entry (@data) {
-            if (ref $entry) {
-                print $fh Dumper $entry;
-            } else {
-                print $fh $entry;
-            }
-            print $fh "\n";
-        }
-    }
+	my $now  = DataTime::Tiny->now;
+	my $file = '/tmp/perl-maven.log';
+	if ( open my $fh, '>>encoding(UTF-8)', $file ) {
+		print $fh "---------------------------------- $now\n";
+		for my $entry (@data) {
+			if ( ref $entry ) {
+				print $fh Dumper $entry;
+			}
+			else {
+				print $fh $entry;
+			}
+			print $fh "\n";
+		}
+	}
 }
-
-
 
 1;
 
