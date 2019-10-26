@@ -81,11 +81,16 @@ use Exporter qw(import);
 our @EXPORT_OK
 	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors pm_error pm_message pm_user_info);
 
-sub mymaven {
-	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
+sub myhost {
 	my $host = request->host;
 	$host =~ s/\.local:5000//;
-	return $mymaven->config($host);
+    return $host;
+}
+
+
+sub mymaven {
+	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
+	return $mymaven->config(myhost());
 }
 
 sub _generate_code {
@@ -315,6 +320,7 @@ sub authors {
 }
 
 sub _read_authors {
+    #tmplog(myhost, mymaven);
 
 	# TODO: The list of author is currently a global which means two sites on the same server can get messed up.
 	# for now we are re-reading the whole thing again and again.
