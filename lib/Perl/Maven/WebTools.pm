@@ -278,12 +278,12 @@ sub pm_show_page {
 	_add_author($tt);
 
 	my $translator = $tt->{translator};
-	_read_authors();
-	if ( $translator and $authors{$translator} ) {
-		$tt->{translator_name} = $authors{$translator}{author_name};
-		$tt->{translator_img}  = $authors{$translator}{author_img};
+	my $authors = authors();
+	if ( $translator and $authors->{$translator} ) {
+		$tt->{translator_name} = $authors->{$translator}{author_name};
+		$tt->{translator_img}  = $authors->{$translator}{author_img};
 		$tt->{translator_google_plus_profile}
-			= $authors{$translator}{author_google_plus_profile};
+			= $authors->{$translator}{author_google_plus_profile};
 	}
 	else {
 		if ($translator) {
@@ -301,13 +301,13 @@ sub _add_author {
 	my ($tt) = @_;
 
 	my $nick = $tt->{author};
-	_read_authors();
-	if ( $nick and $authors{$nick} ) {
-		$tt->{author_name} = $authors{$nick}{author_name};
-		$tt->{author_img}  = $authors{$nick}{author_img};
-		$tt->{author_html} = $authors{$nick}{author_html};
+	my $authors = authors();
+	if ( $nick and $authors->{$nick} ) {
+		$tt->{author_name} = $authors->{$nick}{author_name};
+		$tt->{author_img}  = $authors->{$nick}{author_img};
+		$tt->{author_html} = $authors->{$nick}{author_html};
 		$tt->{author_google_plus_profile}
-			= $authors{$nick}{author_google_plus_profile};
+			= $authors->{$nick}{author_google_plus_profile};
 	}
 	else {
 		delete $tt->{author};
