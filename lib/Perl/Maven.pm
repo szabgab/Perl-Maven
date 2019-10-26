@@ -25,6 +25,7 @@ use Encode qw(encode);
 
 use Web::Feed;
 
+use Perl::Maven::Debug qw(tmplog);
 use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;

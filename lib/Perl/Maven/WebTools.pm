@@ -1,6 +1,7 @@
 package Perl::Maven::WebTools;
 use Dancer2 appname => 'Perl::Maven';
 use Data::Dumper qw(Dumper);
+use Perl::Maven::Debug qw(tmplog);
 
 my $TIMEOUT = 60 * 60 * 24 * 365;
 
