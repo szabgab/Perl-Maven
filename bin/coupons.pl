@@ -19,18 +19,18 @@ my $db = Perl::Maven::DB->new($dbfile);
 ##########################################
 
 my $code;
-my $days;
+my $hours;
 
 GetOptions(
     "code=s" => \$code,
-    "days=i" => \$days,
+    "hours=i" => \$hours,
 ) or die;
-die usage() if not $code or not $days;
+die usage() if not $code or not $hours;
 
 my $pid        = 6;                             # perl_maven_pro
 my $price      = 0;
 my $start_time = time;
-my $end_time   = time + $days * 60 * 60;
+my $end_time   = time + $hours * 60 * 60;
 my $max_users  = 30;
 
 my $sql = "INSERT INTO coupons (code, pid, price, start_time, end_time, max_uses) VALUES (?, ?, ?, ?, ?, ?)";
@@ -38,5 +38,5 @@ $db->{dbh}->do( $sql, undef, $code, $pid, $price, $start_time, $end_time, $max_u
 
 
 sub usage {
-    die "Usage: $0 CODE DAYS\n";
+    die "Usage: $0 --code CODE --hours HOURS\n";
 }
