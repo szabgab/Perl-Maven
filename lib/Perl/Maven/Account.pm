@@ -12,6 +12,7 @@ use Data::Dumper qw(Dumper);
 use Perl::Maven::WebTools
 	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template pm_user_info);
 use Perl::Maven::Sendmail qw(send_mail);
+use Perl::Maven::Debug qw(tmplog);
 
 our $VERSION = '0.11';
 
@@ -171,7 +172,9 @@ post '/pm/coupon' => sub {
 		return pm_message('user_has_valid_subscription');
 	}
 
-	debug $db->delete_expired_subscription_by_uid( $uid, $subscription_code );
+    tmplog("coupon before delete");
+    my $coupon_deleted = $db->delete_expired_subscription_by_uid( $uid, $subscription_code )
+	tmplog("deleted", $coupon_deleted);
 
 	# add a subscription with the proper data
 	$db->subscribe_to( uid => $uid, code => $subscription_code, expiration => $coupon->{end_time} );
