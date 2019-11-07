@@ -173,7 +173,7 @@ post '/pm/coupon' => sub {
 	}
 
     tmplog("coupon before delete");
-    my $coupon_deleted = $db->delete_expired_subscription_by_uid( $uid, $subscription_code )
+    my $coupon_deleted = $db->delete_expired_subscription_by_uid( $uid, $subscription_code );
 	tmplog("deleted", $coupon_deleted);
 
 	# add a subscription with the proper data
