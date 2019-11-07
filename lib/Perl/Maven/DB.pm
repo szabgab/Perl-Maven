@@ -158,7 +158,7 @@ sub delete_expired_subscription_by_uid {
 
 	# TODO shall we only delete if it really expired?
 	my $sql = q{DELETE FROM subscription WHERE uid=? AND pid=?};
-	$self->{dbh}->do($sql, undef, $uid, $pid);
+	return $self->{dbh}->do($sql, undef, $uid, $pid);
 	return;
 }
 
