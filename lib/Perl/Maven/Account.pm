@@ -172,8 +172,8 @@ post '/pm/coupon' => sub {
 		return pm_message('user_has_valid_subscription');
 	}
 
-    tmplog("coupon before delete");
-    my $coupon_deleted = $db->delete_expired_subscription_by_uid( $uid, $subscription_code );
+    tmplog("coupon before delete uid '$uid', sub_code '$subscription_code'");
+    my $coupon_deleted = $db->delete_expired_subscription_by_uid( $uid, 6 ); # perlmaven_pro TODO: replace by name
 	tmplog("deleted", $coupon_deleted);
 
 	# add a subscription with the proper data
