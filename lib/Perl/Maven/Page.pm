@@ -258,6 +258,12 @@ DOWNLOADS
 			next;
 		}
 
+		if ( $line =~ /<series name="([^"]*)">/ ) {
+            my $series = $1;
+		    my $all_series = setting('tools')->read_meta('series');
+		    $line = Dumper $all_series->{$series};
+        }
+
 		if ( $line =~ /<podcast>/ ) {
 			if ( $data{mp3} ) {
 				my ( $file, $size, $mins ) = @{ $data{mp3} };
