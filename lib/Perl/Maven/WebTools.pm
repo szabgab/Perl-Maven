@@ -94,7 +94,7 @@ sub mymaven {
 
 sub _generate_code {
 	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
-	my $code = time;
+	my $code  = time;
 	$code .= $chars[ rand( scalar @chars ) ] for 1 .. 20;
 	return $code;
 }
@@ -145,7 +145,7 @@ sub get_ip {
 }
 
 sub valid_ip {
-	my $uid = session('uid') or die 'No uid found';
+	my $uid  = session('uid') or die 'No uid found';
 	my $user = setting('db')->get_user_by_id($uid);
 
 	# if white-listing is not turned on, then every IP is valid
@@ -315,11 +315,11 @@ sub _add_author {
 
 sub authors {
 	_read_authors();
-	return $all_the_authors{myhost()};
+	return $all_the_authors{ myhost() };
 }
 
 sub _read_authors {
-    my $host = myhost();
+	my $host = myhost();
 
 	#tmplog(myhost, mymaven);
 
@@ -354,7 +354,7 @@ sub _read_authors {
 
 sub pm_user_info {
 	my %data = ( logged_in => logged_in(), );
-	my $uid = session('uid');
+	my $uid  = session('uid');
 	if ($uid) {
 		my $db = setting('db');
 		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );

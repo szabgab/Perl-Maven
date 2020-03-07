@@ -76,7 +76,7 @@ while ( my $row = $get_user_sth->fetchrow_hashref ) {
 	my $in_to   = $check_user_sth->fetchrow_hashref;
 	my $in_from = $row->{id};
 	if ( not $in_to ) {
-		my %row = %$row;
+		my %row    = %$row;
 		my @values = @row{ 'email', 'password', 'register_time', 'verify_code', 'verify_time', 'name', 'admin',
 			'login_whitelist' };
 

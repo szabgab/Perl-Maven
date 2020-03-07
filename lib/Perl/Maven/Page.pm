@@ -28,7 +28,7 @@ my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect? perl6url? perl6title? img? alt? sample?);
 my @common_options
 	= qw(archive? comments_disqus_enable? show_social? show_newsletter_form? show_right? show_related? show_date? show_ads? embedded_ad?);
-my @header = ( @page_options, @common_options );
+my @header        = ( @page_options, @common_options );
 my @merge_options = map { my $t = $_; $t =~ s/[?@]//g; $t } @common_options;
 
 sub read {
@@ -259,10 +259,10 @@ DOWNLOADS
 		}
 
 		#if ( $line =~ /<series name="([^"]*)">/ ) {
-        #    my $series = $1;
+		#    my $series = $1;
 		#    my $all_series = setting('tools')->read_meta('series');
 		#    $line = Dumper $all_series->{$series};
-        #}
+		#}
 
 		if ( $line =~ /<podcast>/ ) {
 			if ( $data{mp3} ) {
@@ -312,7 +312,7 @@ DOWNLOADS
 		}
 		$self->{data}{mycontent} .= $line;
 	}
-	$embedded_ad = $self->embed_ad( $embedded_ad, 0 );
+	$embedded_ad     = $self->embed_ad( $embedded_ad, 0 );
 	$data{mycontent} = $self->{data}{mycontent};
 	$data{abstract}  = $self->{data}{abstract};
 
@@ -350,7 +350,7 @@ DOWNLOADS
 	# TODO: this should not be read into memory for every page!
 	$data{related} = [];
 	if ( not $ENV{METAMETA} and %links ) {
-		my $site = $self->tools->read_meta_array('sitemap');
+		my $site    = $self->tools->read_meta_array('sitemap');
 		my %sitemap = map { '/' . $_->{filename} => $_->{title} } @$site;
 		foreach my $url ( sort keys %links ) {
 			push @{ $data{related} },

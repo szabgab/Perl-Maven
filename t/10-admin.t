@@ -24,7 +24,7 @@ subtest usage => sub {
 		system $admin;
 	};
 	like $stdout, qr{Usage: bin/admin.pl}, 'usage';
-	is $stderr, '', 'stderr is empty';
+	is $stderr,   '',                      'stderr is empty';
 };
 
 subtest dump_products => sub {

@@ -44,7 +44,7 @@ subtest mymaven => sub {
 	like $@, qr{Hostname 'qq.perlmaven.com' not in configuration file\n}, 'missing hostname';
 
 	is $main->{site}, "$root/t/files/../sites/perlmaven.com/sites/en", '{site}';
-	is $main->{meta}, '/home/foobar/perlmaven-meta', '{meta}';
+	is $main->{meta}, '/home/foobar/perlmaven-meta',                   '{meta}';
 	is $main->{dirs}{mail}, "$root/t/files/../articles/mail", '{dirs}{mail}';
 	is $main->{dirs}{pro},  '/home/foobar/articles/pro',      '{dirs}{pro}';
 	is_deeply $main->{redirect},

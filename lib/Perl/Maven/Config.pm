@@ -34,11 +34,11 @@ sub new {
 
 	$path = $ENV{MYMAVEN_YML} || $path;
 
-	die 'Missing configuration filename' if not $path;
+	die 'Missing configuration filename'     if not $path;
 	die "Missing configuration file '$path'" if not -e $path;
 
 	my $self = bless {
-		root => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
+		root   => ( dirname( dirname( abs_path($path) ) ) || abs_path('.') ),
 		config => scalar LoadFile($path),
 	}, $class;
 
@@ -86,8 +86,8 @@ sub config {
 	delete $mymaven->{sites};
 
 	#die Dumper $mymaven;
-	$mymaven->{root} = $self->_update_root( $mymaven->{root} );
-	$mymaven->{meta} = $self->_update_root( $mymaven->{meta} );
+	$mymaven->{root}     = $self->_update_root( $mymaven->{root} );
+	$mymaven->{meta}     = $self->_update_root( $mymaven->{meta} );
 	$mymaven->{dirs}{$_} = $self->_update_root( $mymaven->{dirs}{$_} ) for keys %{ $mymaven->{dirs} };
 
 	#die Dumper $mymaven;

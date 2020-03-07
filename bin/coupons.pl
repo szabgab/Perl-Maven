@@ -22,12 +22,12 @@ my $code;
 my $hours;
 
 GetOptions(
-    "code=s" => \$code,
-    "hours=i" => \$hours,
+	"code=s"  => \$code,
+	"hours=i" => \$hours,
 ) or die;
 die usage() if not $code or not $hours;
 
-my $pid        = 6;                             # perl_maven_pro
+my $pid        = 6;                         # perl_maven_pro
 my $price      = 0;
 my $start_time = time;
 my $end_time   = time + $hours * 60 * 60;
@@ -36,7 +36,6 @@ my $max_users  = 30;
 my $sql = "INSERT INTO coupons (code, pid, price, start_time, end_time, max_uses) VALUES (?, ?, ?, ?, ?, ?)";
 $db->{dbh}->do( $sql, undef, $code, $pid, $price, $start_time, $end_time, $max_users );
 
-
 sub usage {
-    die "Usage: $0 --code CODE --hours HOURS\n";
+	die "Usage: $0 --code CODE --hours HOURS\n";
 }

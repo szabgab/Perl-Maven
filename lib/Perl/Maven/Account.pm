@@ -166,14 +166,14 @@ post '/pm/coupon' => sub {
 	# TODO: check if we have not used all the available coupons.
 
 	my $subscription_code = 'perl_maven_pro';    #TODO get this from the $coupon->{pid}
-	     # check if the user already has a valid subscription then report that and quit
+		 # check if the user already has a valid subscription then report that and quit
 	my $subscriptions = $db->get_valid_subscriptions_by_uid($uid);
 	if ( scalar grep { $_ eq $subscription_code } @$subscriptions ) {
 		return pm_message('user_has_valid_subscription');
 	}
 
-    #tmplog("coupon before delete uid '$uid', sub_code '$subscription_code'");
-    $db->delete_expired_subscription_by_uid( $uid, 6 ); # perlmaven_pro TODO: replace by name
+	#tmplog("coupon before delete uid '$uid', sub_code '$subscription_code'");
+	$db->delete_expired_subscription_by_uid( $uid, 6 );    # perlmaven_pro TODO: replace by name
 
 	# add a subscription with the proper data
 	$db->subscribe_to( uid => $uid, code => $subscription_code, expiration => $coupon->{end_time} );
@@ -627,7 +627,7 @@ sub register {
 	}
 
 	my $code = _generate_code();
-	my $uid = $db->add_registration( { email => $data{email} } );
+	my $uid  = $db->add_registration( { email => $data{email} } );
 	$db->save_verification(
 		code      => $code,
 		action    => 'verify_email',
@@ -668,7 +668,7 @@ sub register {
 sub send_verification_mail {
 	my ( $template, $email, $subject, $params ) = @_;
 
-	my $html = template $template, $params, { layout => 'email', };
+	my $html    = template $template, $params, { layout => 'email', };
 	my $mymaven = mymaven;
 	return send_mail(
 		{

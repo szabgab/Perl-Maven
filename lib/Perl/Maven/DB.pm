@@ -158,7 +158,7 @@ sub delete_expired_subscription_by_uid {
 
 	# TODO shall we only delete if it really expired?
 	my $sql = q{DELETE FROM subscription WHERE uid=? AND pid=?};
-	$self->{dbh}->do($sql, undef, $uid, $pid);
+	$self->{dbh}->do( $sql, undef, $uid, $pid );
 	return;
 }
 
@@ -292,7 +292,7 @@ sub stats {
 	my ($self) = @_;
 
 	my $products = $self->get_products;
-	my $subs = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
+	my $subs     = $self->{dbh}->selectall_hashref( q{SELECT pid, COUNT(*) cnt FROM subscription GROUP BY pid}, 'pid' );
 	foreach my $code ( keys %$products ) {
 		my $pid = $products->{$code}{id};
 		$products->{$code}{cnt} = ( $subs->{$pid}{cnt} || 0 );
