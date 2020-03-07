@@ -22,8 +22,8 @@ my $code;
 my $hours;
 
 GetOptions(
-	"code=s"  => \$code,
-	"hours=i" => \$hours,
+	'code=s'  => \$code,
+	'hours=i' => \$hours,
 ) or die;
 die usage() if not $code or not $hours;
 
@@ -33,7 +33,7 @@ my $start_time = time;
 my $end_time   = time + $hours * 60 * 60;
 my $max_users  = 30;
 
-my $sql = "INSERT INTO coupons (code, pid, price, start_time, end_time, max_uses) VALUES (?, ?, ?, ?, ?, ?)";
+my $sql = 'INSERT INTO coupons (code, pid, price, start_time, end_time, max_uses) VALUES (?, ?, ?, ?, ?, ?)';
 $db->{dbh}->do( $sql, undef, $code, $pid, $price, $start_time, $end_time, $max_users );
 
 sub usage {
