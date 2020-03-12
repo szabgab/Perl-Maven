@@ -374,29 +374,29 @@ get '/contributor/:name' => sub {
 	);
 };
 
-get '/jobs' => sub {
-	redirect '/jobs/';
-};
-get '/jobs/' => sub {
-	my $jobs = setting('jobs');
-	template 'jobs', { jobs => $jobs };
-};
-
-get '/jobs/:id' => sub {
-	my ($job_id)  = param('id');
-	my $jobs      = setting('jobs');
-	my $job_links = setting('job_links');
-	if ( $jobs->{$job_id} ) {
-		if ( $jobs->{$job_id}{modules} ) {
-			@{ $jobs->{$job_id}{modules} } = map { { name => $_, url => $job_links->{modules}{$_}, } }
-				grep { $job_links->{modules}{$_} } @{ $jobs->{$job_id}{modules} };
-		}
-		template 'job', { job => $jobs->{$job_id} };
-	}
-	else {
-		return 'No such job. Please check out the <a href="/jobs/">list of available Perl jobs</a>.';
-	}
-};
+# get '/jobs' => sub {
+# 	redirect '/jobs/';
+# };
+# get '/jobs/' => sub {
+# 	my $jobs = setting('jobs');
+# 	template 'jobs', { jobs => $jobs };
+# };
+#
+# get '/jobs/:id' => sub {
+# 	my ($job_id)  = param('id');
+# 	my $jobs      = setting('jobs');
+# 	my $job_links = setting('job_links');
+# 	if ( $jobs->{$job_id} ) {
+# 		if ( $jobs->{$job_id}{modules} ) {
+# 			@{ $jobs->{$job_id}{modules} } = map { { name => $_, url => $job_links->{modules}{$_}, } }
+# 				grep { $job_links->{modules}{$_} } @{ $jobs->{$job_id}{modules} };
+# 		}
+# 		template 'job', { job => $jobs->{$job_id} };
+# 	}
+# 	else {
+# 		return 'No such job. Please check out the <a href="/jobs/">list of available Perl jobs</a>.';
+# 	}
+# };
 
 # autocomplete: given one or more letters return the existing, or the most popular search terms
 # search: given one or more letters search various sources
