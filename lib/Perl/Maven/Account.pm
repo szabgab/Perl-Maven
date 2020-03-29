@@ -565,7 +565,7 @@ sub register {
 		return _registration_form( %data, error => 'no_email_provided' );
 	}
 	$data{email} = lc $data{email};
-	$data{email} =~ s/^\s+|\s+$//;
+	$data{email} =~ s/^\s+|\s+$//g;
 	if ( not Email::Valid->address( $data{email} ) ) {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
