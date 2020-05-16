@@ -459,6 +459,12 @@ get '/search/:query' => sub {
 		#}
 	}
 
+	# Move the exact match to be the first in the list
+	my ($exact) = grep { lc $query eq lc $_->{title} } @hits;
+	if ($exact) {
+		@hits = ( $exact, grep { lc $query ne lc $_->{title} } @hits );
+	}
+
 	if ( @hits > $LIMIT ) {
 		@hits = @hits[ 0 .. $LIMIT - 1 ];
 	}
