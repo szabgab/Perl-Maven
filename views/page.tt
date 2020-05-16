@@ -36,6 +36,7 @@
   </p>
 <% END %>
 <% ads.bottom %>
+<% INCLUDE incl/bottom_video.tt %>
 <% INCLUDE incl/comments.tt %>
 
 <% INCLUDE incl/github_change_text.tt %>

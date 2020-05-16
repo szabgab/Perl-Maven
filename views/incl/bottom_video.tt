@@ -1,0 +1,4 @@
+<% IF conf.bottom_youtube_video %>
+  <% conf.bottom_youtube_video %>
+<% END %>
+
