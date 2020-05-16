@@ -1,0 +1,8 @@
+<!--
+<pre>
+<% FOREACH key IN conf.keys.sort %>
+   * <% key %>
+<% END %>
+</pre>
+-->
+
