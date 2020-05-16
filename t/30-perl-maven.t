@@ -232,7 +232,10 @@ subtest 'subscribe' => sub {
 		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
 		],
 		'product table';
-	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM subscription'), [ [ 1, 1 ] ], 'subscription table';
+	my $subscription = $db->{dbh}->selectall_arrayref('SELECT * FROM subscription');
+
+	#diag Dumper $subscription;
+	cmp_deeply $subscription, [ [ 1, 1, undef ] ], 'subscription table';
 
 	#diag $w->content;
 	# the new page does not contain a link to the cookbook.
@@ -265,7 +268,10 @@ subtest 'subscribe' => sub {
 		[ 2, 'beginner_perl_maven_ebook', 'Beginner Perl Maven e-book', '0.01' ]
 		],
 		'product table';
-	cmp_deeply $db->{dbh}->selectall_arrayref('SELECT * FROM subscription'), [ [ 1, 1 ] ], 'subscription table';
+	$subscription = $db->{dbh}->selectall_arrayref('SELECT * FROM subscription');
+
+	#diag Dumper $subscription;
+	cmp_deeply $subscription, [ [ 1, 1, undef ] ], 'subscription table';
 
 	#diag $w->content;
 	$w->follow_link_ok(
