@@ -7,7 +7,11 @@
 
 <% FOR r IN results %>
 <ul>
-  <li><a href="<% r.url %>"><% r.title %></a></li>
+  {% if r.title == query %}
+     <li><a href="<% r.url %>"><b><% r.title %></b></a></li>
+  {% else %}
+     <li><a href="<% r.url %>"><% r.title %></a></li>
+  {% endif %}
 </ul>
 <% END %>
 
