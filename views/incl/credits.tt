@@ -5,7 +5,7 @@
       <div id="translator">
        <img src="/img/<% translator_img %>" alt="<% translator_name %>" />
        <div class="author_text">
-         <% resources.text.translated_by %><br><a href="<%translator_google_plus_profile %>?rel=author"><% translator_name %></a>
+         <% resources.text.translated_by %><br><a href="<%translator_google_plus_profile %>"><% translator_name %></a>
        </div>
       </div>
 
@@ -15,7 +15,7 @@
           <div class="author_text">
              <% resources.text.written_by %><br>
              <% IF author_google_plus_profile %>
-               <a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
+               <a href="<% author_google_plus_profile %>"><% author_name %></a>
              <% ELSE %>
                <% author_name %>
             <% END %>
@@ -33,7 +33,7 @@
         <div class="author_text">
            <% resources.text.written_by %><br>
            <% IF author_google_plus_profile %>
-             <a href="<% author_google_plus_profile %>?rel=author"><% author_name %></a>
+             <a href="<% author_google_plus_profile %>"><% author_name %></a>
            <% ELSE %>
              <% author_name %>
           <% END %>
