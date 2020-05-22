@@ -9,7 +9,6 @@
   <% IF prev %><link rel="prev" href="<% prev.url %>"><% END %>
   <% IF next %><link rel="next" href="<% next.url %>"><% END %>
 
-  <link href="https://plus.google.com/111891839130546418347/" rel="publisher" />
   <link href="/atom" rel="alternate" type="application/atom+xml" title ="<% brand_name %>" />
 
   <script>
