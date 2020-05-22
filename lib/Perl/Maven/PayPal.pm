@@ -191,10 +191,10 @@ sub paypal_buy {
 		my %period;
 		for my $i ( 1, 3 ) {
 			if ( $params{"t$i"} eq 'M' ) {
-				$period{$i} = "month";
+				$period{$i} = 'month';
 			}
 			elsif ( $params{"t$i"} eq 'Y' ) {
-				$period{$i} = "year";
+				$period{$i} = 'year';
 			}
 		}
 		if ( exists $params{t1} ) {
