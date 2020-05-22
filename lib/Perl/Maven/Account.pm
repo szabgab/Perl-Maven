@@ -165,7 +165,7 @@ post '/pm/coupon' => sub {
 
 	# TODO: check if we have not used all the available coupons.
 
-	my $subscription_code = 'perl_maven_pro';    #TODO get this from the $coupon->{pid}
+	my $subscription_code = 'code_maven_pro';    #TODO get this from the $coupon->{pid}
 		 # check if the user already has a valid subscription then report that and quit
 	my $subscriptions = $db->get_valid_subscriptions_by_uid($uid);
 	if ( scalar grep { $_ eq $subscription_code } @$subscriptions ) {
@@ -383,8 +383,8 @@ get '/pm/account' => sub {
 	my @owned_products;
 	foreach my $code ( @{ $user->{subscriptions} } ) {
 
-		# TODO remove the hard-coded special case of the perl_maven_pro
-		if ( $code eq 'perl_maven_pro' ) {
+		# TODO remove the hard-coded special case of the code_maven_pro
+		if ( $code eq 'code_maven_pro' ) {
 			push @owned_products,
 				{
 				name     => 'Perl Maven Pro',
@@ -417,9 +417,9 @@ get '/pm/account' => sub {
 	if ( $user->{login_whitelist} ) {
 		$params{whitelist} = $db->get_whitelist($uid);
 	}
-	if ( $db->get_product_by_code('perl_maven_pro') and not $db->is_subscribed( $uid, 'perl_maven_pro' ) ) {
-		$params{perl_maven_pro_buy_button}
-			= Perl::Maven::PayPal::paypal_buy( 'perl_maven_pro', 'trial', 1, 'perl_maven_pro_1_9' );
+	if ( $db->get_product_by_code('code_maven_pro') and not $db->is_subscribed( $uid, 'code_maven_pro' ) ) {
+		$params{code_maven_pro_buy_button}
+			= Perl::Maven::PayPal::paypal_buy( 'code_maven_pro', 'trial', 1, 'code_maven_pro_1_9' );
 	}
 	template 'account', \%params;
 };
@@ -661,7 +661,7 @@ sub register {
 	return pm_template 'response',
 		{
 		from           => $html_from,
-		perl_maven_pro => $db->get_product_by_code('perl_maven_pro'),
+		code_maven_pro => $db->get_product_by_code('code_maven_pro'),
 		};
 }
 

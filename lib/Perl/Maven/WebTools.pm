@@ -357,7 +357,7 @@ sub pm_user_info {
 	my $uid  = session('uid');
 	if ($uid) {
 		my $db = setting('db');
-		$data{perl_maven_pro} = $db->is_subscribed( $uid, 'perl_maven_pro' );
+		$data{code_maven_pro} = $db->is_subscribed( $uid, 'code_maven_pro' );
 		my $user = $db->get_user_by_id($uid);
 		$data{admin} = $user->{admin} ? 1 : 0;
 	}
@@ -418,13 +418,13 @@ sub pm_user_info {
 		}
 
 		# TODO: only if not a pro subscriber yet
-		# perl_maven_pro_logged_in:
+		# code_maven_pro_logged_in:
 		#   incoming_only: 1
 		#   logged_in: 1
 		#   logged_out: 0
 		#   frequency: '1d'
 		#   delay: 1000
-		# perl_maven_pro_logged_out:
+		# code_maven_pro_logged_out:
 		#   incoming_only: 1
 		#   logged_in: 0
 		#   logged_out: 1

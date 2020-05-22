@@ -169,7 +169,7 @@ sub paypal_buy {
 
 	# TODO remove special case for recurring payment
 	my %params;
-	if ( $what eq 'perl_maven_pro' ) {
+	if ( $what eq 'code_maven_pro' ) {
 		%params = (
 			src => 1,
 			cmd => '_xclick-subscriptions',

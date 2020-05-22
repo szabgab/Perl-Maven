@@ -27,7 +27,7 @@ GetOptions(
 ) or die;
 die usage() if not $code or not $hours;
 
-my $pid        = 6;                         # perl_maven_pro
+my $pid        = 6;                         # code_maven_pro
 my $price      = 0;
 my $start_time = time;
 my $end_time   = time + $hours * 60 * 60;

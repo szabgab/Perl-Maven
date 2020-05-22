@@ -241,7 +241,7 @@ subtest 'subscribe' => sub {
 	# the new page does not contain a link to the cookbook.
 	#$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 1, code_maven_pro => 0, admin => 0 };
 
 	# check e-mails
 	@mails = Email::Sender::Simple->default_transport->deliveries;
@@ -299,7 +299,7 @@ subtest 'subscribe' => sub {
 	$w->get_ok('/pm/account');
 	$w->content_unlike( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 0, code_maven_pro => 0, admin => 0 };
 };
 
 {
@@ -365,7 +365,7 @@ subtest 'ask for password reset, then login' => sub {
 
 	#diag($w->content);
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 1, code_maven_pro => 0, admin => 0 };
 
 	# white-box:
 	my $user = $db->get_user_by_email($EMAIL);
@@ -374,7 +374,7 @@ subtest 'ask for password reset, then login' => sub {
 	#diag('now logout');
 	$w->get_ok("$url/pm/logout");
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 0, code_maven_pro => 0, admin => 0 };
 
 	#diag('login now that we have a password');
 	$w->get_ok("$url/pm/login");
@@ -390,7 +390,7 @@ subtest 'ask for password reset, then login' => sub {
 	);
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 1, code_maven_pro => 0, admin => 0 };
 
 	#diag $w->content;
 	$w->get_ok("$url/pm/register");
@@ -403,7 +403,7 @@ subtest 'ask for password reset, then login' => sub {
 		'/pm/login when already logged in' );
 
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 1, code_maven_pro => 0, admin => 0 };
 };
 
 # now change password while logged in,
@@ -447,7 +447,7 @@ subtest 'change password while logged in' => sub {
 	$w->content_like( qr{The password was set successfully}, 'password was reset' );
 	$w->get_ok("$url/pm/logout");
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 0, code_maven_pro => 0, admin => 0 };
 
 	$w->get_ok("$url/pm/login");
 	$w->submit_form_ok(
@@ -462,7 +462,7 @@ subtest 'change password while logged in' => sub {
 	);
 	$w->content_like(qr{Invalid });
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 0, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 0, code_maven_pro => 0, admin => 0 };
 
 	$w->back;
 	$w->get_ok("$url/pm/login");
@@ -479,7 +479,7 @@ subtest 'change password while logged in' => sub {
 	$w->content_like( qr{<a href="$cookbook_url">$cookbook_text</a>}, 'download link' );
 
 	$w->get_ok("$url/pm/user-info");
-	is_deeply from_json( $w->content ), { logged_in => 1, perl_maven_pro => 0, admin => 0 };
+	is_deeply from_json( $w->content ), { logged_in => 1, code_maven_pro => 0, admin => 0 };
 
 	#diag($w->content);
 

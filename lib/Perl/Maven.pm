@@ -116,7 +116,7 @@ hook before_template => sub {
 		my $email = $user->{email};
 		( $t->{username} ) = split /@/, $email;
 
-		if ( grep { $_ eq 'perl_maven_pro' } @{ $user->{subscriptions} } ) {
+		if ( grep { $_ eq 'code_maven_pro' } @{ $user->{subscriptions} } ) {
 			$t->{conf}{show_ads} = 0;
 		}
 	}
@@ -813,7 +813,7 @@ get '/download/:dir/:file' => sub {
 # information to decide who can see the file
 # and then we should probably just handle directories seenlessly
 get qr{^/pro/?$} => sub {
-	my $product = 'perl_maven_pro';
+	my $product = 'code_maven_pro';
 	my $path    = mymaven->{site} . '/pages/pro.txt';
 	my $promo   = 1;
 	my $db      = setting('db');
@@ -826,7 +826,7 @@ get qr{^/pro/?$} => sub {
 get qr{^/pro/(.+)} => sub {
 	my ($article) = splat;
 	error if $article =~ /\.\./;
-	my $product = 'perl_maven_pro';
+	my $product = 'code_maven_pro';
 	my $dir     = 'pro';
 
 	my $path = mymaven->{dirs}{$dir} . "/$article.txt";
@@ -921,7 +921,7 @@ get qr{^/media/(.+)} => sub {
 
 	my $db = setting('db');
 	if ( $item =~ m{^pro/} and not is_free("/$item") ) {
-		my $product = 'perl_maven_pro';
+		my $product = 'code_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber'
 			if not $db->is_subscribed( session('uid'), $product );
