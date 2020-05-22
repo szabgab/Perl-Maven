@@ -14,7 +14,6 @@ WriteMakefile(
 	PREREQ_PM => {
 		'Business::PayPal' => 0.13,
 		'Carp::Always'     => 0,
-		'Code::Explain'    => 0.02,
 		'Dancer2'          => 0.156001,
 
 		'Dancer2::Plugin::Passphrase' => '2.0.5',
