@@ -34,7 +34,7 @@
 
             <% IF e.login %>
               <% IF username %>
-                <li><a href="/pm/account"><% m.translation.account %></a></li>
+                <li><a href="/pm/account"><% resources.memu.translation.account %></a></li>
               <% ELSE %>
                 <li><a href="/pm/login"><% e.title %></a></li>
               <% END %>
