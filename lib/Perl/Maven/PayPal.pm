@@ -180,21 +180,15 @@ sub paypal_buy {
 		);
 		$button_text = qq{$usd USD per month};
 
-		my $trial = mymaven->{trial};
-		if ( $type eq 'trial' and $trial ) {
-			$params{a1} = $trial->{a1};
-			$params{p1} = $trial->{p1};
-			$params{t1} = 'M';
+		my $deals = mymaven->{deals};
+		if ( $deals and $deals->{$type} ) {
+			$params{a1} = $deals->{$type}{a1};
+			$params{p1} = $deals->{$type}{p1};
+			$params{t1} = $deals->{$type}{t1};
+			$usd        = $params{p1};
+			my $period = "month";    # t1 = 'M'
+			$button_text = qq{$params{a1} USD for the first $period and then $usd USD per $period.};
 		}
-
-		#if ( $type eq 'trial' ) {
-		#	$params{p1} = 1;
-		#	$params{t1} = 'M';
-
-		#	#$button_text = qq{1 USD for the first month and then $usd USD per month};
-		#	#$button_text = qq{1 USD for the first month};
-		#	$button_text = q{Sign me up to the Perl Maven Pro for $1!};
-		#}
 
 		#if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
 		#	$params{a1}  = 1;
