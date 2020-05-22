@@ -162,10 +162,10 @@ sub paypal {
 }
 
 sub paypal_buy {
-	my ( $what, $type, $quantity, $button_text ) = @_;
-
-	my $products = setting('products');
-	my $usd      = $products->{$what}{price};
+	my ( $what, $type, $quantity, ) = @_;
+	my $button_text = '';
+	my $products    = setting('products');
+	my $usd         = $products->{$what}{price};
 
 	# TODO remove special case for recurring payment
 	my %params;
@@ -177,37 +177,31 @@ sub paypal_buy {
 			a3 => $usd,
 			p3 => 1,
 			t3 => 'M',    # monthly
+						  # recurring payment of a3 USD even p3 t3
 		);
-		$button_text = qq{$usd USD per month};
 
 		my $deals = mymaven->{deals};
 		if ( $deals and $deals->{$type} ) {
-			$params{a1} = $deals->{$type}{a1};
-			$params{p1} = $deals->{$type}{p1};
-			$params{t1} = $deals->{$type}{t1};
-			$usd        = $params{p1};
-			my $period = "month";    # t1 = 'M'
-			$button_text = qq{$params{a1} USD for the first $period and then $usd USD per $period.};
+			my %deal = %{ $deals->{$type} };
+			for my $k ( keys %deal ) {
+				$params{$k} = $deal{$k};
+			}
 		}
 
-		#if ( $type eq 'annual-1' ) {    # TODO remove hardcoding
-		#	$params{a1}  = 1;
-		#	$params{p1}  = 1;
-		#	$params{t1}  = 'M';
-		#	$usd         = 90;
-		#	$params{a3}  = $usd;
-		#	$params{t3}  = 'Y';                     # yearly
-		#	$button_text = qq{$usd USD per year};
-		#}
-		if ( $type eq 'annual' ) {    # TODO remove hardcoding
-									  #$params{a1} = 60;
-									  #$params{p1} = 1;
-									  #$params{t1} = 'Y';
-			$usd         = 90;
-			$params{a3}  = $usd;
-			$params{t3}  = 'Y';                     # yearly
-			$button_text = qq{$usd USD per year};
+		my %period;
+		for my $i ( 1, 2 ) {
+			if ( $params{"t$i"} eq 'M' ) {
+				$period{$i} = "month";
+			}
+			elsif ( $params{"t$i"} eq 'Y' ) {
+				$period{$i} = "year";
+			}
 		}
+		if ( exists $params{t1} ) {
+			$button_text = qq{$params{a1} USD for the first $period{1} and then "};
+		}
+		$button_text .= qq{$params{a3} USD per $period{3}.};
+		$usd = $params{a1};
 	}
 	else {
 		$params{amount} = $usd;

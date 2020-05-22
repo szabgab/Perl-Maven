@@ -418,8 +418,7 @@ get '/pm/account' => sub {
 		$params{whitelist} = $db->get_whitelist($uid);
 	}
 	if ( $db->get_product_by_code('code_maven_pro') and not $db->is_subscribed( $uid, 'code_maven_pro' ) ) {
-		$params{code_maven_pro_buy_button}
-			= Perl::Maven::PayPal::paypal_buy( 'code_maven_pro', 'trial', 1, 'code_maven_pro_1_9' );
+		$params{code_maven_pro_buy_button} = Perl::Maven::PayPal::paypal_buy( 'code_maven_pro', 'monthly', 1, );
 	}
 	template 'account', \%params;
 };
