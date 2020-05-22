@@ -189,7 +189,7 @@ sub paypal_buy {
 		}
 
 		my %period;
-		for my $i ( 1, 2 ) {
+		for my $i ( 1, 3 ) {
 			if ( $params{"t$i"} eq 'M' ) {
 				$period{$i} = "month";
 			}
