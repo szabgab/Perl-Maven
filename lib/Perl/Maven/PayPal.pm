@@ -73,7 +73,7 @@ any '/paypal' => sub {
 	$body .= "<pre>\n$content\n</pre>\n";
 
 	my $id     = param('custom');
-	my $paypal = paypal( id => $id );
+	my $paypal = get_paypal( id => $id );
 
 	my ( $txnstatus, $reason ) = $paypal->ipnvalidate( \%query );
 	if ( not $txnstatus ) {
@@ -157,7 +157,7 @@ any '/paypal' => sub {
 };
 
 ###################################### subroutines:
-sub paypal {
+sub get_paypal {
 	my @params = @_;
 
 	if ($sandbox) {
@@ -225,7 +225,7 @@ sub paypal_buy {
 	my $cancel_url = uri_for('/canceled');
 	my $return_url = uri_for('/paid');
 	my $notify_url = uri_for('/paypal');
-	my $paypal     = paypal();
+	my $paypal     = get_paypal();
 	my $button     = $paypal->button(
 
 		#button_image  => qq{<button type="button" class="btn btn-success">$button_text</button>},
