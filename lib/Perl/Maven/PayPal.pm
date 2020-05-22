@@ -198,7 +198,7 @@ sub paypal_buy {
 			}
 		}
 		if ( exists $params{t1} ) {
-			$button_text = qq{$params{a1} USD for the first $period{1} and then "};
+			$button_text = qq{$params{a1} USD for the first $period{1} and then };
 		}
 		$button_text .= qq{$params{a3} USD per $period{3}.};
 		$usd = $params{a1};
