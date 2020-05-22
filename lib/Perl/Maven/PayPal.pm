@@ -180,7 +180,7 @@ sub paypal_buy {
 		);
 		$button_text = qq{$usd USD per month};
 
-		my $trial = mymaven->{trial}
+		my $trial = mymaven->{trial};
 			if ( $type eq 'trial' and $trial ) {
 			$params{a1} = $trial->{a1};
 			$params{p1} = $trial->{p1};
