@@ -89,7 +89,9 @@ any '/paypal' => sub {
 		$body .= "\n</pre>\n";
 
 		send_mail( $header, { html => $body } );
-		return '';
+
+		# Let's disregard this validation for now
+		#return '';
 	}
 
 	my $paypal_data = from_yaml setting('db')->get_transaction($id);
@@ -178,13 +180,14 @@ sub paypal_buy {
 		);
 		$button_text = qq{$usd USD per month};
 
+		my $trial = mymaven->{trial}
+			if ( $type eq 'trial' and $trial ) {
+			$params{a1} = $trial->{a1};
+			$params{p1} = $trial->{p1};
+			$params{t1} = 'M';
+		}
+
 		#if ( $type eq 'trial' ) {
-		#	$params{a1} = 0;
-		#	$params{p1} = 1;
-		#	$params{t1} = 'M';
-		#}
-		#if ( $type eq 'trial' ) {
-		#	$params{a1} = 1;
 		#	$params{p1} = 1;
 		#	$params{t1} = 'M';
 
