@@ -2,7 +2,6 @@ menu:
   - dir: left
     menu:
       - login: 1
-        title: Login
       - title: FREE Registration
         button: 1
   - dir: right
@@ -15,4 +14,5 @@ menu:
       - title: About
         url: /about
       - atom: 1
-
+text:
+    login: Login
