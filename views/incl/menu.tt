@@ -34,6 +34,7 @@
 
             <% IF e.login %>
               <% IF username %>
+                <li><a href="/pm/logout"><% resources.text.logout %></a></li>
                 <li><a href="/pm/account"><% resources.text.account %></a></li>
               <% ELSE %>
                 <li><a href="/pm/login"><% resources.text.login %></a></li>
