@@ -36,7 +36,8 @@
               <% IF username %>
                 <li><a href="/pm/account"><% resources.text.account %></a></li>
               <% ELSE %>
-                <li><a href="/pm/login"><% e.title %></a></li>
+                <li><a href="/pm/login"><% resources.text.login %></a></li>
+                <li><a href="/pm/register"><% resources.text.register %></a></li>
               <% END %>
             <% END %>
 
