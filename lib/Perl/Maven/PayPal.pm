@@ -34,10 +34,13 @@ get '/buy' => sub {
 	if ( not $products->{$what} ) {
 		return pm_error('invalid_product_specified');
 	}
-	if ( $type eq 'annual' ) {    # TODO remove hardcoding
-		$products->{$what}{price} = 90;
-	}
-	return template 'buy', { %{ $products->{$what} }, button => paypal_buy( $what, $type, 1 ), };
+
+	#if ( $type eq 'annual' ) {    # TODO remove hardcoding
+	#	$products->{$what}{price} = 90;
+	#}
+	#my $text = "Price ?? USD";
+	my ( $button, $text ) = paypal_buy( $what, $type, 1 );
+	return template 'buy', { name => $products->{$what}{name}, text => $text, button => $button };
 };
 
 get '/canceled' => sub {
