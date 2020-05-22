@@ -40,7 +40,9 @@ get '/buy' => sub {
 	#}
 	#my $text = "Price ?? USD";
 	my ( $button, $text ) = paypal_buy( $what, $type, 1 );
-	return template 'buy', { name => $products->{$what}{name}, text => $text, button => $button };
+
+	# We don't want to duplicate the text so we leave it out for now
+	return template 'buy', { name => $products->{$what}{name}, text => '', button => $button };
 };
 
 get '/canceled' => sub {
