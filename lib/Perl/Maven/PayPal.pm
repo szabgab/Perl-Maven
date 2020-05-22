@@ -256,7 +256,7 @@ sub paypal_buy {
 
 	log_paypal( 'buy_button', { id => $id, %data } );
 
-	return $button;
+	return $button, $button_text;
 }
 
 sub log_paypal {
