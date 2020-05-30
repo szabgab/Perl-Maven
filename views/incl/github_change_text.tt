@@ -1,5 +1,5 @@
 <% IF edit %>
 <div>
-   If you have any comments or questions, feel free to post them on the <a href="<% edit %>">source of this page</a> in GitHub.
+  <% resources.text.comments %> <a href="<% edit %>"><% resources.text.source %></a>
 </div>
 <% END %>
