@@ -671,7 +671,7 @@ get '/archive' => sub {
 
 	# filter for special
 	if ( $special and $special eq 'preview' ) {
-		@$pages = grep { is_special( $special, $_->{url} ) } @$pages;
+		@$pages = grep { is_special( $special, "/$_->{filename}" ) } @$pages;
 	}
 
 	# add series
