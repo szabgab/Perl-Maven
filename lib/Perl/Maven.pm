@@ -660,13 +660,19 @@ get '/about' => sub {
 };
 
 get '/archive' => sub {
-	my $tag = param('tag');
+	my $tag     = param('tag');
+	my $special = param('special');
 
 	my $pages
 		= $tag
 		? setting('tools')->read_meta_array( 'archive', filter => $tag )
 		: setting('tools')->read_meta_array('archive');
 	_replace_tags($pages);
+
+	# filter for special
+	if ( $special and $special eq 'preview' ) {
+		@$pages = grep { is_special( $special, $_->{url} ) } @$pages;
+	}
 
 	# add series
 	my $lookup_series = setting('tools')->read_meta('lookup_series');
