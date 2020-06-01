@@ -833,7 +833,10 @@ get qr{^/pro/(.+)} => sub {
 	pass if not -e $path;    # will show invalid page
 
 	my $db = setting('db');
-	pass if is_free("/pro/$article");
+	pass if is_special( 'free', "/pro/$article" );
+	pass
+		if logged_in()
+		and is_special( 'preview', "/pro/$article" );
 	pass
 		if logged_in()
 		and $db->is_subscribed( session('uid'), $product );
@@ -920,7 +923,7 @@ get qr{^/media/(.+)} => sub {
 	error if $item =~ /\.\./;
 
 	my $db = setting('db');
-	if ( $item =~ m{^pro/} and not is_free("/$item") ) {
+	if ( $item =~ m{^pro/} and not is_special( 'free', "/$item" ) ) {
 		my $product = 'code_maven_pro';
 		return 'error: not logged in' if not logged_in();
 		return 'error: not a Pro subscriber'
@@ -1117,9 +1120,10 @@ sub rss {
 	return encode( 'UTF-8', $pmf->rss );
 }
 
-sub is_free {
-	my ($path) = @_;
-	return Perl::Maven::Tools::_any( $path, mymaven->{free} );
+# how is "free" or "preview"
+sub is_special {
+	my ( $how, $path ) = @_;
+	return Perl::Maven::Tools::_any( $path, mymaven->{$how} );
 }
 
 sub is_bot {
