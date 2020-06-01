@@ -660,8 +660,12 @@ get '/about' => sub {
 };
 
 get '/archive' => sub {
-	my $tag     = param('tag');
-	my $special = param('special');
+	my $tag = param('tag');
+	my $special;
+	if ( $tag eq 'preview' ) {
+		$special = $tag;
+		$tag     = undef;
+	}
 
 	my $pages
 		= $tag
@@ -669,8 +673,8 @@ get '/archive' => sub {
 		: setting('tools')->read_meta_array('archive');
 	_replace_tags($pages);
 
-	# filter for special
-	if ( $special and $special eq 'preview' ) {
+	# filter for special cases
+	if ($special) {
 		@$pages = grep { is_special( $special, "/$_->{filename}" ) } @$pages;
 	}
 

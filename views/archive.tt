@@ -7,7 +7,7 @@
        <li><button class="btn btn-mini btn-primary archive-button" type="button" value="free">Free</button></li>
        <li><button class="btn btn-mini btn-primary archive-button" type="button" value="pro">Pro</button></li>
        <li><button class="btn btn-mini btn-primary archive-button" type="button" value="interview">Interviews</button></li>
-       <li><button class="btn btn-mini btn-primary archive-button" type="button" value="preview">Preview</button></li>
+       <li><button class="btn btn-mini btn-primary archive-button" type="button" value="preview">Previews</button></li>
     </ul>
   </div>
 <% END %>
