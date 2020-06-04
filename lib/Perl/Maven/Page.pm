@@ -163,7 +163,7 @@ sub process {
 				$line = '';
 			}
 
-			my $path = substr $file, length('/media');
+			my $path = length($file) > 6 ? substr $file, length('/media') : "";
 			my %types = (
 				mp4  => 'mp4',
 				webm => 'webm',
