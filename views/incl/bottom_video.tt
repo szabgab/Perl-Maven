@@ -1,4 +1,6 @@
+<% UNLESS pro %>
 <% IF conf.bottom_youtube_video %>
    <iframe width="1120" height="630" class="youtube" src="https://www.youtube.com/embed/<% conf.bottom_youtube_video %>?rel=0" frameborder="0" allowfullscreen></iframe>
+<% END %>
 <% END %>
 
