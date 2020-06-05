@@ -52,10 +52,10 @@ sub _none {
 sub read_meta {
 	my ( $self, $file ) = @_;
 
-	my $host = Perl::Maven::Config::host( $self->host );
-    my $json_file = $self->meta . "/$host/meta/$file.json";
-    return {} if not -e $json_file;
-	return read_json( $json_file );
+	my $host      = Perl::Maven::Config::host( $self->host );
+	my $json_file = $self->meta . "/$host/meta/$file.json";
+	return {} if not -e $json_file;
+	return read_json($json_file);
 }
 
 sub read_meta_hash {
