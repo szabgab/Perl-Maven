@@ -233,7 +233,7 @@ sub process_site {
 	#$self->pages( { map { substr( $_->{file}, 0, -4 ) => $_ } @$pages } );
 	$self->pages( { map { substr( $_->{url_path}, 0, -4 ) => $_ } @$pages } );
 
-	my $series_file = $config->{series_file};
+	my $series_file = $config->{root} . '/sites/' . $lang . '/series.yml';
 
 	#print Dumper $config;
 	if ($series_file) {
