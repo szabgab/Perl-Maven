@@ -662,7 +662,7 @@ get '/about' => sub {
 get '/archive' => sub {
 	my $tag = param('tag');
 	my $special;
-	if ( $tag eq 'preview' ) {
+	if ( defined($tag) and $tag eq 'preview' ) {
 		$special = $tag;
 		$tag     = undef;
 	}
