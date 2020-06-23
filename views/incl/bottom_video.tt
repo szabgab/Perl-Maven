@@ -1,6 +1,8 @@
 <% UNLESS tags.grep('screencast') %>
 <% IF conf.bottom_youtube_video %>
+<div>
    <iframe width="1120" height="630" class="youtube" src="https://www.youtube.com/embed/<% conf.bottom_youtube_video %>?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
 <% END %>
 <% END %>
 
