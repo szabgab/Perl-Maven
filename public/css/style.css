@@ -552,3 +552,7 @@ audio {
         display: none;
     }
 }
+
+.bottom-video {
+   margin-top: 30px;
+}
