@@ -522,13 +522,13 @@ video {
       height: 576px;
    }
 }
-@media (min-width: 1000px) {
+@media (min-width: 1000px) and (max-width: 1599px) {
    .youtube {
       width: 640px;
       height: 360px;
    }
 }
-@media (min-width: 800px) and (max-width 999px) {
+@media (min-width: 800px) and (max-width: 999px) {
    .youtube {
       width: 560px;
       height: 315px;
