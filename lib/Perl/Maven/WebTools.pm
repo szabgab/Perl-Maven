@@ -298,6 +298,10 @@ sub pm_show_page {
 	$tt->{$_} = $data->{$_} for keys %$data;
 	my $url  = request->base || '';
 	my $path = request->path || '';
+	if ( length($path) > 0 and substr( $path, 0, 1 ) eq '/' ) {
+		$path = substr( $path, 1 );
+	}
+
 	$tt->{canonical} = "$url/$path";
 
 	return template $params->{template}, $tt;
