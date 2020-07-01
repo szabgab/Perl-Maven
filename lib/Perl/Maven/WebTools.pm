@@ -302,7 +302,7 @@ sub pm_show_page {
 		$path = substr( $path, 1 );
 	}
 
-	$tt->{canonical} = "$url/$path";
+	$tt->{canonical} = "$url$path";
 
 	return template $params->{template}, $tt;
 }
