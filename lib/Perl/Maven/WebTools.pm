@@ -255,15 +255,15 @@ sub pm_show_page {
 	$data        //= {};
 	$pre_process //= {};
 
-	my $path
+	my $filepath
 		= ( delete $params->{path} || ( mymaven->{site} . '/pages' ) ) . "/$params->{article}.txt";
 
-	if ( not -e $path ) {
+	if ( not -e $filepath ) {
 		status 'not_found';
 		return template 'error', { 'no_such_article' => 1 };
 	}
 
-	my $tt = read_tt( $path, $pre_process );
+	my $tt = read_tt( $filepath, $pre_process );
 
 	if ( $tt->{tags} and mymaven->{special} ) {
 		( $tt->{feed} ) = grep { mymaven->{special}{$_} } @{ $tt->{tags} };
@@ -297,7 +297,7 @@ sub pm_show_page {
 
 	$tt->{$_} = $data->{$_} for keys %$data;
 	my $url  = request->base || '';
-	#my $path = request->path || '';
+	my $path = request->path || '';
 	$tt->{canonical} = "$url/$path";
 
 	return template $params->{template}, $tt;
