@@ -45,7 +45,6 @@
             <% IF e.searchbox %>
               <li><form id="search_form">
                      <input id="search_box" type="text" data-provide="typeahead" data-items="4" aria-label="Enter your search term">
-                     <label for="search_box">Enter your search term</label>
                   </form>
               </li>
             <% END %>
