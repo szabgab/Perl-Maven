@@ -296,6 +296,9 @@ sub pm_show_page {
 	}
 
 	$tt->{$_} = $data->{$_} for keys %$data;
+	my $url  = request->base || '';
+	#my $path = request->path || '';
+	$tt->{canonical} = "$url/$path";
 
 	return template $params->{template}, $tt;
 }
