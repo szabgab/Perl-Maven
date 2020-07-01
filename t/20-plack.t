@@ -43,6 +43,7 @@ test_psgi $app, sub {
 	is $res->content, <<"END", 'content';
 Sitemap: $url/sitemap.xml
 
+User-agent: *
 Disallow: /media/*
 END
 

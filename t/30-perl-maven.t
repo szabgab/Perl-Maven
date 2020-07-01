@@ -62,6 +62,7 @@ subtest static => sub {
 	is $visitor->content, <<"END";
 Sitemap: $url/sitemap.xml
 
+User-agent: *
 Disallow: /media/*
 END
 
