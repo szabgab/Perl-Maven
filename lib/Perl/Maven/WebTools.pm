@@ -202,6 +202,10 @@ sub _resources {
 sub pm_template {
 	my ( $template, $params ) = @_;
 	delete $params->{password};
+	my $url  = request->base || '';
+	my $path = request->path || '';
+	$params->{canonical} = "$url/$path";
+
 	if ( request->path =~ /\.json$/ ) {
 		return to_json $params;
 	}
