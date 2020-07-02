@@ -29,7 +29,7 @@
 
 <% INCLUDE incl/credits.tt %>
 
-<% IF show_date %>
+<% IF conf.show_date %>
   <hr>
   <p>
   Published on <% date %>
