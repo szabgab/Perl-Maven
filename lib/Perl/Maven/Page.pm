@@ -180,6 +180,8 @@ sub process {
 
 			if ( @sources and not $youtube ) {
 				$line .= <<"SCREENCAST";
+<link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+<script src="//vjs.zencdn.net/4.12/video.js"></script>
 <video id="video_1" class="video-js vjs-default-skin"
   controls preload="auto"
   data-setup='{"controls":true}'>
