@@ -13,7 +13,7 @@ function show_video() {
     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     ></iframe>`;
 }
-setTimeout(show_video, 4000);
+setTimeout(show_video, 2000);
 </script>
 <% END %>
 <% END %>
