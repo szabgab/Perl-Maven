@@ -1,7 +1,15 @@
 <% UNLESS tags.grep('screencast') %>
 <% IF conf.bottom_youtube_video %>
 <div class="bottom-video">
-   <iframe class="youtube" src="https://www.youtube.com/embed/<% conf.bottom_youtube_video %>?rel=0" frameborder="0" allowfullscreen></iframe>
+   <iframe
+      class="youtube"
+      src="https://www.youtube.com/embed/<% conf.bottom_youtube_video %>?rel=0"
+      frameborder="0"
+      allowfullscreen
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      title="Welcome"
+      srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href=https://www.youtube.com/embed/<% conf.bottom_youtube_video %>?rel=0><img src=https://img.youtube.com/vi/<% conf.bottom_youtube_video %>/hqdefault.jpg alt='Welcome to the Code Maven site'><span>▶</span></a>"
+   ></iframe>
 </div>
 <% END %>
 <% END %>
