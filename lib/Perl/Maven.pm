@@ -1062,6 +1062,8 @@ sub _feed {
 			$abstract .= qq{\n<a href="$link">Links and transcript</a>\n};
 		}
 
+        $title =~ s/</&lt;/g
+        $title =~ s//>&gt;/g
 		$e{title}   = $title;
 		$e{summary} = qq{<![CDATA[$abstract]]>};
 		$e{updated} = $p->{timestamp};
