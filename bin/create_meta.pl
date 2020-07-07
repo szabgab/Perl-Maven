@@ -10,6 +10,7 @@ use YAML::XS qw(LoadFile);
 use lib 'lib';
 use Perl::Maven::Config;
 use Perl::Maven::CreateMeta;
+use Perl::Maven::Sendmail qw(send_mail html2text);
 
 binmode( STDOUT, ':encoding(UTF-8)' );
 binmode( STDERR, ':encoding(UTF-8)' );
@@ -21,6 +22,7 @@ GetOptions(
 	'books'    => \my $books,
 	'help'     => \my $help,
 	'config=s' => \my $config,
+	'email=s'  => \my $email,
 
 	#	'all'      => \my $all,
 );
@@ -29,17 +31,44 @@ $ENV{METAMETA} = 1;
 
 $config ||= 'config.yml';
 
-my $cfg     = LoadFile($config);
-my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
+eval {
+	my $cfg     = LoadFile($config);
+	my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
 
-foreach my $domain_name ( sort keys %{ $mymaven->{config}{domains} } ) {
-	my $meta = Perl::Maven::CreateMeta->new(
-		verbose => $verbose,
-		mymaven => $mymaven,
-		books   => $books,
+	foreach my $domain_name ( sort keys %{ $mymaven->{config}{domains} } ) {
+		my $meta = Perl::Maven::CreateMeta->new(
+			verbose => $verbose,
+			mymaven => $mymaven,
+			books   => $books,
+		);
+		$meta->process_domain($domain_name);
+	}
+};
+my $err = $@;
+
+if ($email) {
+	my $cfg     = LoadFile('config.yml');
+	my $mymaven = Perl::Maven::Config->new( $cfg->{mymaven_yml} );
+	my $config  = $mymaven->config('code-maven.com');
+	$mymaven = $config;
+
+	my %content;
+	if ($err) {
+		$content{text} = $err;
+	}
+	else {
+		$content{text} = "Success";
+	}
+
+	my %header = (
+		From    => $mymaven->{from},
+		To      => $email,
+		Subject => ( $err ? 'Failure creating meta files' : 'Success creating meta files' ),
 	);
-	$meta->process_domain($domain_name);
+	send_mail( \%header, \%content );
 }
+
+die $err if $err;
 
 #if ($all) {
 #	for my $domain_name ( keys %{ $mymaven->{config} } ) {
