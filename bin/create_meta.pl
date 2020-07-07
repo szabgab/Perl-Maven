@@ -57,7 +57,7 @@ if ($email) {
 		$content{text} = $err;
 	}
 	else {
-		$content{text} = "Success";
+		$content{text} = 'Success';
 	}
 
 	my %header = (
