@@ -4,7 +4,9 @@ Nevertheless the overview:
 
 In the header there are
 
-    =key value
+```
+=key value
+```
 
 pairs of meta information.
 
@@ -59,7 +61,7 @@ Header values:
 
     =comments_disqus_enable 1
         Boolean. Enable/Disable commands using Disqus
-	
+
     =show_social
         Boolean. Shall we show the social widgets (Twitter, Reddit, Facebook, G+)
 
@@ -87,7 +89,7 @@ is displayed on the front pages and is included in the RSS/Atom feed.
 
 `<hl></hl>` stands for highlight and usually code-snippets inside the text are marked with these.
 
-`<b></b>` is used to mark other important pieces. 
+`<b></b>` is used to mark other important pieces.
 
 
 Code snippets and full Examples

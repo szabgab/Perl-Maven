@@ -188,7 +188,7 @@ Register:
   - If a user has not been verified yet, send an e-mail and ask
     if I can help (or shall I just delete the old but unverified
     accounts?
-  - If a user does not yet have a password, send an e-mail   
+  - If a user does not yet have a password, send an e-mail
     explaining the new story
 
 
