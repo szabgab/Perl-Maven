@@ -5,13 +5,14 @@ Nevertheless the overview:
 In the header there are
 
 ```
-=key value
+    =key value
 ```
 
 pairs of meta information.
 
 Header values:
 
+```
     =title Is the title of the article
 
     =timestamp 2015-02-01T07:30:01
@@ -70,7 +71,7 @@ Header values:
     =show_related
     =show_date
     =show_ads
-
+```
 
 lib/Perl/Maven/Page.pm has the full list of header values. Both those that are inherited from the mymaven configuration and those
 that can only appear in the headr of an article.
@@ -78,9 +79,11 @@ that can only appear in the headr of an article.
 
 The text between
 
+```
     =abstract start
 
     =abstract end
+```
 
 is displayed on the front pages and is included in the RSS/Atom feed.
 
@@ -140,7 +143,13 @@ Separate controls to include files in the following places:
     /keywords and /search  (using the 'keywords' meta file)
     /sitemap.xml       (uses the 'sitemap' meta file)
 
+```
+/slides - generated separately
+/category - based on the =books tag in each file.
+=tags
+=indexes - these values are displayed at the top of the page as blue buttons.
+```
 
-
-
+In each language there can be a file called `series.yml` (e.g.  `sites/LANG/series.yml`)
+that contains lists of pages in "pages-serieses". Based on this we have the list of page on the left.
 
