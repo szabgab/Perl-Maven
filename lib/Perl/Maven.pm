@@ -892,6 +892,11 @@ get '/mail/:article' => sub {
 	return template 'email_newsletter', $tt, { layout => 'email' };
 };
 
+get '/courses/:file' => sub {
+    my $file = param('file');
+    return $file;
+};
+
 get '/favicon.ico' => sub {
 	_send_file('favicon.ico');
 };
