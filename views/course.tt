@@ -1,0 +1,52 @@
+<h1><% title %></h1>
+
+This, along with the other <a href="/courses">courses</a> can be given either on-site in the offices
+of the client or on-line via Zoom or other means. Contact <a href="https://szabgab.com/contact.html">Gabor Szabo</a> for more details.
+
+<h2>Goals</h2>
+<ul>
+<% FOR line IN objectives %>
+   <li><% line %></li>
+<% END %>
+</ul>
+
+<h2>Audience</h2>
+<ul>
+<% FOR line IN target_audience %>
+   <li><% line %></li>
+<% END %>
+</ul>
+
+<h2>Prerequisites</h2>
+<ul>
+<% FOR line IN prerequisites %>
+   <li><% line %></li>
+<% END %>
+</ul>
+
+<h2>Language</h2>
+<ul>
+<% FOR line IN language %>
+   <li><% line %></li>
+<% END %>
+</ul>
+
+<h2>Course format</h2>
+<ul>
+<% FOR line IN course_format %>
+   <li><% line %></li>
+<% END %>
+</ul>
+
+<h2>Syllabus</h2>
+
+<% FOR section IN syllabus %>
+<h3><% section.title %></h3>
+<ul>
+<% FOR line IN section.entries %>
+   <li><% line %></li>
+<% END %>
+</ul>
+
+<% END %>
+

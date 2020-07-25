@@ -894,7 +894,20 @@ get '/mail/:article' => sub {
 
 get '/courses/:file' => sub {
     my $file = param('file');
-    return $file;
+    my $courses = mymaven->{courses};
+    if (not $courses) {
+        status 'not_found';
+	return 'Courses were not configured here.';
+    }
+    my $json_file = path($courses, $file . '.json');
+    if (not -e $json_file) {
+        status 'not_found';
+	return "Course $file does not exis.";
+    }
+    my $json = Cpanel::JSON::XS->new->utf8;
+    my $json_string = Path::Tiny::path( $json_file )->slurp_utf8;
+    my $data = $json->decode( $json_string );
+    return pm_template 'course', $data;
 };
 
 get '/favicon.ico' => sub {
