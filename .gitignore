@@ -9,6 +9,7 @@
 /books
 /config
 /cover_db
+/environments/deployment.yml
 /logs
 /logs_paypal/
 /logs_requests/
@@ -22,4 +23,3 @@
 /venv/
 /views/sites/
 cpan.json
-/environments/deployment.yml
