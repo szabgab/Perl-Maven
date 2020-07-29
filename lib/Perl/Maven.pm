@@ -892,6 +892,10 @@ get '/mail/:article' => sub {
 	return template 'email_newsletter', $tt, { layout => 'email' };
 };
 
+get '/courses/' => sub {
+	return redirect "/courses";
+};
+
 get '/courses/:file' => sub {
 	my $file    = param('file');
 	my $courses = mymaven->{courses};
