@@ -893,7 +893,7 @@ get '/mail/:article' => sub {
 };
 
 get '/courses/' => sub {
-	return redirect "/courses";
+	return redirect '/courses';
 };
 
 get '/courses/:file' => sub {
