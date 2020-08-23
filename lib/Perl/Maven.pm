@@ -7,7 +7,7 @@ use Dancer2;
 use Dancer2::Plugin::Passphrase;    # qw(passphrase);
 
 our $VERSION = '0.11';
-my $PM_VERSION = 202008231;         # Version number to force JavaScript and CSS files reload
+my $PM_VERSION = 20200823.2;         # Version number to force JavaScript and CSS files reload
 
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
