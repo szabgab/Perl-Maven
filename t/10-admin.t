@@ -118,7 +118,7 @@ subtest add_subscriber => sub {
 		system "$admin --addsub some_free_product --email a\@b.com";
 	};
 	like $stdout,   qr{Could not find user 'a\@b.com'};
-	is $stderr,     '', 'stderr is empty';
+	is $stderr,     '',                'stderr is empty';
 	unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
 };
 
@@ -129,7 +129,7 @@ subtest add_client_to_not_exisiting_product => sub {
 		system "$admin --addsub other_thing --email a\@b.com";
 	};
 	like $stdout,   qr{Could not find product 'other_thing'};
-	is $stderr,     '', 'stderr is empty';
+	is $stderr,     '',                'stderr is empty';
 	unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
 };
 

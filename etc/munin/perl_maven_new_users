@@ -16,8 +16,8 @@ use lib "$root/lib";
 use Perl::Maven::DB;
 my $db = Perl::Maven::DB->new("$root/pm.db");
 
-my $day  = time - 60 * 60 * 24;
-my $week = time - 60 * 60 * 24 * 7;
+my $day            = time - 60 * 60 * 24;
+my $week           = time - 60 * 60 * 24 * 7;
 my ($new_verify_1) = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE verify_time > ?',   undef, $day );
 my ($new_verify_7) = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE verify_time > ?',   undef, $week );
 my ($new_users_1)  = $db->{dbh}->selectrow_array( 'SELECT COUNT(*) FROM user WHERE register_time > ?', undef, $day );

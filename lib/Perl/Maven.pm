@@ -19,7 +19,7 @@ use POSIX       ();
 use Time::HiRes ();
 use YAML::XS qw(LoadFile);
 use MongoDB;
-use Path::Tiny ();                  # the path function would clash with the path function of Dancer
+use Path::Tiny       ();            # the path function would clash with the path function of Dancer
 use Cpanel::JSON::XS ();
 use Encode qw(encode);
 
@@ -290,7 +290,7 @@ hook before_template => sub {
 	my %localized = map { ( $ISO_LANG{$_} || $_ ) => $links{$_} } keys %links;
 	$t->{localized_versions} = \%localized;
 
-	$links{$language}{current} = 1;                                           # mark the current language
+	$links{$language}{current} = 1;                                                      # mark the current language
 	$t->{languages} = [ sort { $a->{name} cmp $b->{name} } values %links ];
 
 	my $url = request->uri_base . request->path;
@@ -871,7 +871,7 @@ get qr{^/pro/(.+)} => sub {
 
 get '/mail/:article' => sub {
 	my $article = param('article');
-	my $code    = param('code') || '';
+	my $code    = param('code')  || '';
 	my $email   = param('email') || '';
 
 	my $path = mymaven->{dirs}{mail} . "/$article.txt";

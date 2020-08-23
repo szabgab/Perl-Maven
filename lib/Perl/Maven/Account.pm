@@ -166,7 +166,7 @@ post '/pm/coupon' => sub {
 	# TODO: check if we have not used all the available coupons.
 
 	my $subscription_code = 'code_maven_pro';    #TODO get this from the $coupon->{pid}
-		 # check if the user already has a valid subscription then report that and quit
+		# check if the user already has a valid subscription then report that and quit
 	my $subscriptions = $db->get_valid_subscriptions_by_uid($uid);
 	if ( scalar grep { $_ eq $subscription_code } @$subscriptions ) {
 		return pm_message('user_has_valid_subscription');

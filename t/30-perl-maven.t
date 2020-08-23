@@ -109,8 +109,8 @@ A series of articles about testing, and test automation using Perl.
 	#my $n = 200;
 	#diag length $expected;
 	#is substr($visitor->content, 0, $n), substr($expected, 0, $n);
-	my @expected = grep { $_ !~ /pubDate/ } split /\n/, $expected;
-	my @received = split /\n/, $visitor->content;
+	my @expected  = grep { $_ !~ /pubDate/ } split /\n/, $expected;
+	my @received  = split /\n/, $visitor->content;
 	my ($pubDate) = grep {/pubDate/} @received;
 	@received = grep { $_ !~ /pubDate/ } @received;
 	is_deeply \@received, \@expected;

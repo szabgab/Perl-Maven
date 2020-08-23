@@ -20,9 +20,9 @@ has root   => ( is => 'ro', required => 1 );
 has file   => ( is => 'ro', required => 1 );
 has tools  => ( is => 'ro', required => 0 );
 has data   => ( is => 'rw' );
-has raw    => ( is => 'rw', default  => sub { [] } );
-has pre    => ( is => 'ro', default  => sub { {} } );
-has inline => ( is => 'ro', default  => sub { [] } );
+has raw    => ( is => 'rw', default => sub { [] } );
+has pre    => ( is => 'ro', default => sub { {} } );
+has inline => ( is => 'ro', default => sub { [] } );
 
 my @page_options
 	= qw(title timestamp author status description? indexes@? tags@? mp3@? original? books@? translator? redirect? perl6url? perl6title? img? alt? sample?);
@@ -163,7 +163,7 @@ sub process {
 				$line = '';
 			}
 
-			my $path = length($file) > 6 ? substr $file, length('/media') : '';
+			my $path  = length($file) > 6 ? substr $file, length('/media') : '';
 			my %types = (
 				mp4  => 'mp4',
 				webm => 'webm',

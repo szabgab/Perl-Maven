@@ -66,10 +66,10 @@ use the locally stored data to fetch the "most recent" list
 
 =cut
 
-has root  => ( is => 'ro', required => 1 );
-has limit => ( is => 'ro', default  => 100 );
-has hours => ( is => 'ro', default  => 24 );    # shall we restrict this to these numbers 1, 24, 168  ??
-has conf  => ( is => 'ro' );
+has root    => ( is => 'ro', required => 1 );
+has limit   => ( is => 'ro', default  => 100 );
+has hours   => ( is => 'ro', default  => 24 );    # shall we restrict this to these numbers 1, 24, 168  ??
+has conf    => ( is => 'ro' );
 has verbose => ( is => 'ro' );
 has config  => ( is => 'rw' );
 
@@ -169,7 +169,7 @@ sub generate_html_cpan {
 	for my $r (@$data) {
 		$html .= q{<tr>};
 		$html .= sprintf q{<td><a href="https://metacpan.org/release/%s">%s</a></td>}, $r->{distribution}, $r->{name};
-		$html .= sprintf q{<td><a href="https://metacpan.org/author/%s">%s</a></td>}, $r->{author}, $r->{author};
+		$html .= sprintf q{<td><a href="https://metacpan.org/author/%s">%s</a></td>},  $r->{author},       $r->{author};
 		$html .= sprintf q{<td>%s</td>}, ( $r->{abstract} // '' );
 		$html .= sprintf q{<td style="width:130px">%s<td>}, $r->{date};
 		$html .= qq{</tr>\n};
