@@ -7,7 +7,9 @@ use Dancer2;
 use Dancer2::Plugin::Passphrase;    # qw(passphrase);
 
 our $VERSION = '0.11';
-my $PM_VERSION = 20200823.3;         # Version number to force JavaScript and CSS files reload
+
+# Version number to force JavaScript and CSS files reload
+my $PM_VERSION = 20200823.3;
 
 use Cwd qw(abs_path);
 use Data::Dumper qw(Dumper);
@@ -19,7 +21,7 @@ use POSIX       ();
 use Time::HiRes ();
 use YAML::XS qw(LoadFile);
 use MongoDB;
-use Path::Tiny       ();            # the path function would clash with the path function of Dancer
+use Path::Tiny       ();    # the path function would clash with the path function of Dancer
 use Cpanel::JSON::XS ();
 use Encode qw(encode);
 
