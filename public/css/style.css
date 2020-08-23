@@ -557,7 +557,8 @@ audio {
    margin-top: 120px;
 }
 
-@media (max-width: 1200px) {
+/* Change the NBootstrap Navigation bar to collapse to the hamburger earlier */
+@media (max-width: 1300px) {
   .navbar-header {
       float: none;
   }
