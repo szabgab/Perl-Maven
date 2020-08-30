@@ -24,6 +24,7 @@ before_install:
   - cpanm --notest Test::Version
   - cpanm --notest Module::Version
 # Let's make the installation much faster by not testing anything
+install:
   - cpanm --notest --installdeps .
   - tidyall --version
   - mversion Perl::Tidy
