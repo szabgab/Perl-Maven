@@ -33,5 +33,3 @@ services:
   - mongodb
 after_success:
   - cover -test -report coveralls
-after_failure:
-  - cat /home/travis/.cpanm/work/*/build.log
