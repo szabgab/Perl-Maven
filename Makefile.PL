@@ -68,10 +68,11 @@ WriteMakefile(
 		'File::HomeDir' => 0,
 		'JSON::XS'      => 0,    # should be replaced!
 
-		'Net::Dogstatsd' => 0, DataDog
+		'Net::Dogstatsd'     => 0,
+		'DataDog::DogStatsd' => 0,
 
-			# For testing
-			'Test::WWW::Mechanize'   => 1.44,
+		# For testing
+		'Test::WWW::Mechanize'       => 1.44,
 		'Test::WWW::Mechanize::PSGI' => 0.35,
 		'Test::More'                 => 1,
 		'Test::Most'                 => 0.34,
