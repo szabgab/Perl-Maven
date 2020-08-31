@@ -68,7 +68,6 @@ WriteMakefile(
 		'File::HomeDir' => 0,
 		'JSON::XS'      => 0,    # should be replaced!
 
-		'Net::Dogstatsd'     => 0,
 		'DataDog::DogStatsd' => 0,
 
 		# For testing

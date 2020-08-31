@@ -1255,19 +1255,12 @@ sub log_to_mongodb {
 sub log_to_datadog {
 	my ($data) = @_;
 
-	use Net::Dogstatsd;
+	use DataDog::DogStatsd;
 
-	my $dogstatsd = Net::Dogstatsd->new();
-	my $socket    = $dogstatsd->get_socket();
-	$dogstatsd->increment( name => 'web.page_views', );
-	$dogstatsd->gauge(
-		name  => 'web.elapsed_time',
-		value => $data->{elapsed_time},
-	);
-	$dogstatsd->histogram(
-		name  => 'web.elapsed_time_histogram',
-		value => $data->{elapsed_time},
-	);
+	my $dogstatsd = DataDog::DogStatsd->new;
+	$dogstatsd->increment( name => 'web.page_views' );
+	$dogstatsd->gauge( 'web.elapsed_time', $data->{elapsed_time} );
+	$dogstatsd->histogram( 'web.elapsed_time_histogram', $data->{elapsed_time} );
 }
 
 sub in_development {
