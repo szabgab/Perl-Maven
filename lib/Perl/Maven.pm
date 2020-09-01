@@ -1258,9 +1258,9 @@ sub log_to_datadog {
 	use DataDog::DogStatsd;
 
 	my $dogstatsd = DataDog::DogStatsd->new;
-	$dogstatsd->increment('web.page_views');
-	$dogstatsd->gauge( 'web.elapsed_time', $data->{elapsed_time} );
-	$dogstatsd->histogram( 'web.elapsed_time_histogram', $data->{elapsed_time} );
+	$dogstatsd->increment('code-maven.page_views');
+	$dogstatsd->gauge( 'code-maven.elapsed_time', $data->{elapsed_time} );
+	$dogstatsd->histogram( 'code-maven.elapsed_time_histogram', $data->{elapsed_time} );
 }
 
 sub in_development {
