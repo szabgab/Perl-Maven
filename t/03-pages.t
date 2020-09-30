@@ -69,8 +69,8 @@ subtest indexes => sub {
 };
 
 my %cases = (
-	missing_title => qq{Header ended and 'title' was not supplied for file t/files/missing_title.txt\n},
-	invalid_field => qq{Invalid entry in header 'darklord' file t/files/invalid_field.txt\n},
+	missing_title                 => qq{Header ended and 'title' was not supplied for file t/files/missing_title.txt\n},
+	invalid_field                 => qq{Invalid entry in header 'darklord' file t/files/invalid_field.txt\n},
 	invalid_field_before_optional =>
 		qq{Invalid entry in header 'darklord' file t/files/invalid_field_before_optional.txt\n},
 

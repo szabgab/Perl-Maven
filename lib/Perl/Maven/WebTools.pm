@@ -35,7 +35,7 @@ my %RESOURCES = (
 	no_password                 => 'No password was given.',
 	passwords_dont_match        => q{Passwords don't match.},
 	bad_password                => 'No or bad password was given.',
-	old_password_code =>
+	old_password_code           =>
 		'The code you you have received to set your password has timed out. Please ask for a new code.',
 	invalid_email   => 'Could not find this e-mail address in our database.',
 	no_admin_rights => 'You dont have admin rights.',
@@ -62,7 +62,7 @@ my %RESOURCES = (
 	coupon_has_expired      => 'This coupons has already expired',
 	user_has_valid_subscription => 'You already have a valid subscription',
 	unsubscribed                => 'Unsubscribed from the Perl Maven newsletter.',
-	subscribed =>
+	subscribed                  =>
 		'Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/pm/account">account</a>.',
 	verification_email_sent =>
 		'We have sent you an e-mail with a verification code. Please check your e-mail account and click on the link inthe message to verify your new e-mail address.',
@@ -71,7 +71,7 @@ my %RESOURCES = (
 	# PayPal
 	no_product_specified      => 'No product was specified.',
 	invalid_product_specified => 'Invalid product was specified.',
-	please_log_in =>
+	please_log_in             =>
 		'Before making a purchase, please <a href="/register">create an account</a> and  <a href="/pm/login">login</a>, so we can associate your purchase with your account.',
 	canceled => 'We are sorry that you canceled your purchase.',
 
