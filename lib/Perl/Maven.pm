@@ -913,7 +913,7 @@ get '/courses/:file' => sub {
 	my $json        = Cpanel::JSON::XS->new->utf8;
 	my $json_string = Path::Tiny::path($json_file)->slurp_utf8;
 	my $data        = $json->decode($json_string);
-	return pm_template 'course', { course => $data };
+	return pm_template 'course', { course => $data, title => $data->{title} };
 };
 
 get '/favicon.ico' => sub {
