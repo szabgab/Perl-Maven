@@ -4,42 +4,12 @@
 
 <% IF promo %>
 <div id="promo">
-While many of the Code-Maven articles are <a href="/archive?tag=free">free</a>, this article is only available for Code-Maven Pro subscribers.
+All the Pro videos are now available via our <a href="https://courses.code-maven.com/p/all">All or nothing</a> subscription service.
+Now you can also purchase the <a href="https://courses.code-maven.com/courses">individual courses</a> or
+<a href="https://courses.code-maven.com/">everything as a bundle</a> with a one-time payment.
 
-<h2>The Code Maven Pro library of screencasts and articles</h2>
-<p>
-As a Code Maven Pro subscriber you will enjoy a library of articles and screencasts.
-</p>
-<p>
-Ad free browsing!
-</p>
-<p>
-The articles contain topics such as Web Application Development,
-Object Oriented programming, testing, deployment,
-code walkthroughs, best practices, and many more subjects in various programming languages such as
-Python, Go, JavaScript,  Perl, and in related technologies.
-</p>
-<p>
-The related technologies over HTML5, CSS3, Git, vim,
-Unix/Linux shell, SQL and NoSQL just to name a few topics.
-</p>
-<p>
-Subscriptions include all previous pro episodes.
-</p>
-<p>
-In order to subscribe to the Code Maven Pro, first
-<a href="/pm/register">register</a> and <a href="/pm/login">login</a>
-to the web site, and then pay via PayPal:
-</p>
-<p>
-<div class="btn"><a href="/buy?product=code_maven_pro">Subscribe for $9 per month</a></div>
-or
-<div class="btn"><a href="/buy?product=code_maven_pro&type=annual">$90 per year</a></div>
-
-</p>
-
-<p>
-If you already have <b>Code Maven Pro subscription</b>, you will need to <a href="/pm/login">login</a> to access the articles.
+<hr>
+If you already have a <b>Code Maven Pro subscription</b>, you will keep receiving the new videos in your Code-Maven account. You just need to <a href="/pm/login">login</a> to access them.
 </p>
 </div>
 <% END %>
