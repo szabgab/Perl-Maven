@@ -306,6 +306,7 @@ hook before_template => sub {
 
 	if ( $t->{no_such_article} ) {
 		$t->{conf}{google_analytics} = 0;
+		$t->{title} = 'No such article';
 	}
 
 	$t->{pm_version} = in_development() ? time : $PM_VERSION;
@@ -880,7 +881,7 @@ get '/mail/:article' => sub {
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
-	return pm_template 'error', { 'no_such_article' => 1, title => 'No such article' }
+	return pm_template 'error', { 'no_such_article' => 1 }
 		if not $tt->{status}
 		or $tt->{status} ne 'show';
 
