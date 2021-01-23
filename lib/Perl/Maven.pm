@@ -880,7 +880,7 @@ get '/mail/:article' => sub {
 	return 'NO path' if not -e $path;
 
 	my $tt = read_tt($path);
-	return pm_template 'error', { 'no_such_article' => 1 }
+	return pm_template 'error', { 'no_such_article' => 1, title => 'No such article' }
 		if not $tt->{status}
 		or $tt->{status} ne 'show';
 

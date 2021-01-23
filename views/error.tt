@@ -3,7 +3,7 @@
     <% IF no_such_article %>
     No such article
     <% END %>
-    
+
     <% IF error %>
        <% error %>
     <% END %>
