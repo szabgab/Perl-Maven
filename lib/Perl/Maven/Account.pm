@@ -574,7 +574,7 @@ sub register {
 	# Let's not bother with them.
 	# TODO move this to configuration file
 	# Domains used to register on the PerlMaven/CodeMaven sites that bounced:
-	my %BLACK_LIST = map { $_ => 1 } qw(
+	my %REJECT_LIST = map { $_ => 1 } qw(
 		asooemail.com
 		asdfmail.net
 		qwkcmail.net
@@ -608,7 +608,7 @@ sub register {
 	);
 	my ( $username, $domain ) = split /@/, $data{email};
 
-	if ( $BLACK_LIST{$domain} ) {
+	if ( $REJECT_LIST{$domain} ) {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
 
