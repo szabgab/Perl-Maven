@@ -40,6 +40,7 @@ my %RESOURCES = (
 	invalid_email   => 'Could not find this e-mail address in our database.',
 	no_admin_rights => 'You dont have admin rights.',
 	not_logged_in   => 'This area is only accessible to logged in users',
+	naughty_ip      => 'How did you get this IP address',
 	invalid_ip      => 'You are trying to access a protected page from %s which is not in the white-list.
       We have sent an e-mail to your default e-mail address with a code that can be used to add this IP address to the white-list.',
 	not_verified_yet => 'This e-mail address has not been verified yet.

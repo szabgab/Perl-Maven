@@ -611,6 +611,13 @@ sub register {
 	if ( $REJECT_LIST{$domain} ) {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
+	my $user_ip = get_ip();
+	my %bad_ip = map { $_ => 1 } qw(
+		5.253.204.110
+	);
+	if ( $bad_ip{$user_ip} ) {
+		return _registration_form( %data, error => 'naughty_ip' );
+	}
 
 	my $db   = setting('db');
 	my $user = $db->get_user_by_email( $data{email} );
@@ -648,7 +655,7 @@ sub register {
 		"Please finish the $mymaven->{title} registration",
 		{
 			code => $code,
-			ip   => get_ip(),
+			ip   => $user_ip,
 			url  => request->base,
 		},
 	);
