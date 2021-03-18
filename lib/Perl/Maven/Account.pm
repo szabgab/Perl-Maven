@@ -612,7 +612,7 @@ sub register {
 		return _registration_form( %data, error => 'invalid_mail' );
 	}
 	my $user_ip = get_ip();
-	my %bad_ip = map { $_ => 1 } qw(
+	my %bad_ip  = map { $_ => 1 } qw(
 		5.253.204.110
 	);
 	if ( $bad_ip{$user_ip} ) {
