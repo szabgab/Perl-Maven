@@ -614,8 +614,8 @@ sub register {
 	my $user_ip = get_ip();
 	my %bad_ip  = map { $_ => 1 } qw(
 		5.253.204.110
-        5.253.204.148
-        51.91.67.153
+		5.253.204.148
+		51.91.67.153
 	);
 	if ( $bad_ip{$user_ip} ) {
 		return _registration_form( %data, error => 'naughty_ip' );
