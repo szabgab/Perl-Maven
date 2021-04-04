@@ -27,7 +27,7 @@ use Encode qw(encode);
 
 use Web::Feed;
 
-use Perl::Maven::Calendar qw(create_calendar);
+use Perl::Maven::Calendar ();
 use Perl::Maven::Debug qw(tmplog);
 use Perl::Maven::DB;
 use Perl::Maven::Config;
@@ -728,7 +728,7 @@ get '/sitemap.xml' => sub {
 get '/events.ics' => sub {
 	content_type 'text/calendar';
 	my $filepath = path( mymaven->{root}, 'sites', mymaven->{lang}, 'events.json' );
-	return create_calendar($filepath);
+	return Perl::Maven::Calendar::create_calendar($filepath);
 };
 
 get '/rss/:tag' => sub {
