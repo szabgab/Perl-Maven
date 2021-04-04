@@ -14,6 +14,7 @@ sub create_calendar {
 	my ($filepath) = @_;
 
 	my $calendar = Data::ICal->new;
+	my $now      = DateTime->now;
 
 	my $events = decode_json( path($filepath)->slurp_utf8 );
 	for my $event (@$events) {
@@ -21,12 +22,13 @@ sub create_calendar {
 		my $begin      = DateTime->new( $event->{begin} );
 		my $duration   = DateTime::Duration->new( $event->{duration} );
 		$ical_event->add_properties(
-			summary     => $event->{summary},
-			description => $event->{description},
-			dtstart     => DateTime::Format::ICal->format_datetime($begin),
-			location    => $event->{location},
-			url         => $event->{url},
-			duration    => DateTime::Format::ICal->format_duration($duration),
+			summary         => $event->{summary},
+			description     => $event->{description},
+			dtstart         => DateTime::Format::ICal->format_datetime($begin),
+			location        => $event->{location},
+			url             => $event->{url},
+			duration        => DateTime::Format::ICal->format_duration($duration),
+			'last-modified' => DateTime::Format::ICal->format_datetime($now),
 		);
 		$calendar->add_entry($ical_event);
 	}
