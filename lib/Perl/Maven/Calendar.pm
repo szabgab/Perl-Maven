@@ -13,8 +13,10 @@ use Path::Tiny qw(path);
 sub create_calendar {
 	my ($filepath) = @_;
 
+	my $modify_time = ( stat($filepath) )[9];
+
 	my $calendar = Data::ICal->new;
-	my $now      = DateTime->now;
+	my $changed  = DateTime->from_epoch( epoch => $modify_time );
 
 	my $events = decode_json( path($filepath)->slurp_utf8 );
 	for my $event (@$events) {
@@ -28,7 +30,7 @@ sub create_calendar {
 			location        => $event->{location},
 			url             => $event->{url},
 			duration        => DateTime::Format::ICal->format_duration($duration),
-			'last-modified' => DateTime::Format::ICal->format_datetime($now),
+			'last-modified' => DateTime::Format::ICal->format_datetime($changed),
 		);
 		$calendar->add_entry($ical_event);
 	}
