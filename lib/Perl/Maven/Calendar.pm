@@ -30,6 +30,8 @@ sub create_calendar {
 			location        => $event->{location},
 			url             => $event->{url},
 			duration        => DateTime::Format::ICal->format_duration($duration),
+			dtstamp         => DateTime::Format::ICal->format_datetime($changed),
+			uid             => DateTime::Format::ICal->format_datetime($begin) . '-' . $event->{url},
 			'last-modified' => DateTime::Format::ICal->format_datetime($changed),
 		);
 		$calendar->add_entry($ical_event);
