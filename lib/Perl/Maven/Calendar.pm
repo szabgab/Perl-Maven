@@ -2,6 +2,8 @@ package Perl::Maven::Calendar;
 use strict;
 use warnings;
 
+our $VERSION = '0.11';
+
 use Data::ICal               ();
 use Data::ICal::Entry::Event ();
 use DateTime                 ();
