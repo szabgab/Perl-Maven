@@ -71,9 +71,26 @@ function code_explain() {
         alert('fail');
     });
     //alert($('#code').val());
+    //
+}
+
+function set_local_date() {
+    // Assume a date format of "2021-04-13T19:00:00+03:00";
+    // Display time in localtime of the browser.
+    const obj = document.getElementById("localdate");
+    if (! obj) {
+        return;
+    }
+    const mydate = obj.getAttribute("x-schedule");
+    const date = new Date(mydate);
+    if (obj) {
+        obj.innerHTML = date;
+    }
 }
 
 $(document).ready(function() {
+    set_local_date();
+
     $('#explain').click(code_explain);
 
     $(".archive-button").click(function(e) {
