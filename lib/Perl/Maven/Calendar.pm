@@ -13,15 +13,20 @@ use Cpanel::JSON::XS qw(encode_json decode_json);
 use Path::Tiny qw(path);
 
 sub create_calendar {
-	my ($filepath) = @_;
+	my ( $filepath, $old_file ) = @_;
 
 	my $modify_time = ( stat($filepath) )[9];
 
 	my $calendar = Data::ICal->new;
 	my $changed  = DateTime->from_epoch( epoch => $modify_time );
 
-	my $events = decode_json( path($filepath)->slurp_utf8 );
-	for my $event (@$events) {
+	my @events;
+	for my $file ( $old_file, $filepath ) {
+		if ( -e $file ) {
+			push @events, @{ decode_json( path($file)->slurp_utf8 ) };
+		}
+	}
+	for my $event (@events) {
 		my $ical_event = Data::ICal::Entry::Event->new;
 		my $begin      = DateTime->new( $event->{begin} );
 		my $duration   = DateTime::Duration->new( $event->{duration} );

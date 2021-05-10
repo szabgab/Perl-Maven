@@ -727,8 +727,9 @@ get '/sitemap.xml' => sub {
 
 get '/events.ics' => sub {
 	content_type 'text/calendar';
+	my $old_file = path( mymaven->{root}, 'sites', mymaven->{lang}, 'old_events.json' );
 	my $filepath = path( mymaven->{root}, 'sites', mymaven->{lang}, 'events.json' );
-	return Perl::Maven::Calendar::create_calendar($filepath);
+	return Perl::Maven::Calendar::create_calendar( $filepath, $old_file );
 };
 
 get '/rss/:tag' => sub {
