@@ -1,5 +1,6 @@
 <% IF edit %>
 <div>
   <% resources.text.comments %> <a href="<% edit %>"><% resources.text.source %></a>
+  <a href="<% github %>/issues/new?body=this">Comment on this post</a>
 </div>
 <% END %>
