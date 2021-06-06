@@ -306,7 +306,7 @@ hook before_template => sub {
 		$t->{github} = mymaven->{github};
 		$t->{github_title} = "";
 	    my $host = request->host;
-		$t->{github_body} = "$host/$path";
+		$t->{github_body} = "https://$host$path";
 	}
 
 	if ( $t->{no_such_article} ) {
