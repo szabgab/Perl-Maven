@@ -1,3 +1,4 @@
+<!--
 <h2>Do you want to improve yourself?</h2>
 
 In order to register to our web site, please type your e-mail here:
@@ -10,6 +11,9 @@ Name: <input name="name" value="<% name %>" />
 </form>
 
 Registered people will be notified when a new article is published on the <% brand_name %> web site.
+-->
+
+<h2>Registration is closed</h2>
 
 <% IF error %>
 <div id="error">
