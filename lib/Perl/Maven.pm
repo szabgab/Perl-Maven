@@ -1234,7 +1234,6 @@ sub log_request {
 	}
 
 	log_to_mongodb( \%details );
-	log_to_datadog( \%details );
 
 	return if response->status != 200;
 	return if $uri =~ m{^/atom};
@@ -1265,17 +1264,6 @@ sub log_to_mongodb {
 		$collection->insert($data);
 	};
 	error("Could not log to MongoDB: $@") if $@;
-}
-
-sub log_to_datadog {
-	my ($data) = @_;
-
-	use DataDog::DogStatsd;
-
-	my $dogstatsd = DataDog::DogStatsd->new;
-	$dogstatsd->increment('code-maven.page_views');
-	$dogstatsd->gauge( 'code-maven.elapsed_time', $data->{elapsed_time} );
-	$dogstatsd->histogram( 'code-maven.elapsed_time_histogram', $data->{elapsed_time} );
 }
 
 sub in_development {

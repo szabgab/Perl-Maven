@@ -71,7 +71,6 @@ WriteMakefile(
 		'File::HomeDir' => 0,
 		'JSON::XS'      => 0,    # should be replaced!
 
-		'DataDog::DogStatsd' => 0,
 
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,
