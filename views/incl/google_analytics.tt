@@ -1,6 +1,6 @@
 <% IF conf.google_analytics %>
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BLRW8KB16K"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<% conf.google_analytics %>"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
