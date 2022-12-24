@@ -32,6 +32,7 @@
               </li>
             <%- END %>
 
+<!--
             <% IF e.login %>
               <% IF username %>
                 <li><a href="/pm/logout"><% resources.text.logout %></a></li>
@@ -41,6 +42,7 @@
                 <li><a href="/pm/register"><% resources.text.register %></a></li>
               <% END %>
             <% END %>
+-->
 
             <% IF e.searchbox %>
               <li><form id="search_form">
