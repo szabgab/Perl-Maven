@@ -75,7 +75,11 @@ sub process_series {
 
 	$self->_log("series file: $series_file");
 	return if not -e $series_file;
-	my $series = LoadFile($series_file);
+	my $series = eval { LoadFile($series_file) };
+	if ($@) {
+		die "Could not read '$series_file' $@";
+	}
+
 	my %series_map;
 	if ( $self->books ) {
 		mkdir 'books';
