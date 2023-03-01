@@ -15,6 +15,7 @@ WriteMakefile(
 		'Business::PayPal' => 0.13,
 		'Carp::Always'     => 0,
 		'Dancer2'          => 0.156001,
+        'List::MoreUtils'  => 0,
 
 		'Dancer2::Plugin::Passphrase' => '2.0.5',
 		'Dancer2::Session::Cookie'    => 0,
