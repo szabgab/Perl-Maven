@@ -539,7 +539,7 @@ get '/pm/verify/:id/:code' => sub {
 
 sub register {
 	my $mymaven = mymaven;
-	return _registration_form( {}, error => '' ); # registration is disabled
+	return _registration_form( error => '' ); # registration is disabled
 
 	my %data = (
 		password => param('password'),
