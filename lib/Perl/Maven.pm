@@ -103,11 +103,12 @@ hook before => sub {
 	return;
 };
 
-hook after => sub {
-	my ($response) = @_;
-	log_request();
-	return;
-};
+# this just takes up disk space
+#hook after => sub {
+#	my ($response) = @_;
+#	log_request();
+#	return;
+#};
 
 hook before_template => sub {
 	my $t = shift;
