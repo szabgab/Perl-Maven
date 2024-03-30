@@ -24,8 +24,6 @@ WriteMakefile(
 		'DateTime::Format::ICal'      => 0,
 		'DateTime::Duration'          => 0,
 		'DateTime::Tiny'              => 0,          #test fails and we should probably stop using it
-		'Email::Valid'                => 1.193,
-		'File::Find::Rule'            => 0.33,
 		'Hash::Merge::Simple'         => 0.051,
 		'Moo'                         => 1.006000,
 		'Path::Tiny'                  => 0,
@@ -38,13 +36,10 @@ WriteMakefile(
 		'JSON'                        => 2.90,
 		'Cpanel::JSON::XS'            => 3.0115,
 		'Web::Feed'                   => 0.07,
-		'Digest::SHA'                 => 5.92,
-		'Data::Structure::Util'       => 0,
-
-		'Crypt::URandom'          => 0,              # recommended by Dancer2
-		'Math::Random::ISAAC::XS' => 0,              # recommended by Dancer2
-		'Scope::Upper'            => 0,              # recommended by Dancer2
-		'URL::Encode::XS'         => 0,              # recommended by Dancer2
+		'Crypt::URandom'              => 0,          # recommended by Dancer2
+		'Math::Random::ISAAC::XS'     => 0,          # recommended by Dancer2
+		'Scope::Upper'                => 0,          # recommended by Dancer2
+		'URL::Encode::XS'             => 0,          # recommended by Dancer2
 
 		# needed for bin/perl_analyze.pl
 		'JSON::XS' => 0,                             # should be replaced!

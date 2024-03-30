@@ -31,8 +31,7 @@ use Perl::Maven::Debug    qw(tmplog);
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
-use Perl::Maven::WebTools
-	qw(get_ip mymaven pm_template read_tt pm_show_abstract pm_show_page authors pm_message);
+use Perl::Maven::WebTools qw(get_ip mymaven pm_template read_tt pm_show_abstract pm_show_page authors);
 
 require Perl::Maven::Consultants;
 
@@ -85,13 +84,6 @@ hook before => sub {
 
 	return;
 };
-
-# this just takes up disk space
-#hook after => sub {
-#	my ($response) = @_;
-#	log_request();
-#	return;
-#};
 
 hook before_template => sub {
 	my $t = shift;
@@ -1025,65 +1017,6 @@ sub is_bot {
 	return $user_agent
 		=~ /Googlebot|AhrefsBot|TweetmemeBot|bingbot|YandexBot|MJ12bot|heritrix|Baiduspider|Sogou web spider|Spinn3r|robots|thumboweb_bot|Blekkobot|Exabot|LWP::Simple/;
 
-}
-
-sub log_request {
-
-	# It seems uri is not set when accessing images on the development server
-	my $uri = request->uri;
-	return if not defined $uri;
-	return if $uri =~ m{^/img/};
-	return if $uri =~ m{^/download/};
-
-	my $time = time;
-	my $dir  = path( config->{appdir}, 'logs' );
-	mkdir $dir if not -e $dir;
-	my $file = path( $dir, POSIX::strftime( '%Y-%m-%d-requests.log', gmtime($time) ) );
-
-	my $ip = get_ip();
-	my $page =
-
-		my %details = (
-		sid        => setting('sid'),
-		time       => $time,
-		host       => request->host,
-		page       => request->uri,
-		referrer   => scalar( request->referer ),
-		ip         => $ip,
-		user_agent => scalar( request->user_agent ),
-		status     => response->status,
-		);
-
-	if ( request->query_string ) {
-		$details{query_string} = request->query_string;
-	}
-	if ( $details{page} =~ m{^/autocomplete.json/(.+)} ) {
-		$details{autocomplete} = $1;
-	}
-	if ( $details{page} =~ m{^/search/(.+)} ) {
-		$details{search} = $1;
-	}
-	my $start_time = setting('start_time');
-
-	if ($start_time) {
-		$details{elapsed_time} = Time::HiRes::time - $start_time;
-	}
-
-	return if response->status != 200;
-	return if $uri =~ m{^/atom};
-	return if $uri =~ m{^/robots.txt};
-
-	return if is_bot();
-
-	#return if $SKIP{$uri};
-
-	if ( open my $fh, '>>', $file ) {
-		flock( $fh, LOCK_EX )    or return;
-		seek( $fh, 0, SEEK_END ) or return;
-		say $fh to_json \%details, { pretty => 0, canonical => 1 };
-		close $fh;
-	}
-	return;
 }
 
 sub _replace_tags {

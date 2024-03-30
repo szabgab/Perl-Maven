@@ -11,8 +11,7 @@ our $VERSION = '0.11';
 my %all_the_authors;
 
 use Exporter qw(import);
-our @EXPORT_OK
-	= qw(logged_in get_ip mymaven generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors  pm_message);
+our @EXPORT_OK = qw(logged_in get_ip mymaven generate_code pm_template read_tt pm_show_abstract pm_show_page authors);
 
 sub myhost {
 	my $host = request->host;
@@ -66,14 +65,6 @@ sub get_ip {
 		}
 	}
 	return $ip;
-}
-
-sub pm_message {
-	return _resources( 'message', 'code', @_ );
-}
-
-sub _registration_form {
-	return _resources( 'registration_form', @_ );
 }
 
 sub _resources {
