@@ -57,13 +57,8 @@ WriteMakefile(
 		'Email::Stuffer'        => 0,
 
 		# needed for bin/perl_analyze.pl
-		# Moo
-		#MongoDB
-		'MooX::Options'       => 0,
-		'Archive::Any'        => 0,
 		'MetaCPAN::Client'    => 0,
 		'LWP::Simple'         => 0,
-		'Perl::PrereqScanner' => 0,
 
 		'EBook::MOBI' => 0,
 

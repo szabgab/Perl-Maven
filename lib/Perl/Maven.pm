@@ -37,9 +37,6 @@ use Perl::Maven::WebTools
 	qw(logged_in get_ip mymaven pm_error pm_template read_tt pm_show_abstract pm_show_page authors pm_message pm_user_info);
 use Perl::Maven::Account;
 
-prefix '/digger';
-require Perl::Maven::AnalyzeWeb;
-
 prefix '/';
 
 require Perl::Maven::Consultants;
