@@ -12,7 +12,6 @@ WriteMakefile(
 		: () ),
 	PL_FILES  => {},
 	PREREQ_PM => {
-		'Business::PayPal' => 0.13,
 		'Carp::Always'     => 0,
 		'Dancer2'          => 0.156001,
 		'List::MoreUtils'  => 0,
