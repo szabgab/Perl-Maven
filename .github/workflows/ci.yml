@@ -38,6 +38,10 @@ jobs:
         # --with-configure
         # --with-recommends, --with-suggests
 
+    - name: Install Extra Modules
+      run: |
+        cpanm --notest Test::Version Test::Code::TidyAll Test::Perl::Critic
+
     - name: Show Errors on Ubuntu
       if:  ${{ failure() && startsWith( matrix.runner, 'ubuntu-')}}
       run: |
