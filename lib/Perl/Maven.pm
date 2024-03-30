@@ -26,7 +26,6 @@ use Encode           qw(encode);
 
 use Web::Feed;
 
-use Perl::Maven::Calendar ();
 use Perl::Maven::Debug    qw(tmplog);
 use Perl::Maven::Config;
 use Perl::Maven::Page;
@@ -634,13 +633,6 @@ get '/sitemap.xml' => sub {
 	}
 	$xml .= qq{</urlset>\n};
 	return $xml;
-};
-
-get '/events.ics' => sub {
-	content_type 'text/calendar';
-	my $old_file = path( mymaven->{root}, 'sites', mymaven->{lang}, 'old_events.json' );
-	my $filepath = path( mymaven->{root}, 'sites', mymaven->{lang}, 'events.json' );
-	return Perl::Maven::Calendar::create_calendar( $filepath, $old_file );
 };
 
 get '/rss/:tag' => sub {
