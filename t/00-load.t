@@ -4,9 +4,6 @@ use warnings;
 use Test::Most;
 use Test::Script;
 
-# Temporariy removed
-#	bin/cpan_monitor.pl
-
 my @scripts = qw(
 	bin/admin.pl
 	app.psgi

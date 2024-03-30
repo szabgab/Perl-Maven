@@ -80,9 +80,6 @@ WriteMakefile(
 		# not really needed but good to have on the server:
 		'App::Ack'        => 0,
 		'Module::Version' => 0,
-
-		#'MetaCPAN::API'    => 0,    # for bin/cpan_monitor.pl
-		#'MetaCPAN::Client' => 0,    # for bin/monitor.pl
 	},
 	dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 	clean => { FILES    => 'Perl-Maven-*' },
