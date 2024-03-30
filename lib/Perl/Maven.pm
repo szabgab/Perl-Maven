@@ -485,49 +485,6 @@ get '/search/:query' => sub {
 		};
 };
 
-get '/api/1/recent' => sub {
-	my @recent;
-	my $limit = param('limit') || 100;
-	eval {
-		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-		my $database   = $client->get_database('PerlMaven');
-		my $collection = $database->get_collection('cpan');
-		my $res        = $collection->find->sort(
-			{ 'cpan.date' => -1 },
-			{
-				'_cm_.repository_url' => 1,
-				'_cm_.travis_yml'     => 1,
-				'cpan.distribution'   => 1,
-				'cpan.abstract'       => 1,
-				'cpan.date'           => 1,
-				'cpan.license'        => 1,
-			}
-		)->limit($limit);
-		while ( my $r = $res->next ) {
-			my $repository_url = $r->{_cm_}{repository_url} || '';
-			my %data           = (
-				repository_url => $r->{_cm_}{repository_url},
-				travis_yml     => $r->{_cm_}{travis_yml},
-				distribution   => $r->{cpan}{distribution},
-				abstract       => $r->{cpan}{abstract},
-				date           => $r->{cpan}{date},
-				license        => $r->{cpan}{license},
-
-			   # // var repo_url = d.cpan.metadata.resources.repository.web || d.cpan.metadata.resources.repository.url;
-			);
-			my ($repo) = $repository_url =~ m{https://github.com/(.*)};
-			if ($repo) {
-				$data{repo} = $repo;
-			}
-			push @recent, \%data;
-		}
-	};
-	push_response_header 'Content-type' => 'application/json';
-	my $json = Cpanel::JSON::XS->new->utf8;
-	$json->convert_blessed(1);
-	return $json->encode( \@recent );
-};
-
 get '/autocomplete.json/:query' => sub {
 	my ($query) = param('query');
 
