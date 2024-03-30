@@ -32,9 +32,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(logged_in get_ip mymaven pm_error pm_template read_tt pm_show_abstract pm_show_page authors pm_message pm_user_info);
-
-prefix '/';
+	qw(get_ip mymaven pm_error pm_template read_tt pm_show_abstract pm_show_page authors pm_message);
 
 require Perl::Maven::Consultants;
 
@@ -292,9 +290,6 @@ hook before_template => sub {
 	$t->{jquery_cdn}    = 'https://code.jquery.com';
 	$t->{angular_cdn}   = 'https://ajax.googleapis.com/ajax/libs';
 	$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
-
-	$t->{user_info}      = pm_user_info();
-	$t->{user_info_json} = to_json $t->{user_info};
 
 	#die Dumper $t;
 
@@ -827,11 +822,6 @@ get qr{^/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
-	if ( $item =~ m{^pro/} and not is_special( 'free', "/$item" ) ) {
-		my $product = 'code_maven_pro';
-		return 'error: not logged in' if not logged_in();
-	}
-
 	push_response_header 'X-Accel-Redirect' => "/send/$item";
 
 	if ( $item =~ /\.(mp4|webm|avi|ogv)$/ ) {
@@ -1078,11 +1068,6 @@ sub log_request {
 
 	if ($start_time) {
 		$details{elapsed_time} = Time::HiRes::time - $start_time;
-	}
-
-	# TODO if there are entries in the session, move them to the database
-	if (logged_in) {
-		$details{uid} = session('uid');
 	}
 
 	return if response->status != 200;

@@ -81,7 +81,7 @@ my %RESOURCES = (
 
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors pm_error pm_message pm_user_info);
+	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors pm_error pm_message);
 
 sub myhost {
 	my $host = request->host;
@@ -367,88 +367,6 @@ sub _read_authors {
 		}
 	};
 	return;
-}
-
-sub pm_user_info {
-	my %data = ( logged_in => logged_in(), );
-	my $uid  = session('uid');
-	if ($uid) {
-		my $db = setting('db');
-		$data{code_maven_pro} = $db->is_subscribed( $uid, 'code_maven_pro' );
-		my $user = $db->get_user_by_id($uid);
-		$data{admin} = $user->{admin} ? 1 : 0;
-	}
-
-	# adding popups:
-
-	#my @popups = (
-	#	{
-	#		logged_in => 1,
-	#		what => 'popup_logged_in',
-	#		when => 1000,
-	#	 	frequency => 60*60*24,   # not more than
-	# } );
-	my $referrer = request->referer || '';
-	my $url      = request->base    || '';
-	my $path     = request->path    || '';
-
-	$referrer =~ s{^(https?://[^/]*/).*}{$1};
-
-	#debug("referrer = '$referrer'");
-	#debug("url = '$url'");
-	return \%data if $path =~ m{^/pm/};
-
-	if ( mymaven->{conf}{enable_popups} ) {
-		foreach my $code ( keys %{ mymaven->{popups} } ) {
-			my $pop = mymaven->{popups}{$code};
-			next if not $pop->{on};
-			if ( $pop->{incoming_only} and $url eq $referrer ) {
-				next;
-			}
-			if ( $pop->{logged_in} and not logged_in() ) {
-				next;
-			}
-			if ( $pop->{logged_out} and logged_in() ) {
-				next;
-			}
-			my $frequency = 0;
-			if ( $pop->{frequency} =~ /^(\d+)([dhms]?)$/ ) {
-				my ( $m, $t ) = ( $1, $2 );
-				$t //= 's';
-				my %sec = (
-					s => 1,
-					m => 60,
-					h => 60 * 60,
-					d => 60 * 60 * 24,
-				);
-				$frequency = $m * $sec{$t};
-			}
-			my $seen = session($code);
-			if ( $seen and $seen > time - $frequency ) {
-				next;
-			}
-			session( $code, time );
-			$data{delayed} = {
-				what => $code,
-				when => $pop->{delay},
-			};
-		}
-
-		# TODO: only if not a pro subscriber yet
-		# code_maven_pro_logged_in:
-		#   incoming_only: 1
-		#   logged_in: 1
-		#   logged_out: 0
-		#   frequency: '1d'
-		#   delay: 1000
-		# code_maven_pro_logged_out:
-		#   incoming_only: 1
-		#   logged_in: 0
-		#   logged_out: 1
-		#   frequency: '1d'
-		#   delay: 1000
-	}
-	return \%data;
 }
 
 true;
