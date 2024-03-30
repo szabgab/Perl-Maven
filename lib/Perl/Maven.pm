@@ -32,7 +32,7 @@ use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
-	qw(get_ip mymaven pm_error pm_template read_tt pm_show_abstract pm_show_page authors pm_message);
+	qw(get_ip mymaven pm_template read_tt pm_show_abstract pm_show_page authors pm_message);
 
 require Perl::Maven::Consultants;
 
@@ -288,7 +288,6 @@ hook before_template => sub {
 	$t->{google_prettify}
 		= q{<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>};
 	$t->{jquery_cdn}    = 'https://code.jquery.com';
-	$t->{angular_cdn}   = 'https://ajax.googleapis.com/ajax/libs';
 	$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
 
 	#die Dumper $t;

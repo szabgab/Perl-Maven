@@ -10,78 +10,9 @@ our $VERSION = '0.11';
 
 my %all_the_authors;
 
-my %RESOURCES = (
-	password_short =>
-		'Password is too short. It needs to be at least %s characters long not including spaces at the ends.',
-	missing_password                => 'Missing password',
-	invalid_mail                    => 'Invalid e-mail.',
-	already_registered_and_verified => 'This address is already registered. Please <a href="/pm/login">log in</a>.',
-	already_registered_not_verified =>
-		'This address is already registered, but the e-mail has not been verified yet. Please ask for a new verification code <a href="/pm/login">here</a>.',
-	could_not_send_email        => 'Internal error. Could not send e-mail to <b>%s</b>.',
-	internal_error              => 'Internal error',
-	invalid_value_provided      => 'Invalid parameter',
-	no_email_provided           => 'No e-mail was provided.',
-	broken_email                => 'This does not look like a valid e-mail address.',
-	email_exists                => 'This e-mail already exists in our database.',
-	missing_verification_code   => 'Missing verification code.',
-	invalid_verification_code   => 'Invalid or expired verification code.',
-	internal_verification_error => 'Internal verification error',
-	invalid_uid                 => 'User not found',
-	missing_data                => 'Some data is missing.',
-	invalid_pw                  => 'Invalid password.',
-	invalid_unsubscribe_code    => 'Invalid code',
-	could_not_find_registration => 'Could not find registration.',
-	invalid_code                => 'Invalid or missing code.',
-	no_password                 => 'No password was given.',
-	passwords_dont_match        => q{Passwords don't match.},
-	bad_password                => 'No or bad password was given.',
-	old_password_code           =>
-		'The code you you have received to set your password has timed out. Please ask for a new code.',
-	invalid_email   => 'Could not find this e-mail address in our database.',
-	no_admin_rights => 'You dont have admin rights.',
-	not_logged_in   => 'This area is only accessible to logged in users',
-	naughty_ip      => 'How did you get this IP address',
-	invalid_ip      => 'You are trying to access a protected page from %s which is not in the white-list.
-      We have sent an e-mail to your default e-mail address with a code that can be used to add this IP address to the white-list.',
-	not_verified_yet => 'This e-mail address has not been verified yet.
-    We have sent you a verification code.
-    Please check your e-mail and follow the instructions there.',
-	already_registered => 'Why would you want to register if you are already logged in',
-	already_logged_in  => 'You are already logged in. Go to your <a href="/pm/account">account</a>',
-
-	whitelist_enabled       => 'Whitelist enabled. See your <a href="/pm/account">account</a> and add IP addresses.',
-	whitelist_disabled      => 'Whitelist disabled. See your <a href="/pm/account">account</a>.',
-	whitelist_entry_deleted => 'Whitelist entry was deleted. See your <a href="/pm/account">account</a>.',
-	whitelist_updated       => 'Whitelist entry for %s was added. See your <a href="/pm/account">account</a>.',
-	reset_password_sent     => 'E-mail sent with code to reset password.',
-	password_set            => 'The password was set successfully. <a href="/pm/account">account</a>',
-	user_updated            => 'Updated. <a href="/pm/account">account</a>',
-	coupon_used             => 'The coupon was validated. Enjoy!',
-	missing_coupon          => 'No coupon was provided',
-	no_such_coupon          => 'The provided coupon does not exist',
-	coupon_not_started_yet  => 'Coupon is not yet valid',
-	coupon_has_expired      => 'This coupons has already expired',
-	user_has_valid_subscription => 'You already have a valid subscription',
-	unsubscribed                => 'Unsubscribed from the Perl Maven newsletter.',
-	subscribed                  =>
-		'Subscribed to the Perl Maven newsletter. You can manage your subscription at your <a href="/pm/account">account</a>.',
-	verification_email_sent =>
-		'We have sent you an e-mail with a verification code. Please check your e-mail account and click on the link inthe message to verify your new e-mail address.',
-	email_updated_successfully => 'Email updated successfully.',
-
-	# PayPal
-	no_product_specified      => 'No product was specified.',
-	invalid_product_specified => 'Invalid product was specified.',
-	please_log_in             =>
-		'Before making a purchase, please <a href="/register">create an account</a> and  <a href="/pm/login">login</a>, so we can associate your purchase with your account.',
-	canceled => 'We are sorry that you canceled your purchase.',
-
-);
-
 use Exporter qw(import);
 our @EXPORT_OK
-	= qw(logged_in is_admin get_ip mymaven valid_ip _generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors pm_error pm_message);
+	= qw(logged_in get_ip mymaven generate_code _registration_form pm_template read_tt pm_show_abstract pm_show_page authors  pm_message);
 
 sub myhost {
 	my $host = request->host;
@@ -122,15 +53,6 @@ sub logged_in {
 
 }
 
-sub is_admin {
-	return if not logged_in();
-
-	my $db   = setting('db');
-	my $user = $db->get_user_by_id( session('uid') );
-	return if not $user or not $user->{admin};
-	return 1;
-}
-
 sub get_ip {
 
 	# direct access
@@ -146,24 +68,6 @@ sub get_ip {
 	return $ip;
 }
 
-sub valid_ip {
-	my $uid  = session('uid') or die 'No uid found';
-	my $user = setting('db')->get_user_by_id($uid);
-
-	# if white-listing is not turned on, then every IP is valid
-	return 1 if not $user->{login_whitelist};
-
-	my $ip        = get_ip();
-	my $whitelist = setting('db')->get_whitelist($uid);
-
-	# TODO make use of the mask with Net::Subnet
-	return scalar grep { $ip eq $_->{ip} } values %$whitelist;
-}
-
-sub pm_error {
-	return _resources( 'error', 'error', @_ );
-}
-
 sub pm_message {
 	return _resources( 'message', 'code', @_ );
 }
@@ -177,28 +81,6 @@ sub _resources {
 		carp("odd number of elements for hash will follow: _resources(@_)");
 	}
 	my ( $template, %args ) = @_;
-
-	my $error = $args{error};
-	if ( $error and $RESOURCES{$error} ) {
-		if ( ref $args{params} ) {
-			$error = sprintf $RESOURCES{$error}, @{ $args{params} };
-		}
-		else {
-			$error = $RESOURCES{$error};
-		}
-		$args{error} = $error;
-	}
-
-	my $code = $args{code};
-	if ( $code and $RESOURCES{$code} ) {
-		if ( ref $args{params} ) {
-			$code = sprintf $RESOURCES{code}, @{ $args{params} };
-		}
-		else {
-			$code = $RESOURCES{$code};
-		}
-		$args{message} = $code;
-	}
 
 	$args{show_right} = 0;
 	return pm_template( $template, \%args );
@@ -247,9 +129,6 @@ sub pm_show_abstract {
 	return redirect $tt->{redirect} if $tt->{redirect};
 	$tt->{promo} = $params->{promo} // 1;
 
-	#		if not logged_in(), tell the user to subscribe or log in
-	#
-	#		if logged in but not subscribed, tell the user to subscribe
 	delete $tt->{mycontent};
 	_add_author($tt);
 	return template 'propage', $tt;
