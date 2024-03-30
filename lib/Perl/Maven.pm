@@ -39,7 +39,6 @@ use Perl::Maven::WebTools
 prefix '/';
 
 require Perl::Maven::Consultants;
-require Perl::Maven::Admin;
 require Perl::Maven::PayPal;
 
 hook before => sub {
