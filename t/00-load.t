@@ -6,7 +6,6 @@ use Test::Script;
 
 my @scripts = qw(
 	app.psgi
-	bin/create_meta.pl
 	bin/remove_sessions.pl
 	bin/setup.pl
 	bin/update_sessions.pl
