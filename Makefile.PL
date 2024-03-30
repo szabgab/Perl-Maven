@@ -50,12 +50,8 @@ WriteMakefile(
 		# needed for bin/perl_analyze.pl
 		'MetaCPAN::Client' => 0,
 		'LWP::Simple'      => 0,
-
-		'EBook::MOBI' => 0,
-
-		'Config::Tiny'  => 0,
-		'File::HomeDir' => 0,
-		'JSON::XS'      => 0,                        # should be replaced!
+		'Config::Tiny'     => 0,
+		'JSON::XS'         => 0,                     # should be replaced!
 
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,
