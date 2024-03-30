@@ -192,37 +192,6 @@ Register:
     explaining the new story
 
 
-Munin integration
-===================
-
-1) Install the following packages to the system `perl libdbi-perl libdbd-sqlite3-perl libdbd-sqlite-perl libjson-xs-perl libmongodb-perl`
-
-2) Create symlinks:
-
-```
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_subscribers_per_product  /etc/munin/plugins/
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_users  /etc/munin/plugins/
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_new_users  /etc/munin/plugins/
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_hostnames
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_hostnames_daily
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_translations_daily
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_processing
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_logs  /etc/munin/plugins/perl_maven_logs_time
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/plugins/perl_maven_mongo_hits
-sudo ln -s /home/foobar/work/Perl-Maven/etc/munin/perl_maven_mongo  /etc/munin/plugins/perl_maven_mongo_elapsed_time
-```
-
-3) Add to crontab something like this (except of the username, and the path to perl):
-
-```
-*/5 * * * * (cd /home/foobar/work/Perl-Maven/; /home/foobar/dwimperl-linux-5.20.1-10-x86_64/perl/bin/perl etc/munin/perl_maven_logs collect)
-```
-
-4) Restart the munin node(!)
-
-```sudo service munin-node restart```
-
-
 ## Docker
 
 ```

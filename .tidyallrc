@@ -2,7 +2,6 @@ no_cache = 1
 
 [PerlTidy]
 select = {bin,lib,t}/**/*.{pl,pm,t,psgi}
-select = etc/munin/*
 select = app.psgi
 select = Makefile.PL
 argv = --profile=$ROOT/.perltidyrc

@@ -30,7 +30,6 @@ WriteMakefile(
 		'Email::Valid'                => 1.193,
 		'File::Find::Rule'            => 0.33,
 		'Hash::Merge::Simple'         => 0.051,
-		'MongoDB'                     => v1,
 		'Moo'                         => 1.006000,
 		'Path::Tiny'                  => 0,
 		'Plack'                       => 1.0031,
