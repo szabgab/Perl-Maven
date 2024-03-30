@@ -7,7 +7,7 @@ use Config::Tiny;
 use Data::Dumper qw(Dumper);
 use File::HomeDir;
 use Cpanel::JSON::XS qw(decode_json);
-use Path::Tiny qw(path);
+use Path::Tiny       qw(path);
 
 my $file = 'meta/perlmaven.com/perlmaven.com/meta/archive.json';
 my $url  = 'https://perlmaven.com';

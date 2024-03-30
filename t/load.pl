@@ -13,7 +13,7 @@ BEGIN {
 
 use Plack::Test;
 use HTTP::Request::Common qw(GET);
-use Path::Tiny qw(path);
+use Path::Tiny            qw(path);
 
 my $app  = do 'app.psgi';
 my $test = Plack::Test->create($app);

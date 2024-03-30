@@ -2,8 +2,8 @@ use strict;
 use warnings;
 
 use Test::Most;
-use Cwd qw(abs_path);
-use Data::Dumper qw(Dumper);
+use Cwd            qw(abs_path);
+use Data::Dumper   qw(Dumper);
 use File::Basename qw(dirname);
 
 use t::lib::Test;
@@ -43,10 +43,10 @@ subtest mymaven => sub {
 	eval { $mymaven->config('qq.perlmaven.com') };
 	like $@, qr{Hostname 'qq.perlmaven.com' not in configuration file\n}, 'missing hostname';
 
-	is $main->{site}, "$root/t/files/../sites/perlmaven.com/sites/en", '{site}';
-	is $main->{meta}, '/home/foobar/perlmaven-meta',                   '{meta}';
-	is $main->{dirs}{mail}, "$root/t/files/../articles/mail", '{dirs}{mail}';
-	is $main->{dirs}{pro},  '/home/foobar/articles/pro',      '{dirs}{pro}';
+	is $main->{site},       "$root/t/files/../sites/perlmaven.com/sites/en", '{site}';
+	is $main->{meta},       '/home/foobar/perlmaven-meta',                   '{meta}';
+	is $main->{dirs}{mail}, "$root/t/files/../articles/mail",                '{dirs}{mail}';
+	is $main->{dirs}{pro},  '/home/foobar/articles/pro',                     '{dirs}{pro}';
 	is_deeply $main->{redirect},
 		{
 		'abc'      => 'def',

@@ -3,9 +3,9 @@ use warnings;
 use Test::Most tests => 5;
 use Test::Deep qw(cmp_deeply re);
 
-use File::Copy qw(move);
+use File::Copy    qw(move);
 use Capture::Tiny qw(capture);
-use Cwd qw(cwd);
+use Cwd           qw(cwd);
 use t::lib::Test;
 
 t::lib::Test::setup();

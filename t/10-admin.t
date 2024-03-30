@@ -2,10 +2,10 @@ use strict;
 use warnings;
 use Test::Most tests => 9;
 
-use Data::Dumper qw(Dumper);
-use File::Copy qw(move);
+use Data::Dumper  qw(Dumper);
+use File::Copy    qw(move);
 use Capture::Tiny qw(capture);
-use Cwd qw(cwd);
+use Cwd           qw(cwd);
 use t::lib::Test;
 
 BEGIN {
@@ -24,7 +24,7 @@ subtest usage => sub {
 		system $admin;
 	};
 	like $stdout, qr{Usage: bin/admin.pl}, 'usage';
-	is $stderr,   '',                      'stderr is empty';
+	is $stderr, '', 'stderr is empty';
 };
 
 subtest dump_products => sub {
@@ -117,8 +117,8 @@ subtest add_subscriber => sub {
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --addsub some_free_product --email a\@b.com";
 	};
-	like $stdout,   qr{Could not find user 'a\@b.com'};
-	is $stderr,     '',                'stderr is empty';
+	like $stdout, qr{Could not find user 'a\@b.com'};
+	is $stderr, '', 'stderr is empty';
 	unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
 };
 
@@ -128,8 +128,8 @@ subtest add_client_to_not_exisiting_product => sub {
 	my ( $stdout, $stderr, @result ) = capture {
 		system "$admin --addsub other_thing --email a\@b.com";
 	};
-	like $stdout,   qr{Could not find product 'other_thing'};
-	is $stderr,     '',                'stderr is empty';
+	like $stdout, qr{Could not find product 'other_thing'};
+	is $stderr, '', 'stderr is empty';
 	unlike $stderr, qr/DBD::.*failed/, 'no DBD error';
 };
 

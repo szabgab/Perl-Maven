@@ -1,8 +1,8 @@
 package Perl::Maven::Tools;
 use Moo;
-use List::MoreUtils qw(any none);
+use List::MoreUtils  qw(any none);
 use Cpanel::JSON::XS qw(decode_json);
-use List::Util qw(min);
+use List::Util       qw(min);
 
 our $VERSION = '0.11';
 

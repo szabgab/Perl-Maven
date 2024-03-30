@@ -1,8 +1,8 @@
 package Perl::Maven::WebTools;
 use Dancer2 appname => 'Perl::Maven';
-use Data::Dumper qw(Dumper);
+use Data::Dumper       qw(Dumper);
 use Perl::Maven::Debug qw(tmplog);
-use Carp qw(carp);
+use Carp               qw(carp);
 
 my $TIMEOUT = 60 * 60 * 24 * 365;
 
@@ -173,9 +173,9 @@ sub _registration_form {
 }
 
 sub _resources {
-	if (scalar(@_) % 2 == 0) {
-        carp("odd number of elements for hash will follow: _resources(@_)");
-    }
+	if ( scalar(@_) % 2 == 0 ) {
+		carp("odd number of elements for hash will follow: _resources(@_)");
+	}
 	my ( $template, %args ) = @_;
 
 	my $error = $args{error};

@@ -10,11 +10,11 @@ use 5.010;
 
 use Data::Dumper;
 use MetaCPAN::API;
-use Cpanel::JSON::XS qw(decode_json encode_json);
-use Cwd qw(abs_path);
-use File::Basename qw(dirname);
-use Path::Tiny qw(path);
-use Email::Sender::Simple qw(sendmail);
+use Cpanel::JSON::XS               qw(decode_json encode_json);
+use Cwd                            qw(abs_path);
+use File::Basename                 qw(dirname);
+use Path::Tiny                     qw(path);
+use Email::Sender::Simple          qw(sendmail);
 use Email::Sender::Transport::SMTP qw();
 use Email::MIME::Creator;
 

@@ -16,7 +16,7 @@ use Dancer2;    # importing: set, config
 
 set( appdir => getcwd() );
 
-is config->{'appdir'}, getcwd(), 'appdir';
+is config->{'appdir'},      getcwd(),             'appdir';
 is config->{'mymaven_yml'}, 'config/mymaven.yml', 'mymaven';
 
 use Perl::Maven;
@@ -48,7 +48,7 @@ Disallow: /media/*
 END
 
 	my $favicon = $cb->( GET "$url/favicon.ico" );
-	is $favicon->code, 200, "code 200for GET $url/favicon.ico";
+	is $favicon->code,    200,                                                   "code 200for GET $url/favicon.ico";
 	is $favicon->content, Path::Tiny::path('t/files/images/favicon.ico')->slurp, 'content';
 
 	foreach my $path (qw(atom rss tv/atom sitemap.xml)) {
@@ -56,15 +56,15 @@ END
 		is $res->code, 200, "code 200 for GET $url/$path";
 	}
 	my $css = $cb->( GET "$url/css/style.css" );
-	is $css->code, 200, "code 200 for GET $url/css/style.css";
+	is $css->code,    200,                                             "code 200 for GET $url/css/style.css";
 	is $css->content, Path::Tiny::path('public/css/style.css')->slurp, 'content';
 
 	my $feed_icon = $cb->( GET "$url/img/feed-icon16x16.png" );
-	is $feed_icon->code, 200, "code 200 for GET $url/img/feed-icon16x16.png";
+	is $feed_icon->code,    200, "code 200 for GET $url/img/feed-icon16x16.png";
 	is $feed_icon->content, Path::Tiny::path('t/files/images/feed-icon16x16.png')->slurp, 'content';
 
 	my $perl_maven = $cb->( GET "$url/img/perl_maven_150x212.png" );
-	is $perl_maven->code, 200, "code 200 for GET $url/img/perl_maven_150x212.png";
+	is $perl_maven->code,    200, "code 200 for GET $url/img/perl_maven_150x212.png";
 	is $perl_maven->content, Path::Tiny::path('t/files/images/perl_maven_150x212.png')->slurp, 'content';
 };
 

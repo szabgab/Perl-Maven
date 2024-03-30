@@ -15,7 +15,7 @@ WriteMakefile(
 		'Business::PayPal' => 0.13,
 		'Carp::Always'     => 0,
 		'Dancer2'          => 0.156001,
-        'List::MoreUtils'  => 0,
+		'List::MoreUtils'  => 0,
 
 		'Dancer2::Plugin::Passphrase' => '2.0.5',
 		'Dancer2::Session::Cookie'    => 0,
@@ -71,7 +71,6 @@ WriteMakefile(
 		'Config::Tiny'  => 0,
 		'File::HomeDir' => 0,
 		'JSON::XS'      => 0,    # should be replaced!
-
 
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,

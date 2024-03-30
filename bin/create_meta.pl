@@ -4,8 +4,8 @@ use warnings;
 use v5.10;
 
 use File::Basename qw(basename dirname);
-use Getopt::Long qw(GetOptions);
-use YAML::XS qw(LoadFile);
+use Getopt::Long   qw(GetOptions);
+use YAML::XS       qw(LoadFile);
 
 use lib 'lib';
 use Perl::Maven::Config;

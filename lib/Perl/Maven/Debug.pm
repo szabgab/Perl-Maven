@@ -2,7 +2,7 @@ package Perl::Maven::Debug;
 use strict;
 use warnings;
 use Data::Dumper qw(Dumper);
-use Exporter qw(import);
+use Exporter     qw(import);
 use DateTime;
 
 our $VERSION = '0.11';

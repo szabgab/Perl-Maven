@@ -2,9 +2,9 @@ package Perl::Maven::Monitor::CPAN;
 use 5.010;
 use Moo::Role;
 use boolean;
-use Data::Dumper qw(Dumper);
+use Data::Dumper     qw(Dumper);
 use Cpanel::JSON::XS qw(decode_json);
-use Path::Tiny qw(path);
+use Path::Tiny       qw(path);
 
 #use Storable qw(dclone);
 use Data::Structure::Util qw(unbless);

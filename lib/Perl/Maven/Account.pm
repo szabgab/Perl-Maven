@@ -12,7 +12,7 @@ use Data::Dumper qw(Dumper);
 use Perl::Maven::WebTools
 	qw(mymaven logged_in get_ip _generate_code pm_error pm_message _registration_form pm_template pm_user_info);
 use Perl::Maven::Sendmail qw(send_mail);
-use Perl::Maven::Debug qw(tmplog);
+use Perl::Maven::Debug    qw(tmplog);
 
 our $VERSION = '0.11';
 
@@ -425,7 +425,7 @@ get '/pm/account' => sub {
 };
 
 get '/pm/verify2/:code' => \&verify2;
-post '/pm/verify2'      => \&verify2;
+post '/pm/verify2' => \&verify2;
 
 sub verify2 {
 	my $code = param('code');
@@ -539,7 +539,7 @@ get '/pm/verify/:id/:code' => sub {
 
 sub register {
 	my $mymaven = mymaven;
-	return _registration_form( error => '' ); # registration is disabled
+	return _registration_form( error => '' );    # registration is disabled
 
 	my %data = (
 		password => param('password'),

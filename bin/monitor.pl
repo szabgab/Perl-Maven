@@ -2,9 +2,9 @@ use strict;
 use warnings;
 use 5.010;
 use lib 'lib';
-use Cwd qw(abs_path);
+use Cwd            qw(abs_path);
 use File::Basename qw(dirname);
-use Getopt::Long qw(GetOptions);
+use Getopt::Long   qw(GetOptions);
 use Perl::Maven::Monitor;
 
 my %opt;

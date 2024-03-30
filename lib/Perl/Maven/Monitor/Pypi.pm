@@ -3,8 +3,8 @@ use 5.010;
 use Moo::Role;
 use XML::Feed ();
 use boolean;
-use Data::Dumper qw(Dumper);
-use LWP::Simple qw(get);
+use Data::Dumper     qw(Dumper);
+use LWP::Simple      qw(get);
 use Cpanel::JSON::XS qw(decode_json);
 
 our $VERSION = '0.11';

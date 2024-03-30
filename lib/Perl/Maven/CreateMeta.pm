@@ -16,10 +16,10 @@ has pages        => ( is => 'rw' );
 
 use Data::Dumper qw(Dumper);
 use File::Find::Rule;
-use File::Path qw(mkpath);
+use File::Path       qw(mkpath);
 use Cpanel::JSON::XS qw(decode_json encode_json);
-use YAML::XS qw(LoadFile);
-use POSIX ();
+use YAML::XS         qw(LoadFile);
+use POSIX            ();
 
 use Perl::Maven::Page;
 
@@ -141,7 +141,8 @@ sub process_series {
 				my $page = $self->pages->{ $chapter->{sub}[$i] };
 				if ( not $page ) {
 					die "Page Not found: '$chapter->{sub}[$i]' while processing '$series_file'";
-						#. Dumper [ keys %{ $self->pages } ];
+
+					#. Dumper [ keys %{ $self->pages } ];
 				}
 				$chapter->{sub}[$i] = {
 					url   => "/$chapter->{sub}[$i]",

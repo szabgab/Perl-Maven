@@ -11,24 +11,24 @@ our $VERSION = '0.11';
 # Version number to force JavaScript and CSS files reload
 my $PM_VERSION = 20210507.1;
 
-use Cwd qw(abs_path);
-use Data::Dumper qw(Dumper);
-use DateTime ();
-use Fcntl qw(:flock SEEK_END);
+use Cwd             qw(abs_path);
+use Data::Dumper    qw(Dumper);
+use DateTime        ();
+use Fcntl           qw(:flock SEEK_END);
 use List::MoreUtils qw(uniq);
-use List::Util qw(min);
-use POSIX       ();
-use Time::HiRes ();
-use YAML::XS qw(LoadFile);
+use List::Util      qw(min);
+use POSIX           ();
+use Time::HiRes     ();
+use YAML::XS        qw(LoadFile);
 use MongoDB;
-use Path::Tiny       ();    # the path function would clash with the path function of Dancer
+use Path::Tiny       ();           # the path function would clash with the path function of Dancer
 use Cpanel::JSON::XS ();
-use Encode qw(encode);
+use Encode           qw(encode);
 
 use Web::Feed;
 
 use Perl::Maven::Calendar ();
-use Perl::Maven::Debug qw(tmplog);
+use Perl::Maven::Debug    qw(tmplog);
 use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
@@ -303,12 +303,12 @@ hook before_template => sub {
 	}
 
 	if ( mymaven->{github} and -e path( mymaven->{root}, 'sites', $language, 'pages', "$path.txt" ) ) {
-		$t->{edit} = mymaven->{github} . "/tree/main/sites/$language/pages/$path.txt";
-		$t->{github} = mymaven->{github};
+		$t->{edit}         = mymaven->{github} . "/tree/main/sites/$language/pages/$path.txt";
+		$t->{github}       = mymaven->{github};
 		$t->{github_title} = "";
-	    my $host = request->host;
+		my $host = request->host;
 		$t->{github_body} = "$host/$path";
-		$t->{github_body} =~ s{/+}{/}; # remove double slashes
+		$t->{github_body} =~ s{/+}{/};    # remove double slashes
 		$t->{github_body} = "https://$t->{github_body}";
 	}
 

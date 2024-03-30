@@ -5,17 +5,17 @@ use warnings;
 use Moo;
 use MooX::Options;
 
-use Archive::Any ();
-use Cwd qw(getcwd);
-use Data::Dumper qw(Dumper);
-use MetaCPAN::Client ();
-use MongoDB          ();
-use LWP::Simple qw(getstore);
-use Path::Tiny qw(path);
-use Capture::Tiny qw(capture);
-use Cpanel::JSON::XS qw(decode_json);
+use Archive::Any         ();
+use Cwd                  qw(getcwd);
+use Data::Dumper         qw(Dumper);
+use MetaCPAN::Client     ();
+use MongoDB              ();
+use LWP::Simple          qw(getstore);
+use Path::Tiny           qw(path);
+use Capture::Tiny        qw(capture);
+use Cpanel::JSON::XS     qw(decode_json);
 use Path::Iterator::Rule ();
-use File::Temp qw(tempdir);
+use File::Temp           qw(tempdir);
 use Perl::PrereqScanner;
 
 our $VERSION = '0.11';
@@ -23,8 +23,12 @@ our $VERSION = '0.11';
 option limit   => ( is => 'ro', default  => 1, format => 'i' );
 option verbose => ( is => 'ro', default  => 0 );
 option conf    => ( is => 'ro', required => 0, format => 's', doc => 'Path to configuration JSON file' );
-option dir     =>
-	( is => 'ro', required => 0, format => 's', doc => 'Path to directory that holds the source code of the projects' );
+option dir => (
+	is       => 'ro',
+	required => 0,
+	format   => 's',
+	doc      => 'Path to directory that holds the source code of the projects'
+);
 
 sub _log {
 	my ( $self, $msg ) = @_;

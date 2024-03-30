@@ -5,7 +5,7 @@ use 5.010;
 
 use File::Basename qw(basename);
 use POSIX;
-use JSON::XS qw(encode_json decode_json);
+use JSON::XS    qw(encode_json decode_json);
 use Time::HiRes ();
 
 my $daily_data_file = '/tmp/perl_maven_logs_daily.json';

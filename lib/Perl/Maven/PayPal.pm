@@ -263,7 +263,7 @@ sub paypal_buy {
 
 sub log_paypal {
 	my ( $action, $data ) = @_;
-	return; # we don't use PayPal any more, so no loggin is needed
+	return;    # we don't use PayPal any more, so no loggin is needed
 
 	my $ts      = time;
 	my $logfile = config->{appdir} . '/logs/paypal_' . POSIX::strftime( '%Y%m%d', gmtime($ts) );

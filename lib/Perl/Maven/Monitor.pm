@@ -1,13 +1,13 @@
 package Perl::Maven::Monitor;
 use Moo;
 use 5.010;
-use Data::Dumper qw(Dumper);
+use Data::Dumper     qw(Dumper);
 use Cpanel::JSON::XS qw(decode_json encode_json);
-use Path::Tiny qw(path);
+use Path::Tiny       qw(path);
 use MetaCPAN::Client;
 use Email::Stuffer;
 use Email::Sender::Transport::SMTP ();
-use Time::Local qw(timegm);
+use Time::Local                    qw(timegm);
 use MongoDB;
 use DateTime::Tiny;
 
@@ -152,7 +152,7 @@ sub prepare {
 			#$self->_log('WARN: author is empty in ' . Dumper $r);
 		}
 		push @{ $data{distributions}{ $r->{distribution} } }, $r;
-		push @{ $data{modules}{$_} }, $r for @{ $r->{modules} };
+		push @{ $data{modules}{$_} },                         $r for @{ $r->{modules} };
 	}
 
 	#say $count;

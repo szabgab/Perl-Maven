@@ -21,13 +21,13 @@ See also L<Perl::Maven>.
 
 our $VERSION = '0.11';
 
-use Cwd qw(abs_path);
-use Carp ();
-use Data::Dumper qw(Dumper);
-use File::Basename qw(dirname);
+use Cwd                 qw(abs_path);
+use Carp                ();
+use Data::Dumper        qw(Dumper);
+use File::Basename      qw(dirname);
 use Hash::Merge::Simple qw(merge);
-use YAML::XS qw(LoadFile);
-use Storable qw(dclone);
+use YAML::XS            qw(LoadFile);
+use Storable            qw(dclone);
 
 sub new {
 	my ( $class, $path ) = @_;
