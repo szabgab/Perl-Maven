@@ -56,7 +56,6 @@ WriteMakefile(
 
 		'EBook::MOBI' => 0,
 
-		'Net::Twitter'  => 0,
 		'Config::Tiny'  => 0,
 		'File::HomeDir' => 0,
 		'JSON::XS'      => 0,                        # should be replaced!
