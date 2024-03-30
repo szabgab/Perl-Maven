@@ -525,7 +525,7 @@ get '/api/1/recent' => sub {
 			push @recent, \%data;
 		}
 	};
-	push_header 'Content-type' => 'application/json';
+	push_response_header 'Content-type' => 'application/json';
 	my $json = Cpanel::JSON::XS->new->utf8;
 	$json->convert_blessed(1);
 	return $json->encode( \@recent );
@@ -981,19 +981,19 @@ get qr{^/media/(.+)} => sub {
 			if not $db->is_subscribed( session('uid'), $product );
 	}
 
-	push_header 'X-Accel-Redirect' => "/send/$item";
+	push_response_header 'X-Accel-Redirect' => "/send/$item";
 
 	if ( $item =~ /\.(mp4|webm|avi|ogv)$/ ) {
 		my $ext = $1;
 		if ( $ext eq 'ogv' ) {
 			$ext = 'ogg';
 		}
-		push_header 'Content-type' => "video/$ext";
+		push_response_header 'Content-type' => "video/$ext";
 		return;
 	}
 	elsif ( $item =~ /\.(mp3)$/ ) {
 		my $ext = $1;
-		push_header 'Content-type' => 'audio/mpeg';
+		push_response_header 'Content-type' => 'audio/mpeg';
 		return;
 	}
 
