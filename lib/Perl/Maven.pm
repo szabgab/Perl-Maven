@@ -35,7 +35,6 @@ use Perl::Maven::Page;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools
 	qw(logged_in get_ip mymaven pm_error pm_template read_tt pm_show_abstract pm_show_page authors pm_message pm_user_info);
-use Perl::Maven::Account;
 
 prefix '/';
 
@@ -729,14 +728,6 @@ get '/tv/atom' => sub {
 	return atom( 'archive', 'interview' );
 };
 
-# temporary solution
-get '/verify2/:code' => sub {
-	return redirect '/pm/verify2/' . param('code');
-};
-get '/verify/:id/:code' => sub {
-	return redirect '/pm/verify/' . param('id') . '/' . param('code');
-};
-
 get qr{^/(.+)} => sub {
 	my ($article) = splat;
 
@@ -1196,7 +1187,6 @@ sub log_request {
 
 	return if is_bot();
 
-	#my %SKIP = map { $_ => 1 } qw(/pm/user-info);
 	#return if $SKIP{$uri};
 
 	if ( open my $fh, '>>', $file ) {
