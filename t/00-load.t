@@ -6,9 +6,6 @@ use Test::Script;
 
 my @scripts = qw(
 	app.psgi
-	bin/remove_sessions.pl
-	bin/setup.pl
-	bin/update_sessions.pl
 );
 
 plan tests => 1 + @scripts;
