@@ -12,7 +12,6 @@ plan tests => 1 + @scripts;
 
 use Perl::Maven::Config;
 use Perl::Maven::Page;
-use Perl::Maven::SVG;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools;
 

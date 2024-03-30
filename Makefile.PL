@@ -31,7 +31,6 @@ WriteMakefile(
 		'Path::Tiny'                  => 0,
 		'Plack'                       => 1.0031,
 		'Storable'                    => 2.51,       # dclone is used
-		'SVG'                         => 0,          # for Perl::Maven::SVG
 		'Template'                    => 2.25,
 		'Time::HiRes'                 => 0,
 		'YAML'                        => 1.09,
@@ -48,17 +47,12 @@ WriteMakefile(
 		'URL::Encode::XS'         => 0,              # recommended by Dancer2
 
 		# needed for bin/perl_analyze.pl
-		'MetaCPAN::Client' => 0,
-		'LWP::Simple'      => 0,
-		'Config::Tiny'     => 0,
-		'JSON::XS'         => 0,                     # should be replaced!
+		'JSON::XS' => 0,                             # should be replaced!
 
 		# For testing
-		'Test::WWW::Mechanize'       => 1.44,
-		'Test::WWW::Mechanize::PSGI' => 0.35,
-		'Test::More'                 => 1,
-		'Test::Most'                 => 0.34,
-		'Test::Script'               => 1.07,
+		'Test::More'   => 1,
+		'Test::Most'   => 0.34,
+		'Test::Script' => 1.07,
 
 		# For deployment
 		'Starman'         => 0.4009,
