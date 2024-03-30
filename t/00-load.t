@@ -5,7 +5,6 @@ use Test::Most;
 use Test::Script;
 
 my @scripts = qw(
-	bin/admin.pl
 	app.psgi
 	bin/create_meta.pl
 	bin/remove_sessions.pl

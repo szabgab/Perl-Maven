@@ -18,10 +18,6 @@ our $URL    = "https://$DOMAIN/";
 sub setup {
 	my $dir = tempdir( CLEANUP => 1 );
 	$ENV{MYMAVEN_YML} = 't/files/config/test.yml';
-
-	unlink glob 'sessions/*';
-
-	system "$^X bin/setup.pl $dbfile" and die;
 }
 
 sub read_file {

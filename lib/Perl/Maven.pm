@@ -56,8 +56,6 @@ hook before => sub {
 	#	config => $engines->{template_toolkit}
 	#);
 
-	set products => $p;
-
 	set tools => Perl::Maven::Tools->new(
 		host => request->host,
 		meta => mymaven->{meta}
