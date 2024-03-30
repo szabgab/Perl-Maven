@@ -20,7 +20,6 @@ use Perl::Maven::Config;
 use Perl::Maven::DB;
 use Perl::Maven::CreateMeta;
 use Perl::Maven::Page;
-use Perl::Maven::PayPal;
 use Perl::Maven::SVG;
 use Perl::Maven::Sendmail;
 use Perl::Maven::Tools;
