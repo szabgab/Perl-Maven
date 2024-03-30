@@ -24,9 +24,6 @@ WriteMakefile(
 		'DateTime::Format::ICal'      => 0,
 		'DateTime::Duration'          => 0,
 		'DateTime::Tiny'              => 0,          #test fails and we should probably stop using it
-		'DBD::SQLite'                 => 1.42,
-		'DBI'                         => 1.631,
-		'DBIx::RunSQL'                => 0.12,
 		'Email::Valid'                => 1.193,
 		'File::Find::Rule'            => 0.33,
 		'Hash::Merge::Simple'         => 0.051,

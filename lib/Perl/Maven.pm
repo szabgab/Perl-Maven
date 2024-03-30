@@ -28,7 +28,6 @@ use Web::Feed;
 
 use Perl::Maven::Calendar ();
 use Perl::Maven::Debug    qw(tmplog);
-use Perl::Maven::DB;
 use Perl::Maven::Config;
 use Perl::Maven::Page;
 use Perl::Maven::Tools;
@@ -44,9 +43,6 @@ hook before => sub {
 
 	my $appdir = abs_path config->{appdir};
 
-	my $db = Perl::Maven::DB->new( config->{appdir} . '/' . mymaven->{dbfile} );
-	set db => $db;
-
 	#set views => ["$appdir/views"]; # Cannot set array!
 
 	# Create a new Template::Toolkit object for every call because we cannot access the existing object
@@ -59,8 +55,6 @@ hook before => sub {
 	#	type   => 'template',
 	#	config => $engines->{template_toolkit}
 	#);
-
-	my $p = $db->get_products;
 
 	set products => $p;
 
@@ -106,17 +100,6 @@ hook before => sub {
 hook before_template => sub {
 	my $t = shift;
 	$t->{title} ||= '';
-	if ( logged_in() ) {
-		my $uid   = session('uid');
-		my $db    = setting('db');
-		my $user  = $db->get_user_by_id($uid);
-		my $email = $user->{email};
-		( $t->{username} ) = split /@/, $email;
-
-		if ( grep { $_ eq 'code_maven_pro' } @{ $user->{subscriptions} } ) {
-			$t->{conf}{show_ads} = 0;
-		}
-	}
 
 	# If these pages are sales piches then we should not show other ads.
 	if ( request->path =~ m{^/pro/} ) {
@@ -769,10 +752,6 @@ get '/download/:dir/:file' => sub {
 		if not logged_in();
 	return redirect '/' if not setting('products')->{$dir};    # no such product
 
-	# check if the user is really subscribed to the newsletter?
-	my $db = setting('db');
-	return redirect '/' if not $db->is_subscribed( session('uid'), $dir );
-
 	send_file( path( mymaven->{dirs}{download}, $dir, $file ), system_path => 1 );
 };
 
@@ -787,46 +766,7 @@ get qr{^/pro/?$} => sub {
 	my $product = 'code_maven_pro';
 	my $path    = mymaven->{site} . '/pages/pro.txt';
 	my $promo   = 1;
-	my $db      = setting('db');
-	if ( logged_in() and $db->is_subscribed( session('uid'), $product ) ) {
-		$promo = 0;
-	}
 	return pm_show_abstract( { path => $path, promo => $promo } );
-};
-
-get qr{^/pro/(.+)} => sub {
-	my ($article) = splat;
-	error if $article =~ /\.\./;
-	my $product = 'code_maven_pro';
-	my $dir     = 'pro';
-
-	my $path = mymaven->{dirs}{$dir} . "/$article.txt";
-	pass if not -e $path;    # will show invalid page
-
-	my $db = setting('db');
-	pass if is_special( 'free', "/pro/$article" );
-	pass
-		if logged_in()
-		and is_special( 'preview', "/pro/$article" );
-	pass
-		if logged_in()
-		and $db->is_subscribed( session('uid'), $product );
-
-	session url => request->path;
-
-	pm_show_abstract( { path => $path } );
-};
-
-get qr{^/pro/(.+)} => sub {
-	my ($article) = splat;
-
-	return pm_show_page(
-		{
-			path     => mymaven->{dirs}{pro},
-			article  => $article,
-			template => 'page',
-		}
-	);
 };
 
 get '/mail/:article' => sub {
@@ -915,12 +855,9 @@ get qr{^/media/(.+)} => sub {
 	my ($item) = splat;
 	error if $item =~ /\.\./;
 
-	my $db = setting('db');
 	if ( $item =~ m{^pro/} and not is_special( 'free', "/$item" ) ) {
 		my $product = 'code_maven_pro';
 		return 'error: not logged in' if not logged_in();
-		return 'error: not a Pro subscriber'
-			if not $db->is_subscribed( session('uid'), $product );
 	}
 
 	push_response_header 'X-Accel-Redirect' => "/send/$item";
