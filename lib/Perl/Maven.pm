@@ -99,11 +99,6 @@ hook before_template => sub {
 	my $t = shift;
 	$t->{title} ||= '';
 
-	# If these pages are sales piches then we should not show other ads.
-	if ( request->path =~ m{^/pro/} ) {
-		$t->{conf}{show_ads} = 0;
-	}
-
 	$t->{domain} = mymaven->{domain};
 
 	sub _conv {
@@ -291,20 +286,12 @@ hook before_template => sub {
 		$t->{title} = 'No such article';
 	}
 
-	$t->{pm_version} = in_development() ? time : $PM_VERSION;
-	if ( in_development() ) {
-		$t->{google_prettify} = q{<link href="/google-code-prettify/prettify.css" rel="stylesheet">};
-		$t->{google_prettify} .= q{<script src="/google-code-prettify/prettify.js"></script>};
-		$t->{jquery_cdn}  = '/javascripts';
-		$t->{angular_cdn} = '';
-	}
-	else {
-		$t->{google_prettify}
-			= q{<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>};
-		$t->{jquery_cdn}    = 'https://code.jquery.com';
-		$t->{angular_cdn}   = 'https://ajax.googleapis.com/ajax/libs';
-		$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
-	}
+	$t->{pm_version} = $PM_VERSION;
+	$t->{google_prettify}
+		= q{<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>};
+	$t->{jquery_cdn}    = 'https://code.jquery.com';
+	$t->{angular_cdn}   = 'https://ajax.googleapis.com/ajax/libs';
+	$t->{bootstrap_cdn} = 'https://maxcdn.bootstrapcdn.com';
 
 	$t->{user_info}      = pm_user_info();
 	$t->{user_info_json} = to_json $t->{user_info};
@@ -741,18 +728,6 @@ get '/category/:name' => sub {
 	);
 };
 
-get '/download/:dir/:file' => sub {
-	my $dir  = param('dir');
-	my $file = param('file');
-
-	# TODO better error reporting or handling when not logged in
-	return redirect '/'
-		if not logged_in();
-	return redirect '/' if not setting('products')->{$dir};    # no such product
-
-	send_file( path( mymaven->{dirs}{download}, $dir, $file ), system_path => 1 );
-};
-
 # special treatment of the /pro pages
 # TODO: they should probably be moved to the top-level directory and the
 # fact that they are only available to 'pro' subscribers should be part of the header of the page
@@ -761,9 +736,8 @@ get '/download/:dir/:file' => sub {
 # information to decide who can see the file
 # and then we should probably just handle directories seenlessly
 get qr{^/pro/?$} => sub {
-	my $product = 'code_maven_pro';
-	my $path    = mymaven->{site} . '/pages/pro.txt';
-	my $promo   = 1;
+	my $path  = mymaven->{site} . '/pages/pro.txt';
+	my $promo = 1;
 	return pm_show_abstract( { path => $path, promo => $promo } );
 };
 
@@ -1126,10 +1100,6 @@ sub log_request {
 		close $fh;
 	}
 	return;
-}
-
-sub in_development {
-	return request->host =~ /local(:\d+)?$/;
 }
 
 sub _replace_tags {
