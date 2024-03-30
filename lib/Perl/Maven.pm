@@ -11,17 +11,16 @@ our $VERSION = '0.11';
 # Version number to force JavaScript and CSS files reload
 my $PM_VERSION = 20210507.1;
 
-use Cwd             qw(abs_path);
-use Data::Dumper    qw(Dumper);
-use DateTime        ();
-use Fcntl           qw(:flock SEEK_END);
-use List::MoreUtils qw(uniq);
-use List::Util      qw(min);
-use POSIX           ();
-use Time::HiRes     ();
-use YAML::XS        qw(LoadFile);
-use MongoDB;
-use Path::Tiny       ();           # the path function would clash with the path function of Dancer
+use Cwd              qw(abs_path);
+use Data::Dumper     qw(Dumper);
+use DateTime         ();
+use Fcntl            qw(:flock SEEK_END);
+use List::MoreUtils  qw(uniq);
+use List::Util       qw(min);
+use POSIX            ();
+use Time::HiRes      ();
+use YAML::XS         qw(LoadFile);
+use Path::Tiny       ();                    # the path function would clash with the path function of Dancer
 use Cpanel::JSON::XS ();
 use Encode           qw(encode);
 
@@ -1177,8 +1176,6 @@ sub log_request {
 		$details{uid} = session('uid');
 	}
 
-	log_to_mongodb( \%details );
-
 	return if response->status != 200;
 	return if $uri =~ m{^/atom};
 	return if $uri =~ m{^/robots.txt};
@@ -1194,19 +1191,6 @@ sub log_request {
 		close $fh;
 	}
 	return;
-}
-
-sub log_to_mongodb {
-	my ($data) = @_;
-	return if not mymaven->{mongodb_logging};
-
-	eval {
-		my $client     = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-		my $database   = $client->get_database('PerlMaven');
-		my $collection = $database->get_collection('logging');
-		$collection->insert($data);
-	};
-	error("Could not log to MongoDB: $@") if $@;
 }
 
 sub in_development {
