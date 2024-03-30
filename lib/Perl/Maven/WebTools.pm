@@ -11,7 +11,7 @@ our $VERSION = '0.11';
 my %all_the_authors;
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(logged_in get_ip mymaven generate_code pm_template read_tt pm_show_abstract pm_show_page authors);
+our @EXPORT_OK = qw(get_ip mymaven generate_code pm_template read_tt pm_show_abstract pm_show_page authors);
 
 sub myhost {
 	my $host = request->host;
@@ -22,27 +22,6 @@ sub myhost {
 sub mymaven {
 	my $mymaven = Perl::Maven::Config->new( path( config->{appdir}, config->{mymaven_yml} ) );
 	return $mymaven->config( myhost() );
-}
-
-sub logged_in {
-
-	#my $email = session('email');
-	#if ($email) {
-	#	my $db   = setting('db');
-	#	my $user  = $db->get_user_by_email($email);
-	#	session uid => $user->{id};
-	#	session email => undef;
-	#}
-
-	if (    session('logged_in')
-		and session('uid')
-		and session('last_seen') > time - $TIMEOUT )
-	{
-		session last_seen => time;
-		return 1;
-	}
-	return 0;
-
 }
 
 sub get_ip {
