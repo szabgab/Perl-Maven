@@ -2,14 +2,3 @@
 <% abstract %>
 </div>
 
-<% IF promo %>
-<div id="promo">
-All the Pro videos are now available via our <a href="https://courses.code-maven.com/p/all">All or nothing</a> subscription service.
-Now you can also purchase the <a href="https://courses.code-maven.com/courses">individual courses</a> or
-<a href="https://courses.code-maven.com/">everything as a bundle</a> with a one-time payment.
-
-<hr>
-If you already have a <b>Code Maven Pro subscription</b>, you will keep receiving the new videos in your Code-Maven account. You just need to <a href="/pm/login">login</a> to access them.
-</p>
-</div>
-<% END %>
