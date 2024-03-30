@@ -25,7 +25,7 @@ my $EMAIL4   = 'foobar@perlmaven.com';
 my @PASSWORD = ( '123456', 'abcdef', 'secret', 'qwerty' );
 my @NAMES    = ( 'Foo Bar', );
 
-plan skip_all => "We have disabled the registration features";
+plan skip_all => 'We have disabled the registration features';
 
 plan tests => 13;
 

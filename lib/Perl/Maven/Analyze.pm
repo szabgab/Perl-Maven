@@ -27,7 +27,7 @@ option dir => (
 	is       => 'ro',
 	required => 0,
 	format   => 's',
-	doc      => 'Path to directory that holds the source code of the projects'
+	doc      => 'Path to directory that holds the source code of the projects',
 );
 
 sub _log {

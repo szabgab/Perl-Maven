@@ -305,7 +305,7 @@ hook before_template => sub {
 	if ( mymaven->{github} and -e path( mymaven->{root}, 'sites', $language, 'pages', "$path.txt" ) ) {
 		$t->{edit}         = mymaven->{github} . "/tree/main/sites/$language/pages/$path.txt";
 		$t->{github}       = mymaven->{github};
-		$t->{github_title} = "";
+		$t->{github_title} = '';
 		my $host = request->host;
 		$t->{github_body} = "$host/$path";
 		$t->{github_body} =~ s{/+}{/};    # remove double slashes
