@@ -17,7 +17,7 @@ for my $file (@files) {
     next if $file eq 'archive.txt';
     next if $file !~ /\.txt$/;
 
-    say $file;
+    say "FILE: $file";
     my $in_file = catfile($path, $file);
     my $out_file = $in_file;
     $out_file =~ s/\.txt/.md/;
@@ -49,20 +49,61 @@ for my $file (@files) {
             next;
         }
 
-        #LINE: =status show
-        #LINE: =author 0
-        #LINE: =archive 1
+        if ($line =~ /^=status\s+(.*)/) {
+            my $status = $1;
+            if ($status eq "show") {
+                push @output, "published: true\n";
+            } elsif ($status eq "draft") {
+                push @output, "published: false\n";
+            } else {
+                die "Invalid status '$status' in $in_file";
+            }
+            next;
+        }
+
+        if ($line =~ /^=author\s+(.*)/) {
+            my $author = $1;
+            if ($author eq "0") {
+
+            } else {
+                push @output, "author: $author\n";
+            }
+        }
+
+
+        # TODO: =archive 1
+        if ($line =~ /^=archive\s+(.*)/) {
+            my $archive = $1;
+            if ($archive eq "0") {
+            } elsif ($archive eq "1") {
+            } else {
+                die "Invalid archive '$archive' in $in_file";
+            }
+        }
+
+        if ($line =~ /^=show_related\s+(.*)/) {
+            my $show_related = $1;
+            if ($show_related eq "0") {
+                push @output, "show_related: false\n";
+            } elsif ($show_related eq "1") {
+
+            } else {
+                die "Invalid show_related '$show_related' in $in_file";
+            }
+        }
+
         #LINE: =comments_disqus_enable 0
-        #LINE: =show_related 1
 
         if ($line =~ /^\s*$/) {
             $in_header = 0;
-            push @output, "---\n";
+            push @output, "---\n\n";
             last;
         }
     }
 
     for my $line (@lines) {
+        next if $line =~ /^=abstract/;
+        $line =~ s{^<h2>(.*)</h2>}{## $1};
         push @output, $line;
     }
 
