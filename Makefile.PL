@@ -57,8 +57,8 @@ WriteMakefile(
 		'Email::Stuffer'        => 0,
 
 		# needed for bin/perl_analyze.pl
-		'MetaCPAN::Client'    => 0,
-		'LWP::Simple'         => 0,
+		'MetaCPAN::Client' => 0,
+		'LWP::Simple'      => 0,
 
 		'EBook::MOBI' => 0,
 
