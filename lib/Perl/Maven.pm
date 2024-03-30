@@ -1020,12 +1020,12 @@ sub read_sites {
 # This is text messages and translated text messages.
 sub read_resources {
 	my $default_file = mymaven->{root} . '/resources.yml';
-	my $defaults     = eval { LoadFile $default_file};
+	my $defaults     = eval { LoadFile $default_file };
 
 	#error("Could not load '$default_file' $@") if $@;
 
 	my $resources_file = mymaven->{site} . '/resources.yml';
-	my $data           = eval { LoadFile $resources_file};
+	my $data           = eval { LoadFile $resources_file };
 	error("Could not load '$resources_file' $@") if $@;
 	$data ||= {};
 

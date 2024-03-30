@@ -47,7 +47,7 @@ USAGE
 	exit;
 }
 
-my $file = dirname( dirname abs_path $0) . '/cpan.json';
+my $file = dirname( dirname abs_path $0 ) . '/cpan.json';
 
 my $data = {};
 if ( $opt{setup} ) {
