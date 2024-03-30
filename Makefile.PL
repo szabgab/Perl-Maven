@@ -50,10 +50,6 @@ WriteMakefile(
 		'Scope::Upper'            => 0,              # recommended by Dancer2
 		'URL::Encode::XS'         => 0,              # recommended by Dancer2
 
-		'Email::Sender::Simple' => 1.300012,
-		'Email::MIME::Creator'  => 1.926,
-		'Email::Stuffer'        => 0,
-
 		# needed for bin/perl_analyze.pl
 		'MetaCPAN::Client' => 0,
 		'LWP::Simple'      => 0,
@@ -63,7 +59,7 @@ WriteMakefile(
 		'Net::Twitter'  => 0,
 		'Config::Tiny'  => 0,
 		'File::HomeDir' => 0,
-		'JSON::XS'      => 0,    # should be replaced!
+		'JSON::XS'      => 0,                        # should be replaced!
 
 		# For testing
 		'Test::WWW::Mechanize'       => 1.44,

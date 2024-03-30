@@ -9,7 +9,6 @@ my @scripts = qw(
 	app.psgi
 	bin/create_meta.pl
 	bin/remove_sessions.pl
-	bin/sendmail.pl
 	bin/setup.pl
 	bin/update_sessions.pl
 );
@@ -21,7 +20,6 @@ use Perl::Maven::DB;
 use Perl::Maven::CreateMeta;
 use Perl::Maven::Page;
 use Perl::Maven::SVG;
-use Perl::Maven::Sendmail;
 use Perl::Maven::Tools;
 use Perl::Maven::WebTools;
 
