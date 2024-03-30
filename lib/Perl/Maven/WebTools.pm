@@ -24,13 +24,6 @@ sub mymaven {
 	return $mymaven->config( myhost() );
 }
 
-sub _generate_code {
-	my @chars = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
-	my $code  = time;
-	$code .= $chars[ rand( scalar @chars ) ] for 1 .. 20;
-	return $code;
-}
-
 sub logged_in {
 
 	#my $email = session('email');
