@@ -16,7 +16,6 @@ my @scripts = qw(
 plan tests => 1 + @scripts;
 
 use Perl::Maven::Config;
-use Perl::Maven::DB;
 use Perl::Maven::CreateMeta;
 use Perl::Maven::Page;
 use Perl::Maven::SVG;
