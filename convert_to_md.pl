@@ -10,7 +10,6 @@ use Path::Tiny qw(path);
 
 # TODO:
 # Replace <screencast file="spanish-edit-wikipedia-v1" youtube="nQYXllZtsyI" /> by Liquid-tag
-# Replace <a href=""></a> by []()
 
 my $path = shift or die "Usage: $0 PATH_TO_PAGES\n";
 
@@ -122,6 +121,8 @@ for my $file (@files) {
             $in_ul = 0;
             next;
         }
+
+        $line =~ s{<a href="([^"]+)">([^<]+)</a>}{[$2]($1)};
 
         push @output, $line;
     }
