@@ -6,6 +6,11 @@ use File::Spec::Functions qw(catfile);
 use Path::Tiny qw(path);
 
 # Convert olf Perl-Maven format to Markdown with Liquid-like special syntax
+# to be moved to the Code-Maven SSG
+
+# TODO:
+# Replace <screencast file="spanish-edit-wikipedia-v1" youtube="nQYXllZtsyI" /> by Liquid-tag
+# Replace <a href=""></a> by []()
 
 my $path = shift or die "Usage: $0 PATH_TO_PAGES\n";
 
@@ -101,9 +106,23 @@ for my $file (@files) {
         }
     }
 
+    my $in_ul = 0;
     for my $line (@lines) {
         next if $line =~ /^=abstract/;
         $line =~ s{^<h2>(.*)</h2>}{## $1};
+        if ($line =~ m{^<ul>$}) {
+            $in_ul = 1;
+            next;
+        }
+        if ($in_ul) {
+             $line =~ s{^ *<li>}{* };
+             $line =~ s{</li> *$}{};
+        }
+        if ($line =~ m{^</ul>$}) {
+            $in_ul = 0;
+            next;
+        }
+
         push @output, $line;
     }
 
