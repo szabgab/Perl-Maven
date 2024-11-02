@@ -9,7 +9,6 @@ use Path::Tiny qw(path);
 # to be moved to the Code-Maven SSG
 
 # TODO:
-# Replace <screencast file="spanish-edit-wikipedia-v1" youtube="nQYXllZtsyI" /> by Liquid-tag
 
 my $path = shift or die "Usage: $0 PATH_TO_PAGES\n";
 
@@ -122,15 +121,18 @@ for my $file (@files) {
             next;
         }
 
-        $line =~ s{<a href="([^"]+)">([^<]+)</a>}{[$2]($1)};
+        $line =~ s{<a href="([^"]+)">([^<]+)</a>}{[$2]($1)}g;
+
+        $line =~ s{<screencast file="([^"]+)" youtube="([^"]+)" />}({% youtube id="$2" %});
+
+        $line =~ s{<include file="([^"]+)">}({% include file="$1" %});
+
+        $line =~ s{</?code>}{```};
+        $line =~ s{<code lang="([^"]+)">}{```$1};
+        $line =~ s{</?hl>}{`}g;
 
         push @output, $line;
     }
-
-    #=abstract start
-    #=abstract end
-    #
-    #<screencast file="/media" youtube="dc28TN0PCoc" />
 
 
     path($out_file)->spew_utf8(@output);
