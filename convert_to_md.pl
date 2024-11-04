@@ -10,18 +10,19 @@ use Path::Tiny qw(path);
 
 # TODO:
 
-my $path = shift or die "Usage: $0 PATH_TO_PAGES\n";
+die "Usage: $0 PATH_TO_PAGEs\n" if not @ARGV;
 
-opendir my $dh, $path or die "Could not open path\n";
-my @files = grep {$_ ne '.' and $_ ne '..'} readdir $dh;
+#opendir my $dh, $path or die "Could not open path\n";
+#my @files = grep {$_ ne '.' and $_ ne '..'} readdir $dh;
+my @files = @ARGV;
 
 #print Dumper \@files;
 for my $file (@files) {
-    next if $file eq 'archive.txt';
+    next if $file =~ m{/archive.txt$};
     next if $file !~ /\.txt$/;
 
     say "FILE: $file";
-    my $in_file = catfile($path, $file);
+    my $in_file = $file;
     my $out_file = $in_file;
     $out_file =~ s/\.txt/.md/;
     #say $in_file;
@@ -126,6 +127,9 @@ for my $file (@files) {
         $line =~ s{<screencast file="([^"]+)" youtube="([^"]+)" />}({% youtube id="$2" %});
 
         $line =~ s{<include file="([^"]+)">}({% include file="$1" %});
+        $line =~ s{<try file="([^"]+)">}({% include file="$1" %}\n\n[view]($1));
+
+        $line =~ s{<img src="([^"]+)">}{![]($1)};
 
         $line =~ s{</?code>}{```};
         $line =~ s{<code lang="([^"]+)">}{```$1};
