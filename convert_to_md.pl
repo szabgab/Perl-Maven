@@ -126,9 +126,12 @@ for my $file (@files) {
 
         $line =~ s{<screencast file="([^"]+)" youtube="([^"]+)" />}({% youtube id="$2" %});
 
+        say $1 if $line =~ m{<include file="([^"]+)">};
         $line =~ s{<include file="([^"]+)">}({% include file="$1" %});
+        say $1 if $line =~ m{<try file="([^"]+)">};
         $line =~ s{<try file="([^"]+)">}({% include file="$1" %}\n\n[view]($1));
 
+        say $1 if $line =~ m{<img src="([^"]+)">};
         $line =~ s{<img src="([^"]+)">}{![]($1)};
 
         $line =~ s{</?code>}{```};
