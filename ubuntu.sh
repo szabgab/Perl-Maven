@@ -1,23 +1,24 @@
-apt-get install -y libarchive-any-perl
-apt-get install -y libcarp-always-perl
-apt-get install -y libplack-perl
-apt-get install -y libdatetime-perl
-apt-get install -y libdatetime-tiny-perl
-apt-get install -y libemail-stuffer-perl
-apt-get install -y starman
-apt-get install -y libmetacpan-client-perl
-apt-get install -y libtest-www-mechanize-psgi-perl
-apt-get install -y libscope-upper-perl
-apt-get install -y libdancer2-perl
-apt-get install -y libdancer2-plugin-passphrase-perl
-apt-get install -y libperl-prereqscanner-perl
-apt-get install -y libmath-random-isaac-xs-perl
-apt-get install -y libtest-script-perl
-apt-get install -y libdaemon-control-perl
-apt-get install -y libdata-structure-util-perl
-apt-get install -y libmodule-versions-report-perl
-apt-get install -y libmoox-options-perl
-apt-get install -y libnet-twitter-perl
-apt-get install -y libsvg-perl
+sudo apt-get install -y libarchive-any-perl
+sudo apt-get install -y libcarp-always-perl
+sudo apt-get install -y libplack-perl
+sudo apt-get install -y libdatetime-perl
+sudo apt-get install -y libdatetime-tiny-perl
+sudo apt-get install -y libemail-stuffer-perl
+sudo apt-get install -y starman
+sudo apt-get install -y libmetacpan-client-perl
+sudo apt-get install -y libtest-www-mechanize-psgi-perl
+sudo apt-get install -y libscope-upper-perl
+sudo apt-get install -y libdancer2-perl
+sudo apt-get install -y libdancer2-plugin-passphrase-perl
+sudo apt-get install -y libperl-prereqscanner-perl
+sudo apt-get install -y libmath-random-isaac-xs-perl
+sudo apt-get install -y libtest-script-perl
+sudo apt-get install -y libdaemon-control-perl
+sudo apt-get install -y libdata-structure-util-perl
+sudo apt-get install -y libmodule-versions-report-perl
+sudo apt-get install -y libmoox-options-perl
+sudo apt-get install -y libnet-twitter-perl
+sudo apt-get install -y libsvg-perl
 
-apt-get install -y libperl-version-perl
+sudo apt-get install -y libperl-version-perl
+sudo apt-get install -y libtest-most-perl
