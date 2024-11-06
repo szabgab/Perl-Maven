@@ -37,7 +37,7 @@ for my $file (@files) {
         my $line = shift @lines;
         #print "LINE: $line";
         if ($line =~ /^=title\s+(.*)/) {
-            push @output, "title: $1\n";
+            push @output, qq{title: "$1"\n};
             next;
         }
         if ($line =~ /^=timestamp\s+(.*)/) {
