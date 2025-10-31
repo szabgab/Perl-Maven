@@ -213,11 +213,11 @@ for my $file (@files) {
         $line =~ s{<screencast file="([^"]+)" youtube="([^"]+)" />}({% youtube id="$2" file="$1" %});
 
         say $1 if $line =~ m{<include file="([^"]+)">};
-        $line =~ s{<include file="([^"]+)">}({% include file="$1" %});
-        #$line =~ s{<include file="([^"]+)">}(```ruby\n{{#include $1 }}\n```);
+        $line =~ s{<include file="([^"]+)">}({% include file="$1" %});            # my SSG
+        #$line =~ s{<include file="([^"]+)">}(```ruby\n{{#include $1 }}\n```);    # mdBook
         say $1 if $line =~ m{<try file="([^"]+)">};
-        $line =~ s{<try file="([^"]+)">}({% include file="$1" %}\n\n[view]($1));
-        #$line =~ s{<try file="([^"]+)">}(```\n{{#include $1 }}\n```);
+        $line =~ s{<try file="([^"]+)">}({% include file="$1" %}\n\n[view]($1));  # my SSG
+        #$line =~ s{<try file="([^"]+)">}(```\n{{#include $1 }}\n```);            # mdBook
 
         say $1 if $line =~ m{<img src="([^"]+)">};
         $line =~ s{<img src="([^"]+)">}{![]($1)};
